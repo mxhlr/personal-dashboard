@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 type ReviewType = "daily" | "weekly" | "monthly" | "quarterly" | "annual";
 
@@ -36,11 +37,11 @@ export default function Header({
   };
 
   return (
-    <header className="border-b border-border bg-card">
+    <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-sm shadow-sm transition-shadow duration-200">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo/Title */}
-          <h1 className="text-xl font-bold">Personal Coach</h1>
+          <h1 className="text-xl font-semibold">Personal Coach</h1>
 
           {/* Navigation */}
           <nav className="flex items-center gap-2">
@@ -109,12 +110,15 @@ export default function Header({
               Coach
             </Button>
 
+            {/* Theme Toggle */}
+            <ThemeToggle />
+
             {/* Settings Icon */}
             <Button
               variant="ghost"
               size="icon"
               onClick={onSettingsClick}
-              className="ml-2"
+              aria-label="Open settings"
             >
               <Settings className="h-5 w-5" />
             </Button>
