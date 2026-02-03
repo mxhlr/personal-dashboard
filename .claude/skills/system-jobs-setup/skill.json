@@ -1,0 +1,22 @@
+{
+  "name": "system-jobs-setup",
+  "description": "Automatically set up and verify all system jobs in the database. Use when adding new cron jobs or after database reset.",
+  "version": "1.0.0",
+  "author": "Real Rise Agency",
+  "tags": ["system", "cron", "automation", "setup"],
+  "capabilities": [
+    "Verify all cron jobs exist in systemJobs table",
+    "Add missing system jobs automatically",
+    "Enable/disable jobs based on environment",
+    "Verify Discord webhook configuration",
+    "Check job health and last run status"
+  ],
+  "when_to_use": [
+    "After deploying new cron jobs to convex/crons.ts",
+    "When system jobs show 'never run' or 'paused'",
+    "After database migration or reset",
+    "When adding new scheduled automation",
+    "To verify all jobs are properly configured"
+  ],
+  "example_usage": "User: 'The AI Proxy Orchestrator shows paused, can you fix it?'\nAssistant: I'll use the system-jobs-setup skill to verify and configure all system jobs."
+}
