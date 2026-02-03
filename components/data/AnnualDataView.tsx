@@ -46,7 +46,7 @@ export function AnnualDataView() {
   const isCurrentYear = year === currentYear;
 
   // Calculate quarterly stats
-  const quarterlyStats = getQuarterlyStats(logs, profile, year);
+  const quarterlyStats = profile ? getQuarterlyStats(logs, profile, year) : [];
 
   // Calculate overall completion rate
   const completedDays = logs.filter((log) => log.completed).length;
@@ -103,13 +103,13 @@ export function AnnualDataView() {
       </div>
 
       {/* North Stars Progress */}
-      {profile.northStars && (
+      {profile?.northStars && (
         <div className="bg-card border border-border rounded-lg p-6">
           <h3 className="text-lg font-semibold mb-6">North Stars {year}</h3>
           <div className="space-y-6">
             {Object.entries(LIFE_AREAS).map(([key, area]) => {
               const northStar =
-                profile.northStars[key as keyof typeof profile.northStars];
+                profile?.northStars[key as keyof typeof profile.northStars];
 
               // Check if achieved from annual review
               let achieved = "Ausstehend";
@@ -288,7 +288,29 @@ export function AnnualDataView() {
 }
 
 // Helper functions
-function getQuarterlyStats(logs: any[], profile: any, year: number) {
+interface DailyLog {
+  date: string;
+  completed: boolean;
+  wellbeing?: {
+    energy: number;
+    satisfaction: number;
+    stress: number;
+  };
+}
+
+interface Milestone {
+  year: number;
+  quarter: number;
+  area: string;
+  milestone: string;
+  completed: boolean;
+}
+
+interface UserProfile {
+  quarterlyMilestones: Milestone[];
+}
+
+function getQuarterlyStats(logs: DailyLog[], profile: UserProfile, year: number) {
   const quarters = [];
   const quarterMonths = [
     "Jan - Mär",
@@ -311,9 +333,9 @@ function getQuarterlyStats(logs: any[], profile: any, year: number) {
 
     // Get milestones for this quarter
     const milestones = profile.quarterlyMilestones.filter(
-      (m: any) => m.year === year && m.quarter === q
+      (m) => m.year === year && m.quarter === q
     );
-    const milestoneCompleted = milestones.filter((m: any) => m.completed).length;
+    const milestoneCompleted = milestones.filter((m) => m.completed).length;
 
     // Calculate avg energy
     const logsWithWellbeing = quarterLogs.filter((log) => log.wellbeing);
@@ -321,7 +343,7 @@ function getQuarterlyStats(logs: any[], profile: any, year: number) {
       logsWithWellbeing.length > 0
         ? Math.round(
             (logsWithWellbeing.reduce(
-              (sum, log) => sum + log.wellbeing.energy,
+              (sum, log) => sum + log.wellbeing!.energy,
               0
             ) /
               logsWithWellbeing.length) *

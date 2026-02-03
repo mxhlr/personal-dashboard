@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -31,8 +32,8 @@ export function DailyTracker() {
     dinner: "",
     workHours: 0,
     workNotes: "",
-    customToggles: [] as Array<{ fieldId: string; value: boolean }>,
-    customTexts: [] as Array<{ fieldId: string; value: string }>,
+    customToggles: [] as Array<{ fieldId: Id<"trackingFields">; value: boolean }>,
+    customTexts: [] as Array<{ fieldId: Id<"trackingFields">; value: string }>,
   });
 
   const [wellbeing, setWellbeing] = useState({
@@ -103,7 +104,7 @@ export function DailyTracker() {
     });
   };
 
-  const handleToggleChange = (fieldId: string, value: boolean) => {
+  const handleToggleChange = (fieldId: Id<"trackingFields">, value: boolean) => {
     setTracking((prev) => {
       const existing = prev.customToggles.find((t) => t.fieldId === fieldId);
       if (existing) {
@@ -122,7 +123,7 @@ export function DailyTracker() {
     });
   };
 
-  const handleTextChange = (fieldId: string, value: string) => {
+  const handleTextChange = (fieldId: Id<"trackingFields">, value: string) => {
     setTracking((prev) => {
       const existing = prev.customTexts.find((t) => t.fieldId === fieldId);
       if (existing) {

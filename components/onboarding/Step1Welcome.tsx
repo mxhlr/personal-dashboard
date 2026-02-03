@@ -21,7 +21,7 @@ export default function Step1Welcome({ onNext }: Step1WelcomeProps) {
       </div>
 
       <Button onClick={onNext} size="lg" className="px-8">
-        Los geht's →
+        Los geht&apos;s →
       </Button>
     </div>
   );

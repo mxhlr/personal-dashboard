@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -105,7 +106,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     }
   };
 
-  const handleToggleField = async (fieldId: string, isActive: boolean) => {
+  const handleToggleField = async (fieldId: Id<"trackingFields">, isActive: boolean) => {
     try {
       await toggleFieldActive({ fieldId, isActive });
     } catch (error) {
@@ -114,9 +115,9 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     }
   };
 
-  const handleUpdateWeeklyTarget = async (fieldId: string, target: number) => {
+  const handleUpdateWeeklyTarget = async (fieldId: Id<"trackingFields">, target: number) => {
     try {
-      await updateWeeklyTarget({ fieldId, weeklyTarget: target });
+      await updateWeeklyTarget({ fieldId, target });
     } catch (error) {
       console.error("Failed to update weekly target:", error);
       toast.error("Fehler beim Speichern");

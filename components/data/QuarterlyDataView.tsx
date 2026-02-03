@@ -65,13 +65,16 @@ export function QuarterlyDataView() {
 
   const currentQuarter = Math.ceil((new Date().getMonth() + 1) / 3);
   const currentYear = new Date().getFullYear();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const isCurrentQuarter = quarter === currentQuarter && year === currentYear;
 
   // Group milestones by area
   const milestonesByArea = Object.keys(LIFE_AREAS).reduce((acc, area) => {
-    acc[area] = milestones.milestones.filter((m) => m.area === area);
+    acc[area] = Array.isArray(milestones)
+      ? []
+      : milestones.milestones.filter((m) => m.area === area);
     return acc;
-  }, {} as Record<string, any[]>);
+  }, {} as Record<string, Array<{ area: string; milestone: string; completed: boolean }>>);
 
   // Calculate monthly stats
   const monthlyStats = getMonthlyStats(logs, year, quarter);
@@ -132,8 +135,8 @@ export function QuarterlyDataView() {
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold">Milestone Progress</h3>
           <div className="text-sm text-muted-foreground">
-            {milestones.completed} / {milestones.total} abgeschlossen (
-            {milestones.percentage}%)
+            {Array.isArray(milestones) ? "0 / 0" : `${milestones.completed} / ${milestones.total}`} abgeschlossen (
+            {Array.isArray(milestones) ? 0 : milestones.percentage}%)
           </div>
         </div>
 
@@ -242,7 +245,7 @@ export function QuarterlyDataView() {
         </div>
       )}
 
-      {logs.length === 0 && milestones.total === 0 && (
+      {logs.length === 0 && (Array.isArray(milestones) || milestones.total === 0) && (
         <div className="bg-card border border-border rounded-lg p-12 text-center">
           <Circle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
           <h3 className="text-lg font-semibold mb-2">Keine Daten</h3>
@@ -285,7 +288,15 @@ function getQuarterMonths(quarter: number): string {
   return `${monthNames[startMonth]} - ${monthNames[startMonth + 2]}`;
 }
 
-function getMonthlyStats(logs: any[], year: number, quarter: number) {
+interface QuarterlyLog {
+  date: string;
+  completed: boolean;
+  wellbeing?: {
+    energy: number;
+  };
+}
+
+function getMonthlyStats(logs: QuarterlyLog[], year: number, quarter: number) {
   const monthNames = [
     "Januar",
     "Februar",
@@ -319,7 +330,7 @@ function getMonthlyStats(logs: any[], year: number, quarter: number) {
       logsWithWellbeing.length > 0
         ? Math.round(
             (logsWithWellbeing.reduce(
-              (sum, log) => sum + log.wellbeing.energy,
+              (sum, log) => sum + log.wellbeing!.energy,
               0
             ) /
               logsWithWellbeing.length) *

@@ -1,12 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, CheckCircle2, Circle } from "lucide-react";
-import { useState } from "react";
-
-// Helper to get week number
+// Helper to get week number (unused but kept for potential future use)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getWeekNumber(date: Date): number {
   const d = new Date(
     Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
@@ -74,6 +74,7 @@ export function MonthlyDataView() {
 
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const isCurrentMonth = month === currentMonth && year === currentYear;
 
   // Group logs by week
@@ -310,8 +311,23 @@ function getCalendarDays(year: number, month: number): (Date | null)[] {
   return days;
 }
 
-function groupLogsByWeek(logs: any[]) {
-  const weekMap = new Map<number, any>();
+interface MonthlyLog {
+  weekNumber: number;
+  completed: boolean;
+  wellbeing?: {
+    energy: number;
+  };
+}
+
+function groupLogsByWeek(logs: MonthlyLog[]) {
+  const weekMap = new Map<number, {
+    weekNumber: number;
+    logs: MonthlyLog[];
+    completed: number;
+    total: number;
+    totalEnergy: number;
+    energyCount: number;
+  }>();
 
   logs.forEach((log) => {
     const weekNum = log.weekNumber;

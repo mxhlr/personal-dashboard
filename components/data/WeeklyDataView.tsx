@@ -70,6 +70,7 @@ export function WeeklyDataView() {
   const weekDays = getWeekDays(year, weekNumber);
   const currentWeekNumber = getWeekNumber(new Date());
   const currentYear = new Date().getFullYear();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const isCurrentWeek = weekNumber === currentWeekNumber && year === currentYear;
 
   return (
@@ -131,7 +132,7 @@ export function WeeklyDataView() {
       <div className="bg-card border border-border rounded-lg p-6">
         <h3 className="text-lg font-semibold mb-4">Tagesübersicht</h3>
         <div className="grid grid-cols-7 gap-2">
-          {weekDays.map((day, index) => {
+          {weekDays.map((day) => {
             const dateStr = day.toISOString().split("T")[0];
             const log = logs.find((l) => l.date === dateStr);
             const isToday =

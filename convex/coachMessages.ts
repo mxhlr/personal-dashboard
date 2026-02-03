@@ -154,7 +154,7 @@ export const sendMessage = action({
     // Build messages array for Claude API
     const apiMessages = messages
       .slice(-10) // Last 10 messages for context
-      .map((msg) => ({
+      .map((msg: { role: string; content: string }) => ({
         role: msg.role as "user" | "assistant",
         content: msg.content,
       }));
@@ -166,7 +166,7 @@ export const sendMessage = action({
     });
 
     // Call Claude API
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    const response: Response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -185,8 +185,8 @@ export const sendMessage = action({
       throw new Error(`Claude API error: ${response.statusText}`);
     }
 
-    const data = await response.json();
-    const assistantMessage = data.content[0].text;
+    const data: { content: Array<{ text: string }> } = await response.json();
+    const assistantMessage: string = data.content[0].text;
 
     // Save user message
     await ctx.runMutation(api.coachMessages.addUserMessage, {

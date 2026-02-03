@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Settings } from "lucide-react";
 import {
   DropdownMenu,
@@ -27,6 +26,7 @@ export default function Header({
   onReviewChange,
   onSettingsClick,
 }: HeaderProps) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const reviewLabels: Record<ReviewType, string> = {
     daily: "Daily",
     weekly: "Weekly",

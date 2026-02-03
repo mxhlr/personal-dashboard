@@ -46,7 +46,7 @@ export default function Step5Tracking({
   };
 
   const toggleField = (field: DefaultField) => {
-    let updatedFields = [...data.trackingFields];
+    const updatedFields = [...data.trackingFields];
     const existingIndex = updatedFields.findIndex((f) => f.name === field.name);
 
     if (existingIndex >= 0) {
