@@ -39,6 +39,18 @@ export const createDefaultTrackingFields = mutation({
 
     const now = new Date().toISOString();
 
+    // List of actual default field names
+    const defaultFieldNames = [
+      "Movement",
+      "Phone Jail",
+      "Vibes",
+      "Breakfast",
+      "Lunch",
+      "Dinner",
+      "Work Hours",
+      "Work Notes",
+    ];
+
     // Create all selected fields
     const fieldPromises = args.selectedFields.map((field, index) =>
       ctx.db.insert("trackingFields", {
@@ -46,7 +58,7 @@ export const createDefaultTrackingFields = mutation({
         name: field.name,
         type: field.type,
         hasStreak: field.hasStreak,
-        isDefault: true,
+        isDefault: defaultFieldNames.includes(field.name),
         isActive: true,
         order: index,
         currentStreak: field.hasStreak ? 0 : undefined,
@@ -164,5 +176,41 @@ export const deleteTrackingField = mutation({
     }
 
     await ctx.db.delete(args.fieldId);
+  },
+});
+
+// Fix custom fields that were incorrectly marked as default
+export const fixCustomFields = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    // List of actual default field names
+    const defaultFieldNames = [
+      "Movement",
+      "Phone Jail",
+      "Vibes",
+      "Breakfast",
+      "Lunch",
+      "Dinner",
+      "Work Hours",
+      "Work Notes",
+    ];
+
+    // Get all fields for this user
+    const fields = await ctx.db
+      .query("trackingFields")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .collect();
+
+    // Fix fields that are marked as default but aren't in the list
+    const fixPromises = fields
+      .filter(f => f.isDefault && !defaultFieldNames.includes(f.name))
+      .map(f => ctx.db.patch(f._id, { isDefault: false }));
+
+    await Promise.all(fixPromises);
+
+    return { fixed: fixPromises.length };
   },
 });
