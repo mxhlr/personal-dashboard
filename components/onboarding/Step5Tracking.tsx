@@ -151,6 +151,39 @@ export default function Step5Tracking({
         })}
       </div>
 
+      {/* Custom Fields Section */}
+      {data.trackingFields.filter((f) => !defaultFields.some((df) => df.name === f.name)).length > 0 && (
+        <div className="space-y-4 mb-6">
+          <h3 className="text-lg font-semibold">Eigene Felder</h3>
+          {data.trackingFields
+            .filter((f) => !defaultFields.some((df) => df.name === f.name))
+            .map((field, index) => (
+              <div key={`custom-${index}`} className="border border-border rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="font-medium">{field.name}</Label>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Custom Field
+                    </p>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      const updatedFields = data.trackingFields.filter(
+                        (f) => f.name !== field.name
+                      );
+                      onUpdate({ trackingFields: updatedFields });
+                    }}
+                  >
+                    Entfernen
+                  </Button>
+                </div>
+              </div>
+            ))}
+        </div>
+      )}
+
       <div className="border border-dashed border-border rounded-lg p-4 mb-6">
         <Label className="mb-2 block">Eigenes Feld hinzufügen</Label>
         <div className="flex gap-2">
