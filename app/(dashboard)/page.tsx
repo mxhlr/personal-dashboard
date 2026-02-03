@@ -1,15 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useRouter } from "next/navigation";
 import Header from "@/components/layout/Header";
 
 type ReviewType = "daily" | "weekly" | "monthly" | "quarterly" | "annual";
 type TabType = "planning" | "data" | "coach";
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const hasCompletedSetup = useQuery(api.userProfile.hasCompletedSetup);
   const [activeTab, setActiveTab] = useState<TabType>("planning");
   const [selectedReview, setSelectedReview] = useState<ReviewType>("daily");
   const [settingsOpen, setSettingsOpen] = useState(false);
+
+  // Redirect to setup if not completed
+  useEffect(() => {
+    if (hasCompletedSetup === false) {
+      router.push("/setup");
+    }
+  }, [hasCompletedSetup, router]);
+
+  // Show loading while checking setup status
+  if (hasCompletedSetup === undefined || hasCompletedSetup === false) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Lädt...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">

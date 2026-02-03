@@ -8,13 +8,19 @@
  * @module
  */
 
+import type * as trackingFields from "../trackingFields.js";
+import type * as userProfile from "../userProfile.js";
+
 import type {
   ApiFromModules,
   FilterApi,
   FunctionReference,
 } from "convex/server";
 
-declare const fullApi: ApiFromModules<{}>;
+declare const fullApi: ApiFromModules<{
+  trackingFields: typeof trackingFields;
+  userProfile: typeof userProfile;
+}>;
 
 /**
  * A utility for referencing Convex functions in your app's public API.

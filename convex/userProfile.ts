@@ -1,0 +1,134 @@
+import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
+
+/**
+ * User Profile Queries & Mutations
+ */
+
+// Check if user has completed setup
+export const hasCompletedSetup = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return false;
+
+    const profile = await ctx.db
+      .query("userProfile")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .first();
+
+    return profile?.setupCompleted ?? false;
+  },
+});
+
+// Get user profile
+export const getUserProfile = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const profile = await ctx.db
+      .query("userProfile")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .first();
+
+    return profile;
+  },
+});
+
+// Create user profile (during onboarding)
+export const createUserProfile = mutation({
+  args: {
+    name: v.string(),
+    role: v.string(),
+    mainProject: v.string(),
+    northStars: v.object({
+      wealth: v.string(),
+      health: v.string(),
+      love: v.string(),
+      happiness: v.string(),
+    }),
+    quarterlyMilestones: v.array(v.object({
+      quarter: v.number(),
+      year: v.number(),
+      area: v.string(),
+      milestone: v.string(),
+      completed: v.boolean(),
+    })),
+    coachTone: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const now = new Date().toISOString();
+
+    const profileId = await ctx.db.insert("userProfile", {
+      userId: identity.subject,
+      name: args.name,
+      role: args.role,
+      mainProject: args.mainProject,
+      northStars: args.northStars,
+      quarterlyMilestones: args.quarterlyMilestones,
+      coachTone: args.coachTone,
+      setupCompleted: true,
+      setupDate: now,
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    return profileId;
+  },
+});
+
+// Update North Stars
+export const updateNorthStars = mutation({
+  args: {
+    northStars: v.object({
+      wealth: v.string(),
+      health: v.string(),
+      love: v.string(),
+      happiness: v.string(),
+    }),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const profile = await ctx.db
+      .query("userProfile")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .first();
+
+    if (!profile) throw new Error("Profile not found");
+
+    await ctx.db.patch(profile._id, {
+      northStars: args.northStars,
+      updatedAt: new Date().toISOString(),
+    });
+  },
+});
+
+// Update Coach Tone
+export const updateCoachTone = mutation({
+  args: {
+    tone: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const profile = await ctx.db
+      .query("userProfile")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .first();
+
+    if (!profile) throw new Error("Profile not found");
+
+    await ctx.db.patch(profile._id, {
+      coachTone: args.tone,
+      updatedAt: new Date().toISOString(),
+    });
+  },
+});
