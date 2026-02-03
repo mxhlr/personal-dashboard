@@ -1,6 +1,6 @@
 "use client";
 
-import { Settings } from "lucide-react";
+import { Settings, Trash2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +17,7 @@ interface HeaderProps {
   selectedReview: ReviewType;
   onReviewChange: (review: ReviewType) => void;
   onSettingsClick: () => void;
+  onCleanupClick: () => void;
 }
 
 export default function Header({
@@ -25,6 +26,7 @@ export default function Header({
   selectedReview,
   onReviewChange,
   onSettingsClick,
+  onCleanupClick,
 }: HeaderProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const reviewLabels: Record<ReviewType, string> = {
@@ -109,12 +111,22 @@ export default function Header({
               Coach
             </Button>
 
+            {/* Cleanup Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onCleanupClick}
+              className="ml-2"
+              title="Duplikate entfernen"
+            >
+              <Trash2 className="h-5 w-5" />
+            </Button>
+
             {/* Settings Icon */}
             <Button
               variant="ghost"
               size="icon"
               onClick={onSettingsClick}
-              className="ml-2"
             >
               <Settings className="h-5 w-5" />
             </Button>
