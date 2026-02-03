@@ -49,8 +49,8 @@ export const getWeeklyLogs = query({
 // Get logs for a date range (for weekly overview)
 export const getWeekLogs = query({
   args: {
-    startDate: v.string(), // ISO string
-    endDate: v.string(),   // ISO string
+    startDate: v.string(), // "YYYY-MM-DD"
+    endDate: v.string(),   // "YYYY-MM-DD"
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -58,16 +58,19 @@ export const getWeekLogs = query({
       throw new Error("Not authenticated");
     }
 
-    const logs = await ctx.db
+    // Get all logs for user and filter in memory
+    const allLogs = await ctx.db
       .query("dailyLog")
       .withIndex("by_user", (q) => q.eq("userId", identity.subject))
-      .filter((q) =>
-        q.and(
-          q.gte(q.field("date"), args.startDate.split("T")[0]),
-          q.lte(q.field("date"), args.endDate.split("T")[0])
-        )
-      )
       .collect();
+
+    // Filter by date range
+    const startDateStr = args.startDate.split("T")[0];
+    const endDateStr = args.endDate.split("T")[0];
+
+    const logs = allLogs.filter((log) => {
+      return log.date >= startDateStr && log.date <= endDateStr;
+    });
 
     return logs;
   },
