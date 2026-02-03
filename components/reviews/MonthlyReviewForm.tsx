@@ -3,26 +3,15 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { format } from "date-fns";
+import { TrackingCard } from "@/components/dashboard/TrackingCard";
+import { ProgressIndicator } from "@/components/dashboard/ProgressIndicator";
+import { toast } from "sonner";
 
 interface MonthlyReviewFormProps {
   year: number;
   month: number;
 }
-
-const MONTH_NAMES = [
-  "Januar",
-  "Februar",
-  "März",
-  "April",
-  "Mai",
-  "Juni",
-  "Juli",
-  "August",
-  "September",
-  "Oktober",
-  "November",
-  "Dezember",
-];
 
 export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
   const existingReview = useQuery(api.monthlyReview.getMonthlyReview, {
@@ -51,19 +40,16 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
     }
   }, [existingReview]);
 
+  const totalFields = 6;
+  const filledFields = Object.values(formData).filter((val) => val.trim() !== "").length;
+  const percentage = Math.round((filledFields / totalFields) * 100);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate all fields are filled
-    if (
-      !formData.biggestSuccess.trim() ||
-      !formData.patternToChange.trim() ||
-      !formData.learnedAboutSelf.trim() ||
-      !formData.biggestSurprise.trim() ||
-      !formData.proudOf.trim() ||
-      !formData.nextMonthFocus.trim()
-    ) {
-      alert("Bitte fülle alle Felder aus.");
+    if (filledFields < totalFields) {
+      toast.error("Bitte fülle alle Felder aus.");
       return;
     }
 
@@ -75,10 +61,10 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
         responses: formData,
       });
       setIsReadOnly(true);
-      alert("Monthly Review erfolgreich gespeichert!");
+      toast.success("Monthly Review erfolgreich gespeichert!");
     } catch (error) {
       console.error("Error submitting review:", error);
-      alert("Fehler beim Speichern des Reviews.");
+      toast.error("Fehler beim Speichern des Reviews.");
     } finally {
       setIsSubmitting(false);
     }
@@ -89,128 +75,106 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
   };
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <div className="bg-card border border-border rounded-lg p-6">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2">Monthly Review</h2>
-          <p className="text-muted-foreground">
-            {MONTH_NAMES[month - 1]} {year}
-          </p>
-        </div>
+    <div className="max-w-4xl mx-auto px-6 space-y-8">
+      {/* Header */}
+      <div className="text-center space-y-2">
+        <h1 className="text-3xl font-semibold">Monthly Review</h1>
+        <p className="text-sm text-muted-foreground">
+          {format(new Date(), "EEEE, MMMM d, yyyy")}
+        </p>
+      </div>
 
-        {existingReview && isReadOnly ? (
-          <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
-            <p className="text-green-800 dark:text-green-200">
-              ✓ Review abgeschlossen am{" "}
-              {new Date(existingReview.completedAt).toLocaleDateString("de-DE")}
-            </p>
-          </div>
-        ) : null}
+      {/* Progress Indicator */}
+      <ProgressIndicator percentage={percentage} />
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Question 1 */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Was war dein größter Erfolg diesen Monat?
-            </label>
-            <textarea
-              value={formData.biggestSuccess}
-              onChange={(e) =>
-                setFormData({ ...formData, biggestSuccess: e.target.value })
-              }
-              disabled={isReadOnly}
-              className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
-              placeholder="Beschreibe deinen größten Erfolg..."
-            />
-          </div>
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Question 1 */}
+        <TrackingCard label="Was war dein größter Erfolg diesen Monat?">
+          <textarea
+            value={formData.biggestSuccess}
+            onChange={(e) =>
+              setFormData({ ...formData, biggestSuccess: e.target.value })
+            }
+            disabled={isReadOnly}
+            className="w-full min-h-[120px] px-4 py-3 border-0 bg-transparent resize-none focus:outline-none disabled:cursor-not-allowed placeholder:text-muted-foreground/50"
+            placeholder="Beschreibe deinen größten Erfolg..."
+          />
+        </TrackingCard>
 
-          {/* Question 2 */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Welches Muster möchtest du ändern?
-            </label>
-            <textarea
-              value={formData.patternToChange}
-              onChange={(e) =>
-                setFormData({ ...formData, patternToChange: e.target.value })
-              }
-              disabled={isReadOnly}
-              className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
-              placeholder="Welches Verhaltensmuster möchtest du ändern?"
-            />
-          </div>
+        {/* Question 2 */}
+        <TrackingCard label="Welches Muster möchtest du ändern?">
+          <textarea
+            value={formData.patternToChange}
+            onChange={(e) =>
+              setFormData({ ...formData, patternToChange: e.target.value })
+            }
+            disabled={isReadOnly}
+            className="w-full min-h-[120px] px-4 py-3 border-0 bg-transparent resize-none focus:outline-none disabled:cursor-not-allowed placeholder:text-muted-foreground/50"
+            placeholder="Welches Verhaltensmuster möchtest du ändern?"
+          />
+        </TrackingCard>
 
-          {/* Question 3 */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Was hast du über dich selbst gelernt?
-            </label>
-            <textarea
-              value={formData.learnedAboutSelf}
-              onChange={(e) =>
-                setFormData({ ...formData, learnedAboutSelf: e.target.value })
-              }
-              disabled={isReadOnly}
-              className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
-              placeholder="Was hast du über dich gelernt?"
-            />
-          </div>
+        {/* Question 3 */}
+        <TrackingCard label="Was hast du über dich selbst gelernt?">
+          <textarea
+            value={formData.learnedAboutSelf}
+            onChange={(e) =>
+              setFormData({ ...formData, learnedAboutSelf: e.target.value })
+            }
+            disabled={isReadOnly}
+            className="w-full min-h-[120px] px-4 py-3 border-0 bg-transparent resize-none focus:outline-none disabled:cursor-not-allowed placeholder:text-muted-foreground/50"
+            placeholder="Was hast du über dich gelernt?"
+          />
+        </TrackingCard>
 
-          {/* Question 4 */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Was war die größte Überraschung?
-            </label>
-            <textarea
-              value={formData.biggestSurprise}
-              onChange={(e) =>
-                setFormData({ ...formData, biggestSurprise: e.target.value })
-              }
-              disabled={isReadOnly}
-              className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
-              placeholder="Was hat dich überrascht?"
-            />
-          </div>
+        {/* Question 4 */}
+        <TrackingCard label="Was war die größte Überraschung?">
+          <textarea
+            value={formData.biggestSurprise}
+            onChange={(e) =>
+              setFormData({ ...formData, biggestSurprise: e.target.value })
+            }
+            disabled={isReadOnly}
+            className="w-full min-h-[120px] px-4 py-3 border-0 bg-transparent resize-none focus:outline-none disabled:cursor-not-allowed placeholder:text-muted-foreground/50"
+            placeholder="Was hat dich überrascht?"
+          />
+        </TrackingCard>
 
-          {/* Question 5 */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Worauf bist du stolz?
-            </label>
-            <textarea
-              value={formData.proudOf}
-              onChange={(e) =>
-                setFormData({ ...formData, proudOf: e.target.value })
-              }
-              disabled={isReadOnly}
-              className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
-              placeholder="Worauf bist du stolz?"
-            />
-          </div>
+        {/* Question 5 */}
+        <TrackingCard label="Worauf bist du stolz?">
+          <textarea
+            value={formData.proudOf}
+            onChange={(e) =>
+              setFormData({ ...formData, proudOf: e.target.value })
+            }
+            disabled={isReadOnly}
+            className="w-full min-h-[120px] px-4 py-3 border-0 bg-transparent resize-none focus:outline-none disabled:cursor-not-allowed placeholder:text-muted-foreground/50"
+            placeholder="Worauf bist du stolz?"
+          />
+        </TrackingCard>
 
-          {/* Question 6 */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Was ist dein Fokus für nächsten Monat?
-            </label>
-            <textarea
-              value={formData.nextMonthFocus}
-              onChange={(e) =>
-                setFormData({ ...formData, nextMonthFocus: e.target.value })
-              }
-              disabled={isReadOnly}
-              className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
-              placeholder="Dein Fokus für nächsten Monat..."
-            />
-          </div>
+        {/* Question 6 */}
+        <TrackingCard label="Was ist dein Fokus für nächsten Monat?">
+          <textarea
+            value={formData.nextMonthFocus}
+            onChange={(e) =>
+              setFormData({ ...formData, nextMonthFocus: e.target.value })
+            }
+            disabled={isReadOnly}
+            className="w-full min-h-[120px] px-4 py-3 border-0 bg-transparent resize-none focus:outline-none disabled:cursor-not-allowed placeholder:text-muted-foreground/50"
+            placeholder="Dein Fokus für nächsten Monat..."
+          />
+        </TrackingCard>
 
-          {/* Buttons */}
-          <div className="flex gap-3">
+        {/* Buttons */}
+        <div className="border-t pt-4">
+          <div className="flex gap-3 justify-center">
             {isReadOnly ? (
               <button
                 type="button"
                 onClick={handleEdit}
-                className="px-6 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80"
+                className="px-8 py-3 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 font-medium transition-colors"
               >
                 Bearbeiten
               </button>
@@ -218,14 +182,14 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-6 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-8 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
               >
                 {isSubmitting ? "Speichert..." : "Speichern"}
               </button>
             )}
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   );
 }

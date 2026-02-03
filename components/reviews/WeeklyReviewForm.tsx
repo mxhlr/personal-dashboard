@@ -3,6 +3,10 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { format } from "date-fns";
+import { TrackingCard } from "@/components/dashboard/TrackingCard";
+import { ProgressIndicator } from "@/components/dashboard/ProgressIndicator";
+import { toast } from "sonner";
 
 interface WeeklyReviewFormProps {
   year: number;
@@ -35,18 +39,16 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
     }
   }, [existingReview]);
 
+  const totalFields = 5;
+  const filledFields = Object.values(formData).filter((val) => val.trim() !== "").length;
+  const percentage = Math.round((filledFields / totalFields) * 100);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate all fields are filled
-    if (
-      !formData.biggestSuccess.trim() ||
-      !formData.mostFrustrating.trim() ||
-      !formData.differentlyNextTime.trim() ||
-      !formData.learned.trim() ||
-      !formData.nextWeekFocus.trim()
-    ) {
-      alert("Bitte fülle alle Felder aus.");
+    if (filledFields < totalFields) {
+      toast.error("Bitte fülle alle Felder aus.");
       return;
     }
 
@@ -58,10 +60,10 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
         responses: formData,
       });
       setIsReadOnly(true);
-      alert("Weekly Review erfolgreich gespeichert!");
+      toast.success("Weekly Review erfolgreich gespeichert!");
     } catch (error) {
       console.error("Error submitting review:", error);
-      alert("Fehler beim Speichern des Reviews.");
+      toast.error("Fehler beim Speichern des Reviews.");
     } finally {
       setIsSubmitting(false);
     }
@@ -72,115 +74,96 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
   };
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <div className="bg-card border border-border rounded-lg p-6">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2">Weekly Review</h2>
-          <p className="text-muted-foreground">
-            KW {weekNumber}, {year}
-          </p>
-        </div>
+    <div className="max-w-4xl mx-auto px-6 space-y-8">
+      {/* Header */}
+      <div className="text-center space-y-2">
+        <h1 className="text-3xl font-semibold">Weekly Review</h1>
+        <p className="text-sm text-muted-foreground">
+          {format(new Date(), "EEEE, MMMM d, yyyy")}
+        </p>
+      </div>
 
-        {existingReview && isReadOnly ? (
-          <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
-            <p className="text-green-800 dark:text-green-200">
-              ✓ Review abgeschlossen am{" "}
-              {new Date(existingReview.completedAt).toLocaleDateString("de-DE")}
-            </p>
-          </div>
-        ) : null}
+      {/* Progress Indicator */}
+      <ProgressIndicator percentage={percentage} />
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Question 1 */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Was war dein größter Erfolg diese Woche?
-            </label>
-            <textarea
-              value={formData.biggestSuccess}
-              onChange={(e) =>
-                setFormData({ ...formData, biggestSuccess: e.target.value })
-              }
-              disabled={isReadOnly}
-              className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
-              placeholder="Beschreibe deinen größten Erfolg..."
-            />
-          </div>
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Question 1 */}
+        <TrackingCard label="Was war dein größter Erfolg diese Woche?">
+          <textarea
+            value={formData.biggestSuccess}
+            onChange={(e) =>
+              setFormData({ ...formData, biggestSuccess: e.target.value })
+            }
+            disabled={isReadOnly}
+            className="w-full min-h-[120px] px-4 py-3 border-0 bg-transparent resize-none focus:outline-none disabled:cursor-not-allowed placeholder:text-muted-foreground/50"
+            placeholder="Beschreibe deinen größten Erfolg..."
+          />
+        </TrackingCard>
 
-          {/* Question 2 */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Was hat dich am meisten frustriert?
-            </label>
-            <textarea
-              value={formData.mostFrustrating}
-              onChange={(e) =>
-                setFormData({ ...formData, mostFrustrating: e.target.value })
-              }
-              disabled={isReadOnly}
-              className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
-              placeholder="Was war frustrierend?"
-            />
-          </div>
+        {/* Question 2 */}
+        <TrackingCard label="Was hat dich am meisten frustriert?">
+          <textarea
+            value={formData.mostFrustrating}
+            onChange={(e) =>
+              setFormData({ ...formData, mostFrustrating: e.target.value })
+            }
+            disabled={isReadOnly}
+            className="w-full min-h-[120px] px-4 py-3 border-0 bg-transparent resize-none focus:outline-none disabled:cursor-not-allowed placeholder:text-muted-foreground/50"
+            placeholder="Was war frustrierend?"
+          />
+        </TrackingCard>
 
-          {/* Question 3 */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Was hättest du anders gemacht?
-            </label>
-            <textarea
-              value={formData.differentlyNextTime}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  differentlyNextTime: e.target.value,
-                })
-              }
-              disabled={isReadOnly}
-              className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
-              placeholder="Was würdest du beim nächsten Mal anders machen?"
-            />
-          </div>
+        {/* Question 3 */}
+        <TrackingCard label="Was hättest du anders gemacht?">
+          <textarea
+            value={formData.differentlyNextTime}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                differentlyNextTime: e.target.value,
+              })
+            }
+            disabled={isReadOnly}
+            className="w-full min-h-[120px] px-4 py-3 border-0 bg-transparent resize-none focus:outline-none disabled:cursor-not-allowed placeholder:text-muted-foreground/50"
+            placeholder="Was würdest du beim nächsten Mal anders machen?"
+          />
+        </TrackingCard>
 
-          {/* Question 4 */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Was hast du diese Woche gelernt?
-            </label>
-            <textarea
-              value={formData.learned}
-              onChange={(e) =>
-                setFormData({ ...formData, learned: e.target.value })
-              }
-              disabled={isReadOnly}
-              className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
-              placeholder="Deine wichtigsten Learnings..."
-            />
-          </div>
+        {/* Question 4 */}
+        <TrackingCard label="Was hast du diese Woche gelernt?">
+          <textarea
+            value={formData.learned}
+            onChange={(e) =>
+              setFormData({ ...formData, learned: e.target.value })
+            }
+            disabled={isReadOnly}
+            className="w-full min-h-[120px] px-4 py-3 border-0 bg-transparent resize-none focus:outline-none disabled:cursor-not-allowed placeholder:text-muted-foreground/50"
+            placeholder="Deine wichtigsten Learnings..."
+          />
+        </TrackingCard>
 
-          {/* Question 5 */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Worauf fokussierst du dich nächste Woche?
-            </label>
-            <textarea
-              value={formData.nextWeekFocus}
-              onChange={(e) =>
-                setFormData({ ...formData, nextWeekFocus: e.target.value })
-              }
-              disabled={isReadOnly}
-              className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
-              placeholder="Dein Fokus für nächste Woche..."
-            />
-          </div>
+        {/* Question 5 */}
+        <TrackingCard label="Worauf fokussierst du dich nächste Woche?">
+          <textarea
+            value={formData.nextWeekFocus}
+            onChange={(e) =>
+              setFormData({ ...formData, nextWeekFocus: e.target.value })
+            }
+            disabled={isReadOnly}
+            className="w-full min-h-[120px] px-4 py-3 border-0 bg-transparent resize-none focus:outline-none disabled:cursor-not-allowed placeholder:text-muted-foreground/50"
+            placeholder="Dein Fokus für nächste Woche..."
+          />
+        </TrackingCard>
 
-          {/* Buttons */}
-          <div className="flex gap-3">
+        {/* Buttons */}
+        <div className="border-t pt-4">
+          <div className="flex gap-3 justify-center">
             {isReadOnly ? (
               <button
                 type="button"
                 onClick={handleEdit}
-                className="px-6 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80"
+                className="px-8 py-3 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 font-medium transition-colors"
               >
                 Bearbeiten
               </button>
@@ -188,14 +171,14 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-6 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-8 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
               >
                 {isSubmitting ? "Speichert..." : "Speichern"}
               </button>
             )}
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   );
 }
