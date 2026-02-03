@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -56,7 +56,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [coachTone, setCoachTone] = useState("");
 
   // Initialize forms when profile loads
-  useState(() => {
+  useEffect(() => {
     if (profile) {
       setProfileForm({
         name: profile.name,
@@ -66,7 +66,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       setNorthStarsForm(profile.northStars);
       setCoachTone(profile.coachTone);
     }
-  });
+  }, [profile]);
 
   const handleSaveProfile = async () => {
     setIsSaving(true);
