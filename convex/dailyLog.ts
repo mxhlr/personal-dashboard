@@ -64,12 +64,9 @@ export const getWeekLogs = query({
       .withIndex("by_user", (q) => q.eq("userId", identity.subject))
       .collect();
 
-    // Filter by date range
-    const startDateStr = args.startDate.split("T")[0];
-    const endDateStr = args.endDate.split("T")[0];
-
+    // Filter by date range (dates are already in "YYYY-MM-DD" format)
     const logs = allLogs.filter((log) => {
-      return log.date >= startDateStr && log.date <= endDateStr;
+      return log.date >= args.startDate && log.date <= args.endDate;
     });
 
     return logs;
