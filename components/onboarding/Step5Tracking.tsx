@@ -79,6 +79,7 @@ export default function Step5Tracking({
       name: customFieldName,
       type: "text",
       hasStreak: false,
+      weeklyTarget: undefined,
     };
 
     onUpdate({
