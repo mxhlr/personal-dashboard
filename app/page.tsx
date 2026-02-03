@@ -63,6 +63,8 @@ export default function DashboardPage() {
   }, [hasCompletedSetup, router]);
 
   const handleCleanup = async () => {
+    if (isCleaningUp) return;
+
     if (!confirm("Duplikate entfernen? (z.B. doppelte Phone Jail Felder)")) {
       return;
     }
