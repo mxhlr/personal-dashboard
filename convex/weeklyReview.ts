@@ -1,6 +1,5 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-import { getAuthUserId } from "@convex-dev/auth/server";
 
 /**
  * Get the weekly review for a specific year and week
@@ -11,17 +10,17 @@ export const getWeeklyReview = query({
     weekNumber: v.number(),
   },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
       throw new Error("Not authenticated");
     }
 
     const review = await ctx.db
       .query("weeklyReview")
       .withIndex("by_user_year_week", (q) =>
-        q.eq("userId", userId).eq("year", args.year).eq("weekNumber", args.weekNumber)
+        q.eq("userId", identity.subject).eq("year", args.year).eq("weekNumber", args.weekNumber)
       )
-      .unique();
+      .first();
 
     return review;
   },
@@ -43,8 +42,8 @@ export const submitWeeklyReview = mutation({
     }),
   },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
       throw new Error("Not authenticated");
     }
 
@@ -52,9 +51,9 @@ export const submitWeeklyReview = mutation({
     const existingReview = await ctx.db
       .query("weeklyReview")
       .withIndex("by_user_year_week", (q) =>
-        q.eq("userId", userId).eq("year", args.year).eq("weekNumber", args.weekNumber)
+        q.eq("userId", identity.subject).eq("year", args.year).eq("weekNumber", args.weekNumber)
       )
-      .unique();
+      .first();
 
     if (existingReview) {
       // Update existing review
@@ -66,7 +65,7 @@ export const submitWeeklyReview = mutation({
     } else {
       // Create new review
       const reviewId = await ctx.db.insert("weeklyReview", {
-        userId,
+        userId: identity.subject,
         year: args.year,
         weekNumber: args.weekNumber,
         responses: args.responses,

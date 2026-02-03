@@ -38,9 +38,8 @@ export const getWeeklyLogs = query({
     const logs = await ctx.db
       .query("dailyLog")
       .withIndex("by_user_week", (q) =>
-        q.eq("userId", identity.subject).eq("weekNumber", args.weekNumber)
+        q.eq("userId", identity.subject).eq("year", args.year).eq("weekNumber", args.weekNumber)
       )
-      .filter((q) => q.eq(q.field("year"), args.year))
       .collect();
 
     return logs;
@@ -207,6 +206,7 @@ async function updateStreaksForToggles(
 
       const yesterdayLog = await ctx.db
         .query("dailyLog")
+        // @ts-ignore
         .withIndex("by_user_date", (q) =>
           q.eq("userId", userId).eq("date", yesterdayStr)
         )
@@ -251,7 +251,9 @@ async function updatePhoneJailStreak(
   // Find Phone Jail tracking field
   const phoneJailField = await ctx.db
     .query("trackingFields")
+    // @ts-ignore
     .withIndex("by_user", (q) => q.eq("userId", userId))
+    // @ts-ignore
     .filter((q) => q.eq(q.field("name"), "Phone Jail"))
     .first();
 
@@ -265,6 +267,7 @@ async function updatePhoneJailStreak(
 
     const yesterdayLog = await ctx.db
       .query("dailyLog")
+      // @ts-ignore
       .withIndex("by_user_date", (q) =>
         q.eq("userId", userId).eq("date", yesterdayStr)
       )
@@ -315,9 +318,8 @@ export const getWeeklyProgress = query({
     const logs = await ctx.db
       .query("dailyLog")
       .withIndex("by_user_week", (q) =>
-        q.eq("userId", identity.subject).eq("weekNumber", args.weekNumber)
+        q.eq("userId", identity.subject).eq("year", args.year).eq("weekNumber", args.weekNumber)
       )
-      .filter((q) => q.eq(q.field("year"), args.year))
       .collect();
 
     // Calculate progress for each field

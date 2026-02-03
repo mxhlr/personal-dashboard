@@ -8,9 +8,14 @@
  * @module
  */
 
+import type * as analytics from "../analytics.js";
+import type * as annualReview from "../annualReview.js";
 import type * as dailyLog from "../dailyLog.js";
+import type * as monthlyReview from "../monthlyReview.js";
+import type * as quarterlyReview from "../quarterlyReview.js";
 import type * as trackingFields from "../trackingFields.js";
 import type * as userProfile from "../userProfile.js";
+import type * as weeklyReview from "../weeklyReview.js";
 
 import type {
   ApiFromModules,
@@ -19,9 +24,14 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  analytics: typeof analytics;
+  annualReview: typeof annualReview;
   dailyLog: typeof dailyLog;
+  monthlyReview: typeof monthlyReview;
+  quarterlyReview: typeof quarterlyReview;
   trackingFields: typeof trackingFields;
   userProfile: typeof userProfile;
+  weeklyReview: typeof weeklyReview;
 }>;
 
 /**

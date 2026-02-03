@@ -1,6 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-import { getAuthUserId } from "@convex-dev/auth/server";
+
 
 /**
  * Get the monthly review for a specific year and month
@@ -11,17 +11,17 @@ export const getMonthlyReview = query({
     month: v.number(),
   },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
       throw new Error("Not authenticated");
     }
 
     const review = await ctx.db
       .query("monthlyReview")
       .withIndex("by_user_year_month", (q) =>
-        q.eq("userId", userId).eq("year", args.year).eq("month", args.month)
+        q.eq("userId", identity.subject).eq("year", args.year).eq("month", args.month)
       )
-      .unique();
+      .first();
 
     return review;
   },
@@ -44,8 +44,8 @@ export const submitMonthlyReview = mutation({
     }),
   },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
       throw new Error("Not authenticated");
     }
 
@@ -53,9 +53,9 @@ export const submitMonthlyReview = mutation({
     const existingReview = await ctx.db
       .query("monthlyReview")
       .withIndex("by_user_year_month", (q) =>
-        q.eq("userId", userId).eq("year", args.year).eq("month", args.month)
+        q.eq("userId", identity.subject).eq("year", args.year).eq("month", args.month)
       )
-      .unique();
+      .first();
 
     if (existingReview) {
       // Update existing review
@@ -67,7 +67,7 @@ export const submitMonthlyReview = mutation({
     } else {
       // Create new review
       const reviewId = await ctx.db.insert("monthlyReview", {
-        userId,
+        userId: identity.subject,
         year: args.year,
         month: args.month,
         responses: args.responses,

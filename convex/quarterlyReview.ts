@@ -1,6 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-import { getAuthUserId } from "@convex-dev/auth/server";
+
 
 /**
  * Get the quarterly review for a specific year and quarter
@@ -11,17 +11,17 @@ export const getQuarterlyReview = query({
     quarter: v.number(),
   },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
       throw new Error("Not authenticated");
     }
 
     const review = await ctx.db
       .query("quarterlyReview")
       .withIndex("by_user_year_quarter", (q) =>
-        q.eq("userId", userId).eq("year", args.year).eq("quarter", args.quarter)
+        q.eq("userId", identity.subject).eq("year", args.year).eq("quarter", args.quarter)
       )
-      .unique();
+      .first();
 
     return review;
   },
@@ -36,15 +36,15 @@ export const getCurrentQuarterMilestones = query({
     quarter: v.number(),
   },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
       throw new Error("Not authenticated");
     }
 
     const profile = await ctx.db
       .query("userProfile")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
-      .unique();
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .first();
 
     if (!profile) {
       return [];
@@ -89,16 +89,16 @@ export const submitQuarterlyReview = mutation({
     ),
   },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
       throw new Error("Not authenticated");
     }
 
     // Update milestones in userProfile based on milestoneReview
     const profile = await ctx.db
       .query("userProfile")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
-      .unique();
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .first();
 
     if (profile) {
       // Update completion status of reviewed milestones
@@ -138,9 +138,9 @@ export const submitQuarterlyReview = mutation({
     const existingReview = await ctx.db
       .query("quarterlyReview")
       .withIndex("by_user_year_quarter", (q) =>
-        q.eq("userId", userId).eq("year", args.year).eq("quarter", args.quarter)
+        q.eq("userId", identity.subject).eq("year", args.year).eq("quarter", args.quarter)
       )
-      .unique();
+      .first();
 
     if (existingReview) {
       // Update existing review
@@ -154,7 +154,7 @@ export const submitQuarterlyReview = mutation({
     } else {
       // Create new review
       const reviewId = await ctx.db.insert("quarterlyReview", {
-        userId,
+        userId: identity.subject,
         year: args.year,
         quarter: args.quarter,
         milestoneReview: args.milestoneReview,

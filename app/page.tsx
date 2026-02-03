@@ -11,6 +11,7 @@ import { WeeklyReviewForm } from "@/components/reviews/WeeklyReviewForm";
 import { MonthlyReviewForm } from "@/components/reviews/MonthlyReviewForm";
 import { QuarterlyReviewForm } from "@/components/reviews/QuarterlyReviewForm";
 import { AnnualReviewForm } from "@/components/reviews/AnnualReviewForm";
+import { DataView } from "@/components/data/DataView";
 
 type ReviewType = "daily" | "weekly" | "monthly" | "quarterly" | "annual";
 type TabType = "planning" | "data" | "coach";
@@ -105,24 +106,14 @@ export default function DashboardPage() {
         {/* Tab 2: Data View */}
         {activeTab === "data" && (
           <div>
-            <h2 className="text-2xl font-bold mb-4">Data View</h2>
-            <div className="bg-card border border-border rounded-lg p-6">
-              <p className="text-muted-foreground">
-                Data visualization will be here...
-              </p>
-            </div>
+            <DataView selectedView={selectedReview} />
           </div>
         )}
 
         {/* Tab 3: Coach */}
         {activeTab === "coach" && (
           <div>
-            <h2 className="text-2xl font-bold mb-4">Coach</h2>
-            <div className="bg-card border border-border rounded-lg p-6">
-              <p className="text-muted-foreground">
-                AI Coach chat interface will be here...
-              </p>
-            </div>
+            <CoachChat />
           </div>
         )}
       </main>
