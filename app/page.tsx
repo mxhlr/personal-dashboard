@@ -6,9 +6,30 @@ import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
 import Header from "@/components/layout/Header";
 import { DailyTracker } from "@/components/dashboard/DailyTracker";
+import { CoachChat } from "@/components/coach/CoachChat";
+import { WeeklyReviewForm } from "@/components/reviews/WeeklyReviewForm";
+import { MonthlyReviewForm } from "@/components/reviews/MonthlyReviewForm";
+import { QuarterlyReviewForm } from "@/components/reviews/QuarterlyReviewForm";
+import { AnnualReviewForm } from "@/components/reviews/AnnualReviewForm";
 
 type ReviewType = "daily" | "weekly" | "monthly" | "quarterly" | "annual";
 type TabType = "planning" | "data" | "coach";
+
+// Helper function to get current week number (ISO 8601)
+function getWeekNumber(date: Date): number {
+  const d = new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+  );
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
+}
+
+// Helper function to get current quarter
+function getQuarter(date: Date): number {
+  return Math.floor(date.getMonth() / 3) + 1;
+}
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -16,6 +37,13 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<TabType>("planning");
   const [selectedReview, setSelectedReview] = useState<ReviewType>("daily");
   const [settingsOpen, setSettingsOpen] = useState(false);
+
+  // Get current date info for reviews
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth() + 1; // 1-12
+  const currentWeek = getWeekNumber(now);
+  const currentQuarter = getQuarter(now);
 
   // Redirect to setup if not completed
   useEffect(() => {
@@ -57,47 +85,19 @@ export default function DashboardPage() {
             )}
 
             {selectedReview === "weekly" && (
-              <div>
-                <h2 className="text-2xl font-bold mb-4">Weekly Review</h2>
-                <div className="bg-card border border-border rounded-lg p-6">
-                  <p className="text-muted-foreground">
-                    Weekly review form (5 questions) will be here...
-                  </p>
-                </div>
-              </div>
+              <WeeklyReviewForm year={currentYear} weekNumber={currentWeek} />
             )}
 
             {selectedReview === "monthly" && (
-              <div>
-                <h2 className="text-2xl font-bold mb-4">Monthly Review</h2>
-                <div className="bg-card border border-border rounded-lg p-6">
-                  <p className="text-muted-foreground">
-                    Monthly review form (6 questions) will be here...
-                  </p>
-                </div>
-              </div>
+              <MonthlyReviewForm year={currentYear} month={currentMonth} />
             )}
 
             {selectedReview === "quarterly" && (
-              <div>
-                <h2 className="text-2xl font-bold mb-4">Quarterly Review</h2>
-                <div className="bg-card border border-border rounded-lg p-6">
-                  <p className="text-muted-foreground">
-                    Quarterly review form (milestones + 5 questions) will be here...
-                  </p>
-                </div>
-              </div>
+              <QuarterlyReviewForm year={currentYear} quarter={currentQuarter} />
             )}
 
             {selectedReview === "annual" && (
-              <div>
-                <h2 className="text-2xl font-bold mb-4">Annual Review</h2>
-                <div className="bg-card border border-border rounded-lg p-6">
-                  <p className="text-muted-foreground">
-                    Annual review form (North Stars + 6 questions) will be here...
-                  </p>
-                </div>
-              </div>
+              <AnnualReviewForm year={currentYear} />
             )}
           </div>
         )}
