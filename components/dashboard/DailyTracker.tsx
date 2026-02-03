@@ -16,7 +16,7 @@ import { toast } from "sonner";
 
 export function DailyTracker() {
   const today = new Date().toISOString().split("T")[0];
-  const [selectedDate, setSelectedDate] = useState(today);
+  const [selectedDate] = useState(today);
   const [isSaving, setIsSaving] = useState(false);
 
   const dailyLog = useQuery(api.dailyLog.getDailyLog, { date: selectedDate });
@@ -234,7 +234,7 @@ export function DailyTracker() {
     <div className="max-w-4xl mx-auto px-6 py-8 space-y-6">
       {/* Header */}
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-semibold">Today's Log</h1>
+        <h1 className="text-3xl font-semibold">Today&apos;s Log</h1>
         <p className="text-sm text-muted-foreground">
           {new Date(selectedDate).toLocaleDateString("en-US", {
             weekday: "long",
