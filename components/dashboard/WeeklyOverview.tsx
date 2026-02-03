@@ -4,7 +4,6 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { startOfWeek, endOfWeek, eachDayOfInterval, format } from "date-fns";
 import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import {
   Table,
   TableBody,
@@ -43,12 +42,12 @@ export function WeeklyOverview({ selectedDate = new Date() }: WeeklyOverviewProp
 
   // Calculate goal progress
   const movementGoal = {
-    completed: dailyLogs.filter(log => log.movement && log.movement.trim() !== "").length,
+    completed: dailyLogs.filter(log => log.tracking.movement && log.tracking.movement.trim() !== "").length,
     target: 5,
   };
 
   const phoneJailGoal = {
-    completed: dailyLogs.filter(log => log.phoneJail === true).length,
+    completed: dailyLogs.filter(log => log.tracking.phoneJail === true).length,
     target: 5,
   };
 
@@ -58,16 +57,32 @@ export function WeeklyOverview({ selectedDate = new Date() }: WeeklyOverviewProp
       (l) => format(new Date(l.date), "yyyy-MM-dd") === format(date, "yyyy-MM-dd")
     );
 
-    if (!log) return { data: {}, progress: 0 };
+    if (!log) {
+      return {
+        data: {
+          tracking: {
+            movement: undefined,
+            phoneJail: undefined,
+            vibes: undefined,
+            breakfast: undefined,
+            lunch: undefined,
+            dinner: undefined,
+            workHours: undefined,
+            workNotes: undefined,
+          }
+        },
+        progress: 0
+      };
+    }
 
     const fields = trackingFields?.length || 1;
     let filled = 0;
 
-    if (log.movement) filled++;
-    if (log.phoneJail !== undefined) filled++;
-    if (log.vibes) filled++;
-    if (log.breakfast || log.lunch || log.dinner) filled++;
-    if (log.work) filled++;
+    if (log.tracking.movement) filled++;
+    if (log.tracking.phoneJail !== undefined) filled++;
+    if (log.tracking.vibes) filled++;
+    if (log.tracking.breakfast || log.tracking.lunch || log.tracking.dinner) filled++;
+    if (log.tracking.workHours || log.tracking.workNotes) filled++;
 
     const progress = Math.round((filled / fields) * 100);
 
@@ -139,7 +154,7 @@ export function WeeklyOverview({ selectedDate = new Date() }: WeeklyOverviewProp
           <TableBody>
             {daysInWeek.map((day) => {
               const { data, progress } = getDailyProgress(day);
-              const mealsCompleted = [data.breakfast, data.lunch, data.dinner].filter(Boolean).length;
+              const mealsCompleted = [data.tracking?.breakfast, data.tracking?.lunch, data.tracking?.dinner].filter(Boolean).length;
 
               return (
                 <TableRow key={day.toISOString()} className="hover:bg-muted/30">
@@ -151,30 +166,30 @@ export function WeeklyOverview({ selectedDate = new Date() }: WeeklyOverviewProp
                   </TableCell>
                   <TableCell>
                     <div className="text-sm text-muted-foreground">
-                      {data.movement ? "✓" : "-"}
+                      {data.tracking?.movement ? "✓" : "-"}
                     </div>
                   </TableCell>
                   <TableCell>
                     <div className="text-sm text-muted-foreground">
-                      {data.phoneJail === true ? "✓" : data.phoneJail === false ? "✗" : "-"}
+                      {data.tracking?.phoneJail === true ? "✓" : data.tracking?.phoneJail === false ? "✗" : "-"}
                     </div>
                   </TableCell>
                   <TableCell>
                     <div className="text-sm text-muted-foreground">
-                      {data.vibes ? "✓" : "-"}
+                      {data.tracking?.vibes ? "✓" : "-"}
                     </div>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2 text-xs">
-                      <span className={data.breakfast ? "text-foreground" : "text-muted-foreground/40"}>B</span>
-                      <span className={data.lunch ? "text-foreground" : "text-muted-foreground/40"}>L</span>
-                      <span className={data.dinner ? "text-foreground" : "text-muted-foreground/40"}>D</span>
+                      <span className={data.tracking?.breakfast ? "text-foreground" : "text-muted-foreground/40"}>B</span>
+                      <span className={data.tracking?.lunch ? "text-foreground" : "text-muted-foreground/40"}>L</span>
+                      <span className={data.tracking?.dinner ? "text-foreground" : "text-muted-foreground/40"}>D</span>
                       <span className="text-muted-foreground">{mealsCompleted}/3</span>
                     </div>
                   </TableCell>
                   <TableCell>
                     <div className="text-sm text-muted-foreground">
-                      {data.work ? "✓" : "-"}
+                      {data.tracking?.workHours || data.tracking?.workNotes ? "✓" : "-"}
                     </div>
                   </TableCell>
                   <TableCell className="text-right">
