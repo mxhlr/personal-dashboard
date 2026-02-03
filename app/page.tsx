@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Header from "@/components/layout/Header";
@@ -38,11 +37,9 @@ function getQuarter(date: Date): number {
 export default function DashboardPage() {
   const router = useRouter();
   const hasCompletedSetup = useQuery(api.userProfile.hasCompletedSetup);
-  const adminCleanupFields = useMutation(api.trackingFields.adminCleanupFields);
   const [activeTab, setActiveTab] = useState<TabType>("planning");
   const [selectedReview, setSelectedReview] = useState<ReviewType>("daily");
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [isCleaningUp, setIsCleaningUp] = useState(false);
 
   // Get current date info for reviews
   const now = new Date();
@@ -61,29 +58,6 @@ export default function DashboardPage() {
       console.log("Setup is completed, staying on dashboard");
     }
   }, [hasCompletedSetup, router]);
-
-  const handleCleanup = async () => {
-    if (isCleaningUp) return;
-
-    if (!confirm("Duplikate entfernen? (z.B. doppelte Phone Jail Felder)")) {
-      return;
-    }
-
-    setIsCleaningUp(true);
-    try {
-      const result = await adminCleanupFields();
-      toast.success(`✓ ${result.deleted} Duplikate entfernt, ${result.fixed} Felder repariert!`);
-      // Refresh page to show updated data
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
-    } catch (error) {
-      console.error("Cleanup failed:", error);
-      toast.error("Fehler beim Cleanup");
-    } finally {
-      setIsCleaningUp(false);
-    }
-  };
 
   // Show loading while checking setup status
   if (hasCompletedSetup === undefined || hasCompletedSetup === false) {
@@ -106,7 +80,6 @@ export default function DashboardPage() {
           selectedReview={selectedReview}
           onReviewChange={setSelectedReview}
           onSettingsClick={() => setSettingsOpen(true)}
-          onCleanupClick={handleCleanup}
         />
 
         <main className="container mx-auto px-4 py-8">
