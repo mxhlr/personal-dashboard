@@ -12,6 +12,7 @@ import { MonthlyReviewForm } from "@/components/reviews/MonthlyReviewForm";
 import { QuarterlyReviewForm } from "@/components/reviews/QuarterlyReviewForm";
 import { AnnualReviewForm } from "@/components/reviews/AnnualReviewForm";
 import { DataView } from "@/components/data/DataView";
+import { SettingsModal } from "@/components/settings/SettingsModal";
 
 type ReviewType = "daily" | "weekly" | "monthly" | "quarterly" | "annual";
 type TabType = "planning" | "data" | "coach";
@@ -118,23 +119,11 @@ export default function DashboardPage() {
         )}
       </main>
 
-      {/* Settings Modal Placeholder */}
-      {settingsOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-card border border-border rounded-lg p-6 max-w-md w-full">
-            <h2 className="text-xl font-bold mb-4">Einstellungen</h2>
-            <p className="text-muted-foreground mb-4">
-              Settings modal will be implemented in Phase 7...
-            </p>
-            <button
-              onClick={() => setSettingsOpen(false)}
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-md"
-            >
-              Schließen
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Settings Modal */}
+      <SettingsModal
+        isOpen={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+      />
     </div>
   );
 }

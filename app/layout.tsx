@@ -5,6 +5,7 @@ import ConvexClientProvider from "@/components/ConvexClientProvider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import ClientBody from "@/components/ClientBody";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -57,6 +58,7 @@ export default function RootLayout({
             }}
           >
             <ConvexClientProvider>{children}</ConvexClientProvider>
+            <Toaster richColors position="top-right" />
           </ClerkProvider>
         </ClientBody>
       </body>
