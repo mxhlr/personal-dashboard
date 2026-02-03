@@ -465,7 +465,7 @@ export function DailyTracker() {
         </div>
 
         {/* Actions */}
-        <div className="sticky bottom-0 bg-card/95 backdrop-blur-sm border-t pt-4 -mx-6 px-6 pb-6 space-y-4">
+        <div className="border-t pt-4 space-y-4">
           <div className="flex items-center gap-4">
             <Button
               onClick={handleSave}
