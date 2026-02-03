@@ -34,8 +34,11 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const toggleFieldActive = useMutation(api.trackingFields.toggleFieldActive);
   const updateWeeklyTarget = useMutation(api.trackingFields.updateWeeklyTarget);
   const deleteTrackingField = useMutation(api.trackingFields.deleteTrackingField);
+  const createTrackingField = useMutation(api.trackingFields.createTrackingField);
 
   const [isSaving, setIsSaving] = useState(false);
+  const [newFieldName, setNewFieldName] = useState("");
+  const [isAddingField, setIsAddingField] = useState(false);
 
   // Profile form state
   const [profileForm, setProfileForm] = useState({
@@ -134,6 +137,29 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     } catch (error) {
       console.error("Failed to delete field:", error);
       toast.error("Fehler beim Löschen");
+    }
+  };
+
+  const handleAddField = async () => {
+    if (!newFieldName.trim()) {
+      toast.error("Bitte Feldname eingeben");
+      return;
+    }
+
+    setIsAddingField(true);
+    try {
+      await createTrackingField({
+        name: newFieldName.trim(),
+        type: "text",
+        hasStreak: false,
+      });
+      toast.success("Feld hinzugefügt!");
+      setNewFieldName("");
+    } catch (error) {
+      console.error("Failed to add field:", error);
+      toast.error("Fehler beim Hinzufügen");
+    } finally {
+      setIsAddingField(false);
     }
   };
 
@@ -301,6 +327,21 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               <p className="text-sm text-muted-foreground mb-4">
                 Verwalte deine täglichen Tracking-Felder
               </p>
+
+              {/* Add Custom Field */}
+              <div className="flex gap-2 pb-4 border-b">
+                <Input
+                  placeholder="Neues Feld hinzufügen..."
+                  value={newFieldName}
+                  onChange={(e) => setNewFieldName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleAddField();
+                  }}
+                />
+                <Button onClick={handleAddField} disabled={isAddingField}>
+                  {isAddingField ? "..." : "Hinzufügen"}
+                </Button>
+              </div>
 
               <div className="space-y-3">
                 {trackingFields.map((field) => (
