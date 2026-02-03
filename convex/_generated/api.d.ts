@@ -18,6 +18,7 @@ import type * as quarterlyReview from "../quarterlyReview.js";
 import type * as settings from "../settings.js";
 import type * as trackingFields from "../trackingFields.js";
 import type * as userProfile from "../userProfile.js";
+import type * as visionboard from "../visionboard.js";
 import type * as weeklyReview from "../weeklyReview.js";
 
 import type {
@@ -37,6 +38,7 @@ declare const fullApi: ApiFromModules<{
   settings: typeof settings;
   trackingFields: typeof trackingFields;
   userProfile: typeof userProfile;
+  visionboard: typeof visionboard;
   weeklyReview: typeof weeklyReview;
 }>;
 

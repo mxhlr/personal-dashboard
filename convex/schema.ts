@@ -265,4 +265,16 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_user_timestamp", ["userId", "timestamp"]),
+
+  // ============================================
+  // VISIONBOARD
+  // ============================================
+
+  visionboard: defineTable({
+    userId: v.string(), // Clerk user ID
+    storageId: v.id("_storage"), // Convex file storage ID
+    createdAt: v.string(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_created", ["userId", "createdAt"]),
 });

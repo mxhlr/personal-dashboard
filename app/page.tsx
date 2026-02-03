@@ -8,6 +8,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Header from "@/components/layout/Header";
 import { DailyTracker } from "@/components/dashboard/DailyTracker";
 import { WeeklyOverview } from "@/components/dashboard/WeeklyOverview";
+import { Visionboard } from "@/components/visionboard/Visionboard";
 import { CoachChat } from "@/components/coach/CoachChat";
 import { WeeklyReviewForm } from "@/components/reviews/WeeklyReviewForm";
 import { MonthlyReviewForm } from "@/components/reviews/MonthlyReviewForm";
@@ -24,7 +25,7 @@ import {
 } from "@/components/ui/select";
 
 type ReviewType = "daily" | "weekly" | "monthly" | "quarterly" | "annual";
-type TabType = "planning" | "data" | "coach";
+type TabType = "visionboard" | "planning" | "data" | "coach";
 type DataViewType = "weekly" | "monthly" | "quarterly" | "annual";
 
 // Helper function to get current week number (ISO 8601)
@@ -46,7 +47,7 @@ function getQuarter(date: Date): number {
 export default function DashboardPage() {
   const router = useRouter();
   const hasCompletedSetup = useQuery(api.userProfile.hasCompletedSetup);
-  const [activeTab, setActiveTab] = useState<TabType>("planning");
+  const [activeTab, setActiveTab] = useState<TabType>("visionboard");
   const [selectedReview, setSelectedReview] = useState<ReviewType>("daily");
   const [selectedDataView, setSelectedDataView] = useState<DataViewType>("weekly");
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -98,6 +99,13 @@ export default function DashboardPage() {
         />
 
         <main>
+          {/* Tab 0: Visionboard */}
+          {activeTab === "visionboard" && (
+            <div className="container mx-auto px-4 py-8">
+              <Visionboard />
+            </div>
+          )}
+
           {/* Tab 1: Planning & Review */}
           {activeTab === "planning" && (
             <div className="container mx-auto px-4 py-8 space-y-6">
