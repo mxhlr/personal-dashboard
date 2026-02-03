@@ -75,8 +75,18 @@ export default function Step5Tracking({
   const addCustomField = () => {
     if (!customFieldName.trim()) return;
 
+    // Check if field already exists (case-insensitive)
+    const fieldExists = data.trackingFields.some(
+      (f) => f.name.toLowerCase() === customFieldName.trim().toLowerCase()
+    );
+
+    if (fieldExists) {
+      alert(`Ein Feld mit dem Namen "${customFieldName}" existiert bereits.`);
+      return;
+    }
+
     const newField = {
-      name: customFieldName,
+      name: customFieldName.trim(),
       type: "text",
       hasStreak: false,
       weeklyTarget: undefined,

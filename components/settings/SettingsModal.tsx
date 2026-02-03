@@ -33,6 +33,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const updateCoachTone = useMutation(api.settings.updateCoachTone);
   const toggleFieldActive = useMutation(api.trackingFields.toggleFieldActive);
   const updateWeeklyTarget = useMutation(api.trackingFields.updateWeeklyTarget);
+  const deleteTrackingField = useMutation(api.trackingFields.deleteTrackingField);
 
   const [isSaving, setIsSaving] = useState(false);
 
@@ -121,6 +122,18 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     } catch (error) {
       console.error("Failed to update weekly target:", error);
       toast.error("Fehler beim Speichern");
+    }
+  };
+
+  const handleDeleteField = async (fieldId: Id<"trackingFields">) => {
+    if (!confirm("Möchtest du dieses Feld wirklich löschen?")) return;
+
+    try {
+      await deleteTrackingField({ fieldId });
+      toast.success("Feld gelöscht!");
+    } catch (error) {
+      console.error("Failed to delete field:", error);
+      toast.error("Fehler beim Löschen");
     }
   };
 
@@ -335,15 +348,26 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                         </div>
                       )}
                     </div>
-                    <Button
-                      variant={field.isActive ? "default" : "outline"}
-                      size="sm"
-                      onClick={() =>
-                        handleToggleField(field._id, !field.isActive)
-                      }
-                    >
-                      {field.isActive ? "Aktiv" : "Inaktiv"}
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant={field.isActive ? "default" : "outline"}
+                        size="sm"
+                        onClick={() =>
+                          handleToggleField(field._id, !field.isActive)
+                        }
+                      >
+                        {field.isActive ? "Aktiv" : "Inaktiv"}
+                      </Button>
+                      {!field.isDefault && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteField(field._id)}
+                        >
+                          Löschen
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>

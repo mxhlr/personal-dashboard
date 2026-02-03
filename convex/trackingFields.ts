@@ -143,3 +143,26 @@ export const updateWeeklyTarget = mutation({
     });
   },
 });
+
+// Delete tracking field (only custom fields, not defaults)
+export const deleteTrackingField = mutation({
+  args: {
+    fieldId: v.id("trackingFields"),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const field = await ctx.db.get(args.fieldId);
+    if (!field || field.userId !== identity.subject) {
+      throw new Error("Field not found");
+    }
+
+    // Only allow deleting custom fields (not default fields)
+    if (field.isDefault) {
+      throw new Error("Cannot delete default fields");
+    }
+
+    await ctx.db.delete(args.fieldId);
+  },
+});

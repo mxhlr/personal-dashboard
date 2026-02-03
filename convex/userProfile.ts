@@ -64,6 +64,28 @@ export const createUserProfile = mutation({
 
     const now = new Date().toISOString();
 
+    // Check if profile already exists
+    const existingProfile = await ctx.db
+      .query("userProfile")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .first();
+
+    if (existingProfile) {
+      // Update existing profile instead of creating a new one
+      await ctx.db.patch(existingProfile._id, {
+        name: args.name,
+        role: args.role,
+        mainProject: args.mainProject,
+        northStars: args.northStars,
+        quarterlyMilestones: args.quarterlyMilestones,
+        coachTone: args.coachTone,
+        setupCompleted: true,
+        setupDate: existingProfile.setupDate || now,
+        updatedAt: now,
+      });
+      return existingProfile._id;
+    }
+
     const profileId = await ctx.db.insert("userProfile", {
       userId: identity.subject,
       name: args.name,
