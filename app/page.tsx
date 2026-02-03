@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Header from "@/components/layout/Header";
 import { DailyTracker } from "@/components/dashboard/DailyTracker";
+import { WeeklyOverview } from "@/components/dashboard/WeeklyOverview";
 import { CoachChat } from "@/components/coach/CoachChat";
 import { WeeklyReviewForm } from "@/components/reviews/WeeklyReviewForm";
 import { MonthlyReviewForm } from "@/components/reviews/MonthlyReviewForm";
@@ -161,8 +162,11 @@ export default function DashboardPage() {
                 </Select>
               </div>
 
-              {/* Data View - Convert selectedDataView to ReviewType for DataView component */}
-              <DataView selectedView={selectedDataView as ReviewType} />
+              {/* Data Views */}
+              {selectedDataView === "weekly" && <WeeklyOverview selectedDate={now} />}
+              {selectedDataView !== "weekly" && (
+                <DataView selectedView={selectedDataView as ReviewType} />
+              )}
             </div>
           )}
 

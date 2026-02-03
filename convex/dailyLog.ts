@@ -46,6 +46,33 @@ export const getWeeklyLogs = query({
   },
 });
 
+// Get logs for a date range (for weekly overview)
+export const getWeekLogs = query({
+  args: {
+    startDate: v.string(), // ISO string
+    endDate: v.string(),   // ISO string
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const logs = await ctx.db
+      .query("dailyLog")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .filter((q) =>
+        q.and(
+          q.gte(q.field("date"), args.startDate.split("T")[0]),
+          q.lte(q.field("date"), args.endDate.split("T")[0])
+        )
+      )
+      .collect();
+
+    return logs;
+  },
+});
+
 // Create or update daily log
 export const upsertDailyLog = mutation({
   args: {
