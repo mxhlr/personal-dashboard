@@ -12,8 +12,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "VIBED",
-  description: "Welcome to VIBED",
+  title: "Personal Dashboard",
+  description: "Track your goals, review your progress, and get AI coaching",
   icons: {
     icon: "/convex.svg",
   },
