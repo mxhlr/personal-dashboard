@@ -26,7 +26,7 @@ interface SettingsModalProps {
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const profile = useQuery(api.settings.getProfile);
-  const trackingFields = useQuery(api.trackingFields.getActiveTrackingFields);
+  const trackingFields = useQuery(api.trackingFields.getAllTrackingFields);
 
   const updateProfile = useMutation(api.settings.updateProfile);
   const updateNorthStars = useMutation(api.settings.updateNorthStars);

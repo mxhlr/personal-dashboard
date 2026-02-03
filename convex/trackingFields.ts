@@ -23,6 +23,22 @@ export const getActiveTrackingFields = query({
   },
 });
 
+// Get all tracking fields for user (active and inactive)
+export const getAllTrackingFields = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const fields = await ctx.db
+      .query("trackingFields")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .collect();
+
+    return fields.sort((a, b) => a.order - b.order);
+  },
+});
+
 // Create default tracking fields (during onboarding)
 export const createDefaultTrackingFields = mutation({
   args: {
