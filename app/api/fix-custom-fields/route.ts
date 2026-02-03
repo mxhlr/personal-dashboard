@@ -3,15 +3,20 @@ import { auth } from "@clerk/nextjs/server";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "@/convex/_generated/api";
 
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-
 export async function POST() {
   try {
-    const { userId } = await auth();
+    const { getToken } = await auth();
 
-    if (!userId) {
+    // Get the Clerk JWT token for Convex authentication
+    const token = await getToken({ template: "convex" });
+
+    if (!token) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
+
+    // Create authenticated Convex client
+    const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+    convex.setAuth(token);
 
     // Call the fixCustomFields mutation
     const result = await convex.mutation(api.trackingFields.fixCustomFields, {});
