@@ -50,8 +50,12 @@ export default function DashboardPage() {
 
   // Redirect to setup if not completed
   useEffect(() => {
+    console.log("Dashboard - hasCompletedSetup:", hasCompletedSetup);
     if (hasCompletedSetup === false) {
+      console.log("Redirecting to setup because hasCompletedSetup is false");
       router.push("/setup");
+    } else if (hasCompletedSetup === true) {
+      console.log("Setup is completed, staying on dashboard");
     }
   }, [hasCompletedSetup, router]);
 
