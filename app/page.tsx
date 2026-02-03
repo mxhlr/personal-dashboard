@@ -5,6 +5,7 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
 import Header from "@/components/layout/Header";
+import { DailyTracker } from "@/components/dashboard/DailyTracker";
 
 type ReviewType = "daily" | "weekly" | "monthly" | "quarterly" | "annual";
 type TabType = "planning" | "data" | "coach";
@@ -49,22 +50,55 @@ export default function DashboardPage() {
         {/* Tab 1: Planning & Review */}
         {activeTab === "planning" && (
           <div>
-            <h2 className="text-2xl font-bold mb-4">
-              {selectedReview === "daily" && "Evening Review"}
-              {selectedReview === "weekly" && "Weekly Review"}
-              {selectedReview === "monthly" && "Monthly Review"}
-              {selectedReview === "quarterly" && "Quarterly Review"}
-              {selectedReview === "annual" && "Annual Review"}
-            </h2>
-            <div className="bg-card border border-border rounded-lg p-6">
-              <p className="text-muted-foreground">
-                {selectedReview === "daily" && "Daily tracking form will be here..."}
-                {selectedReview === "weekly" && "Weekly review form (5 questions) will be here..."}
-                {selectedReview === "monthly" && "Monthly review form (6 questions) will be here..."}
-                {selectedReview === "quarterly" && "Quarterly review form (milestones + 5 questions) will be here..."}
-                {selectedReview === "annual" && "Annual review form (North Stars + 6 questions) will be here..."}
-              </p>
-            </div>
+            {selectedReview === "daily" && (
+              <div className="bg-card border border-border rounded-lg">
+                <DailyTracker />
+              </div>
+            )}
+
+            {selectedReview === "weekly" && (
+              <div>
+                <h2 className="text-2xl font-bold mb-4">Weekly Review</h2>
+                <div className="bg-card border border-border rounded-lg p-6">
+                  <p className="text-muted-foreground">
+                    Weekly review form (5 questions) will be here...
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {selectedReview === "monthly" && (
+              <div>
+                <h2 className="text-2xl font-bold mb-4">Monthly Review</h2>
+                <div className="bg-card border border-border rounded-lg p-6">
+                  <p className="text-muted-foreground">
+                    Monthly review form (6 questions) will be here...
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {selectedReview === "quarterly" && (
+              <div>
+                <h2 className="text-2xl font-bold mb-4">Quarterly Review</h2>
+                <div className="bg-card border border-border rounded-lg p-6">
+                  <p className="text-muted-foreground">
+                    Quarterly review form (milestones + 5 questions) will be here...
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {selectedReview === "annual" && (
+              <div>
+                <h2 className="text-2xl font-bold mb-4">Annual Review</h2>
+                <div className="bg-card border border-border rounded-lg p-6">
+                  <p className="text-muted-foreground">
+                    Annual review form (North Stars + 6 questions) will be here...
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

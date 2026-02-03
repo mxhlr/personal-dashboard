@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as dailyLog from "../dailyLog.js";
 import type * as trackingFields from "../trackingFields.js";
 import type * as userProfile from "../userProfile.js";
 
@@ -18,6 +19,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  dailyLog: typeof dailyLog;
   trackingFields: typeof trackingFields;
   userProfile: typeof userProfile;
 }>;
