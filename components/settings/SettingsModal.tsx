@@ -399,7 +399,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       >
                         {field.isActive ? "Aktiv" : "Inaktiv"}
                       </Button>
-                      {!field.isDefault && (
+                      {!["Movement", "Phone Jail", "Vibes", "Breakfast", "Lunch", "Dinner", "Work Hours", "Work Notes"].includes(field.name) && (
                         <Button
                           variant="ghost"
                           size="sm"

@@ -187,7 +187,18 @@ export const deleteTrackingField = mutation({
     }
 
     // Only allow deleting custom fields (not default fields)
-    if (field.isDefault) {
+    const defaultFieldNames = [
+      "Movement",
+      "Phone Jail",
+      "Vibes",
+      "Breakfast",
+      "Lunch",
+      "Dinner",
+      "Work Hours",
+      "Work Notes",
+    ];
+
+    if (defaultFieldNames.includes(field.name)) {
       throw new Error("Cannot delete default fields");
     }
 
