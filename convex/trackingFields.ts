@@ -230,3 +230,83 @@ export const fixCustomFields = mutation({
     return { fixed: fixPromises.length };
   },
 });
+
+// Admin function: Clean up duplicate fields and fix isDefault flags
+export const adminCleanupFields = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const defaultFieldNames = [
+      "Movement",
+      "Phone Jail",
+      "Vibes",
+      "Breakfast",
+      "Lunch",
+      "Dinner",
+      "Work Hours",
+      "Work Notes",
+    ];
+
+    // Get all fields for this user
+    const fields = await ctx.db
+      .query("trackingFields")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .collect();
+
+    const results = {
+      fixed: 0,
+      deleted: 0,
+      duplicatesRemoved: [] as string[],
+      fieldsFixed: [] as string[],
+    };
+
+    // Group fields by name to find duplicates
+    const fieldsByName = new Map<string, typeof fields>();
+    for (const field of fields) {
+      const existing = fieldsByName.get(field.name);
+      if (!existing) {
+        fieldsByName.set(field.name, [field]);
+      } else {
+        existing.push(field);
+      }
+    }
+
+    // Process each field group
+    for (const [name, fieldsWithName] of Array.from(fieldsByName.entries())) {
+      const isDefaultField = defaultFieldNames.includes(name);
+
+      if (fieldsWithName.length > 1) {
+        // Handle duplicates - keep the oldest one, delete the rest
+        const sorted = fieldsWithName.sort((a, b) => a._creationTime - b._creationTime);
+        const keepField = sorted[0];
+        const deleteFields = sorted.slice(1);
+
+        // Fix the isDefault flag on the kept field
+        if (keepField.isDefault !== isDefaultField) {
+          await ctx.db.patch(keepField._id, { isDefault: isDefaultField });
+          results.fixed++;
+          results.fieldsFixed.push(name);
+        }
+
+        // Delete duplicates
+        for (const field of deleteFields) {
+          await ctx.db.delete(field._id);
+          results.deleted++;
+          results.duplicatesRemoved.push(name);
+        }
+      } else {
+        // Single field - just fix isDefault if needed
+        const field = fieldsWithName[0];
+        if (field.isDefault !== isDefaultField) {
+          await ctx.db.patch(field._id, { isDefault: isDefaultField });
+          results.fixed++;
+          results.fieldsFixed.push(name);
+        }
+      }
+    }
+
+    return results;
+  },
+});

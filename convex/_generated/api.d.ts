@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as adminFix from "../adminFix.js";
 import type * as analytics from "../analytics.js";
 import type * as annualReview from "../annualReview.js";
 import type * as coachMessages from "../coachMessages.js";
@@ -26,6 +27,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  adminFix: typeof adminFix;
   analytics: typeof analytics;
   annualReview: typeof annualReview;
   coachMessages: typeof coachMessages;
