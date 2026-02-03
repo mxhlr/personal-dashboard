@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Header from "@/components/layout/Header";
 import { DailyTracker } from "@/components/dashboard/DailyTracker";
 import { CoachChat } from "@/components/coach/CoachChat";
@@ -39,6 +40,7 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<TabType>("planning");
   const [selectedReview, setSelectedReview] = useState<ReviewType>("daily");
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Get current date info for reviews
   const now = new Date();
@@ -67,16 +69,17 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        selectedReview={selectedReview}
-        onReviewChange={setSelectedReview}
-        onSettingsClick={() => setSettingsOpen(true)}
-      />
+    <ErrorBoundary>
+      <div className="min-h-screen bg-background">
+        <Header
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          selectedReview={selectedReview}
+          onReviewChange={setSelectedReview}
+          onSettingsClick={() => setSettingsOpen(true)}
+        />
 
-      <main className="container mx-auto px-4 py-8">
+        <main className="container mx-auto px-4 py-8">
         {/* Tab 1: Planning & Review */}
         {activeTab === "planning" && (
           <div>
@@ -120,10 +123,11 @@ export default function DashboardPage() {
       </main>
 
       {/* Settings Modal */}
-      <SettingsModal
-        isOpen={settingsOpen}
-        onClose={() => setSettingsOpen(false)}
-      />
-    </div>
+        <SettingsModal
+          isOpen={settingsOpen}
+          onClose={() => setSettingsOpen(false)}
+        />
+      </div>
+    </ErrorBoundary>
   );
 }
