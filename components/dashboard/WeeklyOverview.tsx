@@ -28,8 +28,8 @@ export function WeeklyOverview({ selectedDate = new Date() }: WeeklyOverviewProp
 
   // Get all daily logs for the week
   const dailyLogs = useQuery(api.dailyLog.getWeekLogs, {
-    startDate: weekStart.toISOString(),
-    endDate: weekEnd.toISOString(),
+    startDate: format(weekStart, "yyyy-MM-dd"),
+    endDate: format(weekEnd, "yyyy-MM-dd"),
   });
 
   if (!trackingFields || !dailyLogs) {
