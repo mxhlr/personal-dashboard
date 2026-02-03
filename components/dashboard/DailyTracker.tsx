@@ -504,7 +504,7 @@ export function DailyTracker() {
 
       {/* Sidebar */}
       <div className="lg:col-span-1 space-y-6">
-        <div className="sticky top-24 bg-muted/50 rounded-lg p-4 shadow-sm">
+        <div className="bg-muted/50 rounded-lg p-4 shadow-sm">
           <WeeklyProgress />
         </div>
       </div>
