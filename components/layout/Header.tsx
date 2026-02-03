@@ -1,114 +1,83 @@
 "use client";
 
-import { Settings } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Settings, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
-
-type ReviewType = "daily" | "weekly" | "monthly" | "quarterly" | "annual";
 
 interface HeaderProps {
   activeTab: "planning" | "data" | "coach";
   onTabChange: (tab: "planning" | "data" | "coach") => void;
-  selectedReview: ReviewType;
-  onReviewChange: (review: ReviewType) => void;
   onSettingsClick: () => void;
+  onDateNavigation?: (direction: "prev" | "next" | "today") => void;
 }
 
 export default function Header({
   activeTab,
   onTabChange,
-  selectedReview,
-  onReviewChange,
   onSettingsClick,
+  onDateNavigation,
 }: HeaderProps) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const reviewLabels: Record<ReviewType, string> = {
-    daily: "Daily",
-    weekly: "Weekly",
-    monthly: "Monthly",
-    quarterly: "Quarterly",
-    annual: "Annual",
-  };
-
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-sm shadow-sm transition-shadow duration-200">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo/Title */}
-          <h1 className="text-xl font-semibold">Personal Coach</h1>
-
-          {/* Navigation */}
-          <nav className="flex items-center gap-2">
-            {/* Planning & Review Tab with Dropdown */}
-            {activeTab === "planning" ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="default"
-                    className="flex items-center gap-2"
-                  >
-                    Planning & Review
-                    <span className="text-xs">▼</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem onClick={() => onReviewChange("daily")}>
-                    <span className={selectedReview === "daily" ? "font-semibold" : ""}>
-                      ○ Daily
-                    </span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onReviewChange("weekly")}>
-                    <span className={selectedReview === "weekly" ? "font-semibold" : ""}>
-                      ○ Weekly
-                    </span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onReviewChange("monthly")}>
-                    <span className={selectedReview === "monthly" ? "font-semibold" : ""}>
-                      ○ Monthly
-                    </span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onReviewChange("quarterly")}>
-                    <span className={selectedReview === "quarterly" ? "font-semibold" : ""}>
-                      ○ Quarterly
-                    </span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onReviewChange("annual")}>
-                    <span className={selectedReview === "annual" ? "font-semibold" : ""}>
-                      ○ Annual
-                    </span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <Button
-                variant="ghost"
-                onClick={() => onTabChange("planning")}
-              >
-                Planning & Review
-              </Button>
-            )}
-
-            {/* Data Tab */}
+    <header className="sticky top-0 z-50 border-b border-border bg-card backdrop-blur-sm shadow-sm transition-shadow duration-200">
+      <div className="container mx-auto px-6 py-4">
+        <div className="flex items-center justify-between gap-8">
+          {/* Left: 3 Main Tabs */}
+          <nav className="flex items-center gap-1">
+            <Button
+              variant={activeTab === "planning" ? "default" : "ghost"}
+              onClick={() => onTabChange("planning")}
+              className="font-medium"
+            >
+              Planning & Review
+            </Button>
             <Button
               variant={activeTab === "data" ? "default" : "ghost"}
               onClick={() => onTabChange("data")}
+              className="font-medium"
             >
               Data
             </Button>
-
-            {/* Coach Tab */}
             <Button
               variant={activeTab === "coach" ? "default" : "ghost"}
               onClick={() => onTabChange("coach")}
+              className="font-medium"
             >
               Coach
             </Button>
+          </nav>
+
+          {/* Right: Date Navigation & Settings */}
+          <div className="flex items-center gap-2">
+            {/* Date Navigation (only show on Planning & Review tab) */}
+            {activeTab === "planning" && onDateNavigation && (
+              <div className="flex items-center gap-2 border border-border rounded-md">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => onDateNavigation("prev")}
+                  aria-label="Previous day"
+                  className="h-8 w-8"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => onDateNavigation("today")}
+                  className="h-8 px-3 text-sm font-medium"
+                >
+                  TODAY
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => onDateNavigation("next")}
+                  aria-label="Next day"
+                  className="h-8 w-8"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
 
             {/* Theme Toggle */}
             <ThemeToggle />
@@ -122,7 +91,7 @@ export default function Header({
             >
               <Settings className="h-5 w-5" />
             </Button>
-          </nav>
+          </div>
         </div>
       </div>
     </header>

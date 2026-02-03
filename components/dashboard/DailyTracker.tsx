@@ -8,17 +8,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
-import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { WeeklyProgress } from "./WeeklyProgress";
-import { Save, Check, Loader2 } from "lucide-react";
+import { TrackingCard } from "./TrackingCard";
+import { ProgressIndicator } from "./ProgressIndicator";
+import { Save, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export function DailyTracker() {
   const today = new Date().toISOString().split("T")[0];
   const [selectedDate, setSelectedDate] = useState(today);
   const [isSaving, setIsSaving] = useState(false);
-  const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
   const dailyLog = useQuery(api.dailyLog.getDailyLog, { date: selectedDate });
   const trackingFields = useQuery(api.trackingFields.getActiveTrackingFields);
@@ -68,7 +67,6 @@ export function DailyTracker() {
         }
       );
       setCompleted(dailyLog.completed);
-      setLastSaved(new Date(dailyLog._creationTime));
     } else {
       setTracking({
         movement: "",
@@ -89,7 +87,6 @@ export function DailyTracker() {
         stress: 5,
       });
       setCompleted(false);
-      setLastSaved(null);
     }
   }, [dailyLog]);
 
@@ -104,7 +101,6 @@ export function DailyTracker() {
         wellbeing,
         completed,
       });
-      setLastSaved(new Date());
       toast.success("Gespeichert", {
         description: "Deine Eingaben wurden erfolgreich gespeichert",
         duration: 2000,
@@ -180,6 +176,49 @@ export function DailyTracker() {
     return text?.value || "";
   };
 
+  // Calculate completion percentage
+  const calculateCompletion = (): number => {
+    let filled = 0;
+    let total = 0;
+
+    // Default fields
+    if (tracking.movement) filled++;
+    total++;
+
+    if (tracking.phoneJail) filled++;
+    total++;
+
+    if (tracking.vibes) filled++;
+    total++;
+
+    if (tracking.breakfast || tracking.lunch || tracking.dinner) filled++;
+    total++;
+
+    if (tracking.workHours > 0) filled++;
+    total++;
+
+    // Wellbeing (count as filled if not default value)
+    if (wellbeing.energy !== 5) filled++;
+    total++;
+    if (wellbeing.satisfaction !== 5) filled++;
+    total++;
+    if (wellbeing.stress !== 5) filled++;
+    total++;
+
+    // Custom fields
+    tracking.customToggles.forEach(() => {
+      filled++;
+      total++;
+    });
+
+    tracking.customTexts.forEach((t) => {
+      if (t.value) filled++;
+      total++;
+    });
+
+    return total > 0 ? (filled / total) * 100 : 0;
+  };
+
   if (trackingFields === undefined) {
     return (
       <div className="flex items-center justify-center p-12">
@@ -192,58 +231,43 @@ export function DailyTracker() {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
-      {/* Main Content */}
-      <div className="lg:col-span-2 space-y-6">
-        {/* Header with Save Status */}
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1">
-            <h2 className="text-2xl font-semibold">Daily Tracking</h2>
-            <p className="text-sm text-muted-foreground mt-1">
-              {new Date(selectedDate).toLocaleDateString("de-DE", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </p>
-            {lastSaved && (
-              <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                <Check className="h-3 w-3" />
-                Zuletzt gespeichert: {lastSaved.toLocaleTimeString("de-DE")}
-              </p>
-            )}
-          </div>
+    <div className="max-w-4xl mx-auto px-6 py-8 space-y-6">
+      {/* Header */}
+      <div className="text-center space-y-2">
+        <h1 className="text-3xl font-semibold">Today's Log</h1>
+        <p className="text-sm text-muted-foreground">
+          {new Date(selectedDate).toLocaleDateString("en-US", {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}
+        </p>
+      </div>
+
+      {/* Progress Indicator */}
+      <ProgressIndicator percentage={calculateCompletion()} />
+
+      {/* Tracking Cards */}
+      <div className="space-y-4">
+        {/* Movement */}
+        <TrackingCard label="Movement">
           <Input
-            type="date"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-            className="w-48"
+            placeholder="e.g., 10k steps, gym, running..."
+            value={tracking.movement}
+            onChange={(e) =>
+              setTracking({ ...tracking, movement: e.target.value })
+            }
+            className="text-base"
           />
-        </div>
+        </TrackingCard>
 
-        {/* Default Fields */}
-        <div className="space-y-6">
-          {/* Movement */}
-          <div className="space-y-2">
-            <Label htmlFor="movement">Movement</Label>
-            <Input
-              id="movement"
-              placeholder="z.B. 10k Schritte, Gym, Laufen..."
-              value={tracking.movement}
-              onChange={(e) =>
-                setTracking({ ...tracking, movement: e.target.value })
-              }
-              className="transition-colors duration-200"
-            />
-          </div>
-
-          {/* Phone Jail */}
-          <div className="space-y-2">
+        {/* Phone Jail */}
+        <TrackingCard label="Phone Jail">
+          <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <Label htmlFor="phoneJail">Phone Jail</Label>
+              <span className="text-sm text-muted-foreground">Completed today</span>
               <Switch
-                id="phoneJail"
                 checked={tracking.phoneJail}
                 onCheckedChange={(checked) =>
                   setTracking({ ...tracking, phoneJail: checked })
@@ -258,11 +282,10 @@ export function DailyTracker() {
                   setTracking({ ...tracking, phoneJailNotes: e.target.value })
                 }
                 rows={2}
-                className="transition-colors duration-200"
               />
             )}
             {trackingFields.find((f) => f.name === "Phone Jail") && (
-              <div className="text-xs text-muted-foreground bg-muted/50 rounded-md p-2">
+              <div className="text-xs text-muted-foreground">
                 Current Streak:{" "}
                 {trackingFields.find((f) => f.name === "Phone Jail")
                   ?.currentStreak || 0}{" "}
@@ -272,242 +295,199 @@ export function DailyTracker() {
               </div>
             )}
           </div>
+        </TrackingCard>
 
-          {/* Vibes */}
-          <div className="space-y-2">
-            <Label htmlFor="vibes">Vibes</Label>
-            <Textarea
-              id="vibes"
-              placeholder="Wie läuft der Tag so? Thoughts, Gefühle..."
-              value={tracking.vibes}
+        {/* Vibes */}
+        <TrackingCard label="Vibes">
+          <Textarea
+            placeholder="How's the day going? Thoughts, feelings..."
+            value={tracking.vibes}
+            onChange={(e) =>
+              setTracking({ ...tracking, vibes: e.target.value })
+            }
+            rows={3}
+            className="text-base"
+          />
+        </TrackingCard>
+
+        {/* Meals */}
+        <TrackingCard label="Meals">
+          <div className="space-y-3">
+            <Input
+              placeholder="Breakfast"
+              value={tracking.breakfast}
               onChange={(e) =>
-                setTracking({ ...tracking, vibes: e.target.value })
+                setTracking({ ...tracking, breakfast: e.target.value })
               }
-              rows={3}
-              className="transition-colors duration-200"
+            />
+            <Input
+              placeholder="Lunch"
+              value={tracking.lunch}
+              onChange={(e) =>
+                setTracking({ ...tracking, lunch: e.target.value })
+              }
+            />
+            <Input
+              placeholder="Dinner"
+              value={tracking.dinner}
+              onChange={(e) =>
+                setTracking({ ...tracking, dinner: e.target.value })
+              }
             />
           </div>
+        </TrackingCard>
 
-          {/* Meals */}
-          <div className="space-y-2">
-            <Label>Meals</Label>
-            <div className="grid grid-cols-3 gap-4">
+        {/* Work */}
+        <TrackingCard label="Work">
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-muted-foreground w-16">Hours:</span>
               <Input
-                placeholder="Breakfast"
-                value={tracking.breakfast}
+                type="number"
+                min={0}
+                max={24}
+                step={0.5}
+                value={tracking.workHours}
                 onChange={(e) =>
-                  setTracking({ ...tracking, breakfast: e.target.value })
+                  setTracking({
+                    ...tracking,
+                    workHours: parseFloat(e.target.value) || 0,
+                  })
                 }
-                className="transition-colors duration-200"
-              />
-              <Input
-                placeholder="Lunch"
-                value={tracking.lunch}
-                onChange={(e) =>
-                  setTracking({ ...tracking, lunch: e.target.value })
-                }
-                className="transition-colors duration-200"
-              />
-              <Input
-                placeholder="Dinner"
-                value={tracking.dinner}
-                onChange={(e) =>
-                  setTracking({ ...tracking, dinner: e.target.value })
-                }
-                className="transition-colors duration-200"
+                className="w-24"
               />
             </div>
+            <Textarea
+              placeholder="Notes..."
+              value={tracking.workNotes}
+              onChange={(e) =>
+                setTracking({ ...tracking, workNotes: e.target.value })
+              }
+              rows={2}
+            />
           </div>
+        </TrackingCard>
 
-          {/* Work */}
-          <div className="space-y-2">
-            <Label>Work</Label>
-            <div className="space-y-2">
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-muted-foreground">Hours:</span>
-                <Input
-                  type="number"
-                  min={0}
-                  max={24}
-                  step={0.5}
-                  value={tracking.workHours}
-                  onChange={(e) =>
-                    setTracking({
-                      ...tracking,
-                      workHours: parseFloat(e.target.value) || 0,
-                    })
-                  }
-                  className="w-24 transition-colors duration-200"
-                />
-              </div>
-              <Textarea
-                placeholder="Notes..."
-                value={tracking.workNotes}
-                onChange={(e) =>
-                  setTracking({ ...tracking, workNotes: e.target.value })
-                }
-                rows={2}
-                className="transition-colors duration-200"
-              />
-            </div>
-          </div>
-
-          {/* Custom Fields */}
-          {trackingFields.filter((f) => !f.isDefault).length > 0 && (
-            <div className="space-y-4 pt-4 border-t">
-              <h3 className="text-lg font-semibold">Custom Fields</h3>
-              {trackingFields
-                .filter((f) => !f.isDefault)
-                .map((field) => (
-                  <div key={field._id} className="space-y-2">
-                    {field.type === "toggle" ? (
-                      <>
-                        <div className="flex items-center justify-between">
-                          <Label htmlFor={field._id}>{field.name}</Label>
-                          <Switch
-                            id={field._id}
-                            checked={getToggleValue(field._id)}
-                            onCheckedChange={(checked) =>
-                              handleToggleChange(field._id, checked)
-                            }
-                          />
-                        </div>
-                        {field.hasStreak && (
-                          <div className="text-xs text-muted-foreground bg-muted/50 rounded-md p-2">
-                            Current Streak: {field.currentStreak || 0} | Longest:{" "}
-                            {field.longestStreak || 0}
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        <Label htmlFor={field._id}>{field.name}</Label>
-                        <Input
-                          id={field._id}
-                          placeholder={`${field.name}...`}
-                          value={getTextValue(field._id)}
-                          onChange={(e) =>
-                            handleTextChange(field._id, e.target.value)
-                          }
-                          className="transition-colors duration-200"
-                        />
-                      </>
-                    )}
+        {/* Custom Fields */}
+        {trackingFields.filter((f) => !f.isDefault).map((field) => (
+          <TrackingCard key={field._id} label={field.name}>
+            {field.type === "toggle" ? (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Completed today</span>
+                  <Switch
+                    checked={getToggleValue(field._id)}
+                    onCheckedChange={(checked) =>
+                      handleToggleChange(field._id, checked)
+                    }
+                  />
+                </div>
+                {field.hasStreak && (
+                  <div className="text-xs text-muted-foreground">
+                    Current Streak: {field.currentStreak || 0} | Longest:{" "}
+                    {field.longestStreak || 0}
                   </div>
-                ))}
+                )}
+              </div>
+            ) : (
+              <Input
+                placeholder={`Enter ${field.name.toLowerCase()}...`}
+                value={getTextValue(field._id)}
+                onChange={(e) =>
+                  handleTextChange(field._id, e.target.value)
+                }
+              />
+            )}
+          </TrackingCard>
+        ))}
+
+        {/* Wellbeing */}
+        <TrackingCard label="Energy">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">How energized do you feel?</span>
+              <span className="text-base font-medium tabular-nums">
+                {wellbeing.energy}/10
+              </span>
             </div>
+            <Slider
+              min={1}
+              max={10}
+              step={1}
+              value={[wellbeing.energy]}
+              onValueChange={(value) =>
+                setWellbeing({ ...wellbeing, energy: value[0] })
+              }
+            />
+          </div>
+        </TrackingCard>
+
+        <TrackingCard label="Satisfaction">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">How satisfied are you today?</span>
+              <span className="text-base font-medium tabular-nums">
+                {wellbeing.satisfaction}/10
+              </span>
+            </div>
+            <Slider
+              min={1}
+              max={10}
+              step={1}
+              value={[wellbeing.satisfaction]}
+              onValueChange={(value) =>
+                setWellbeing({ ...wellbeing, satisfaction: value[0] })
+              }
+            />
+          </div>
+        </TrackingCard>
+
+        <TrackingCard label="Stress">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">How stressed do you feel?</span>
+              <span className="text-base font-medium tabular-nums">
+                {wellbeing.stress}/10
+              </span>
+            </div>
+            <Slider
+              min={1}
+              max={10}
+              step={1}
+              value={[wellbeing.stress]}
+              onValueChange={(value) =>
+                setWellbeing({ ...wellbeing, stress: value[0] })
+              }
+            />
+          </div>
+        </TrackingCard>
+      </div>
+
+      {/* Save Button */}
+      <div className="flex justify-center pt-4">
+        <Button
+          onClick={handleSave}
+          size="lg"
+          disabled={isSaving}
+          className="px-8"
+        >
+          {isSaving ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              Saving...
+            </>
+          ) : (
+            <>
+              <Save className="h-4 w-4 mr-2" />
+              Save Changes
+            </>
           )}
-
-          {/* Wellbeing Sliders */}
-          <div className="space-y-6 pt-4 border-t">
-            <h3 className="text-lg font-semibold">Wellbeing</h3>
-
-            {/* Energy */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label>Energy</Label>
-                <span className="text-sm font-medium tabular-nums">
-                  {wellbeing.energy}/10
-                </span>
-              </div>
-              <Slider
-                min={1}
-                max={10}
-                step={1}
-                value={[wellbeing.energy]}
-                onValueChange={(value) =>
-                  setWellbeing({ ...wellbeing, energy: value[0] })
-                }
-                className="transition-colors duration-200"
-              />
-            </div>
-
-            {/* Satisfaction */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label>Satisfaction</Label>
-                <span className="text-sm font-medium tabular-nums">
-                  {wellbeing.satisfaction}/10
-                </span>
-              </div>
-              <Slider
-                min={1}
-                max={10}
-                step={1}
-                value={[wellbeing.satisfaction]}
-                onValueChange={(value) =>
-                  setWellbeing({ ...wellbeing, satisfaction: value[0] })
-                }
-                className="transition-colors duration-200"
-              />
-            </div>
-
-            {/* Stress */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label>Stress</Label>
-                <span className="text-sm font-medium tabular-nums">
-                  {wellbeing.stress}/10
-                </span>
-              </div>
-              <Slider
-                min={1}
-                max={10}
-                step={1}
-                value={[wellbeing.stress]}
-                onValueChange={(value) =>
-                  setWellbeing({ ...wellbeing, stress: value[0] })
-                }
-                className="transition-colors duration-200"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="border-t pt-4 space-y-4">
-          <div className="flex items-center gap-4">
-            <Button
-              onClick={handleSave}
-              size="lg"
-              disabled={isSaving}
-              className="transition-all duration-200"
-            >
-              {isSaving ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Speichert...
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4" />
-                  Speichern
-                </>
-              )}
-            </Button>
-            <div className="flex items-center gap-2">
-              <Switch
-                checked={completed}
-                onCheckedChange={setCompleted}
-                id="completed"
-              />
-              <Label htmlFor="completed" className="cursor-pointer">
-                Tag als abgeschlossen markieren
-              </Label>
-            </div>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Tipp: Drücke Cmd+S (Mac) oder Ctrl+S (Windows) zum schnellen Speichern
-          </p>
-        </div>
+        </Button>
       </div>
 
-      {/* Sidebar */}
-      <div className="lg:col-span-1 space-y-6">
-        <div className="bg-muted/50 rounded-lg p-4 shadow-sm">
-          <WeeklyProgress />
-        </div>
-      </div>
+      <p className="text-xs text-center text-muted-foreground">
+        Tip: Press Cmd+S (Mac) or Ctrl+S (Windows) to save quickly
+      </p>
     </div>
   );
 }

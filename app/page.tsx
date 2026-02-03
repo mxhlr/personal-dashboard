@@ -14,9 +14,17 @@ import { QuarterlyReviewForm } from "@/components/reviews/QuarterlyReviewForm";
 import { AnnualReviewForm } from "@/components/reviews/AnnualReviewForm";
 import { DataView } from "@/components/data/DataView";
 import { SettingsModal } from "@/components/settings/SettingsModal";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type ReviewType = "daily" | "weekly" | "monthly" | "quarterly" | "annual";
 type TabType = "planning" | "data" | "coach";
+type DataViewType = "weekly" | "monthly" | "quarterly" | "annual";
 
 // Helper function to get current week number (ISO 8601)
 function getWeekNumber(date: Date): number {
@@ -39,6 +47,7 @@ export default function DashboardPage() {
   const hasCompletedSetup = useQuery(api.userProfile.hasCompletedSetup);
   const [activeTab, setActiveTab] = useState<TabType>("planning");
   const [selectedReview, setSelectedReview] = useState<ReviewType>("daily");
+  const [selectedDataView, setSelectedDataView] = useState<DataViewType>("weekly");
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   // Get current date info for reviews
@@ -71,61 +80,101 @@ export default function DashboardPage() {
     );
   }
 
+  const handleDateNavigation = (direction: "prev" | "next" | "today") => {
+    // This will be implemented by the DailyTracker component
+    // For now, just console log the action
+    console.log("Date navigation:", direction);
+  };
+
   return (
     <ErrorBoundary>
       <div className="min-h-screen bg-background">
         <Header
           activeTab={activeTab}
           onTabChange={setActiveTab}
-          selectedReview={selectedReview}
-          onReviewChange={setSelectedReview}
           onSettingsClick={() => setSettingsOpen(true)}
+          onDateNavigation={handleDateNavigation}
         />
 
-        <main className="container mx-auto px-4 py-8">
-        {/* Tab 1: Planning & Review */}
-        {activeTab === "planning" && (
-          <div>
-            {selectedReview === "daily" && (
-              <div className="bg-card border border-border rounded-lg">
-                <DailyTracker />
+        <main>
+          {/* Tab 1: Planning & Review */}
+          {activeTab === "planning" && (
+            <div className="container mx-auto px-4 py-8 space-y-6">
+              {/* Dropdown for Review Selection */}
+              <div className="max-w-4xl mx-auto px-6">
+                <Select
+                  value={selectedReview}
+                  onValueChange={(value) => setSelectedReview(value as ReviewType)}
+                >
+                  <SelectTrigger className="w-[240px] bg-card shadow-sm">
+                    <SelectValue placeholder="Select review type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="daily">Daily Log</SelectItem>
+                    <SelectItem value="weekly">Weekly Review</SelectItem>
+                    <SelectItem value="monthly">Monthly Review</SelectItem>
+                    <SelectItem value="quarterly">Quarterly Review</SelectItem>
+                    <SelectItem value="annual">Annual Review</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-            )}
 
-            {selectedReview === "weekly" && (
-              <WeeklyReviewForm year={currentYear} weekNumber={currentWeek} />
-            )}
+              {/* Review Forms */}
+              {selectedReview === "daily" && <DailyTracker />}
 
-            {selectedReview === "monthly" && (
-              <MonthlyReviewForm year={currentYear} month={currentMonth} />
-            )}
+              {selectedReview === "weekly" && (
+                <WeeklyReviewForm year={currentYear} weekNumber={currentWeek} />
+              )}
 
-            {selectedReview === "quarterly" && (
-              <QuarterlyReviewForm year={currentYear} quarter={currentQuarter} />
-            )}
+              {selectedReview === "monthly" && (
+                <MonthlyReviewForm year={currentYear} month={currentMonth} />
+              )}
 
-            {selectedReview === "annual" && (
-              <AnnualReviewForm year={currentYear} />
-            )}
-          </div>
-        )}
+              {selectedReview === "quarterly" && (
+                <QuarterlyReviewForm year={currentYear} quarter={currentQuarter} />
+              )}
 
-        {/* Tab 2: Data View */}
-        {activeTab === "data" && (
-          <div>
-            <DataView selectedView={selectedReview} />
-          </div>
-        )}
+              {selectedReview === "annual" && (
+                <AnnualReviewForm year={currentYear} />
+              )}
+            </div>
+          )}
 
-        {/* Tab 3: Coach */}
-        {activeTab === "coach" && (
-          <div>
-            <CoachChat />
-          </div>
-        )}
-      </main>
+          {/* Tab 2: Data View */}
+          {activeTab === "data" && (
+            <div className="container mx-auto px-4 py-8 space-y-6">
+              {/* Dropdown for Data View Selection */}
+              <div className="max-w-4xl mx-auto px-6">
+                <Select
+                  value={selectedDataView}
+                  onValueChange={(value) => setSelectedDataView(value as DataViewType)}
+                >
+                  <SelectTrigger className="w-[240px] bg-card shadow-sm">
+                    <SelectValue placeholder="Select data view" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="weekly">Weekly Data</SelectItem>
+                    <SelectItem value="monthly">Monthly Data</SelectItem>
+                    <SelectItem value="quarterly">Quarterly Data</SelectItem>
+                    <SelectItem value="annual">Annual Data</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-      {/* Settings Modal */}
+              {/* Data View - Convert selectedDataView to ReviewType for DataView component */}
+              <DataView selectedView={selectedDataView as ReviewType} />
+            </div>
+          )}
+
+          {/* Tab 3: Coach */}
+          {activeTab === "coach" && (
+            <div className="container mx-auto px-4 py-8">
+              <CoachChat />
+            </div>
+          )}
+        </main>
+
+        {/* Settings Modal */}
         <SettingsModal
           isOpen={settingsOpen}
           onClose={() => setSettingsOpen(false)}

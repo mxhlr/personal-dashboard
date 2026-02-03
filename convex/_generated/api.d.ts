@@ -8,13 +8,11 @@
  * @module
  */
 
-import type * as admin from "../admin.js";
 import type * as adminFix from "../adminFix.js";
 import type * as analytics from "../analytics.js";
 import type * as annualReview from "../annualReview.js";
 import type * as coachMessages from "../coachMessages.js";
 import type * as dailyLog from "../dailyLog.js";
-import type * as debug from "../debug.js";
 import type * as monthlyReview from "../monthlyReview.js";
 import type * as quarterlyReview from "../quarterlyReview.js";
 import type * as settings from "../settings.js";
@@ -29,13 +27,11 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  admin: typeof admin;
   adminFix: typeof adminFix;
   analytics: typeof analytics;
   annualReview: typeof annualReview;
   coachMessages: typeof coachMessages;
   dailyLog: typeof dailyLog;
-  debug: typeof debug;
   monthlyReview: typeof monthlyReview;
   quarterlyReview: typeof quarterlyReview;
   settings: typeof settings;
