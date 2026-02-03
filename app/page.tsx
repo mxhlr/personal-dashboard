@@ -40,7 +40,6 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<TabType>("planning");
   const [selectedReview, setSelectedReview] = useState<ReviewType>("daily");
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   // Get current date info for reviews
   const now = new Date();
