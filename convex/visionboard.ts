@@ -164,6 +164,48 @@ export const reorderImages = mutation({
   },
 });
 
+// Move image to a different list
+export const moveImageToList = mutation({
+  args: {
+    imageId: v.id("visionboard"),
+    targetListId: v.optional(v.id("visionboardLists")),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const image = await ctx.db.get(args.imageId);
+    if (!image || image.userId !== identity.subject) {
+      throw new Error("Not authorized");
+    }
+
+    // Get max position in target list
+    const query = args.targetListId
+      ? ctx.db
+          .query("visionboard")
+          .withIndex("by_user_list", (q) =>
+            q.eq("userId", identity.subject).eq("listId", args.targetListId)
+          )
+      : ctx.db
+          .query("visionboard")
+          .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+          .filter((q) => q.eq(q.field("listId"), undefined));
+
+    const targetListImages = await query.collect();
+    const maxPosition = targetListImages.length > 0
+      ? Math.max(...targetListImages.map(img => img.position ?? 0))
+      : -1;
+
+    // Move image to target list with new position
+    await ctx.db.patch(args.imageId, {
+      listId: args.targetListId,
+      position: maxPosition + 1,
+    });
+  },
+});
+
 // Delete image from visionboard
 export const deleteImage = mutation({
   args: {
