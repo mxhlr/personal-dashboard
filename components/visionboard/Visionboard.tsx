@@ -76,19 +76,18 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
     <div
       ref={setNodeRef}
       style={style}
-      className="group relative w-[256px] min-h-[20px] mb-2 rounded-lg overflow-hidden bg-white cursor-move"
-      // Trello shadow: 0px 1px 1px rgba(9,30,66,0.25), 0px 0px 1px rgba(9,30,66,0.31)
-      // Using Tailwind approximation
+      className="group relative w-[256px] min-h-[20px] mb-2 rounded-lg overflow-hidden cursor-move shadow-sm"
     >
       {/* Cover Image - Trello style with background-image */}
       <div
-        className="relative w-full rounded-t-lg"
+        className="relative w-full"
         style={{
           height: `${coverHeight}px`,
           backgroundImage: `url(${image.url})`,
           backgroundSize: "cover", // Trello uses cover
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
+          borderRadius: image.subtitle ? "8px 8px 0 0" : "8px", // Rounded top if subtitle, full rounded if no subtitle
         }}
         {...attributes}
         {...listeners}
@@ -122,7 +121,7 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
 
       {/* Subtitle - only show if exists or editing */}
       {(image.subtitle || isEditingSubtitle) && (
-        <div className="p-2 bg-white">
+        <div className="p-2 bg-white rounded-b-lg">
           {isEditingSubtitle ? (
             <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
               <Input
