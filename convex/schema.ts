@@ -273,8 +273,12 @@ export default defineSchema({
   visionboard: defineTable({
     userId: v.string(), // Clerk user ID
     storageId: v.id("_storage"), // Convex file storage ID
+    subtitle: v.optional(v.string()), // Optional subtitle for image
+    width: v.optional(v.number()), // Original image width (optional for old images)
+    height: v.optional(v.number()), // Original image height (optional for old images)
+    position: v.optional(v.number()), // Order/position for drag & drop (optional for old images)
     createdAt: v.string(),
   })
     .index("by_user", ["userId"])
-    .index("by_user_created", ["userId", "createdAt"]),
+    .index("by_user_position", ["userId", "position"]),
 });
