@@ -67,15 +67,20 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
     setIsEditingSubtitle(false);
   };
 
+  // Calculate dynamic height based on aspect ratio (Trello style)
+  const aspectRatio = image.width / image.height;
+  const cardHeight = Math.round(260 / aspectRatio); // Width is ~260px in grid, adjust height
+
   return (
     <div
       ref={setNodeRef}
       style={style}
       className="group relative rounded-lg overflow-hidden bg-card border shadow-sm hover:shadow-md transition-shadow cursor-move"
     >
-      {/* Image with fixed height, full width - Trello style (260px standard) */}
+      {/* Image with dynamic height based on aspect ratio - Trello style */}
       <div
-        className="relative w-full h-[260px]"
+        className="relative w-full"
+        style={{ height: `${cardHeight}px` }}
         {...attributes}
         {...listeners}
       >
@@ -89,7 +94,7 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
 
       {/* Subtitle - only show if exists or editing */}
       {(image.subtitle || isEditingSubtitle) && (
-        <div className="p-3 bg-card/95 backdrop-blur-sm border-t">
+        <div className="p-3 bg-card border-t">
           {isEditingSubtitle ? (
             <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
               <Input
@@ -117,7 +122,7 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
             </div>
           ) : (
             <div className="flex items-center justify-between gap-2">
-              <p className="text-sm text-muted-foreground truncate flex-1">
+              <p className="text-sm font-medium truncate flex-1">
                 {image.subtitle}
               </p>
               <button
@@ -134,14 +139,14 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
         </div>
       )}
 
-      {/* Add Subtitle Button - show on hover if no subtitle */}
+      {/* Add Subtitle Button - show on hover if no subtitle - INSIDE image area */}
       {!image.subtitle && !isEditingSubtitle && (
         <button
           onClick={(e) => {
             e.stopPropagation();
             setIsEditingSubtitle(true);
           }}
-          className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 bg-card/95 backdrop-blur-sm rounded hover:bg-accent text-xs flex items-center gap-1"
+          className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 bg-black/60 backdrop-blur-sm rounded hover:bg-black/80 text-white text-xs flex items-center gap-1"
         >
           <Edit2 className="h-3 w-3" />
           <span>Untertitel</span>
