@@ -84,8 +84,8 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
         style={{
           height: `${coverHeight}px`,
           backgroundImage: `url(${image.url})`,
-          backgroundSize: "cover", // Trello uses cover
-          backgroundPosition: "center",
+          backgroundSize: "100% auto", // Width 100%, height auto - no cropping
+          backgroundPosition: "center top",
           backgroundRepeat: "no-repeat",
           borderRadius: image.subtitle ? "8px 8px 0 0" : "8px", // Rounded top if subtitle, full rounded if no subtitle
         }}
