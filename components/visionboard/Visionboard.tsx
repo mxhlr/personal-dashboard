@@ -9,6 +9,7 @@ import { Plus, X, Edit2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import Masonry from "react-masonry-css";
 import {
   DndContext,
   closestCenter,
@@ -67,29 +68,32 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
     setIsEditingSubtitle(false);
   };
 
-  // Calculate dynamic height based on aspect ratio (Trello style)
+  // Calculate aspect ratio to maintain image proportions
   const aspectRatio = image.width / image.height;
-  const cardHeight = Math.round(260 / aspectRatio); // Width is ~260px in grid, adjust height
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className="group relative rounded-lg overflow-hidden bg-card border shadow-sm hover:shadow-md transition-shadow cursor-move"
+      className="group relative rounded-lg overflow-hidden bg-card border shadow-sm hover:shadow-md transition-shadow cursor-move mb-2"
     >
-      {/* Image with dynamic height based on aspect ratio - Trello style */}
+      {/* Image with aspect ratio maintained - Trello style */}
       <div
         className="relative w-full"
-        style={{ height: `${cardHeight}px` }}
-        {...attributes}
-        {...listeners}
+        style={{ paddingBottom: `${(1 / aspectRatio) * 100}%` }}
       >
-        <Image
-          src={image.url}
-          alt={image.subtitle || "Vision board image"}
-          fill
-          className="object-cover"
-        />
+        <div
+          className="absolute inset-0"
+          {...attributes}
+          {...listeners}
+        >
+          <Image
+            src={image.url}
+            alt={image.subtitle || "Vision board image"}
+            fill
+            className="object-cover"
+          />
+        </div>
       </div>
 
       {/* Subtitle - only show if exists or editing */}
@@ -330,7 +334,7 @@ export function Visionboard() {
         </label>
       </div>
 
-      {/* Images Grid with Drag & Drop - Trello Style */}
+      {/* Images Masonry Grid with Drag & Drop - Trello Style */}
       {displayImages.length > 0 ? (
         <DndContext
           sensors={sensors}
@@ -341,7 +345,17 @@ export function Visionboard() {
             items={displayImages.map((img) => img._id)}
             strategy={rectSortingStrategy}
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+            <Masonry
+              breakpointCols={{
+                default: 4,
+                1280: 4,
+                1024: 3,
+                768: 2,
+                640: 1,
+              }}
+              className="flex -ml-2 w-auto"
+              columnClassName="pl-2 bg-clip-padding"
+            >
               {displayImages.map((image) => (
                 <SortableImage
                   key={image._id}
@@ -350,7 +364,7 @@ export function Visionboard() {
                   onUpdateSubtitle={handleUpdateSubtitle}
                 />
               ))}
-            </div>
+            </Masonry>
           </SortableContext>
         </DndContext>
       ) : (
