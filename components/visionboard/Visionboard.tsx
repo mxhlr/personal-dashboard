@@ -113,6 +113,7 @@ function SortableImage({
               e.stopPropagation();
               setIsEditingSubtitle(true);
             }}
+            onPointerDown={(e) => e.stopPropagation()}
             className="p-1.5 rounded-md bg-black/50 hover:bg-black/70 text-white backdrop-blur-sm"
           >
             <Edit2 className="h-3 w-3" />
@@ -122,6 +123,7 @@ function SortableImage({
               e.stopPropagation();
               onDelete(image._id);
             }}
+            onPointerDown={(e) => e.stopPropagation()}
             className="p-1.5 rounded-md bg-black/50 hover:bg-black/70 text-white backdrop-blur-sm"
           >
             <X className="h-3 w-3" />
