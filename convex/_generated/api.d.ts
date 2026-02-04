@@ -19,6 +19,7 @@ import type * as settings from "../settings.js";
 import type * as trackingFields from "../trackingFields.js";
 import type * as userProfile from "../userProfile.js";
 import type * as visionboard from "../visionboard.js";
+import type * as visionboardLists from "../visionboardLists.js";
 import type * as weeklyReview from "../weeklyReview.js";
 
 import type {
@@ -39,6 +40,7 @@ declare const fullApi: ApiFromModules<{
   trackingFields: typeof trackingFields;
   userProfile: typeof userProfile;
   visionboard: typeof visionboard;
+  visionboardLists: typeof visionboardLists;
   weeklyReview: typeof weeklyReview;
 }>;
 

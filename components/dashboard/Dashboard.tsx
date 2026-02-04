@@ -28,7 +28,9 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     weekNumber: getWeekNumber(new Date()),
     year: new Date().getFullYear(),
   });
-  const visionboardImages = useQuery(api.visionboard.getVisionboardImages);
+  const visionboardImages = useQuery(api.visionboard.getImagesForList, {
+    listId: undefined, // Get images without listId (default list)
+  });
 
   if (!profile) {
     return (

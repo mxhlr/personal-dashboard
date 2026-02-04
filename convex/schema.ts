@@ -270,8 +270,18 @@ export default defineSchema({
   // VISIONBOARD
   // ============================================
 
+  visionboardLists: defineTable({
+    userId: v.string(), // Clerk user ID
+    name: v.string(), // List name (editable)
+    position: v.number(), // Order for horizontal sorting
+    createdAt: v.string(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_position", ["userId", "position"]),
+
   visionboard: defineTable({
     userId: v.string(), // Clerk user ID
+    listId: v.optional(v.id("visionboardLists")), // Optional list ID (for backward compatibility)
     storageId: v.id("_storage"), // Convex file storage ID
     subtitle: v.optional(v.string()), // Optional subtitle for image
     width: v.optional(v.number()), // Original image width (optional for old images)
@@ -280,5 +290,6 @@ export default defineSchema({
     createdAt: v.string(),
   })
     .index("by_user", ["userId"])
+    .index("by_user_list", ["userId", "listId"])
     .index("by_user_position", ["userId", "position"]),
 });

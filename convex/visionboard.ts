@@ -20,6 +20,7 @@ export const addImage = mutation({
     width: v.number(),
     height: v.number(),
     subtitle: v.optional(v.string()),
+    listId: v.optional(v.id("visionboardLists")),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -27,11 +28,19 @@ export const addImage = mutation({
       throw new Error("Not authenticated");
     }
 
-    // Get current max position
-    const existingImages = await ctx.db
-      .query("visionboard")
-      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
-      .collect();
+    // Get current max position for this list
+    const query = args.listId
+      ? ctx.db
+          .query("visionboard")
+          .withIndex("by_user_list", (q) =>
+            q.eq("userId", identity.subject).eq("listId", args.listId)
+          )
+      : ctx.db
+          .query("visionboard")
+          .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+          .filter((q) => q.eq(q.field("listId"), undefined));
+
+    const existingImages = await query.collect();
 
     const maxPosition = existingImages.length > 0
       ? Math.max(...existingImages.map(img => img.position ?? 0))
@@ -39,6 +48,7 @@ export const addImage = mutation({
 
     const imageId = await ctx.db.insert("visionboard", {
       userId: identity.subject,
+      listId: args.listId,
       storageId: args.storageId,
       width: args.width,
       height: args.height,
@@ -51,20 +61,31 @@ export const addImage = mutation({
   },
 });
 
-// Get all visionboard images for user
-export const getVisionboardImages = query({
-  handler: async (ctx) => {
+// Get images for a specific list
+export const getImagesForList = query({
+  args: {
+    listId: v.optional(v.id("visionboardLists")),
+  },
+  handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error("Not authenticated");
     }
 
-    const images = await ctx.db
-      .query("visionboard")
-      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
-      .collect();
+    const query = args.listId
+      ? ctx.db
+          .query("visionboard")
+          .withIndex("by_user_list", (q) =>
+            q.eq("userId", identity.subject).eq("listId", args.listId)
+          )
+      : ctx.db
+          .query("visionboard")
+          .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+          .filter((q) => q.eq(q.field("listId"), undefined));
 
-    // Sort by position (handle old images without position)
+    const images = await query.collect();
+
+    // Sort by position
     const sortedImages = images.sort((a, b) => {
       const posA = a.position ?? 999999;
       const posB = b.position ?? 999999;
@@ -79,9 +100,10 @@ export const getVisionboardImages = query({
           _id: image._id,
           url: url || "",
           subtitle: image.subtitle,
-          width: image.width ?? 800, // Default for old images
-          height: image.height ?? 600, // Default for old images
+          width: image.width ?? 800,
+          height: image.height ?? 600,
           position: image.position ?? 0,
+          listId: image.listId,
           createdAt: image.createdAt,
         };
       })

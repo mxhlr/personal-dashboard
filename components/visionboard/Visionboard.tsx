@@ -5,7 +5,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { toast } from "sonner";
-import { Plus, X, Edit2 } from "lucide-react";
+import { Plus, X, Edit2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -32,6 +32,14 @@ interface VisionImage {
   subtitle?: string;
   width: number;
   height: number;
+  position: number;
+  listId?: Id<"visionboardLists">;
+  createdAt: string;
+}
+
+interface VisionList {
+  _id: Id<"visionboardLists">;
+  name: string;
   position: number;
   createdAt: string;
 }
@@ -171,8 +179,18 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
   );
 }
 
-export function Visionboard() {
-  const visionboardImages = useQuery(api.visionboard.getVisionboardImages);
+interface VisionListComponentProps {
+  list?: VisionList;
+  onUpdateListName?: (listId: Id<"visionboardLists">, name: string) => void;
+}
+
+function VisionListComponent({ list, onUpdateListName }: VisionListComponentProps) {
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [listName, setListName] = useState(list?.name || "Meine Visionen");
+
+  const visionboardImages = useQuery(api.visionboard.getImagesForList, {
+    listId: list?._id,
+  });
   const generateUploadUrl = useMutation(api.visionboard.generateUploadUrl);
   const addImage = useMutation(api.visionboard.addImage);
   const deleteImage = useMutation(api.visionboard.deleteImage);
@@ -182,14 +200,12 @@ export function Visionboard() {
   const [isUploading, setIsUploading] = useState(false);
   const [images, setImages] = useState<VisionImage[]>([]);
 
-  // Update local state when data changes
   useEffect(() => {
     if (visionboardImages) {
       setImages(visionboardImages as VisionImage[]);
     }
   }, [visionboardImages]);
 
-  // Drag and drop sensors
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -213,7 +229,6 @@ export function Visionboard() {
 
     setIsUploading(true);
     try {
-      // Get image dimensions
       const img = await new Promise<HTMLImageElement>((resolve, reject) => {
         const imgElement = new window.Image();
         imgElement.onload = () => resolve(imgElement);
@@ -224,7 +239,6 @@ export function Visionboard() {
       const width = img.naturalWidth;
       const height = img.naturalHeight;
 
-      // Upload to Convex
       const uploadUrl = await generateUploadUrl();
       const result = await fetch(uploadUrl, {
         method: "POST",
@@ -234,8 +248,7 @@ export function Visionboard() {
 
       const { storageId } = await result.json();
 
-      // Save with dimensions
-      await addImage({ storageId, width, height });
+      await addImage({ storageId, width, height, listId: list?._id });
 
       toast.success("Bild hochgeladen!");
     } catch (error) {
@@ -283,7 +296,6 @@ export function Visionboard() {
     const newImages = arrayMove(images, oldIndex, newIndex);
     setImages(newImages);
 
-    // Update positions in database
     try {
       await reorderImages({
         imageIds: newImages.map((img) => img._id),
@@ -291,15 +303,138 @@ export function Visionboard() {
     } catch (error) {
       console.error("Reorder error:", error);
       toast.error("Fehler beim Verschieben");
-      // Revert on error
       if (visionboardImages) {
         setImages(visionboardImages as VisionImage[]);
       }
     }
   };
 
-  // Use local state for display
+  const handleSaveListName = () => {
+    if (list && onUpdateListName) {
+      onUpdateListName(list._id, listName);
+    }
+    setIsEditingName(false);
+  };
+
   const displayImages = images.length > 0 ? images : (visionboardImages as VisionImage[] || []);
+
+  return (
+    <div className="w-[272px] flex-shrink-0 bg-muted/30 rounded-lg p-2">
+      {/* List Header - Editable */}
+      <div className="mb-2 px-2 flex items-center justify-between group">
+        {isEditingName ? (
+          <div className="flex items-center gap-1 flex-1">
+            <Input
+              value={listName}
+              onChange={(e) => setListName(e.target.value)}
+              className="h-7 text-sm font-semibold"
+              autoFocus
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSaveListName();
+                } else if (e.key === "Escape") {
+                  setIsEditingName(false);
+                  setListName(list?.name || "Meine Visionen");
+                }
+              }}
+              onBlur={handleSaveListName}
+            />
+            <button
+              onClick={handleSaveListName}
+              className="p-1 hover:bg-accent rounded"
+            >
+              <Check className="h-3 w-3" />
+            </button>
+          </div>
+        ) : (
+          <h2
+            className="text-sm font-semibold flex-1 cursor-pointer hover:bg-accent/50 rounded px-2 py-1"
+            onClick={() => setIsEditingName(true)}
+          >
+            {listName}
+          </h2>
+        )}
+      </div>
+
+      {/* Cards Container with Drag & Drop */}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={displayImages.map((img) => img._id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className="space-y-0">
+            {displayImages.map((image) => (
+              <SortableImage
+                key={image._id}
+                image={image}
+                onDelete={handleDelete}
+                onUpdateSubtitle={handleUpdateSubtitle}
+              />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
+
+      {/* Add Card Button */}
+      <div className="mt-2">
+        <label htmlFor={`image-upload-${list?._id || "default"}`} className="cursor-pointer">
+          <div
+            onClick={() => document.getElementById(`image-upload-${list?._id || "default"}`)?.click()}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent/50 transition-colors text-sm text-muted-foreground"
+          >
+            <Plus className="h-4 w-4" />
+            <span>{isUploading ? "Lädt hoch..." : "Bild hinzufügen"}</span>
+          </div>
+          <input
+            id={`image-upload-${list?._id || "default"}`}
+            type="file"
+            accept="image/*"
+            onChange={handleFileUpload}
+            className="hidden"
+            disabled={isUploading}
+          />
+        </label>
+      </div>
+
+      {/* Empty State */}
+      {displayImages.length === 0 && (
+        <div className="text-center py-8 text-muted-foreground text-sm">
+          <p>Noch keine Bilder.</p>
+          <p>Füge dein erstes Vision hinzu!</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function Visionboard() {
+  const lists = useQuery(api.visionboardLists.getLists);
+  const createList = useMutation(api.visionboardLists.createList);
+  const updateListName = useMutation(api.visionboardLists.updateListName);
+
+  const handleCreateList = async () => {
+    try {
+      await createList({ name: "Neue Liste" });
+      toast.success("Liste erstellt");
+    } catch (error) {
+      console.error("Create list error:", error);
+      toast.error("Fehler beim Erstellen");
+    }
+  };
+
+  const handleUpdateListName = async (listId: Id<"visionboardLists">, name: string) => {
+    try {
+      await updateListName({ listId, name });
+      toast.success("Listenname aktualisiert");
+    } catch (error) {
+      console.error("Update list name error:", error);
+      toast.error("Fehler beim Aktualisieren");
+    }
+  };
 
   return (
     <div className="h-full flex flex-col">
@@ -314,69 +449,28 @@ export function Visionboard() {
       {/* Trello-style horizontal scrolling container */}
       <div className="flex-1 overflow-x-auto overflow-y-hidden">
         <div className="inline-flex gap-4 p-4 h-full items-start">
-          {/* Single vertical list - Trello style */}
-          <div className="w-[272px] flex-shrink-0 bg-muted/30 rounded-lg p-2">
-            {/* List Header */}
-            <div className="mb-2 px-2">
-              <h2 className="text-sm font-semibold">Meine Visionen</h2>
-            </div>
-
-          {/* Cards Container with Drag & Drop */}
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext
-              items={displayImages.map((img) => img._id)}
-              strategy={verticalListSortingStrategy}
-            >
-              <div className="space-y-0">
-                {displayImages.map((image) => (
-                  <SortableImage
-                    key={image._id}
-                    image={image}
-                    onDelete={handleDelete}
-                    onUpdateSubtitle={handleUpdateSubtitle}
-                  />
-                ))}
-              </div>
-            </SortableContext>
-          </DndContext>
-
-          {/* Add Card Button */}
-          <div className="mt-2">
-            <label htmlFor="image-upload" className="cursor-pointer">
-              <div
-                onClick={() => document.getElementById("image-upload")?.click()}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent/50 transition-colors text-sm text-muted-foreground"
-              >
-                <Plus className="h-4 w-4" />
-                <span>{isUploading ? "Lädt hoch..." : "Bild hinzufügen"}</span>
-              </div>
-              <input
-                id="image-upload"
-                type="file"
-                accept="image/*"
-                onChange={handleFileUpload}
-                className="hidden"
-                disabled={isUploading}
-              />
-            </label>
-          </div>
-
-          {/* Empty State */}
-          {displayImages.length === 0 && (
-            <div className="text-center py-8 text-muted-foreground text-sm">
-              <p>Noch keine Bilder.</p>
-              <p>Füge dein erstes Vision hinzu!</p>
-            </div>
+          {/* Show default list if no lists exist */}
+          {(!lists || lists.length === 0) && (
+            <VisionListComponent
+              onUpdateListName={handleUpdateListName}
+            />
           )}
-          </div>
+
+          {/* Show all lists */}
+          {lists && lists.map((list) => (
+            <VisionListComponent
+              key={list._id}
+              list={list}
+              onUpdateListName={handleUpdateListName}
+            />
+          ))}
 
           {/* Add Another List Button - Trello style */}
           <div className="w-[272px] flex-shrink-0">
-            <button className="w-full px-3 py-2 rounded-lg bg-white/50 hover:bg-white/80 transition-colors text-sm text-muted-foreground flex items-center gap-2">
+            <button
+              onClick={handleCreateList}
+              className="w-full px-3 py-2 rounded-lg bg-white/50 hover:bg-white/80 transition-colors text-sm text-muted-foreground flex items-center gap-2"
+            >
               <Plus className="h-4 w-4" />
               <span>Weitere Liste hinzufügen</span>
             </button>
