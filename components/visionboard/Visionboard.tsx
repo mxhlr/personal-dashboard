@@ -20,7 +20,6 @@ import {
   useDroppable,
 } from "@dnd-kit/core";
 import {
-  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
@@ -297,7 +296,6 @@ export function Visionboard() {
   const addImage = useMutation(api.visionboard.addImage);
   const deleteImage = useMutation(api.visionboard.deleteImage);
   const updateSubtitle = useMutation(api.visionboard.updateSubtitle);
-  const reorderImages = useMutation(api.visionboard.reorderImages);
   const moveImageToList = useMutation(api.visionboard.moveImageToList);
 
   const [isUploading, setIsUploading] = useState(false);
