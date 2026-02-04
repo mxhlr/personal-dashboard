@@ -67,19 +67,19 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
     setIsEditingSubtitle(false);
   };
 
-  // Calculate aspect ratio to maintain original proportions
-  const aspectRatio = image.width / image.height;
-
   return (
     <div
       ref={setNodeRef}
-      style={style}
-      className="group relative rounded-lg overflow-hidden bg-card border shadow-sm hover:shadow-md transition-shadow cursor-move"
+      style={{
+        ...style,
+        width: `${image.width}px`,
+      }}
+      className="group relative rounded-lg overflow-hidden bg-card border shadow-sm hover:shadow-md transition-shadow cursor-move inline-block"
     >
-      {/* Image with original aspect ratio */}
+      {/* Image with original size */}
       <div
-        className="relative w-full"
-        style={{ paddingBottom: `${(1 / aspectRatio) * 100}%` }}
+        className="relative"
+        style={{ width: `${image.width}px`, height: `${image.height}px` }}
         {...attributes}
         {...listeners}
       >
@@ -87,7 +87,7 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
           src={image.url}
           alt={image.subtitle || "Vision board image"}
           fill
-          className="object-cover"
+          className="object-contain"
         />
       </div>
 
@@ -313,7 +313,7 @@ export function Visionboard() {
         </label>
       </div>
 
-      {/* Images Grid with Drag & Drop */}
+      {/* Images with Drag & Drop - Masonry Layout */}
       {displayImages.length > 0 ? (
         <DndContext
           sensors={sensors}
@@ -324,7 +324,7 @@ export function Visionboard() {
             items={displayImages.map((img) => img._id)}
             strategy={rectSortingStrategy}
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="flex flex-wrap gap-6 justify-center">
               {displayImages.map((image) => (
                 <SortableImage
                   key={image._id}
