@@ -91,50 +91,66 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
         />
       </div>
 
-      {/* Subtitle */}
-      <div className="p-3 bg-card/95 backdrop-blur-sm border-t">
-        {isEditingSubtitle ? (
-          <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-            <Input
-              value={subtitle}
-              onChange={(e) => setSubtitle(e.target.value)}
-              placeholder="Untertitel hinzufügen..."
-              className="h-8 text-sm"
-              autoFocus
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleSaveSubtitle();
-                } else if (e.key === "Escape") {
-                  setIsEditingSubtitle(false);
-                  setSubtitle(image.subtitle || "");
-                }
-              }}
-            />
-            <Button
-              size="sm"
-              onClick={handleSaveSubtitle}
-              className="h-8 px-3"
-            >
-              OK
-            </Button>
-          </div>
-        ) : (
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-sm text-muted-foreground truncate flex-1">
-              {image.subtitle || "Untertitel hinzufügen..."}
-            </p>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsEditingSubtitle(true);
-              }}
-              className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-accent rounded"
-            >
-              <Edit2 className="h-3 w-3" />
-            </button>
-          </div>
-        )}
-      </div>
+      {/* Subtitle - only show if exists or editing */}
+      {(image.subtitle || isEditingSubtitle) && (
+        <div className="p-3 bg-card/95 backdrop-blur-sm border-t">
+          {isEditingSubtitle ? (
+            <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+              <Input
+                value={subtitle}
+                onChange={(e) => setSubtitle(e.target.value)}
+                placeholder="Untertitel hinzufügen..."
+                className="h-8 text-sm"
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSaveSubtitle();
+                  } else if (e.key === "Escape") {
+                    setIsEditingSubtitle(false);
+                    setSubtitle(image.subtitle || "");
+                  }
+                }}
+              />
+              <Button
+                size="sm"
+                onClick={handleSaveSubtitle}
+                className="h-8 px-3"
+              >
+                OK
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-sm text-muted-foreground truncate flex-1">
+                {image.subtitle}
+              </p>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsEditingSubtitle(true);
+                }}
+                className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-accent rounded"
+              >
+                <Edit2 className="h-3 w-3" />
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Add Subtitle Button - show on hover if no subtitle */}
+      {!image.subtitle && !isEditingSubtitle && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsEditingSubtitle(true);
+          }}
+          className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 bg-card/95 backdrop-blur-sm rounded hover:bg-accent text-xs flex items-center gap-1"
+        >
+          <Edit2 className="h-3 w-3" />
+          <span>Untertitel</span>
+        </button>
+      )}
 
       {/* Delete Button */}
       <button
