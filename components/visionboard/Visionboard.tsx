@@ -67,8 +67,10 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
   };
 
   // Calculate cover height based on Trello formula: (cardWidth / imageWidth) * imageHeight
+  // But cap it at a maximum to prevent extreme heights
   const CARD_WIDTH = 256;
-  const coverHeight = Math.round((CARD_WIDTH / image.width) * image.height);
+  const calculatedHeight = Math.round((CARD_WIDTH / image.width) * image.height);
+  const coverHeight = Math.min(calculatedHeight, 400); // Max 400px height like Trello
 
   return (
     <div
@@ -83,9 +85,8 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
         className="relative w-full rounded-t-lg"
         style={{
           height: `${coverHeight}px`,
-          maxHeight: "500px", // Prevent extreme heights
           backgroundImage: `url(${image.url})`,
-          backgroundSize: "contain", // Changed to contain so nothing is cropped
+          backgroundSize: "cover", // Trello uses cover
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
