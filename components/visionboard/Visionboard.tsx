@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -175,11 +175,11 @@ export function Visionboard() {
   const [images, setImages] = useState<VisionImage[]>([]);
 
   // Update local state when data changes
-  useState(() => {
+  useEffect(() => {
     if (visionboardImages) {
       setImages(visionboardImages as VisionImage[]);
     }
-  });
+  }, [visionboardImages]);
 
   // Drag and drop sensors
   const sensors = useSensors(
