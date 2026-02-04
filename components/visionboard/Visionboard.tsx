@@ -181,7 +181,7 @@ function DroppableList({
   onFileUpload: (e: React.ChangeEvent<HTMLInputElement>, listId?: Id<"visionboardLists">) => void;
 }) {
   const [isEditingName, setIsEditingName] = useState(false);
-  const [listName, setListName] = useState(list?.name || "Meine Visionen");
+  const [listName, setListName] = useState(list?.name || "🎥🎥🎥");
 
   // Update listName when list.name changes
   useEffect(() => {
@@ -239,7 +239,7 @@ function DroppableList({
                 if (e.key === "Enter") handleSaveListName();
                 else if (e.key === "Escape") {
                   setIsEditingName(false);
-                  setListName(list?.name || "Meine Visionen");
+                  setListName(list?.name || "🎥🎥🎥");
                 }
               }}
               onBlur={handleSaveListName}
