@@ -168,12 +168,14 @@ function SortableImage({
 function DroppableList({
   list,
   onUpdateListName,
+  onConvertDefaultList,
   onDelete,
   onUpdateSubtitle,
   onFileUpload,
 }: {
   list?: VisionList;
   onUpdateListName?: (listId: Id<"visionboardLists">, name: string) => void;
+  onConvertDefaultList?: (name: string) => Promise<void>;
   onDelete: (imageId: Id<"visionboard">) => void;
   onUpdateSubtitle: (imageId: Id<"visionboard">, subtitle: string) => void;
   onFileUpload: (e: React.ChangeEvent<HTMLInputElement>, listId?: Id<"visionboardLists">) => void;
@@ -193,9 +195,18 @@ function DroppableList({
     listId: list?._id,
   });
 
-  const handleSaveListName = () => {
-    if (list && onUpdateListName && listName.trim()) {
+  const handleSaveListName = async () => {
+    if (!listName.trim()) {
+      setIsEditingName(false);
+      return;
+    }
+
+    if (list && onUpdateListName) {
+      // Real list - update name
       onUpdateListName(list._id, listName.trim());
+    } else if (!list && onConvertDefaultList) {
+      // Default list - convert to real list
+      await onConvertDefaultList(listName.trim());
     }
     setIsEditingName(false);
   };
@@ -291,6 +302,7 @@ export function Visionboard() {
   const lists = useQuery(api.visionboardLists.getLists);
   const createList = useMutation(api.visionboardLists.createList);
   const updateListName = useMutation(api.visionboardLists.updateListName);
+  const convertDefaultListToReal = useMutation(api.visionboardLists.convertDefaultListToReal);
 
   // Query for images without listId to check if default list should be shown
   const defaultListImages = useQuery(api.visionboard.getImagesForList, {
@@ -488,6 +500,15 @@ export function Visionboard() {
                   key={listKey}
                   list={list || undefined}
                   onUpdateListName={handleUpdateListName}
+                  onConvertDefaultList={async (name: string) => {
+                    try {
+                      await convertDefaultListToReal({ name });
+                      toast.success("Liste erstellt");
+                    } catch (error) {
+                      console.error("Convert error:", error);
+                      toast.error("Fehler beim Umbenennen");
+                    }
+                  }}
                   onDelete={handleDelete}
                   onUpdateSubtitle={handleUpdateSubtitle}
                   onFileUpload={handleFileUpload}

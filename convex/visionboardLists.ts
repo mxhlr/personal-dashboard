@@ -78,6 +78,57 @@ export const updateListName = mutation({
   },
 });
 
+// Convert default list to a real list (when renaming default list)
+export const convertDefaultListToReal = mutation({
+  args: {
+    name: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    // Create new list at position 0 (first position)
+    const listId = await ctx.db.insert("visionboardLists", {
+      userId: identity.subject,
+      name: args.name,
+      position: 0,
+      createdAt: new Date().toISOString(),
+    });
+
+    // Get all images without listId (default list images)
+    const defaultImages = await ctx.db
+      .query("visionboard")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .filter((q) => q.eq(q.field("listId"), undefined))
+      .collect();
+
+    // Move all default list images to the new list
+    for (const image of defaultImages) {
+      await ctx.db.patch(image._id, {
+        listId: listId,
+      });
+    }
+
+    // Update positions of all other lists
+    const otherLists = await ctx.db
+      .query("visionboardLists")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .collect();
+
+    for (const list of otherLists) {
+      if (list._id !== listId) {
+        await ctx.db.patch(list._id, {
+          position: list.position + 1,
+        });
+      }
+    }
+
+    return listId;
+  },
+});
+
 // Delete a list (and all its images)
 export const deleteList = mutation({
   args: {
