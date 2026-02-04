@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface HeaderProps {
-  activeTab: "visionboard" | "planning" | "data" | "coach";
-  onTabChange: (tab: "visionboard" | "planning" | "data" | "coach") => void;
+  activeTab: "dashboard" | "visionboard" | "planning" | "data" | "coach";
+  onTabChange: (tab: "dashboard" | "visionboard" | "planning" | "data" | "coach") => void;
   onSettingsClick: () => void;
   onDateNavigation?: (direction: "prev" | "next" | "today") => void;
 }
@@ -21,8 +21,15 @@ export default function Header({
     <header className="sticky top-0 z-50 border-b border-border bg-card backdrop-blur-sm shadow-sm transition-shadow duration-200">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between gap-8">
-          {/* Left: 4 Main Tabs */}
+          {/* Left: 5 Main Tabs */}
           <nav className="flex items-center gap-1">
+            <Button
+              variant={activeTab === "dashboard" ? "default" : "ghost"}
+              onClick={() => onTabChange("dashboard")}
+              className="font-medium"
+            >
+              Dashboard
+            </Button>
             <Button
               variant={activeTab === "visionboard" ? "default" : "ghost"}
               onClick={() => onTabChange("visionboard")}

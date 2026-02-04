@@ -6,6 +6,7 @@ import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Header from "@/components/layout/Header";
+import { Dashboard } from "@/components/dashboard/Dashboard";
 import { DailyTracker } from "@/components/dashboard/DailyTracker";
 import { WeeklyOverview } from "@/components/dashboard/WeeklyOverview";
 import { Visionboard } from "@/components/visionboard/Visionboard";
@@ -25,7 +26,7 @@ import {
 } from "@/components/ui/select";
 
 type ReviewType = "daily" | "weekly" | "monthly" | "quarterly" | "annual";
-type TabType = "visionboard" | "planning" | "data" | "coach";
+type TabType = "dashboard" | "visionboard" | "planning" | "data" | "coach";
 type DataViewType = "weekly" | "monthly" | "quarterly" | "annual";
 
 // Helper function to get current week number (ISO 8601)
@@ -47,7 +48,7 @@ function getQuarter(date: Date): number {
 export default function DashboardPage() {
   const router = useRouter();
   const hasCompletedSetup = useQuery(api.userProfile.hasCompletedSetup);
-  const [activeTab, setActiveTab] = useState<TabType>("visionboard");
+  const [activeTab, setActiveTab] = useState<TabType>("dashboard");
   const [selectedReview, setSelectedReview] = useState<ReviewType>("daily");
   const [selectedDataView, setSelectedDataView] = useState<DataViewType>("weekly");
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -99,14 +100,19 @@ export default function DashboardPage() {
         />
 
         <main>
-          {/* Tab 0: Visionboard */}
+          {/* Tab 0: Dashboard */}
+          {activeTab === "dashboard" && (
+            <Dashboard onNavigate={setActiveTab} />
+          )}
+
+          {/* Tab 1: Visionboard */}
           {activeTab === "visionboard" && (
             <div className="container mx-auto px-4 py-8">
               <Visionboard />
             </div>
           )}
 
-          {/* Tab 1: Planning & Review */}
+          {/* Tab 2: Planning & Review */}
           {activeTab === "planning" && (
             <div className="container mx-auto px-4 py-8 space-y-6">
               {/* Dropdown for Review Selection */}
@@ -149,7 +155,7 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* Tab 2: Data View */}
+          {/* Tab 3: Data View */}
           {activeTab === "data" && (
             <div className="container mx-auto px-4 py-8 space-y-6">
               {/* Dropdown for Data View Selection */}
@@ -178,7 +184,7 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* Tab 3: Coach */}
+          {/* Tab 4: Coach */}
           {activeTab === "coach" && (
             <div className="container mx-auto px-4 py-8">
               <CoachChat />
