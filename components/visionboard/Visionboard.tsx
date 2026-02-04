@@ -8,8 +8,6 @@ import { toast } from "sonner";
 import { Plus, X, Edit2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Image from "next/image";
-import Masonry from "react-masonry-css";
 import {
   DndContext,
   closestCenter,
@@ -23,7 +21,7 @@ import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
-  rectSortingStrategy,
+  verticalListSortingStrategy,
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -68,37 +66,61 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
     setIsEditingSubtitle(false);
   };
 
-  // Calculate aspect ratio to maintain image proportions
-  const aspectRatio = image.width / image.height;
+  // Calculate cover height based on Trello formula: (cardWidth / imageWidth) * imageHeight
+  const CARD_WIDTH = 256;
+  const coverHeight = Math.round((CARD_WIDTH / image.width) * image.height);
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className="group relative rounded-lg overflow-hidden bg-card border shadow-sm hover:shadow-md transition-shadow cursor-move mb-2"
+      className="group relative w-[256px] min-h-[20px] mb-2 rounded-lg overflow-hidden bg-white cursor-move"
+      // Trello shadow: 0px 1px 1px rgba(9,30,66,0.25), 0px 0px 1px rgba(9,30,66,0.31)
+      // Using Tailwind approximation
     >
-      {/* Image with aspect ratio maintained - Trello style - full image visible */}
+      {/* Cover Image - Trello style with background-image */}
       <div
-        className="relative w-full"
-        style={{ paddingBottom: `${(1 / aspectRatio) * 100}%` }}
+        className="relative w-full rounded-t-lg"
+        style={{
+          height: `${coverHeight}px`,
+          backgroundImage: `url(${image.url})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+        {...attributes}
+        {...listeners}
       >
-        <div
-          className="absolute inset-0"
-          {...attributes}
-          {...listeners}
+        {/* Delete Button */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(image._id);
+          }}
+          className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80 z-10"
+          aria-label="Delete image"
         >
-          <Image
-            src={image.url}
-            alt={image.subtitle || "Vision board image"}
-            fill
-            className="object-contain"
-          />
-        </div>
+          <X className="h-4 w-4" />
+        </button>
+
+        {/* Add Subtitle Button - show on hover if no subtitle */}
+        {!image.subtitle && !isEditingSubtitle && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsEditingSubtitle(true);
+            }}
+            className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 bg-black/60 backdrop-blur-sm rounded hover:bg-black/80 text-white text-xs flex items-center gap-1"
+          >
+            <Edit2 className="h-3 w-3" />
+            <span>Untertitel</span>
+          </button>
+        )}
       </div>
 
       {/* Subtitle - only show if exists or editing */}
       {(image.subtitle || isEditingSubtitle) && (
-        <div className="p-3 bg-card border-t">
+        <div className="p-2 bg-white">
           {isEditingSubtitle ? (
             <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
               <Input
@@ -142,32 +164,6 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
           )}
         </div>
       )}
-
-      {/* Add Subtitle Button - show on hover if no subtitle - INSIDE image area */}
-      {!image.subtitle && !isEditingSubtitle && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsEditingSubtitle(true);
-          }}
-          className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 bg-black/60 backdrop-blur-sm rounded hover:bg-black/80 text-white text-xs flex items-center gap-1"
-        >
-          <Edit2 className="h-3 w-3" />
-          <span>Untertitel</span>
-        </button>
-      )}
-
-      {/* Delete Button */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onDelete(image._id);
-        }}
-        className="absolute top-2 right-2 bg-destructive text-destructive-foreground rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive/90 z-10"
-        aria-label="Delete image"
-      >
-        <X className="h-4 w-4" />
-      </button>
     </div>
   );
 }
@@ -303,75 +299,69 @@ export function Visionboard() {
   const displayImages = images.length > 0 ? images : (visionboardImages as VisionImage[] || []);
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-      {/* Header */}
-      <div className="text-center space-y-2">
-        <h1 className="text-3xl font-semibold">Visionboard</h1>
-        <p className="text-sm text-muted-foreground">
-          Visualisiere deine Ziele und Träume
-        </p>
-      </div>
+    <div className="h-full overflow-x-auto overflow-y-hidden">
+      {/* Trello-style horizontal scrolling container */}
+      <div className="inline-flex gap-4 p-4 h-full items-start">
+        {/* Single vertical list - Trello style */}
+        <div className="w-[272px] flex-shrink-0">
+          {/* List Header */}
+          <div className="mb-2 px-2">
+            <h2 className="text-lg font-semibold">Vision Board</h2>
+          </div>
 
-      {/* Upload Button */}
-      <div className="flex justify-center">
-        <label htmlFor="image-upload">
-          <Button
-            type="button"
-            onClick={() => document.getElementById("image-upload")?.click()}
-            disabled={isUploading}
-            className="gap-2"
+          {/* Cards Container with Drag & Drop */}
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
           >
-            <Plus className="h-4 w-4" />
-            {isUploading ? "Lädt hoch..." : "Bild hinzufügen"}
-          </Button>
-          <input
-            id="image-upload"
-            type="file"
-            accept="image/*"
-            onChange={handleFileUpload}
-            className="hidden"
-          />
-        </label>
-      </div>
-
-      {/* Images Masonry Grid with Drag & Drop - Trello Style */}
-      {displayImages.length > 0 ? (
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext
-            items={displayImages.map((img) => img._id)}
-            strategy={rectSortingStrategy}
-          >
-            <Masonry
-              breakpointCols={{
-                default: 4,
-                1280: 4,
-                1024: 3,
-                768: 2,
-                640: 1,
-              }}
-              className="flex -ml-2 w-auto"
-              columnClassName="pl-2 bg-clip-padding"
+            <SortableContext
+              items={displayImages.map((img) => img._id)}
+              strategy={verticalListSortingStrategy}
             >
-              {displayImages.map((image) => (
-                <SortableImage
-                  key={image._id}
-                  image={image}
-                  onDelete={handleDelete}
-                  onUpdateSubtitle={handleUpdateSubtitle}
-                />
-              ))}
-            </Masonry>
-          </SortableContext>
-        </DndContext>
-      ) : (
-        <div className="text-center py-12 text-muted-foreground">
-          <p>Noch keine Bilder. Füge dein erstes Vision hinzu!</p>
+              <div className="space-y-0">
+                {displayImages.map((image) => (
+                  <SortableImage
+                    key={image._id}
+                    image={image}
+                    onDelete={handleDelete}
+                    onUpdateSubtitle={handleUpdateSubtitle}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
+
+          {/* Add Card Button */}
+          <div className="mt-2">
+            <label htmlFor="image-upload" className="cursor-pointer">
+              <div
+                onClick={() => document.getElementById("image-upload")?.click()}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent/50 transition-colors text-sm text-muted-foreground"
+              >
+                <Plus className="h-4 w-4" />
+                <span>{isUploading ? "Lädt hoch..." : "Bild hinzufügen"}</span>
+              </div>
+              <input
+                id="image-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+                className="hidden"
+                disabled={isUploading}
+              />
+            </label>
+          </div>
+
+          {/* Empty State */}
+          {displayImages.length === 0 && (
+            <div className="text-center py-8 text-muted-foreground text-sm">
+              <p>Noch keine Bilder.</p>
+              <p>Füge dein erstes Vision hinzu!</p>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
