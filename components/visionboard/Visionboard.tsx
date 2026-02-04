@@ -77,7 +77,7 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
       style={style}
       className="group relative rounded-lg overflow-hidden bg-card border shadow-sm hover:shadow-md transition-shadow cursor-move mb-2"
     >
-      {/* Image with aspect ratio maintained - Trello style */}
+      {/* Image with aspect ratio maintained - Trello style - full image visible */}
       <div
         className="relative w-full"
         style={{ paddingBottom: `${(1 / aspectRatio) * 100}%` }}
@@ -91,7 +91,7 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
             src={image.url}
             alt={image.subtitle || "Vision board image"}
             fill
-            className="object-cover"
+            className="object-contain"
           />
         </div>
       </div>
