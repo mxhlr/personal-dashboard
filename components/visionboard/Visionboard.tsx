@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -180,6 +180,13 @@ function DroppableList({
 }) {
   const [isEditingName, setIsEditingName] = useState(false);
   const [listName, setListName] = useState(list?.name || "Meine Visionen");
+
+  // Update listName when list.name changes
+  useEffect(() => {
+    if (list?.name) {
+      setListName(list.name);
+    }
+  }, [list?.name]);
 
   // Query images for THIS list
   const listImages = useQuery(api.visionboard.getImagesForList, {
