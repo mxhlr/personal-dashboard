@@ -17,6 +17,7 @@ import {
   DragEndEvent,
   DragStartEvent,
   DragOverlay,
+  useDroppable,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -191,8 +192,14 @@ function DroppableList({
 
   const listId = list?._id || "default";
 
+  // Make the list a droppable zone
+  const { setNodeRef } = useDroppable({
+    id: listId,
+  });
+
   return (
     <div
+      ref={setNodeRef}
       data-list-id={listId}
       className="w-[272px] flex-shrink-0 bg-muted/30 rounded-lg p-2"
     >
@@ -445,29 +452,35 @@ export function Visionboard() {
     if (!over) return;
 
     const activeId = active.id as Id<"visionboard">;
-    const overId = over.id as Id<"visionboard">;
 
-    // Find which list the active item is in
+    // Find which list the dragged item came from
     const activeListId = (active.data.current as { sortable?: { containerId?: string } })?.sortable?.containerId;
-    // Find which list the over item is in (or which list container was dropped on)
-    const overListId = (over.data.current as { sortable?: { containerId?: string } })?.sortable?.containerId || over.id;
+
+    // Find the target: either dropped on another image (over has sortable data) or on a list container
+    const overSortable = (over.data.current as { sortable?: { containerId?: string } })?.sortable;
+    const overListId = overSortable?.containerId || over.id;
+
+    console.log("Drag end:", { activeId, activeListId, overListId, overId: over.id });
 
     // If dropped on a different list, move the image
     if (activeListId !== overListId) {
       try {
         // Extract actual list ID (handle "default" case)
-        const targetListId = overListId === "default" ? undefined : overListId as Id<"visionboardLists">;
+        const targetListId = overListId === "default" ? undefined : (overListId as Id<"visionboardLists">);
         await moveImageToList({ imageId: activeId, targetListId });
         toast.success("Bild verschoben");
       } catch (error) {
         console.error("Move error:", error);
         toast.error("Fehler beim Verschieben");
       }
-    } else if (activeId !== overId) {
+    } else if (active.id !== over.id) {
       // Reorder within the same list
-      const listImages = defaultListImages || [];
+      // Find the list images for this list
+      const listKey = activeListId || "default";
+      const listImages = listImagesMap.get(listKey) || [];
+
       const oldIndex = listImages.findIndex((img) => img._id === activeId);
-      const newIndex = listImages.findIndex((img) => img._id === overId);
+      const newIndex = listImages.findIndex((img) => img._id === over.id);
 
       if (oldIndex !== -1 && newIndex !== -1) {
         const newOrder = arrayMove(listImages, oldIndex, newIndex);
