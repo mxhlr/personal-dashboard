@@ -83,8 +83,9 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
         className="relative w-full rounded-t-lg"
         style={{
           height: `${coverHeight}px`,
+          maxHeight: "500px", // Prevent extreme heights
           backgroundImage: `url(${image.url})`,
-          backgroundSize: "cover",
+          backgroundSize: "contain", // Changed to contain so nothing is cropped
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
@@ -299,15 +300,24 @@ export function Visionboard() {
   const displayImages = images.length > 0 ? images : (visionboardImages as VisionImage[] || []);
 
   return (
-    <div className="h-full overflow-x-auto overflow-y-hidden">
+    <div className="h-full flex flex-col">
+      {/* Centered Page Title */}
+      <div className="text-center py-6">
+        <h1 className="text-3xl font-semibold">Vision Board</h1>
+        <p className="text-sm text-muted-foreground mt-2">
+          Visualisiere deine Ziele und Träume
+        </p>
+      </div>
+
       {/* Trello-style horizontal scrolling container */}
-      <div className="inline-flex gap-4 p-4 h-full items-start">
-        {/* Single vertical list - Trello style */}
-        <div className="w-[272px] flex-shrink-0">
-          {/* List Header */}
-          <div className="mb-2 px-2">
-            <h2 className="text-lg font-semibold">Vision Board</h2>
-          </div>
+      <div className="flex-1 overflow-x-auto overflow-y-hidden">
+        <div className="inline-flex gap-4 p-4 h-full items-start">
+          {/* Single vertical list - Trello style */}
+          <div className="w-[272px] flex-shrink-0 bg-muted/30 rounded-lg p-2">
+            {/* List Header */}
+            <div className="mb-2 px-2">
+              <h2 className="text-sm font-semibold">Meine Visionen</h2>
+            </div>
 
           {/* Cards Container with Drag & Drop */}
           <DndContext
@@ -360,6 +370,15 @@ export function Visionboard() {
               <p>Füge dein erstes Vision hinzu!</p>
             </div>
           )}
+          </div>
+
+          {/* Add Another List Button - Trello style */}
+          <div className="w-[272px] flex-shrink-0">
+            <button className="w-full px-3 py-2 rounded-lg bg-white/50 hover:bg-white/80 transition-colors text-sm text-muted-foreground flex items-center gap-2">
+              <Plus className="h-4 w-4" />
+              <span>Weitere Liste hinzufügen</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
