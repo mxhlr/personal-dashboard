@@ -70,16 +70,12 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
   return (
     <div
       ref={setNodeRef}
-      style={{
-        ...style,
-        width: `${image.width}px`,
-      }}
-      className="group relative rounded-lg overflow-hidden bg-card border shadow-sm hover:shadow-md transition-shadow cursor-move inline-block"
+      style={style}
+      className="group relative rounded-lg overflow-hidden bg-card border shadow-sm hover:shadow-md transition-shadow cursor-move"
     >
-      {/* Image with original size */}
+      {/* Image with fixed height, full width - Trello style */}
       <div
-        className="relative"
-        style={{ width: `${image.width}px`, height: `${image.height}px` }}
+        className="relative w-full h-[300px]"
         {...attributes}
         {...listeners}
       >
@@ -87,7 +83,7 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
           src={image.url}
           alt={image.subtitle || "Vision board image"}
           fill
-          className="object-contain"
+          className="object-cover"
         />
       </div>
 
@@ -329,7 +325,7 @@ export function Visionboard() {
         </label>
       </div>
 
-      {/* Images with Drag & Drop - Masonry Layout */}
+      {/* Images Grid with Drag & Drop - Trello Style */}
       {displayImages.length > 0 ? (
         <DndContext
           sensors={sensors}
@@ -340,7 +336,7 @@ export function Visionboard() {
             items={displayImages.map((img) => img._id)}
             strategy={rectSortingStrategy}
           >
-            <div className="flex flex-wrap gap-6 justify-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {displayImages.map((image) => (
                 <SortableImage
                   key={image._id}
