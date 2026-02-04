@@ -73,9 +73,9 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
       style={style}
       className="group relative rounded-lg overflow-hidden bg-card border shadow-sm hover:shadow-md transition-shadow cursor-move"
     >
-      {/* Image with fixed height, full width - Trello style */}
+      {/* Image with fixed height, full width - Trello style (260px standard) */}
       <div
-        className="relative w-full h-[300px]"
+        className="relative w-full h-[260px]"
         {...attributes}
         {...listeners}
       >
@@ -336,7 +336,7 @@ export function Visionboard() {
             items={displayImages.map((img) => img._id)}
             strategy={rectSortingStrategy}
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
               {displayImages.map((image) => (
                 <SortableImage
                   key={image._id}
