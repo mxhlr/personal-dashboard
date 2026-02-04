@@ -84,14 +84,14 @@ function SortableImage({
       ref={setNodeRef}
       style={style}
       {...attributes}
-      {...listeners}
-      className="group relative w-[256px] min-h-[20px] mb-2 rounded-lg overflow-hidden cursor-move shadow-sm"
+      className="group relative w-[256px] min-h-[20px] mb-2 rounded-lg overflow-hidden shadow-sm"
     >
       <div
-        className="relative"
+        className="relative cursor-move"
         style={{
           borderRadius: image.subtitle ? "8px 8px 0 0" : "8px",
         }}
+        {...listeners}
       >
         {/* Image - simple img tag with width 100% and height auto */}
         <img
@@ -113,8 +113,7 @@ function SortableImage({
               e.stopPropagation();
               setIsEditingSubtitle(true);
             }}
-            onPointerDown={(e) => e.stopPropagation()}
-            className="p-1.5 rounded-md bg-black/50 hover:bg-black/70 text-white backdrop-blur-sm"
+            className="p-1.5 rounded-md bg-black/50 hover:bg-black/70 text-white backdrop-blur-sm cursor-pointer"
           >
             <Edit2 className="h-3 w-3" />
           </button>
@@ -123,8 +122,7 @@ function SortableImage({
               e.stopPropagation();
               onDelete(image._id);
             }}
-            onPointerDown={(e) => e.stopPropagation()}
-            className="p-1.5 rounded-md bg-black/50 hover:bg-black/70 text-white backdrop-blur-sm"
+            className="p-1.5 rounded-md bg-black/50 hover:bg-black/70 text-white backdrop-blur-sm cursor-pointer"
           >
             <X className="h-3 w-3" />
           </button>
