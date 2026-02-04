@@ -105,28 +105,28 @@ function SortableImage({
             objectFit: "cover",
           }}
         />
+      </div>
 
-        {/* Overlay buttons */}
-        <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsEditingSubtitle(true);
-            }}
-            className="p-1.5 rounded-md bg-black/50 hover:bg-black/70 text-white backdrop-blur-sm cursor-pointer"
-          >
-            <Edit2 className="h-3 w-3" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(image._id);
-            }}
-            className="p-1.5 rounded-md bg-black/50 hover:bg-black/70 text-white backdrop-blur-sm cursor-pointer"
-          >
-            <X className="h-3 w-3" />
-          </button>
-        </div>
+      {/* Overlay buttons - OUTSIDE the drag listeners */}
+      <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsEditingSubtitle(true);
+          }}
+          className="p-1.5 rounded-md bg-black/50 hover:bg-black/70 text-white backdrop-blur-sm cursor-pointer"
+        >
+          <Edit2 className="h-3 w-3" />
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(image._id);
+          }}
+          className="p-1.5 rounded-md bg-black/50 hover:bg-black/70 text-white backdrop-blur-sm cursor-pointer"
+        >
+          <X className="h-3 w-3" />
+        </button>
       </div>
 
       {/* Subtitle section - only show if subtitle exists or editing */}
