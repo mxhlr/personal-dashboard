@@ -66,32 +66,34 @@ function SortableImage({ image, onDelete, onUpdateSubtitle }: SortableImageProps
     setIsEditingSubtitle(false);
   };
 
-  // Calculate cover height based on Trello formula: (cardWidth / imageWidth) * imageHeight
-  // But cap it at a maximum to prevent extreme heights
-  const CARD_WIDTH = 256;
-  const calculatedHeight = Math.round((CARD_WIDTH / image.width) * image.height);
-  const coverHeight = Math.min(calculatedHeight, 400); // Max 400px height like Trello
-
   return (
     <div
       ref={setNodeRef}
       style={style}
       className="group relative w-[256px] min-h-[20px] mb-2 rounded-lg overflow-hidden cursor-move shadow-sm"
     >
-      {/* Cover Image - Trello style with background-image */}
+      {/* Cover Image - Simple img tag with width 100% and height auto */}
       <div
-        className="relative w-full"
+        className="relative"
         style={{
-          height: `${coverHeight}px`,
-          backgroundImage: `url(${image.url})`,
-          backgroundSize: "100% auto", // Width 100%, height auto - no cropping
-          backgroundPosition: "center top",
-          backgroundRepeat: "no-repeat",
-          borderRadius: image.subtitle ? "8px 8px 0 0" : "8px", // Rounded top if subtitle, full rounded if no subtitle
+          borderRadius: image.subtitle ? "8px 8px 0 0" : "8px",
         }}
         {...attributes}
         {...listeners}
       >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={image.url}
+          alt={image.subtitle || "Vision board image"}
+          style={{
+            width: "100%",
+            height: "auto",
+            display: "block",
+            maxHeight: "400px",
+            objectFit: "cover",
+          }}
+        />
+
         {/* Delete Button */}
         <button
           onClick={(e) => {
