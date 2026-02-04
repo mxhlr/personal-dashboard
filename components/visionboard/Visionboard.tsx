@@ -243,6 +243,7 @@ function DroppableList({
 
       {/* Droppable area for images */}
       <SortableContext
+        id={listId}
         items={images.map((img) => img._id)}
         strategy={verticalListSortingStrategy}
       >

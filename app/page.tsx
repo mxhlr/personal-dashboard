@@ -107,9 +107,7 @@ export default function DashboardPage() {
 
           {/* Tab 1: Visionboard */}
           {activeTab === "visionboard" && (
-            <div className="container mx-auto px-4 py-8">
-              <Visionboard />
-            </div>
+            <Visionboard />
           )}
 
           {/* Tab 2: Planning & Review */}
