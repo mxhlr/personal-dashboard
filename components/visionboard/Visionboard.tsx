@@ -416,6 +416,12 @@ export function Visionboard() {
   const createList = useMutation(api.visionboardLists.createList);
   const updateListName = useMutation(api.visionboardLists.updateListName);
 
+  // Check if there are any images without listId (default list)
+  const defaultListImages = useQuery(api.visionboard.getImagesForList, {
+    listId: undefined,
+  });
+  const hasDefaultList = defaultListImages && defaultListImages.length > 0;
+
   const handleCreateList = async () => {
     try {
       await createList({ name: "Neue Liste" });
@@ -449,8 +455,8 @@ export function Visionboard() {
       {/* Trello-style horizontal scrolling container */}
       <div className="flex-1 overflow-x-auto overflow-y-hidden">
         <div className="inline-flex gap-4 p-4 h-full items-start">
-          {/* Show default list if no lists exist */}
-          {(!lists || lists.length === 0) && (
+          {/* Show default list if there are images without listId OR no lists exist */}
+          {(hasDefaultList || !lists || lists.length === 0) && (
             <VisionListComponent
               onUpdateListName={handleUpdateListName}
             />
