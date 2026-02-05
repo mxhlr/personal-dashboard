@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { TodaysWinCondition } from "./TodaysWinCondition";
+import { StoicQuote } from "./StoicQuote";
 
 interface DashboardProps {
   onNavigate: (tab: "daily-log" | "visionboard" | "planning" | "data" | "coach") => void;
@@ -78,16 +79,21 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         }}
       />
 
-      <div className="relative max-w-7xl mx-auto px-6 py-8 space-y-8">
+      <div className="relative max-w-7xl mx-auto px-6 py-8 space-y-6">
         {/* Welcome Header */}
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0077B6]">
+        <div className="text-center space-y-3 mb-2">
+          <h1 className="text-5xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0077B6]"
+            style={{
+              textShadow: '0 0 30px rgba(0, 229, 255, 0.2)'
+            }}
+          >
             Welcome back, {profile.name}! 👋
           </h1>
           <p
             className="text-lg dark:text-[#888888] text-[#666666]"
             style={{
-              fontFamily: '"Courier New", "Monaco", monospace'
+              fontFamily: '"Courier New", "Monaco", monospace',
+              fontVariantNumeric: 'tabular-nums'
             }}
           >
             {format(new Date(), "EEEE, MMMM d, yyyy")}
@@ -97,48 +103,52 @@ export function Dashboard({ onNavigate }: DashboardProps) {
       {/* Today's Win Condition */}
       <TodaysWinCondition />
 
+      {/* Daily Stoic Quote */}
+      <StoicQuote />
+
         {/* North Stars - Gaming HUD Style */}
-        <Card className="p-6 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
+        <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
           shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
           dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]
-          dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.2)]"
+          dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.2)]
+          hover:scale-[1.005]"
           style={{
             background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
           }}
         >
-          <div className="flex items-center justify-center gap-12 flex-wrap">
-            <div className="text-center">
-              <p className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
+          <div className="flex items-center justify-center gap-16 flex-wrap">
+            <div className="text-center group cursor-default">
+              <p className="text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#888888] text-[#666666] mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
                 💰 WEALTH
               </p>
-              <p className="text-sm dark:text-[#E0E0E0] text-[#1A1A1A] font-medium">{profile.northStars.wealth}</p>
+              <p className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.wealth}</p>
             </div>
-            <div className="h-8 w-[1px] bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent opacity-40" />
-            <div className="text-center">
-              <p className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
+            <div className="h-12 w-[1px] bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent opacity-30" />
+            <div className="text-center group cursor-default">
+              <p className="text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#888888] text-[#666666] mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
                 🏃 HEALTH
               </p>
-              <p className="text-sm dark:text-[#E0E0E0] text-[#1A1A1A] font-medium">{profile.northStars.health}</p>
+              <p className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.health}</p>
             </div>
-            <div className="h-8 w-[1px] bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent opacity-40" />
-            <div className="text-center">
-              <p className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
+            <div className="h-12 w-[1px] bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent opacity-30" />
+            <div className="text-center group cursor-default">
+              <p className="text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#888888] text-[#666666] mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
                 ❤️ LOVE
               </p>
-              <p className="text-sm dark:text-[#E0E0E0] text-[#1A1A1A] font-medium">{profile.northStars.love}</p>
+              <p className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.love}</p>
             </div>
-            <div className="h-8 w-[1px] bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent opacity-40" />
-            <div className="text-center">
-              <p className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
+            <div className="h-12 w-[1px] bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent opacity-30" />
+            <div className="text-center group cursor-default">
+              <p className="text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#888888] text-[#666666] mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
                 😊 HAPPINESS
               </p>
-              <p className="text-sm dark:text-[#E0E0E0] text-[#1A1A1A] font-medium">{profile.northStars.happiness}</p>
+              <p className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.happiness}</p>
             </div>
           </div>
         </Card>
 
         {/* Main Widgets Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
           {/* Today's Log - Gaming HUD Style */}
           <Card
             className={`p-6 dark:bg-card/50 bg-white/80
