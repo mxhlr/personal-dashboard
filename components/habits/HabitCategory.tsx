@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
 import { HabitItem } from "./HabitItem";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
