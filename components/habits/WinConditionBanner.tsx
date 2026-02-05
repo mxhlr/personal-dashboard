@@ -5,11 +5,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Input } from "@/components/ui/input";
 
-interface WinConditionBannerProps {
-  isAchieved?: boolean;
-}
-
-export function WinConditionBanner({ isAchieved = false }: WinConditionBannerProps = {}) {
+export function WinConditionBanner() {
   const today = new Date().toISOString().split("T")[0];
   const winConditionData = useQuery(api.winConditions.getWinCondition, { date: today });
   const saveWinCondition = useMutation(api.winConditions.saveWinCondition);

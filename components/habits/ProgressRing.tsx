@@ -151,19 +151,21 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
         </div>
       </div>
 
-      {/* Status Badge with stage */}
-      <div
-        className={`px-5 py-2 rounded-full uppercase text-[11px] font-bold tracking-wider transition-all duration-500
-          dark:bg-white/[0.06] bg-black/[0.04]
-          dark:border dark:border-white/[0.1] border border-black/[0.08]
-          ${showCelebration ? 'scale-110' : ''}`}
-        style={{
-          color: stage.color,
-          boxShadow: isComplete ? `0 0 15px ${glowColor}` : undefined,
-        }}
-      >
-        {stage.label}
-      </div>
+      {/* Status Badge with stage - only show when there's meaningful progress */}
+      {percentage > 0 && (
+        <div
+          className={`px-5 py-2 rounded-full uppercase text-[11px] font-bold tracking-wider transition-all duration-500
+            dark:bg-white/[0.06] bg-black/[0.04]
+            dark:border dark:border-white/[0.1] border border-black/[0.08]
+            ${showCelebration ? 'scale-110' : ''}`}
+          style={{
+            color: stage.color,
+            boxShadow: isComplete ? `0 0 15px ${glowColor}` : undefined,
+          }}
+        >
+          {stage.label}
+        </div>
+      )}
     </div>
   );
 }
