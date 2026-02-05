@@ -75,7 +75,10 @@ export function HabitDashboardConnected() {
     if (!categories || !habitTemplates || !dailyHabits) return;
 
     const transformed = categories.map((cat) => {
-      const templates = habitTemplates.filter((t) => t.categoryId === cat._id);
+      const templates = habitTemplates
+        .filter((t) => t.categoryId === cat._id)
+        .sort((a, b) => a.order - b.order); // Sort by order field
+
       const habits = templates.map((template) => {
         const daily = dailyHabits.find((d) => d.templateId === template._id);
         return {
