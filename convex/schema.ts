@@ -4,20 +4,21 @@ import { v } from "convex/values";
 /**
  * Personal Dashboard Schema
  *
- * 13 Tables:
- * 1. userProfile - User basics, North Stars, Milestones, Coach Settings
- * 2. trackingFields - Configurable daily tracking fields
- * 3. dailyLog - Daily tracking data + wellbeing
- * 4. weeklyReview - 5 reflection questions
- * 5. monthlyReview - 6 reflection questions
- * 6. quarterlyReview - Milestone check + 5 questions + new milestones
- * 7. annualReview - North Star check + 6 questions + new North Stars
- * 8. coachMessages - Chat history with AI Coach
- * 9. habitCategories - User-configurable habit categories
- * 10. habitTemplates - Habit templates with XP values
- * 11. dailyHabits - Daily habit completion tracking
- * 12. userStats - Gamification stats (XP, level, streaks)
- * 13. visionboard - Vision board images
+ * PRIMARY SYSTEM (Active):
+ * - habitCategories - User-configurable habit categories
+ * - habitTemplates - Habit templates with XP values
+ * - dailyHabits - Daily habit completion tracking
+ * - userStats - Gamification stats (XP, level, streaks)
+ *
+ * LEGACY SYSTEM (For historical data only):
+ * - trackingFields - Legacy configurable tracking fields (readonly)
+ * - dailyLog - Legacy daily tracking data (readonly)
+ *
+ * OTHER TABLES:
+ * - userProfile - User basics, North Stars, Milestones, Coach Settings
+ * - weeklyReview, monthlyReview, quarterlyReview, annualReview
+ * - coachMessages - Chat history with AI Coach
+ * - visionboard, visionboardLists - Vision board system
  */
 
 export default defineSchema({

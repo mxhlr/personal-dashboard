@@ -78,15 +78,6 @@ export const seedHabitSystemForUser = internalMutation({
           { name: "Work Notes", xp: 10, isCore: false },
         ],
       },
-      {
-        name: "Evening Routine",
-        icon: "🌙",
-        habits: [
-          { name: "Energy Reflection", xp: 3, isCore: false },
-          { name: "Satisfaction Reflection", xp: 3, isCore: false },
-          { name: "Stress Reflection", xp: 3, isCore: false },
-        ],
-      },
     ];
 
     const createdData = {

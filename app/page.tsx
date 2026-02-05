@@ -84,8 +84,7 @@ export default function DashboardPage() {
   }
 
   const handleDateNavigation = (direction: "prev" | "next" | "today") => {
-    // This will be implemented by the DailyTracker component
-    // For now, just console log the action
+    // Date navigation for habit tracking (future enhancement)
     console.log("Date navigation:", direction);
   };
 
