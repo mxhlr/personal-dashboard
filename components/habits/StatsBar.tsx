@@ -69,13 +69,15 @@ function StatCard({
 }) {
   return (
     <div
-      className={`relative overflow-hidden rounded-xl p-4 text-center transition-all duration-300
+      className={`relative overflow-hidden p-4 text-center transition-all duration-300
         dark:bg-white/[0.03] bg-black/[0.02]
-        dark:border dark:border-white/[0.06] border border-black/[0.04]
-        hover:scale-[1.02] hover:shadow-lg
-        ${isHighlight ? 'animate-[stat-glow_2s_ease-in-out_infinite]' : ''}`}
+        dark:border-2 dark:border-white/[0.1] border-2 border-black/[0.08]
+        hover:scale-[1.02] hover:shadow-lg group
+        ${isHighlight ? 'animate-[neon-pulse_2s_ease-in-out_infinite]' : ''}`}
       style={{
-        boxShadow: isHighlight ? `0 0 20px ${glowColor}` : undefined,
+        clipPath: 'polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)',
+        boxShadow: isHighlight ? `0 0 20px ${glowColor}, inset 0 0 20px ${glowColor}` : undefined,
+        borderColor: isHighlight ? accentColor : undefined,
       }}
     >
       {/* Background glow effect */}
@@ -83,6 +85,11 @@ function StatCard({
         className="absolute inset-0 opacity-10 blur-2xl"
         style={{ backgroundColor: accentColor }}
       />
+
+      {/* Scanline effect on hover */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity">
+        <div className="absolute w-full h-[2px] bg-white/50 animate-[scanline_2s_linear_infinite]" />
+      </div>
 
       {/* Content */}
       <div className="relative">
@@ -93,14 +100,16 @@ function StatCard({
           {icon}
         </span>
         <p
-          className="text-3xl md:text-4xl font-bold"
-          style={{ color: accentColor }}
+          className="text-3xl md:text-4xl font-bold font-orbitron tracking-tight"
+          style={{
+            color: accentColor,
+            textShadow: isHighlight ? `0 0 10px ${glowColor}` : undefined
+          }}
         >
           {value}
         </p>
         <p
-          className="text-[10px] mt-1 dark:text-[#888888] text-[#666666] uppercase font-semibold"
-          style={{ letterSpacing: '1.5px' }}
+          className="text-[10px] mt-1 dark:text-[#888888] text-[#666666] uppercase font-semibold tracking-widest"
         >
           {label}
         </p>

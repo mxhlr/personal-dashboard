@@ -85,13 +85,13 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
             strokeWidth="8"
             fill="none"
           />
-          {/* Progress circle with glow */}
+          {/* Progress circle with enhanced glow */}
           <circle
             cx="100"
             cy="100"
             r="90"
             stroke={ringColor}
-            strokeWidth="10"
+            strokeWidth="12"
             fill="none"
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
@@ -100,7 +100,7 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
               showCelebration ? 'animate-[ring-celebration_0.5s_ease-in-out_3]' : ''
             }`}
             style={{
-              filter: `drop-shadow(0 0 ${showCelebration ? '15px' : '8px'} ${glowColor})`
+              filter: `drop-shadow(0 0 ${showCelebration ? '20px' : '12px'} ${glowColor}) drop-shadow(0 0 ${showCelebration ? '30px' : '6px'} ${glowColor})`
             }}
           />
           {/* Progress dot */}
@@ -133,8 +133,11 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
           ) : (
             <>
               <p
-                className="text-[44px] font-bold"
-                style={{ color: ringColor }}
+                className="text-[44px] font-bold font-orbitron"
+                style={{
+                  color: ringColor,
+                  textShadow: `0 0 20px ${glowColor}, 0 0 40px ${glowColor}`
+                }}
               >
                 {percentage}%
               </p>

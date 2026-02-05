@@ -165,7 +165,7 @@ export function HabitItem({
 
       <div className="flex items-center gap-3 justify-end">
         {completed ? (
-          <div className="text-sm font-bold text-[#4CAF50] flex items-center gap-1">
+          <div className="text-sm font-bold text-[#4CAF50] flex items-center gap-1 font-orbitron">
             <span className="text-[#00FF88]">✓</span>
             +{xp}
           </div>
@@ -180,12 +180,15 @@ export function HabitItem({
                 onChange={(e) => setXpValue(e.target.value)}
                 onBlur={handleXPSave}
                 onKeyDown={handleXPKeyDown}
-                className="h-7 w-16 text-center text-sm font-semibold"
+                className="h-7 w-16 text-center text-sm font-semibold font-orbitron"
               />
             ) : (
               <button
                 onClick={handleXPClick}
-                className="cursor-pointer rounded-md px-2 py-1 text-sm font-bold text-[#FF9800] transition-all duration-200 hover:bg-orange-500/15 hover:scale-105"
+                className="cursor-pointer rounded-md px-2 py-1 text-sm font-bold font-orbitron text-[#FF9800] transition-all duration-200 hover:bg-orange-500/15 hover:scale-105"
+                style={{
+                  textShadow: '0 0 8px rgba(255, 152, 0, 0.5)'
+                }}
                 title="Click to edit XP"
               >
                 +{xp}
@@ -213,12 +216,12 @@ export function HabitItem({
         )}
       </div>
 
-      {/* Enhanced XP Float Animation */}
+      {/* Enhanced XP Float Animation with Gaming Style */}
       {isAnimating && (
         <div
-          className="pointer-events-none absolute right-12 top-1/2 -translate-y-1/2 animate-[xp-float_1s_ease-out] text-xl font-bold text-[#FF9800]"
+          className="pointer-events-none absolute right-12 top-1/2 -translate-y-1/2 animate-[xp-float_1s_ease-out] text-xl font-bold font-orbitron text-[#FF9800]"
           style={{
-            textShadow: '0 0 10px rgba(255, 152, 0, 0.6), 0 0 20px rgba(255, 152, 0, 0.3)'
+            textShadow: '0 0 10px rgba(255, 152, 0, 0.8), 0 0 20px rgba(255, 152, 0, 0.5), 0 0 30px rgba(255, 152, 0, 0.3)'
           }}
         >
           +{xp} XP

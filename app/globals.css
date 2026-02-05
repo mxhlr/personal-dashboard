@@ -311,6 +311,48 @@ body {
   }
 }
 
+/* Gaming-style glitch effect */
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+/* Scanline effect for gaming vibe */
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* Neon pulse for gaming elements */
+@keyframes neon-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 2px currentColor) drop-shadow(0 0 8px currentColor);
+  }
+  50% {
+    filter: drop-shadow(0 0 4px currentColor) drop-shadow(0 0 16px currentColor);
+  }
+}
+
 /* Category card complete glow pulse */
 @keyframes category-complete-pulse {
   0%, 100% {

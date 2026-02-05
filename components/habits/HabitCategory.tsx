@@ -147,10 +147,6 @@ export function HabitCategory({
             className="h-2 dark:bg-[#2A2A2E] bg-[#E5E5E5] overflow-hidden"
             indicatorClassName={`transition-all duration-500 ${isComplete ? "bg-[#00FF88] shadow-[0_0_8px_rgba(0,255,136,0.5)]" : "bg-[#00E5FF]"}`}
           />
-          {/* Progress glow effect when complete */}
-          {isComplete && (
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_2s_ease-in-out_infinite]" />
-          )}
         </div>
       </CardHeader>
 
