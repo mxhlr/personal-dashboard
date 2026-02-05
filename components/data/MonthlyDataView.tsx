@@ -158,7 +158,8 @@ export function MonthlyDataView() {
               if (completionPercentage <= 25) return "bg-orange-100"; // ≤25% = orange
               if (completionPercentage <= 50) return "bg-yellow-100"; // ≤50% = yellow
               if (completionPercentage <= 75) return "bg-lime-100"; // ≤75% = lime
-              return "bg-green-100"; // 76-100% = green
+              if (completionPercentage >= 100) return "bg-yellow-200"; // 100%+ = gold
+              return "bg-green-100"; // 76-99% = green
             };
 
             return (
