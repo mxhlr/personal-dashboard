@@ -143,3 +143,14 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes slide-up {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+}

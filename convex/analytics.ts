@@ -463,3 +463,470 @@ export const getQuarterlyReviewStatus = query({
     };
   },
 });
+
+// ============================================
+// PATTERN INTELLIGENCE ANALYTICS
+// ============================================
+
+/**
+ * Get Pattern Intelligence for the last 30 days
+ * Analyzes habit completion patterns and provides insights
+ */
+export const getPatternIntelligence = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    // Get last 30 days of logs
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const startDate = thirtyDaysAgo.toISOString().split("T")[0];
+
+    const logs = await ctx.db
+      .query("dailyLog")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .filter((q) => q.gte(q.field("date"), startDate))
+      .collect();
+
+    // Get all active tracking fields
+    const fields = await ctx.db
+      .query("trackingFields")
+      .withIndex("by_user_active", (q) =>
+        q.eq("userId", identity.subject).eq("isActive", true)
+      )
+      .collect();
+
+    const completedLogs = logs.filter((log) => log.completed);
+    const totalDays = completedLogs.length;
+
+    if (totalDays === 0) {
+      return {
+        weakHabits: [],
+        strongHabits: [],
+        totalDaysTracked: 0,
+        averageCompletionRate: 0,
+        insights: [],
+      };
+    }
+
+    // Analyze each habit
+    const habitAnalysis = fields.map((field) => {
+      const completionRate = calculateCompletionRate(
+        completedLogs,
+        field,
+        totalDays
+      );
+
+      return {
+        habitId: field._id,
+        habitName: field.name,
+        habitType: field.type,
+        completionRate,
+        completionCount: Math.round((completionRate / 100) * totalDays),
+        totalDays,
+        hasStreak: field.hasStreak,
+        currentStreak: field.currentStreak || 0,
+        longestStreak: field.longestStreak || 0,
+        weeklyTarget: field.weeklyTarget,
+      };
+    });
+
+    // Identify weak habits (< 30% completion rate)
+    const weakHabits = habitAnalysis
+      .filter((h) => h.completionRate < 30)
+      .map((h) => ({
+        habitName: h.habitName,
+        completionRate: h.completionRate,
+        recommendation: "Consider restructuring.",
+      }));
+
+    // Identify strong habits (>= 70% completion rate)
+    const strongHabits = habitAnalysis
+      .filter((h) => h.completionRate >= 70)
+      .map((h) => ({
+        habitName: h.habitName,
+        completionRate: h.completionRate,
+        currentStreak: h.currentStreak,
+      }));
+
+    // Calculate average completion rate
+    const avgCompletionRate =
+      habitAnalysis.length > 0
+        ? habitAnalysis.reduce((sum, h) => sum + h.completionRate, 0) /
+          habitAnalysis.length
+        : 0;
+
+    // Generate insights
+    const insights: Array<string> = [];
+    if (weakHabits.length > 0) {
+      insights.push(
+        `You have ${weakHabits.length} habit(s) with low completion rates. Consider simplifying or breaking them down.`
+      );
+    }
+    if (strongHabits.length > 0) {
+      insights.push(
+        `Great job! You're maintaining ${strongHabits.length} habit(s) consistently.`
+      );
+    }
+    if (avgCompletionRate < 50) {
+      insights.push(
+        "Your overall completion rate is below 50%. Try focusing on fewer habits to build momentum."
+      );
+    }
+
+    return {
+      weakHabits,
+      strongHabits,
+      totalDaysTracked: totalDays,
+      averageCompletionRate: Math.round(avgCompletionRate),
+      allHabits: habitAnalysis,
+      insights,
+    };
+  },
+});
+
+/**
+ * Get detailed statistics for a specific habit
+ * Shows day-by-day completion, streaks, and patterns
+ */
+export const getHabitStats = query({
+  args: {
+    fieldId: v.id("trackingFields"),
+    days: v.optional(v.number()), // Number of days to analyze (default 30)
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    // Get the tracking field
+    const field = await ctx.db.get(args.fieldId);
+    if (!field || field.userId !== identity.subject) {
+      throw new Error("Field not found");
+    }
+
+    // Get logs for the specified period
+    const daysToAnalyze = args.days || 30;
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - daysToAnalyze);
+    const startDateStr = startDate.toISOString().split("T")[0];
+
+    const logs = await ctx.db
+      .query("dailyLog")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .filter((q) => q.gte(q.field("date"), startDateStr))
+      .collect();
+
+    // Build day-by-day completion history
+    const completionHistory: Array<{
+      date: string;
+      completed: boolean;
+      dayOfWeek: string;
+    }> = [];
+
+    for (const log of logs.sort((a, b) => a.date.localeCompare(b.date))) {
+      let completed = false;
+
+      if (field.name === "Phone Jail") {
+        completed = log.tracking.phoneJail === true;
+      } else if (field.type === "toggle") {
+        const toggle = log.tracking.customToggles?.find(
+          (t) => t.fieldId === field._id
+        );
+        completed = toggle?.value === true;
+      } else if (field.type === "text") {
+        if (field.name === "Movement") {
+          completed = !!(log.tracking.movement && log.tracking.movement.length > 0);
+        } else if (field.name === "Vibes") {
+          completed = !!(log.tracking.vibes && log.tracking.vibes.length > 0);
+        } else {
+          const text = log.tracking.customTexts?.find(
+            (t) => t.fieldId === field._id
+          );
+          completed = !!(text?.value && text.value.length > 0);
+        }
+      }
+
+      completionHistory.push({
+        date: log.date,
+        completed,
+        dayOfWeek: log.dayOfWeek,
+      });
+    }
+
+    // Calculate current streak from completion history
+    let currentStreakDays = 0;
+    for (let i = completionHistory.length - 1; i >= 0; i--) {
+      if (completionHistory[i].completed) {
+        currentStreakDays++;
+      } else {
+        break;
+      }
+    }
+
+    // Calculate best streak from completion history
+    let bestStreakDays = 0;
+    let tempStreak = 0;
+    for (const day of completionHistory) {
+      if (day.completed) {
+        tempStreak++;
+        bestStreakDays = Math.max(bestStreakDays, tempStreak);
+      } else {
+        tempStreak = 0;
+      }
+    }
+
+    // Calculate completion rate
+    const totalDays = completionHistory.length;
+    const completedDays = completionHistory.filter((d) => d.completed).length;
+    const completionRate =
+      totalDays > 0 ? Math.round((completedDays / totalDays) * 100) : 0;
+
+    return {
+      fieldId: field._id,
+      fieldName: field.name,
+      fieldType: field.type,
+      completionHistory,
+      currentStreak: currentStreakDays,
+      bestStreak: bestStreakDays,
+      completionRate,
+      totalDays,
+      completedDays,
+      weeklyTarget: field.weeklyTarget,
+    };
+  },
+});
+
+/**
+ * Get completion trends over time
+ * Shows weekly trends and best/worst days
+ */
+export const getCompletionTrends = query({
+  args: {
+    weeks: v.optional(v.number()), // Number of weeks to analyze (default 4)
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const weeksToAnalyze = args.weeks || 4;
+    const daysToAnalyze = weeksToAnalyze * 7;
+
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - daysToAnalyze);
+    const startDateStr = startDate.toISOString().split("T")[0];
+
+    // Get logs
+    const logs = await ctx.db
+      .query("dailyLog")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .filter((q) => q.gte(q.field("date"), startDateStr))
+      .collect();
+
+    // Get active fields
+    const fields = await ctx.db
+      .query("trackingFields")
+      .withIndex("by_user_active", (q) =>
+        q.eq("userId", identity.subject).eq("isActive", true)
+      )
+      .collect();
+
+    const completedLogs = logs.filter((log) => log.completed);
+
+    // Group logs by week
+    const weeklyData = new Map<number, Array<typeof logs[0]>>();
+    for (const log of completedLogs) {
+      if (!weeklyData.has(log.weekNumber)) {
+        weeklyData.set(log.weekNumber, []);
+      }
+      weeklyData.get(log.weekNumber)!.push(log);
+    }
+
+    // Calculate weekly completion rates
+    const weeklyTrends: Array<{
+      weekNumber: number;
+      year: number;
+      completionRate: number;
+      totalHabits: number;
+      completedHabits: number;
+    }> = [];
+
+    for (const [weekNumber, weekLogs] of Array.from(weeklyData.entries())) {
+      let totalHabitCompletions = 0;
+      const totalPossible = fields.length * weekLogs.length;
+
+      for (const field of fields) {
+        for (const log of weekLogs) {
+          let completed = false;
+
+          if (field.name === "Phone Jail") {
+            completed = log.tracking.phoneJail === true;
+          } else if (field.type === "toggle") {
+            const toggle = log.tracking.customToggles?.find(
+              (t) => t.fieldId === field._id
+            );
+            completed = toggle?.value === true;
+          } else if (field.type === "text") {
+            if (field.name === "Movement") {
+              completed = !!(log.tracking.movement && log.tracking.movement.length > 0);
+            } else if (field.name === "Vibes") {
+              completed = !!(log.tracking.vibes && log.tracking.vibes.length > 0);
+            } else {
+              const text = log.tracking.customTexts?.find(
+                (t) => t.fieldId === field._id
+              );
+              completed = !!(text?.value && text.value.length > 0);
+            }
+          }
+
+          if (completed) totalHabitCompletions++;
+        }
+      }
+
+      const completionRate =
+        totalPossible > 0
+          ? Math.round((totalHabitCompletions / totalPossible) * 100)
+          : 0;
+
+      weeklyTrends.push({
+        weekNumber,
+        year: weekLogs[0].year,
+        completionRate,
+        totalHabits: fields.length,
+        completedHabits: totalHabitCompletions,
+      });
+    }
+
+    // Analyze day of week patterns
+    const dayOfWeekStats = new Map<string, { completed: number; total: number }>();
+
+    for (const log of completedLogs) {
+      if (!dayOfWeekStats.has(log.dayOfWeek)) {
+        dayOfWeekStats.set(log.dayOfWeek, { completed: 0, total: 0 });
+      }
+
+      const stats = dayOfWeekStats.get(log.dayOfWeek)!;
+      stats.total += fields.length;
+
+      for (const field of fields) {
+        let completed = false;
+
+        if (field.name === "Phone Jail") {
+          completed = log.tracking.phoneJail === true;
+        } else if (field.type === "toggle") {
+          const toggle = log.tracking.customToggles?.find(
+            (t) => t.fieldId === field._id
+          );
+          completed = toggle?.value === true;
+        } else if (field.type === "text") {
+          if (field.name === "Movement") {
+            completed = !!(log.tracking.movement && log.tracking.movement.length > 0);
+          } else if (field.name === "Vibes") {
+            completed = !!(log.tracking.vibes && log.tracking.vibes.length > 0);
+          } else {
+            const text = log.tracking.customTexts?.find(
+              (t) => t.fieldId === field._id
+            );
+            completed = !!(text?.value && text.value.length > 0);
+          }
+        }
+
+        if (completed) stats.completed++;
+      }
+    }
+
+    // Calculate day of week completion rates
+    const dayOfWeekData: Array<{
+      dayOfWeek: string;
+      completionRate: number;
+    }> = [];
+
+    for (const [dayOfWeek, stats] of Array.from(dayOfWeekStats.entries())) {
+      const completionRate =
+        stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0;
+      dayOfWeekData.push({ dayOfWeek, completionRate });
+    }
+
+    // Find best and worst days
+    dayOfWeekData.sort((a, b) => b.completionRate - a.completionRate);
+    const bestDay = dayOfWeekData[0] || null;
+    const worstDay = dayOfWeekData[dayOfWeekData.length - 1] || null;
+
+    return {
+      weeklyTrends: weeklyTrends.sort((a, b) => {
+        if (a.year !== b.year) return a.year - b.year;
+        return a.weekNumber - b.weekNumber;
+      }),
+      dayOfWeekData: dayOfWeekData.sort((a, b) => {
+        const days = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"];
+        return days.indexOf(a.dayOfWeek) - days.indexOf(b.dayOfWeek);
+      }),
+      bestDay,
+      worstDay,
+      totalWeeks: weeklyTrends.length,
+    };
+  },
+});
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+/**
+ * Calculate completion rate for a specific tracking field
+ */
+function calculateCompletionRate(
+  logs: Array<{
+    tracking: {
+      movement?: string;
+      phoneJail?: boolean;
+      vibes?: string;
+      customToggles?: Array<{ fieldId: any; value: boolean }>;
+      customTexts?: Array<{ fieldId: any; value: string }>;
+    };
+  }>,
+  field: {
+    _id: any;
+    name: string;
+    type: string;
+  },
+  totalDays: number
+): number {
+  if (totalDays === 0) return 0;
+
+  let completedCount = 0;
+
+  for (const log of logs) {
+    let completed = false;
+
+    if (field.name === "Phone Jail") {
+      completed = log.tracking.phoneJail === true;
+    } else if (field.type === "toggle") {
+      const toggle = log.tracking.customToggles?.find(
+        (t) => t.fieldId === field._id
+      );
+      completed = toggle?.value === true;
+    } else if (field.type === "text") {
+      if (field.name === "Movement") {
+        completed = !!(log.tracking.movement && log.tracking.movement.length > 0);
+      } else if (field.name === "Vibes") {
+        completed = !!(log.tracking.vibes && log.tracking.vibes.length > 0);
+      } else {
+        const text = log.tracking.customTexts?.find(
+          (t) => t.fieldId === field._id
+        );
+        completed = !!(text?.value && text.value.length > 0);
+      }
+    }
+
+    if (completed) completedCount++;
+  }
+
+  return Math.round((completedCount / totalDays) * 100);
+}

@@ -4,7 +4,7 @@ import { v } from "convex/values";
 /**
  * Personal Dashboard Schema
  *
- * 8 Tables:
+ * 13 Tables:
  * 1. userProfile - User basics, North Stars, Milestones, Coach Settings
  * 2. trackingFields - Configurable daily tracking fields
  * 3. dailyLog - Daily tracking data + wellbeing
@@ -13,6 +13,11 @@ import { v } from "convex/values";
  * 6. quarterlyReview - Milestone check + 5 questions + new milestones
  * 7. annualReview - North Star check + 6 questions + new North Stars
  * 8. coachMessages - Chat history with AI Coach
+ * 9. habitCategories - User-configurable habit categories
+ * 10. habitTemplates - Habit templates with XP values
+ * 11. dailyHabits - Daily habit completion tracking
+ * 12. userStats - Gamification stats (XP, level, streaks)
+ * 13. visionboard - Vision board images
  */
 
 export default defineSchema({
@@ -292,4 +297,59 @@ export default defineSchema({
     .index("by_user", ["userId"])
     .index("by_user_list", ["userId", "listId"])
     .index("by_user_position", ["userId", "position"]),
+
+  // ============================================
+  // GAMIFICATION SYSTEM
+  // ============================================
+
+  habitCategories: defineTable({
+    userId: v.string(),
+    name: v.string(),
+    icon: v.string(), // emoji
+    order: v.number(),
+    requiresCoreCompletion: v.boolean(),
+    createdAt: v.string(),
+    updatedAt: v.string(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_order", ["userId", "order"]),
+
+  habitTemplates: defineTable({
+    userId: v.string(),
+    categoryId: v.id("habitCategories"),
+    name: v.string(),
+    xpValue: v.number(), // user-configurable
+    isCore: v.boolean(), // core habits must be completed to unlock extras
+    order: v.number(),
+    createdAt: v.string(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_category", ["categoryId"])
+    .index("by_category_order", ["categoryId", "order"]),
+
+  dailyHabits: defineTable({
+    userId: v.string(),
+    date: v.string(), // "YYYY-MM-DD"
+    templateId: v.id("habitTemplates"),
+    completed: v.boolean(),
+    skipped: v.boolean(),
+    skipReason: v.optional(v.string()), // "Ran out of time", "Not feeling well", etc.
+    completedAt: v.optional(v.string()),
+    xpEarned: v.number(),
+    createdAt: v.string(),
+  })
+    .index("by_user_date", ["userId", "date"])
+    .index("by_template", ["templateId"])
+    .index("by_user_date_template", ["userId", "date", "templateId"]),
+
+  userStats: defineTable({
+    userId: v.string(),
+    totalXP: v.number(),
+    level: v.number(),
+    currentStreak: v.number(), // days in a row completing habits
+    longestStreak: v.number(),
+    weekScore: v.number(), // days completed this week (0-7)
+    updatedAt: v.string(),
+  })
+    .index("by_user", ["userId"]),
 });
