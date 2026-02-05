@@ -68,7 +68,7 @@ export function HabitCategory({
         <div className="flex items-center justify-between">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex flex-1 items-center gap-3 text-left"
+            className="flex items-center gap-3 text-left"
           >
             {allHabitsComplete ? (
               <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[#00E676] text-white">
@@ -81,21 +81,22 @@ export function HabitCategory({
             )}
             <div>
               <h3 className="text-base font-semibold">{name}</h3>
-              <p className="text-xs text-muted-foreground">
-                {completedTotal}/{habits.length} completed · {totalXP}/{maxXP} XP
-              </p>
             </div>
           </button>
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="p-1"
-          >
-            {isExpanded ? (
-              <ChevronDown className="h-5 w-5 text-muted-foreground" />
-            ) : (
-              <ChevronRight className="h-5 w-5 text-muted-foreground" />
-            )}
-          </button>
+          <div className="flex items-center gap-2">
+            <span className="rounded-full bg-white/8 dark:bg-white/8 bg-black/6 px-2 py-0.5 text-[11px] text-[#666666] dark:text-[#888888]">
+              min
+            </span>
+            <span className="text-[13px] text-[#666666] dark:text-[#888888]">
+              {completedTotal}/{habits.length}
+            </span>
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="text-[10px] text-[#999999] dark:text-[#666666]"
+            >
+              {isExpanded ? "▼" : "▶"}
+            </button>
+          </div>
         </div>
         <Progress
           value={progress}
@@ -130,7 +131,7 @@ export function HabitCategory({
                     Complete core to unlock
                   </span>
                   <div className="flex-1" />
-                  <span className="text-muted-foreground/60 text-xs">
+                  <span className="text-[13px] text-[#AAAAAA] dark:text-[#555555]">
                     {completedExtra}/{extraHabits.length}
                   </span>
                 </div>
@@ -142,7 +143,7 @@ export function HabitCategory({
                       Extras unlocked
                     </span>
                     <div className="flex-1" />
-                    <span className="text-muted-foreground/60 text-xs">
+                    <span className="text-[13px] text-[#AAAAAA] dark:text-[#555555]">
                       {completedExtra}/{extraHabits.length}
                     </span>
                   </div>

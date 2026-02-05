@@ -144,7 +144,7 @@ export function HabitItem({
         )}
       </div>
 
-      <div className="flex items-center gap-2 min-w-[80px] justify-end">
+      <div className="flex items-center gap-3 justify-end">
         {completed ? (
           <div className="text-xl font-bold text-[#00E676]">✓</div>
         ) : (
@@ -171,13 +171,9 @@ export function HabitItem({
             )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 px-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                >
+                <button className="text-[12px] text-[#999999] dark:text-[#555555] bg-transparent border-0 px-0 py-0 h-auto">
                   Skip
-                </Button>
+                </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 {SKIP_REASONS.map((reason) => (
