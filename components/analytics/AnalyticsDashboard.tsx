@@ -72,12 +72,10 @@ export function AnalyticsDashboard() {
         {/* All-Time Stats - Full Width */}
         <AllTimeStats stats={analytics.allTimeStats} />
 
-        {/* Skip Patterns - Full Width */}
-        <SkipPatterns patterns={analytics.skipPatterns} />
-
-        {/* Average Block Times - Half Width (Left Aligned) */}
+        {/* Average Block Times & Skip Patterns - Side by Side */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <AverageBlockTimes blockTimes={analytics.avgBlockTimes} />
+          <SkipPatterns patterns={analytics.skipPatterns} />
         </div>
       </div>
     </div>
