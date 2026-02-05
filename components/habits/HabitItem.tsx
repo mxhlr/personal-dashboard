@@ -125,13 +125,18 @@ export function HabitItem({
       <Checkbox
         checked={completed}
         onCheckedChange={handleToggle}
-        className="h-5 w-5 data-[state=checked]:border-green-500 data-[state=checked]:bg-green-500"
+        className="h-5 w-5 rounded-md data-[state=checked]:border-[#00E676] data-[state=checked]:bg-[#00E676] data-[state=checked]:text-white"
       />
 
       <div className="flex-1">
         <div className={`text-sm ${completed ? "text-muted-foreground line-through" : "text-foreground"}`}>
           {name}
         </div>
+        {completed && completedAt && (
+          <div className="text-xs text-[#00FF88] mt-0.5">
+            {formatTimestamp(completedAt)}
+          </div>
+        )}
         {subtitle && (
           <div className="text-xs text-muted-foreground/70 mt-0.5">
             {subtitle}
@@ -139,11 +144,7 @@ export function HabitItem({
         )}
       </div>
 
-      {completed && completedAt ? (
-        <div className="flex items-center gap-2 text-xs text-green-500">
-          <span>{formatTimestamp(completedAt)}</span>
-        </div>
-      ) : (
+      {!completed && (
         <div className="flex items-center gap-2">
           {isEditingXP ? (
             <Input
