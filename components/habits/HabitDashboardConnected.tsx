@@ -300,8 +300,18 @@ export function HabitDashboardConnected() {
           ))}
         </div>
 
-        {/* Pattern Intelligence */}
-        {patternData && <PatternIntelligence data={patternData} />}
+        {/* Pattern Intelligence - always show with example if empty */}
+        {patternData && (
+          <PatternIntelligence
+            data={{
+              lowCompletionHabits: patternData.lowCompletionHabits,
+              commonSkipReasons: patternData.commonSkipReasons.length > 0
+                ? patternData.commonSkipReasons
+                : [{ reason: "Not enough time", count: 12 }],
+              recommendations: patternData.recommendations,
+            }}
+          />
+        )}
 
         {/* Finish Day Button */}
         <Button
