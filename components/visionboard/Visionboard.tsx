@@ -130,7 +130,7 @@ function SortableImage({
 
       {/* Subtitle section - only show if subtitle exists or editing */}
       {(image.subtitle || isEditingSubtitle) && (
-        <div className="p-2 bg-white dark:bg-gray-800 rounded-b-lg">
+        <div className="p-2 bg-white rounded-b-lg">
           {isEditingSubtitle ? (
             <div className="flex items-center gap-1">
               <Input
@@ -155,7 +155,7 @@ function SortableImage({
               </button>
             </div>
           ) : (
-            <p className="text-xs text-center text-gray-900 dark:text-gray-100">{image.subtitle}</p>
+            <p className="text-xs text-center text-black">{image.subtitle}</p>
           )}
         </div>
       )}
