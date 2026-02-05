@@ -93,7 +93,7 @@ export function SprintTimer() {
               hover:bg-[#616161] hover:shadow-md hover:scale-[1.02]
               transition-all duration-300"
           >
-            NOT STARTED
+            START BLOCK
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
