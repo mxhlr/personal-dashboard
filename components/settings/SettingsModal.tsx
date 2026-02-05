@@ -132,10 +132,11 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">
           <Tabs defaultValue="profile" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="profile">Profil</TabsTrigger>
               <TabsTrigger value="northstars">North Stars</TabsTrigger>
               <TabsTrigger value="habits">Habits</TabsTrigger>
+              <TabsTrigger value="visionboard">Vision Board</TabsTrigger>
               <TabsTrigger value="coach">Coach</TabsTrigger>
             </TabsList>
 
@@ -263,6 +264,25 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               <Button onClick={handleSaveNorthStars} disabled={isSaving}>
                 {isSaving ? "Speichert..." : "Speichern"}
               </Button>
+            </TabsContent>
+
+            {/* Vision Board Tab */}
+            <TabsContent value="visionboard" className="space-y-4 mt-6">
+              <p className="text-sm text-muted-foreground mb-4">
+                Verwalte deine Vision Board Listen und Spalten
+              </p>
+
+              <div className="space-y-4">
+                <div className="rounded-lg border border-border bg-card p-4">
+                  <h3 className="font-semibold mb-2">Listen verwalten</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Hier kannst du neue Listen erstellen, bestehende bearbeiten, die Reihenfolge ändern und Listen löschen.
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Hinweis:</strong> Diese Funktion ist noch in Entwicklung. Verwende vorerst das Vision Board direkt, um Listen zu bearbeiten.
+                  </p>
+                </div>
+              </div>
             </TabsContent>
 
             {/* Tracking Fields Tab */}

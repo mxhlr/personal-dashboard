@@ -513,17 +513,6 @@ export function Visionboard() {
               );
             })}
 
-            {/* Add Another List Button - Trello style */}
-            <div className="w-[272px] flex-shrink-0">
-              <button
-                onClick={handleCreateList}
-                disabled={isUploading}
-                className="w-full px-3 py-2 rounded-lg bg-white/50 hover:bg-white/80 transition-colors text-sm text-muted-foreground flex items-center gap-2"
-              >
-                <Plus className="h-4 w-4" />
-                <span>Weitere Liste hinzufügen</span>
-              </button>
-            </div>
           </div>
         </div>
       </div>

@@ -125,7 +125,7 @@ export function HabitItem({
       <Checkbox
         checked={completed}
         onCheckedChange={handleToggle}
-        className="h-5 w-5 rounded-md border-border data-[state=checked]:border-[#00E676] data-[state=checked]:bg-[#00E676] data-[state=checked]:text-white"
+        className="h-5 w-5 rounded-md border-border data-[state=checked]:border-[#00E676] data-[state=checked]:bg-[#00E676] data-[state=checked]:text-white data-[state=checked]:rounded-[6px]"
       />
 
       <div className="flex-1">
@@ -144,9 +144,9 @@ export function HabitItem({
         )}
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 min-w-[80px] justify-end">
         {completed ? (
-          <div className="text-lg text-[#00FF88]">✓</div>
+          <div className="text-xl font-bold text-[#00E676]">✓</div>
         ) : (
           <>
             {isEditingXP ? (
@@ -174,7 +174,7 @@ export function HabitItem({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-7 px-2 text-xs opacity-0 transition-opacity hover:opacity-100"
+                  className="h-7 px-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
                 >
                   Skip
                 </Button>

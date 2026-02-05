@@ -45,6 +45,7 @@ export function HabitCategory({
   const progress = maxXP > 0 ? (totalXP / maxXP) * 100 : 0;
   const isComplete = completedTotal === habits.length;
   const coreComplete = completedCore === coreHabits.length && coreHabits.length > 0;
+  const allHabitsComplete = habits.every((h) => h.completed);
 
   const handleToggle = (habitId: string) => {
     onHabitToggle(name, habitId);
@@ -69,9 +70,15 @@ export function HabitCategory({
             onClick={() => setIsExpanded(!isExpanded)}
             className="flex flex-1 items-center gap-3 text-left"
           >
-            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-cyan-500 text-xs font-bold text-white">
-              {categoryNumber}
-            </div>
+            {allHabitsComplete ? (
+              <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[#00E676] text-white">
+                <span className="text-sm">✓</span>
+              </div>
+            ) : (
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2A2A3E] text-xs font-medium text-[#88CCDD]">
+                {categoryNumber}
+              </div>
+            )}
             <div>
               <h3 className="text-base font-semibold">{name}</h3>
               <p className="text-xs text-muted-foreground">
