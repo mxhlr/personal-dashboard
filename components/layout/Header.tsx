@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Settings, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -35,6 +36,24 @@ export default function Header({
   selectedReview = "weekly",
   onReviewChange,
 }: HeaderProps) {
+  const [currentTime, setCurrentTime] = useState("");
+
+  useEffect(() => {
+    const updateTime = () => {
+      setCurrentTime(
+        new Date().toLocaleTimeString("de-DE", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      );
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <header className="sticky top-0 z-50 border-b dark:border-[rgba(0,229,255,0.1)] border-[rgba(0,180,220,0.15)]
       dark:bg-[#0A0A0F]/95 bg-white/95 backdrop-blur-md
@@ -130,8 +149,13 @@ export default function Header({
             </Button>
           </nav>
 
-          {/* Right: Settings */}
-          <div className="flex items-center gap-2">
+          {/* Right: Time, Theme Toggle, Settings */}
+          <div className="flex items-center gap-3">
+            {/* Current Time */}
+            <div className="text-sm font-orbitron dark:text-[#888888] text-[#666666] tabular-nums">
+              {currentTime}
+            </div>
+
             {/* Theme Toggle */}
             <div className="dark:hover:bg-white/5 hover:bg-black/5 rounded-lg transition-colors duration-200">
               <ThemeToggle />
