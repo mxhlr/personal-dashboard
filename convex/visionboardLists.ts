@@ -166,3 +166,28 @@ export const deleteList = mutation({
     await ctx.db.delete(args.listId);
   },
 });
+
+// Reorder lists
+export const reorderLists = mutation({
+  args: {
+    listIds: v.array(v.id("visionboardLists")),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    // Update position for each list
+    for (let i = 0; i < args.listIds.length; i++) {
+      const list = await ctx.db.get(args.listIds[i]);
+      if (!list || list.userId !== identity.subject) {
+        throw new Error("Not authorized");
+      }
+
+      await ctx.db.patch(args.listIds[i], {
+        position: i,
+      });
+    }
+  },
+});

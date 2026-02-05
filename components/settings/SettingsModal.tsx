@@ -18,6 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { X, Settings } from "lucide-react";
 import { toast } from "sonner";
 import { ManageHabitsDialog } from "@/components/habits/ManageHabitsDialog";
+import { VisionBoardSettings } from "@/components/settings/VisionBoardSettings";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -269,21 +270,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
             {/* Vision Board Tab */}
             <TabsContent value="visionboard" className="space-y-4 mt-6">
-              <p className="text-sm text-muted-foreground mb-4">
-                Verwalte deine Vision Board Listen und Spalten
-              </p>
-
-              <div className="space-y-4">
-                <div className="rounded-lg border border-border bg-card p-4">
-                  <h3 className="font-semibold mb-2">Listen verwalten</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Hier kannst du neue Listen erstellen, bestehende bearbeiten, die Reihenfolge ändern und Listen löschen.
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    <strong>Hinweis:</strong> Diese Funktion ist noch in Entwicklung. Verwende vorerst das Vision Board direkt, um Listen zu bearbeiten.
-                  </p>
-                </div>
-              </div>
+              <VisionBoardSettings />
             </TabsContent>
 
             {/* Tracking Fields Tab */}

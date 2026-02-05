@@ -472,10 +472,11 @@ export function Visionboard() {
           <h1 className="text-3xl font-semibold">Vision Board</h1>
         </div>
 
-        {/* Trello-style horizontal scrolling container */}
+        {/* Trello-style horizontal scrolling container - centered */}
         <div className="flex-1 overflow-x-auto overflow-y-hidden">
-          <div className="inline-flex gap-4 p-4 h-full items-start">
-            {allLists.map((list) => {
+          <div className="max-w-[1400px] mx-auto px-4">
+            <div className="inline-flex gap-4 py-4 h-full items-start">
+              {allLists.map((list) => {
               const listKey = list?._id || "default";
 
               return (
@@ -498,7 +499,7 @@ export function Visionboard() {
                 />
               );
             })}
-
+            </div>
           </div>
         </div>
       </div>
