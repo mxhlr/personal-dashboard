@@ -41,14 +41,12 @@ export function WinConditionBanner({ isAchieved = false }: WinConditionBannerPro
       }`}
       style={{
         background: isAchieved
-          ? 'rgba(255, 215, 0, 0.15)'
-          : 'linear-gradient(135deg, rgba(107, 33, 168, 0.85) 0%, rgba(139, 92, 246, 0.75) 100%)',
+          ? 'linear-gradient(135deg, rgba(255, 215, 0, 0.25) 0%, rgba(255, 180, 0, 0.2) 100%)'
+          : 'linear-gradient(135deg, rgba(107, 33, 168, 0.95) 0%, rgba(139, 92, 246, 0.85) 100%)',
         borderRadius: '16px',
-        backgroundImage: isAchieved
-          ? 'linear-gradient(rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.15)), linear-gradient(135deg, rgba(255, 215, 0, 0.3) 0%, transparent 100%)'
-          : undefined,
-        backgroundOrigin: isAchieved ? 'border-box' : undefined,
-        backgroundClip: isAchieved ? 'padding-box, border-box' : undefined,
+        boxShadow: isAchieved
+          ? '0 8px 32px rgba(255, 215, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+          : '0 8px 32px rgba(139, 92, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
       }}
     >
       <div className="relative space-y-4 text-center">
