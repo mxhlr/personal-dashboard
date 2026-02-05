@@ -20,17 +20,14 @@ interface DashboardProps {
 }
 
 export function Dashboard({ onNavigate }: DashboardProps) {
+  const today = format(new Date(), "yyyy-MM-dd");
   const profile = useQuery(api.userProfile.getUserProfile);
-  const todayLog = useQuery(api.dailyLog.getDailyLog, {
-    date: format(new Date(), "yyyy-MM-dd"),
-  });
-  const weeklyProgress = useQuery(api.dailyLog.getWeeklyProgress, {
-    weekNumber: getWeekNumber(new Date()),
-    year: new Date().getFullYear(),
-  });
+  const userStats = useQuery(api.gamification.getUserStats);
+  const dailyHabits = useQuery(api.dailyHabits.getHabitsForDate, { date: today });
+  const habitTemplates = useQuery(api.habitTemplates.listTemplates, {});
   const visionboardImages = useQuery(api.visionboard.getAllImages);
 
-  if (!profile) {
+  if (!profile || !userStats || !dailyHabits || !habitTemplates) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <p className="text-muted-foreground">Loading...</p>
@@ -38,7 +35,13 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     );
   }
 
-  const todayComplete = todayLog?.completed || false;
+  // Calculate today's progress
+  const totalHabits = habitTemplates.length;
+  const completedHabits = dailyHabits.filter((h) => h.completed).length;
+  const todayProgress = totalHabits > 0 ? Math.round((completedHabits / totalHabits) * 100) : 0;
+  const todayXP = dailyHabits.reduce((sum, h) => sum + (h.completed ? h.xpEarned : 0), 0);
+  const todayComplete = todayProgress === 100;
+
   const visionboardPreview = visionboardImages?.slice(0, 4) || [];
   const hasVisionboardImages = visionboardImages && visionboardImages.length > 0;
 
@@ -54,96 +57,136 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         </p>
       </div>
 
-      {/* North Stars */}
+      {/* North Stars - Compact Single Row */}
       <Card className="p-6 bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Target className="h-5 w-5 text-primary" />
-            <h2 className="text-xl font-semibold">Your North Stars</h2>
+        <div className="flex items-center justify-center gap-8 flex-wrap">
+          <div className="text-center">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
+              💰 WEALTH
+            </p>
+            <p className="text-sm">{profile.northStars.wealth}</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                💰 Wealth
-              </p>
-              <p className="text-sm">{profile.northStars.wealth}</p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                🏃 Health
-              </p>
-              <p className="text-sm">{profile.northStars.health}</p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                ❤️ Love
-              </p>
-              <p className="text-sm">{profile.northStars.love}</p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                😊 Happiness
-              </p>
-              <p className="text-sm">{profile.northStars.happiness}</p>
-            </div>
+          <div className="text-center">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
+              🏃 HEALTH
+            </p>
+            <p className="text-sm">{profile.northStars.health}</p>
+          </div>
+          <div className="text-center">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
+              ❤️ LOVE
+            </p>
+            <p className="text-sm">{profile.northStars.love}</p>
+          </div>
+          <div className="text-center">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
+              😊 HAPPINESS
+            </p>
+            <p className="text-sm">{profile.northStars.happiness}</p>
           </div>
         </div>
       </Card>
 
       {/* Main Widgets Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Today's Log Status */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Today's Log - Improved */}
         <Card className="p-6 hover:shadow-lg transition-shadow">
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-primary" />
-                <h3 className="font-semibold">Today&apos;s Log</h3>
-              </div>
-              {todayComplete && (
-                <CheckCircle2 className="h-5 w-5 text-green-500" />
-              )}
+            <div className="flex items-center gap-2">
+              <Calendar className="h-5 w-5 text-primary" />
+              <h3 className="font-semibold">Today&apos;s Log</h3>
             </div>
-            <p className="text-sm text-muted-foreground">
-              {todayComplete
-                ? "✅ Completed! Great job!"
-                : "⏳ Not completed yet"}
-            </p>
-            <Button
-              onClick={() => onNavigate("planning")}
-              className="w-full"
-              variant={todayComplete ? "outline" : "default"}
-            >
-              {todayComplete ? "View" : "Fill Out"}
-            </Button>
+
+            {todayComplete ? (
+              <>
+                <div className="flex items-center gap-4">
+                  <CheckCircle2 className="h-12 w-12 text-green-500" />
+                  <div>
+                    <p className="text-sm font-medium">Tag abgeschlossen ✓</p>
+                    <p className="text-sm text-muted-foreground">{todayProgress}% • {todayXP} XP</p>
+                  </div>
+                </div>
+                <Button
+                  onClick={() => onNavigate("planning")}
+                  variant="outline"
+                  className="w-full"
+                >
+                  Details ansehen →
+                </Button>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-4">
+                  <div className="relative h-16 w-16">
+                    {/* Simple Progress Ring */}
+                    <svg className="h-16 w-16 -rotate-90">
+                      <circle
+                        cx="32"
+                        cy="32"
+                        r="28"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        fill="none"
+                        className="text-muted"
+                      />
+                      <circle
+                        cx="32"
+                        cy="32"
+                        r="28"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        fill="none"
+                        strokeDasharray={`${2 * Math.PI * 28}`}
+                        strokeDashoffset={`${2 * Math.PI * 28 * (1 - todayProgress / 100)}`}
+                        className="text-primary"
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-sm font-bold">{todayProgress}%</span>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">{completedHabits}/{totalHabits} Habits erledigt</p>
+                    <p className="text-sm text-muted-foreground">{todayXP} XP earned</p>
+                  </div>
+                </div>
+                <Button
+                  onClick={() => onNavigate("planning")}
+                  className="w-full"
+                >
+                  Zum Sprint →
+                </Button>
+              </>
+            )}
           </div>
         </Card>
 
-        {/* Weekly Progress */}
+        {/* Weekly Progress - Improved */}
         <Card className="p-6 hover:shadow-lg transition-shadow">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <TrendingUp className="h-5 w-5 text-primary" />
               <h3 className="font-semibold">Weekly Progress</h3>
             </div>
-            {weeklyProgress && weeklyProgress.length > 0 ? (
-              <div className="space-y-2">
-                {weeklyProgress.slice(0, 2).map((progress) => (
-                  <div key={progress.fieldId} className="flex justify-between items-center text-sm">
-                    <span className="text-muted-foreground">{progress.fieldName}</span>
-                    <span className="font-medium">{progress.current}/{progress.target}</span>
-                  </div>
-                ))}
+            <div className="space-y-3">
+              <div>
+                <p className="text-2xl font-bold">{userStats.weekScore}/7 Days</p>
+                <p className="text-sm text-muted-foreground">Diese Woche</p>
               </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">No goals tracked this week</p>
-            )}
+              <div>
+                <p className="text-lg font-semibold text-primary">{userStats.totalXP} XP</p>
+                <p className="text-sm text-muted-foreground">Diese Woche</p>
+              </div>
+              <div>
+                <p className="text-lg font-semibold">🔥 {userStats.currentStreak} Tage Streak</p>
+              </div>
+            </div>
             <Button
               onClick={() => onNavigate("data")}
               variant="outline"
               className="w-full"
             >
-              View All Data
+              View All Data →
             </Button>
           </div>
         </Card>

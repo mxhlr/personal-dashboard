@@ -354,4 +354,17 @@ export default defineSchema({
     updatedAt: v.string(),
   })
     .index("by_user", ["userId"]),
+
+  categoryBlockTimes: defineTable({
+    userId: v.string(),
+    date: v.string(), // "YYYY-MM-DD"
+    categoryId: v.id("habitCategories"),
+    durationMinutes: v.number(),
+    startedAt: v.string(),
+    completedAt: v.string(),
+    createdAt: v.string(),
+  })
+    .index("by_user_date", ["userId", "date"])
+    .index("by_category", ["categoryId"])
+    .index("by_user_category", ["userId", "categoryId"]),
 });

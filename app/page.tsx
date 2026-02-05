@@ -17,6 +17,7 @@ import { QuarterlyReviewForm } from "@/components/reviews/QuarterlyReviewForm";
 import { AnnualReviewForm } from "@/components/reviews/AnnualReviewForm";
 import { DataView } from "@/components/data/DataView";
 import { SettingsModal } from "@/components/settings/SettingsModal";
+import { AnalyticsDashboard } from "@/components/analytics/AnalyticsDashboard";
 import {
   Select,
   SelectContent,
@@ -154,31 +155,7 @@ export default function DashboardPage() {
 
           {/* Tab 3: Data View */}
           {activeTab === "data" && (
-            <div className="container mx-auto px-4 py-8 space-y-6">
-              {/* Dropdown for Data View Selection */}
-              <div className="max-w-4xl mx-auto px-6">
-                <Select
-                  value={selectedDataView}
-                  onValueChange={(value) => setSelectedDataView(value as DataViewType)}
-                >
-                  <SelectTrigger className="w-[240px] bg-card shadow-sm">
-                    <SelectValue placeholder="Select data view" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="weekly">Weekly Data</SelectItem>
-                    <SelectItem value="monthly">Monthly Data</SelectItem>
-                    <SelectItem value="quarterly">Quarterly Data</SelectItem>
-                    <SelectItem value="annual">Annual Data</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Data Views */}
-              {selectedDataView === "weekly" && <WeeklyOverview selectedDate={now} />}
-              {selectedDataView !== "weekly" && (
-                <DataView selectedView={selectedDataView as ReviewType} />
-              )}
-            </div>
+            <AnalyticsDashboard />
           )}
 
           {/* Tab 4: Coach */}

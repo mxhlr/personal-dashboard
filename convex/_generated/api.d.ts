@@ -11,6 +11,7 @@
 import type * as adminFix from "../adminFix.js";
 import type * as analytics from "../analytics.js";
 import type * as annualReview from "../annualReview.js";
+import type * as categoryTimeTracking from "../categoryTimeTracking.js";
 import type * as coachMessages from "../coachMessages.js";
 import type * as dailyHabits from "../dailyHabits.js";
 import type * as dailyLog from "../dailyLog.js";
@@ -40,6 +41,7 @@ declare const fullApi: ApiFromModules<{
   adminFix: typeof adminFix;
   analytics: typeof analytics;
   annualReview: typeof annualReview;
+  categoryTimeTracking: typeof categoryTimeTracking;
   coachMessages: typeof coachMessages;
   dailyHabits: typeof dailyHabits;
   dailyLog: typeof dailyLog;

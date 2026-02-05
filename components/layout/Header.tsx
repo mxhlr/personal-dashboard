@@ -31,13 +31,6 @@ export default function Header({
               Dashboard
             </Button>
             <Button
-              variant={activeTab === "visionboard" ? "default" : "ghost"}
-              onClick={() => onTabChange("visionboard")}
-              className="font-medium"
-            >
-              Visionboard
-            </Button>
-            <Button
               variant={activeTab === "planning" ? "default" : "ghost"}
               onClick={() => onTabChange("planning")}
               className="font-medium"
@@ -50,6 +43,13 @@ export default function Header({
               className="font-medium"
             >
               Data
+            </Button>
+            <Button
+              variant={activeTab === "visionboard" ? "default" : "ghost"}
+              onClick={() => onTabChange("visionboard")}
+              className="font-medium"
+            >
+              Visionboard
             </Button>
             <Button
               variant={activeTab === "coach" ? "default" : "ghost"}

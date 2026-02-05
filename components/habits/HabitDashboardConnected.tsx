@@ -47,6 +47,8 @@ export function HabitDashboardConnected() {
   // Mutations
   const completeHabit = useMutation(api.gamification.completeHabit);
   const skipHabit = useMutation(api.gamification.skipHabit);
+  const startCategoryTimer = useMutation(api.categoryTimeTracking.startCategoryTimer);
+  const completeCategoryTimer = useMutation(api.categoryTimeTracking.completeCategoryTimer);
 
   const [currentTime, setCurrentTime] = useState("");
   const [localCategories, setLocalCategories] = useState<Category[]>([]);
@@ -118,6 +120,11 @@ export function HabitDashboardConnected() {
 
     if (!habit || !category) return;
 
+    // Check category completion status BEFORE toggle
+    const coreHabitsBeforeToggle = category.habits.filter((h) => !h.isExtra);
+    const wasNoneCompleted = coreHabitsBeforeToggle.every((h) => !h.completed);
+    const wasAllCompleted = coreHabitsBeforeToggle.every((h) => h.completed);
+
     try {
       // Toggle habit (completeHabit now works as a toggle)
       await completeHabit({
@@ -141,7 +148,21 @@ export function HabitDashboardConnected() {
           .filter((h) => !h.isExtra)
           .every((h) => h.completed);
 
+        // Start timer if this is the first habit in the category
+        if (!habit.isExtra && wasNoneCompleted) {
+          await startCategoryTimer({
+            categoryId: category.id as Id<"habitCategories">,
+            date: today,
+          });
+        }
+
+        // Complete timer if category is now fully complete
         if (categoryComplete) {
+          await completeCategoryTimer({
+            categoryId: category.id as Id<"habitCategories">,
+            date: today,
+          });
+
           toast({
             title: `✓ ${categoryName} complete!`,
             description: "Great job! Keep the momentum going.",

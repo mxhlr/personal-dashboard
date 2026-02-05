@@ -168,3 +168,187 @@ export const getHabitHistory = query({
     };
   },
 });
+
+/**
+ * Get comprehensive analytics for the new Data page
+ */
+export const getComprehensiveAnalytics = query({
+  args: {
+    year: v.optional(v.number()),
+    month: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const currentDate = new Date();
+    const year = args.year || currentDate.getFullYear();
+    const month = args.month !== undefined ? args.month : currentDate.getMonth() + 1;
+
+    // Get all daily habits for the user
+    const allDailyHabits = await ctx.db
+      .query("dailyHabits")
+      .withIndex("by_user_date", (q) => q.eq("userId", identity.subject))
+      .collect();
+
+    // Get all habit templates and categories
+    const templates = await ctx.db
+      .query("habitTemplates")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .collect();
+
+    const categories = await ctx.db
+      .query("habitCategories")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .collect();
+
+    // Calculate daily scores for calendar heatmap
+    const dailyScores: Record<string, { score: number; xp: number }> = {};
+    const dateGroups: Record<string, typeof allDailyHabits> = {};
+
+    allDailyHabits.forEach((habit) => {
+      if (!dateGroups[habit.date]) {
+        dateGroups[habit.date] = [];
+      }
+      dateGroups[habit.date].push(habit);
+    });
+
+    Object.entries(dateGroups).forEach(([date, habits]) => {
+      const completed = habits.filter((h) => h.completed).length;
+      const total = habits.length;
+      const score = total > 0 ? Math.round((completed / total) * 100) : 0;
+      const xp = habits.reduce((sum, h) => sum + (h.completed ? h.xpEarned : 0), 0);
+      dailyScores[date] = { score, xp };
+    });
+
+    // Calculate monthly comparison (last 12 months)
+    const monthlyStats: Array<{ month: string; score: number }> = [];
+    for (let i = 11; i >= 0; i--) {
+      const targetDate = new Date(currentDate);
+      targetDate.setMonth(targetDate.getMonth() - i);
+      const targetYear = targetDate.getFullYear();
+      const targetMonth = targetDate.getMonth() + 1;
+
+      const monthHabits = allDailyHabits.filter((h) => {
+        const [y, m] = h.date.split("-").map(Number);
+        return y === targetYear && m === targetMonth;
+      });
+
+      const monthlyDateGroups: Record<string, typeof allDailyHabits> = {};
+      monthHabits.forEach((habit) => {
+        if (!monthlyDateGroups[habit.date]) {
+          monthlyDateGroups[habit.date] = [];
+        }
+        monthlyDateGroups[habit.date].push(habit);
+      });
+
+      const dailyScoresForMonth = Object.values(monthlyDateGroups).map((habits) => {
+        const completed = habits.filter((h) => h.completed).length;
+        const total = habits.length;
+        return total > 0 ? (completed / total) * 100 : 0;
+      });
+
+      const avgScore =
+        dailyScoresForMonth.length > 0
+          ? Math.round(
+              dailyScoresForMonth.reduce((sum, s) => sum + s, 0) / dailyScoresForMonth.length
+            )
+          : 0;
+
+      monthlyStats.push({
+        month: targetDate.toLocaleString("en-US", { month: "short" }),
+        score: avgScore,
+      });
+    }
+
+    // All-time stats
+    const allDailyScores = Object.values(dailyScores).map((d) => d.score);
+    const wins = allDailyScores.filter((s) => s >= 80).length;
+    const perfect = allDailyScores.filter((s) => s === 100).length;
+
+    // Calculate best streak
+    const sortedDates = Object.keys(dailyScores).sort();
+    let bestStreak = 0;
+    let currentStreak = 0;
+    let previousDate: Date | null = null;
+
+    sortedDates.forEach((dateStr) => {
+      const score = dailyScores[dateStr].score;
+      const currentDate = new Date(dateStr);
+
+      if (score >= 80) {
+        if (
+          previousDate &&
+          (currentDate.getTime() - previousDate.getTime()) / (1000 * 60 * 60 * 24) === 1
+        ) {
+          currentStreak++;
+        } else {
+          currentStreak = 1;
+        }
+        bestStreak = Math.max(bestStreak, currentStreak);
+      } else {
+        currentStreak = 0;
+      }
+
+      previousDate = currentDate;
+    });
+
+    // Skip patterns
+    const skipReasons: Record<string, number> = {};
+    allDailyHabits
+      .filter((h) => h.skipped && h.skipReason)
+      .forEach((h) => {
+        const reason = h.skipReason!;
+        skipReasons[reason] = (skipReasons[reason] || 0) + 1;
+      });
+
+    const skipPatterns = Object.entries(skipReasons)
+      .sort(([, a], [, b]) => b - a)
+      .map(([reason, count]) => ({ reason, count }));
+
+    // Average block times - get from categoryTimeTracking
+    const blockTimes = await ctx.db
+      .query("categoryBlockTimes")
+      .withIndex("by_user_date", (q) => q.eq("userId", identity.subject))
+      .filter((q) => q.gt(q.field("durationMinutes"), 0))
+      .collect();
+
+    const categoryStats: Record<
+      string,
+      { name: string; totalMinutes: number; count: number }
+    > = {};
+
+    for (const bt of blockTimes) {
+      const category = categories.find((c) => c._id === bt.categoryId);
+      const categoryName = category?.name || "Unknown";
+
+      if (!categoryStats[categoryName]) {
+        categoryStats[categoryName] = {
+          name: categoryName,
+          totalMinutes: 0,
+          count: 0,
+        };
+      }
+      categoryStats[categoryName].totalMinutes += bt.durationMinutes;
+      categoryStats[categoryName].count += 1;
+    }
+
+    const avgBlockTimes = Object.values(categoryStats).map((stat) => ({
+      categoryName: stat.name,
+      avgMinutes: Math.round(stat.totalMinutes / stat.count),
+      logs: stat.count,
+    }));
+
+    return {
+      dailyScores,
+      monthlyStats,
+      allTimeStats: {
+        wins,
+        perfect,
+        bestStreak,
+      },
+      skipPatterns,
+      avgBlockTimes,
+    };
+  },
+});
