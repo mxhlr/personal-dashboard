@@ -96,7 +96,8 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         {/* North Stars - Gaming HUD Style */}
         <Card className="p-6 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
           shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
-          dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]"
+          dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]
+          dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.2)]"
           style={{
             background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
           }}
@@ -135,9 +136,19 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         {/* Main Widgets Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Today's Log - Gaming HUD Style */}
-          <Card className="p-6 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
+          <Card
+            className={`p-6 dark:bg-card/50 bg-white/80
             shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl
-            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]">
+            ${todayComplete
+              ? 'dark:border-[rgba(255,215,0,0.3)] border-[rgba(255,215,0,0.4)] dark:hover:border-[rgba(255,215,0,0.4)] hover:border-[rgba(255,215,0,0.5)] dark:hover:shadow-[0_0_40px_rgba(255,215,0,0.3)] hover:shadow-[0_8px_40px_rgba(255,215,0,0.4)]'
+              : 'dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)] dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.25)]'
+            }`"
+            style={{
+              background: todayComplete
+                ? 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(0, 230, 118, 0.06) 100%), rgba(26, 26, 26, 0.5)'
+                : 'linear-gradient(135deg, rgba(0, 229, 255, 0.05) 0%, rgba(26, 26, 26, 0.5) 100%)'
+            }}
+          >
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <Calendar className="h-5 w-5 dark:text-[#00E5FF] text-[#0077B6]" />
@@ -147,27 +158,47 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             {todayComplete ? (
               <>
                 <div className="flex items-center gap-4">
-                  <CheckCircle2 className="h-12 w-12 dark:text-[#00E676] text-[#4CAF50]" />
+                  <div className="relative">
+                    <CheckCircle2
+                      className="h-12 w-12 dark:text-[#FFD700] text-[#FFA500]"
+                      style={{
+                        filter: 'drop-shadow(0 0 8px rgba(255, 215, 0, 0.6))',
+                        animation: 'neon-pulse 2s ease-in-out infinite'
+                      }}
+                    />
+                  </div>
                   <div>
-                    <p className="text-sm font-medium dark:text-[#E0E0E0] text-[#1A1A1A]">Tag abgeschlossen ✓</p>
-                    <p className="text-sm dark:text-[#888888] text-[#666666]">{todayProgress}% • {todayXP} XP</p>
+                    <p className="text-sm font-medium font-orbitron dark:text-[#FFD700] text-[#FFA500]"
+                      style={{
+                        textShadow: '0 0 10px rgba(255, 215, 0, 0.5)'
+                      }}
+                    >
+                      PERFECT DAY ✨
+                    </p>
+                    <p className="text-sm dark:text-[#888888] text-[#666666]">
+                      <span className="font-orbitron" style={{ fontVariantNumeric: 'tabular-nums' }}>{todayProgress}%</span>
+                      {' • '}
+                      <span className="font-orbitron" style={{ fontVariantNumeric: 'tabular-nums' }}>{todayXP}</span>
+                      {' '}XP
+                    </p>
                   </div>
                 </div>
                 <Button
                   onClick={() => onNavigate("daily-log")}
-                  variant="outline"
-                  className="w-full dark:border-[#00E5FF]/30 border-[#0077B6]/30 dark:text-[#00E5FF] text-[#0077B6]
-                    dark:hover:bg-[rgba(0,229,255,0.1)] hover:bg-[rgba(0,180,220,0.1)]
-                    font-orbitron uppercase tracking-wider text-xs transition-all duration-200"
+                  className="w-full dark:bg-gradient-to-r dark:from-[#FFD700] dark:to-[#FFA500] bg-gradient-to-r from-[#FFA500] to-[#FF8C00]
+                    text-black font-bold font-orbitron uppercase tracking-wider text-xs
+                    dark:shadow-[0_0_20px_rgba(255,215,0,0.4)] shadow-[0_4px_15px_rgba(255,165,0,0.4)]
+                    dark:hover:shadow-[0_0_30px_rgba(255,215,0,0.6)] hover:shadow-[0_6px_25px_rgba(255,165,0,0.6)] hover:scale-105
+                    transition-all duration-300"
                 >
-                  Details ansehen →
+                  Celebration Mode ✨
                 </Button>
               </>
             ) : (
               <>
                 <div className="flex items-center gap-4">
                   <div className="relative h-16 w-16">
-                    {/* Simple Progress Ring */}
+                    {/* Simple Progress Ring with glow */}
                     <svg className="h-16 w-16 -rotate-90">
                       <circle
                         cx="32"
@@ -187,16 +218,25 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                         fill="none"
                         strokeDasharray={`${2 * Math.PI * 28}`}
                         strokeDashoffset={`${2 * Math.PI * 28 * (1 - todayProgress / 100)}`}
-                        className="dark:text-[#00E5FF] text-[#0077B6]"
+                        className="dark:text-[#00E5FF] text-[#0077B6] transition-all duration-500"
+                        style={{
+                          filter: todayProgress > 50 ? 'drop-shadow(0 0 6px currentColor)' : 'none'
+                        }}
                       />
                     </svg>
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-sm font-bold dark:text-[#E0E0E0] text-[#1A1A1A]">{todayProgress}%</span>
+                      <span className="text-sm font-bold dark:text-[#E0E0E0] text-[#1A1A1A] font-orbitron">{todayProgress}%</span>
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm font-medium dark:text-[#E0E0E0] text-[#1A1A1A]">{completedHabits}/{totalHabits} Habits erledigt</p>
-                    <p className="text-sm dark:text-[#888888] text-[#666666]">{todayXP} XP earned</p>
+                    <p className="text-sm font-medium dark:text-[#E0E0E0] text-[#1A1A1A]">
+                      <span className="font-orbitron" style={{ fontVariantNumeric: 'tabular-nums' }}>{completedHabits}/{totalHabits}</span>
+                      {' '}Habits erledigt
+                    </p>
+                    <p className="text-sm dark:text-[#888888] text-[#666666]">
+                      <span className="font-orbitron" style={{ fontVariantNumeric: 'tabular-nums' }}>{todayXP}</span>
+                      {' '}XP earned
+                    </p>
                   </div>
                 </div>
                 <Button
@@ -216,9 +256,15 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         </Card>
 
           {/* Weekly Progress - Gaming HUD Style */}
-          <Card className="p-6 dark:border-[rgba(0,230,118,0.15)] border-[rgba(76,175,80,0.2)] dark:bg-card/50 bg-white/80
+          <Card
+            className="p-6 dark:border-[rgba(0,230,118,0.15)] border-[rgba(76,175,80,0.2)] dark:bg-card/50 bg-white/80
             shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl
-            dark:hover:border-[rgba(0,230,118,0.25)] hover:border-[rgba(76,175,80,0.3)]">
+            dark:hover:border-[rgba(0,230,118,0.25)] hover:border-[rgba(76,175,80,0.3)]
+            dark:hover:shadow-[0_0_30px_rgba(0,230,118,0.2)] hover:shadow-[0_8px_30px_rgba(76,175,80,0.25)]"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 230, 118, 0.05) 0%, rgba(26, 26, 26, 0.5) 100%)'
+            }}
+          >
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 dark:text-[#00E676] text-[#4CAF50]" />
@@ -226,15 +272,26 @@ export function Dashboard({ onNavigate }: DashboardProps) {
               </div>
             <div className="space-y-3">
               <div>
-                <p className="text-2xl font-bold dark:text-[#E0E0E0] text-[#1A1A1A]">{userStats.weekScore}/7 Days</p>
+                <p className="text-2xl font-bold dark:text-[#E0E0E0] text-[#1A1A1A] font-orbitron">{userStats.weekScore}/7 Days</p>
                 <p className="text-sm dark:text-[#888888] text-[#666666]">Diese Woche</p>
               </div>
               <div>
-                <p className="text-lg font-semibold dark:text-[#00E676] text-[#4CAF50]">{userStats.totalXP} XP</p>
+                <p className="text-lg font-semibold dark:text-[#00E676] text-[#4CAF50] font-orbitron"
+                  style={{ fontVariantNumeric: 'tabular-nums' }}
+                >
+                  {userStats.totalXP} XP
+                </p>
                 <p className="text-sm dark:text-[#888888] text-[#666666]">Diese Woche</p>
               </div>
               <div>
-                <p className="text-lg font-semibold dark:text-[#E0E0E0] text-[#1A1A1A]">🔥 {userStats.currentStreak} Tage Streak</p>
+                <p className="text-lg font-semibold dark:text-[#E0E0E0] text-[#1A1A1A]">
+                  <span className="inline-block" style={{ animation: userStats.currentStreak > 0 ? 'fire-flicker 0.5s infinite' : 'none' }}>
+                    🔥
+                  </span>
+                  {' '}
+                  <span className="font-orbitron" style={{ fontVariantNumeric: 'tabular-nums' }}>{userStats.currentStreak}</span>
+                  {' '}Tage Streak
+                </p>
               </div>
             </div>
               <Button
@@ -250,9 +307,15 @@ export function Dashboard({ onNavigate }: DashboardProps) {
           </Card>
 
           {/* Visionboard Preview - Gaming HUD Style */}
-          <Card className="p-6 dark:border-[rgba(139,92,246,0.15)] border-[rgba(139,92,246,0.2)] dark:bg-card/50 bg-white/80
+          <Card
+            className="p-6 dark:border-[rgba(139,92,246,0.15)] border-[rgba(139,92,246,0.2)] dark:bg-card/50 bg-white/80
             shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl
-            dark:hover:border-[rgba(139,92,246,0.25)] hover:border-[rgba(139,92,246,0.3)]">
+            dark:hover:border-[rgba(139,92,246,0.25)] hover:border-[rgba(139,92,246,0.3)]
+            dark:hover:shadow-[0_0_30px_rgba(139,92,246,0.2)] hover:shadow-[0_8px_30px_rgba(139,92,246,0.25)]"
+            style={{
+              background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(26, 26, 26, 0.5) 100%)'
+            }}
+          >
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <ImageIcon className="h-5 w-5 dark:text-[#8B5CF6] text-[#7C3AED]" />
@@ -291,9 +354,15 @@ export function Dashboard({ onNavigate }: DashboardProps) {
           </Card>
 
           {/* Coach Quick Access - Gaming HUD Style */}
-          <Card className="p-6 dark:border-[rgba(255,152,0,0.15)] border-[rgba(255,152,0,0.2)] dark:bg-card/50 bg-white/80
+          <Card
+            className="p-6 dark:border-[rgba(255,152,0,0.15)] border-[rgba(255,152,0,0.2)] dark:bg-card/50 bg-white/80
             shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl
-            dark:hover:border-[rgba(255,152,0,0.25)] hover:border-[rgba(255,152,0,0.3)]">
+            dark:hover:border-[rgba(255,152,0,0.25)] hover:border-[rgba(255,152,0,0.3)]
+            dark:hover:shadow-[0_0_30px_rgba(255,152,0,0.2)] hover:shadow-[0_8px_30px_rgba(255,152,0,0.25)]"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255, 152, 0, 0.05) 0%, rgba(26, 26, 26, 0.5) 100%)'
+            }}
+          >
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <MessageSquare className="h-5 w-5 dark:text-[#FF9800] text-[#F57C00]" />
