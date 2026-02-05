@@ -56,11 +56,6 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
   return (
     <div className="flex flex-col items-center justify-center p-8 space-y-6">
       <div className="relative h-52 w-52">
-        {/* Corner brackets for HUD effect */}
-        <div className="absolute -top-2 -left-2 w-6 h-6 border-t-2 border-l-2 border-[#00E5FF] opacity-40" />
-        <div className="absolute -top-2 -right-2 w-6 h-6 border-t-2 border-r-2 border-[#00E5FF] opacity-40" />
-        <div className="absolute -bottom-2 -left-2 w-6 h-6 border-b-2 border-l-2 border-[#00E5FF] opacity-40" />
-        <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-2 border-r-2 border-[#00E5FF] opacity-40" />
         {/* Celebration particles */}
         {showCelebration && (
           <div className="absolute inset-0 pointer-events-none">

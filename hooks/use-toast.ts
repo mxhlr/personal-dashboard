@@ -21,9 +21,9 @@ export function useToast() {
       : title || description || "";
 
     if (variant === "destructive") {
-      sonnerToast.error(message, { duration });
+      sonnerToast.error(message, { duration, position: "bottom-right" });
     } else {
-      sonnerToast.success(message, { duration });
+      sonnerToast.success(message, { duration, position: "bottom-right" });
     }
   };
 

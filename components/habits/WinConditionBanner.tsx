@@ -51,14 +51,6 @@ export function WinConditionBanner({ isAchieved = false }: WinConditionBannerPro
         backgroundClip: isAchieved ? 'padding-box, border-box' : undefined,
       }}
     >
-      {/* Corner brackets - top left */}
-      <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#00E5FF] opacity-60" />
-      {/* Corner brackets - top right */}
-      <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#00E5FF] opacity-60" />
-      {/* Corner brackets - bottom left */}
-      <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#00E5FF] opacity-60" />
-      {/* Corner brackets - bottom right */}
-      <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#00E5FF] opacity-60" />
       <div className="relative space-y-4 text-center">
         <h3
           className="text-[13px] font-semibold font-orbitron uppercase flex items-center justify-center gap-2 text-white"
