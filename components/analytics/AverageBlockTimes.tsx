@@ -11,23 +11,48 @@ export function AverageBlockTimes({ blockTimes }: AverageBlockTimesProps) {
   const sortedTimes = [...blockTimes].sort((a, b) => b.avgMinutes - a.avgMinutes);
 
   return (
-    <Card className="p-6 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 rounded-xl shadow-sm">
-      <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-6">
+    <Card className="p-6 dark:border-[rgba(255,152,0,0.15)] border-[rgba(255,152,0,0.2)] dark:bg-card/50 bg-white/80
+      shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
+      dark:hover:border-[rgba(255,152,0,0.25)] hover:border-[rgba(255,152,0,0.3)]">
+      <h3 className="text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#FF9800] text-[#F57C00] mb-6">
         🕐 AVERAGE BLOCK TIMES
       </h3>
 
       {sortedTimes.length === 0 ? (
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p
+          className="text-sm dark:text-[#888888] text-[#666666]"
+          style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+        >
           Time tracking data will appear here once you complete categories in the Daily Log.
         </p>
       ) : (
         <div className="space-y-3">
           {sortedTimes.map((time, idx) => (
             <div key={idx} className="text-sm">
-              <span className="font-bold text-gray-900 dark:text-white">{time.categoryName}</span>
-              <span className="text-gray-500 dark:text-gray-400">: </span>
-              <span className="text-green-500 font-medium">{time.avgMinutes}min</span>
-              <span className="text-gray-500 dark:text-gray-400"> avg ({time.logs} logs)</span>
+              <span
+                className="font-bold dark:text-[#E0E0E0] text-[#1A1A1A]"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+              >
+                {time.categoryName}
+              </span>
+              <span
+                className="dark:text-[#888888] text-[#666666]"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+              >
+                :{" "}
+              </span>
+              <span
+                className="dark:text-[#00E676] text-[#4CAF50] font-medium"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+              >
+                {time.avgMinutes}min
+              </span>
+              <span
+                className="dark:text-[#888888] text-[#666666]"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+              >
+                {" "}avg ({time.logs} logs)
+              </span>
             </div>
           ))}
         </div>

@@ -149,27 +149,57 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
   };
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <div className="bg-card border border-border rounded-lg p-6">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2">Annual Review</h2>
-          <p className="text-muted-foreground">{year}</p>
-        </div>
+    <div
+      className="min-h-[calc(100vh-64px)] relative overflow-hidden"
+      style={{
+        background: 'radial-gradient(ellipse at center, var(--daily-log-bg-start) 0%, var(--daily-log-bg-end) 100%)'
+      }}
+    >
+      {/* Subtle grid overlay for HUD effect */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.015]"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(0, 229, 255, 0.3) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 229, 255, 0.3) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px'
+        }}
+      />
 
-        {existingReview && isReadOnly ? (
-          <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
-            <p className="text-green-800 dark:text-green-200">
-              ✓ Review abgeschlossen am{" "}
-              {new Date(existingReview.completedAt).toLocaleDateString("de-DE")}
-            </p>
+      {/* Animated scanline effect */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        style={{
+          background: 'linear-gradient(transparent 40%, rgba(0, 229, 255, 0.2) 50%, transparent 60%)',
+          backgroundSize: '100% 4px',
+          animation: 'scanline 8s linear infinite'
+        }}
+      />
+
+      <div className="relative max-w-4xl mx-auto px-6 py-8">
+        <div className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
+          shadow-sm rounded-2xl border">
+          <div className="mb-8 text-center">
+            <h2 className="text-3xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0077B6] mb-2">Annual Review</h2>
+            <p className="dark:text-[#888888] text-[#666666]">{year}</p>
           </div>
-        ) : null}
+
+          {existingReview && isReadOnly ? (
+            <div className="mb-6 p-4 dark:bg-[rgba(0,230,118,0.1)] bg-[rgba(76,175,80,0.1)]
+              dark:border-[rgba(0,230,118,0.3)] border-[rgba(76,175,80,0.3)] border rounded-lg">
+              <p className="dark:text-[#00E676] text-[#4CAF50] font-medium">
+                ✓ Review abgeschlossen am{" "}
+                {new Date(existingReview.completedAt).toLocaleDateString("de-DE")}
+              </p>
+            </div>
+          ) : null}
 
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Part 1: North Star Check */}
           <div>
-            <h3 className="text-xl font-bold mb-4">Teil 1: North Star Check</h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <h3 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0077B6] mb-4">Teil 1: North Star Check</h3>
+            <p className="text-sm dark:text-[#888888] text-[#666666] mb-4">
               Bewerte für jeden Lebensbereich, wie gut du dein Jahresziel
               erreicht hast.
             </p>
@@ -179,21 +209,22 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
                 {Object.entries(AREA_LABELS).map(([area, label]) => (
                   <div
                     key={area}
-                    className="p-4 border border-border rounded-md"
+                    className="p-4 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] border rounded-xl
+                      dark:bg-[rgba(26,26,26,0.3)] bg-white/50"
                   >
-                    <div className="font-bold mb-2">{label}</div>
-                    <div className="text-sm text-muted-foreground mb-3">
+                    <div className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">{label}</div>
+                    <div className="text-sm dark:text-[#E0E0E0] text-[#1A1A1A] font-medium mb-3">
                       North Star: {currentNorthStars[area as keyof typeof currentNorthStars]}
                     </div>
 
                     <div className="space-y-3">
                       <div>
-                        <label className="block text-sm font-medium mb-2">
+                        <label className="block text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
                           Erreicht?
                         </label>
                         <div className="flex gap-4">
                           {["Ja", "Teilweise", "Nein"].map((option) => (
-                            <label key={option} className="flex items-center gap-2">
+                            <label key={option} className="flex items-center gap-2 cursor-pointer">
                               <input
                                 type="radio"
                                 name={`achieved-${area}`}
@@ -211,15 +242,16 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
                                   )
                                 }
                                 disabled={isReadOnly}
+                                className="w-4 h-4 dark:border-[rgba(0,229,255,0.3)] border-[rgba(0,180,220,0.3)]"
                               />
-                              <span className="text-sm">{option}</span>
+                              <span className="text-sm dark:text-[#E0E0E0] text-[#1A1A1A]">{option}</span>
                             </label>
                           ))}
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium mb-2">
+                        <label className="block text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
                           Notizen
                         </label>
                         <textarea
@@ -237,7 +269,10 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
                           }
                           disabled={isReadOnly}
                           placeholder="Notizen..."
-                          className="w-full min-h-[80px] px-3 py-2 text-sm border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
+                          className="w-full min-h-[80px] px-3 py-2 text-sm dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
+                            border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                            disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                            focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
                         />
                       </div>
                     </div>
@@ -249,14 +284,14 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
 
           {/* Part 2: Reflection Questions */}
           <div>
-            <h3 className="text-xl font-bold mb-4">
+            <h3 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0077B6] mb-4">
               Teil 2: Reflexionsfragen
             </h3>
 
             <div className="space-y-6">
               {/* Question 1 */}
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
                   Das Jahr in einem Satz?
                 </label>
                 <textarea
@@ -268,14 +303,17 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
                     })
                   }
                   disabled={isReadOnly}
-                  className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
+                  className="w-full min-h-[100px] px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
+                    border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                    disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                    focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
                   placeholder="Beschreibe das Jahr in einem Satz..."
                 />
               </div>
 
               {/* Question 2 */}
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
                   Was war der Wendepunkt?
                 </label>
                 <textarea
@@ -284,14 +322,17 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
                     setFormData({ ...formData, turningPoint: e.target.value })
                   }
                   disabled={isReadOnly}
-                  className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
+                  className="w-full min-h-[100px] px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
+                    border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                    disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                    focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
                   placeholder="Der entscheidende Wendepunkt..."
                 />
               </div>
 
               {/* Question 3 */}
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
                   Worauf bist du am meisten stolz?
                 </label>
                 <textarea
@@ -300,14 +341,17 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
                     setFormData({ ...formData, mostProudOf: e.target.value })
                   }
                   disabled={isReadOnly}
-                  className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
+                  className="w-full min-h-[100px] px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
+                    border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                    disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                    focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
                   placeholder="Worauf bist du stolz..."
                 />
               </div>
 
               {/* Question 4 */}
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
                   Top 3 Learnings?
                 </label>
                 <textarea
@@ -319,14 +363,17 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
                     })
                   }
                   disabled={isReadOnly}
-                  className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
+                  className="w-full min-h-[100px] px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
+                    border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                    disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                    focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
                   placeholder="Deine Top 3 Learnings..."
                 />
               </div>
 
               {/* Question 5 */}
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
                   Was stoppen/starten/weitermachen?
                 </label>
                 <textarea
@@ -338,7 +385,10 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
                     })
                   }
                   disabled={isReadOnly}
-                  className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
+                  className="w-full min-h-[100px] px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
+                    border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                    disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                    focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
                   placeholder="Was möchtest du stoppen, starten, weitermachen..."
                 />
               </div>
@@ -347,17 +397,17 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
 
           {/* Part 3: Next Year North Stars */}
           <div>
-            <h3 className="text-xl font-bold mb-4">
+            <h3 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0077B6] mb-4">
               Teil 3: North Stars für {year + 1}
             </h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-sm dark:text-[#888888] text-[#666666] mb-4">
               Definiere deine North Stars für das kommende Jahr.
             </p>
 
             <div className="space-y-4">
               {Object.entries(AREA_LABELS).map(([area, label]) => (
                 <div key={area}>
-                  <label className="block text-sm font-bold mb-2">
+                  <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
                     {label}
                   </label>
                   <input
@@ -373,7 +423,10 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
                     }
                     disabled={isReadOnly}
                     placeholder="North Star..."
-                    className="w-full px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
+                    className="w-full px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
+                      border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                      disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                      focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
                   />
                 </div>
               ))}
@@ -381,12 +434,15 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
           </div>
 
           {/* Buttons */}
-          <div className="flex gap-3">
+          <div className="flex gap-3 justify-center">
             {isReadOnly ? (
               <button
                 type="button"
                 onClick={handleEdit}
-                className="px-6 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80"
+                className="px-8 py-3 dark:border-[#00E5FF]/30 border-[#0077B6]/30 border-2
+                  dark:text-[#00E5FF] text-[#0077B6] dark:bg-transparent bg-transparent
+                  dark:hover:bg-[rgba(0,229,255,0.1)] hover:bg-[rgba(0,180,220,0.1)]
+                  font-orbitron uppercase tracking-wider text-xs font-bold transition-all duration-200 rounded-lg"
               >
                 Bearbeiten
               </button>
@@ -394,13 +450,21 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-6 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-8 py-3 dark:bg-gradient-to-r dark:from-[#00E5FF] dark:to-[#00B8D4]
+                  bg-gradient-to-r from-[#0077B6] to-[#005F8F]
+                  text-white font-bold font-orbitron uppercase tracking-wider text-xs
+                  dark:border-[#00E5FF]/30 border-[#0077B6]/30 border-2
+                  dark:shadow-[0_0_15px_rgba(0,229,255,0.3)] shadow-[0_4px_12px_rgba(0,119,182,0.3)]
+                  dark:hover:shadow-[0_0_25px_rgba(0,229,255,0.5)] hover:shadow-[0_6px_20px_rgba(0,119,182,0.5)]
+                  hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
+                  transition-all duration-300 rounded-lg"
               >
                 {isSubmitting ? "Speichert..." : "Speichern"}
               </button>
             )}
           </div>
         </form>
+        </div>
       </div>
     </div>
   );

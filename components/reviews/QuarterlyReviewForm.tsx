@@ -191,36 +191,66 @@ export function QuarterlyReviewForm({
   };
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <div className="bg-card border border-border rounded-lg p-6">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2">Quarterly Review</h2>
-          <p className="text-muted-foreground">
-            Q{quarter} {year}
-          </p>
-        </div>
+    <div
+      className="min-h-[calc(100vh-64px)] relative overflow-hidden"
+      style={{
+        background: 'radial-gradient(ellipse at center, var(--daily-log-bg-start) 0%, var(--daily-log-bg-end) 100%)'
+      }}
+    >
+      {/* Subtle grid overlay for HUD effect */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.015]"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(0, 229, 255, 0.3) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 229, 255, 0.3) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px'
+        }}
+      />
 
-        {existingReview && isReadOnly ? (
-          <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
-            <p className="text-green-800 dark:text-green-200">
-              ✓ Review abgeschlossen am{" "}
-              {new Date(existingReview.completedAt).toLocaleDateString("de-DE")}
+      {/* Animated scanline effect */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        style={{
+          background: 'linear-gradient(transparent 40%, rgba(0, 229, 255, 0.2) 50%, transparent 60%)',
+          backgroundSize: '100% 4px',
+          animation: 'scanline 8s linear infinite'
+        }}
+      />
+
+      <div className="relative max-w-4xl mx-auto px-6 py-8">
+        <div className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
+          shadow-sm rounded-2xl border">
+          <div className="mb-8 text-center">
+            <h2 className="text-3xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0077B6] mb-2">Quarterly Review</h2>
+            <p className="dark:text-[#888888] text-[#666666]">
+              Q{quarter} {year}
             </p>
           </div>
-        ) : null}
+
+          {existingReview && isReadOnly ? (
+            <div className="mb-6 p-4 dark:bg-[rgba(0,230,118,0.1)] bg-[rgba(76,175,80,0.1)]
+              dark:border-[rgba(0,230,118,0.3)] border-[rgba(76,175,80,0.3)] border rounded-lg">
+              <p className="dark:text-[#00E676] text-[#4CAF50] font-medium">
+                ✓ Review abgeschlossen am{" "}
+                {new Date(existingReview.completedAt).toLocaleDateString("de-DE")}
+              </p>
+            </div>
+          ) : null}
 
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Part 1: Milestone Check */}
           <div>
-            <h3 className="text-xl font-bold mb-4">
+            <h3 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0077B6] mb-4">
               Teil 1: Milestone Check
             </h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-sm dark:text-[#888888] text-[#666666] mb-4">
               Markiere welche Milestones du erreicht hast.
             </p>
 
             {milestoneReview.length === 0 ? (
-              <p className="text-muted-foreground">
+              <p className="dark:text-[#888888] text-[#666666]">
                 Keine Milestones für dieses Quartal definiert.
               </p>
             ) : (
@@ -228,7 +258,8 @@ export function QuarterlyReviewForm({
                 {milestoneReview.map((milestone, index) => (
                   <div
                     key={index}
-                    className="p-4 border border-border rounded-md"
+                    className="p-4 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] border rounded-xl
+                      dark:bg-[rgba(26,26,26,0.3)] bg-white/50"
                   >
                     <div className="flex items-start gap-3 mb-2">
                       <input
@@ -236,13 +267,14 @@ export function QuarterlyReviewForm({
                         checked={milestone.completed}
                         onChange={() => handleMilestoneToggle(index)}
                         disabled={isReadOnly}
-                        className="mt-1"
+                        className="mt-1 w-5 h-5 rounded dark:border-[rgba(0,229,255,0.3)] border-[rgba(0,180,220,0.3)]
+                          dark:checked:bg-[#00E5FF] checked:bg-[#0077B6] transition-colors"
                       />
                       <div className="flex-1">
-                        <div className="text-sm font-medium text-muted-foreground mb-1">
+                        <div className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-1">
                           {AREA_LABELS[milestone.area]}
                         </div>
-                        <div className="font-medium">{milestone.milestone}</div>
+                        <div className="font-medium dark:text-[#E0E0E0] text-[#1A1A1A]">{milestone.milestone}</div>
                       </div>
                     </div>
                     <textarea
@@ -252,7 +284,10 @@ export function QuarterlyReviewForm({
                       }
                       disabled={isReadOnly}
                       placeholder="Optionale Notizen..."
-                      className="w-full mt-2 px-3 py-2 text-sm border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
+                      className="w-full mt-2 px-3 py-2 text-sm dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
+                        border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                        disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                        focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
                     />
                   </div>
                 ))}
@@ -262,14 +297,14 @@ export function QuarterlyReviewForm({
 
           {/* Part 2: Reflection Questions */}
           <div>
-            <h3 className="text-xl font-bold mb-4">
+            <h3 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0077B6] mb-4">
               Teil 2: Reflexionsfragen
             </h3>
 
             <div className="space-y-6">
               {/* Question 1 */}
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
                   Welcher Milestone macht dich am stolzesten?
                 </label>
                 <textarea
@@ -281,14 +316,17 @@ export function QuarterlyReviewForm({
                     })
                   }
                   disabled={isReadOnly}
-                  className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
+                  className="w-full min-h-[100px] px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
+                    border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                    disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                    focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
                   placeholder="Welcher Milestone..."
                 />
               </div>
 
               {/* Question 2 */}
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
                   Welches Ziel hättest du anders angehen sollen?
                 </label>
                 <textarea
@@ -300,14 +338,17 @@ export function QuarterlyReviewForm({
                     })
                   }
                   disabled={isReadOnly}
-                  className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
+                  className="w-full min-h-[100px] px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
+                    border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                    disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                    focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
                   placeholder="Was würdest du anders machen?"
                 />
               </div>
 
               {/* Question 3 */}
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
                   Was hast du über deine Zielsetzung gelernt?
                 </label>
                 <textarea
@@ -319,14 +360,17 @@ export function QuarterlyReviewForm({
                     })
                   }
                   disabled={isReadOnly}
-                  className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
+                  className="w-full min-h-[100px] px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
+                    border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                    disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                    focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
                   placeholder="Deine Learnings..."
                 />
               </div>
 
               {/* Question 4 */}
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
                   Welche Entscheidung würdest du anders treffen?
                 </label>
                 <textarea
@@ -338,14 +382,17 @@ export function QuarterlyReviewForm({
                     })
                   }
                   disabled={isReadOnly}
-                  className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
+                  className="w-full min-h-[100px] px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
+                    border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                    disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                    focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
                   placeholder="Welche Entscheidung..."
                 />
               </div>
 
               {/* Question 5 */}
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
                   Was brauchst du, um nächstes Quartal erfolgreicher zu sein?
                 </label>
                 <textarea
@@ -357,7 +404,10 @@ export function QuarterlyReviewForm({
                     })
                   }
                   disabled={isReadOnly}
-                  className="w-full min-h-[100px] px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
+                  className="w-full min-h-[100px] px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
+                    border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                    disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                    focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
                   placeholder="Was brauchst du..."
                 />
               </div>
@@ -366,17 +416,17 @@ export function QuarterlyReviewForm({
 
           {/* Part 3: Next Quarter Milestones */}
           <div>
-            <h3 className="text-xl font-bold mb-4">
+            <h3 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0077B6] mb-4">
               Teil 3: Milestones für nächstes Quartal
             </h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-sm dark:text-[#888888] text-[#666666] mb-4">
               Definiere mindestens einen Milestone pro Lebensbereich.
             </p>
 
             <div className="space-y-6">
               {Object.entries(AREA_LABELS).map(([area, label]) => (
                 <div key={area}>
-                  <label className="block text-sm font-bold mb-2">
+                  <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
                     {label}
                   </label>
                   <div className="space-y-2">
@@ -394,13 +444,18 @@ export function QuarterlyReviewForm({
                           }
                           disabled={isReadOnly}
                           placeholder="Milestone..."
-                          className="flex-1 px-3 py-2 border border-border rounded-md bg-background disabled:bg-muted disabled:cursor-not-allowed"
+                          className="flex-1 px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
+                            border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                            disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                            focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
                         />
                         {!isReadOnly && nextQuarterMilestones[area].length > 1 && (
                           <button
                             type="button"
                             onClick={() => removeNextMilestone(area, index)}
-                            className="px-3 py-2 border border-border rounded-md hover:bg-muted"
+                            className="px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
+                              border rounded-lg dark:hover:bg-[rgba(0,229,255,0.1)] hover:bg-[rgba(0,180,220,0.1)]
+                              dark:text-[#E0E0E0] text-[#1A1A1A] transition-colors"
                           >
                             ✕
                           </button>
@@ -411,7 +466,7 @@ export function QuarterlyReviewForm({
                       <button
                         type="button"
                         onClick={() => addNextMilestone(area)}
-                        className="text-sm text-primary hover:underline"
+                        className="text-sm dark:text-[#00E5FF] text-[#0077B6] hover:underline font-medium"
                       >
                         + Weiterer Milestone
                       </button>
@@ -423,12 +478,15 @@ export function QuarterlyReviewForm({
           </div>
 
           {/* Buttons */}
-          <div className="flex gap-3">
+          <div className="flex gap-3 justify-center">
             {isReadOnly ? (
               <button
                 type="button"
                 onClick={handleEdit}
-                className="px-6 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80"
+                className="px-8 py-3 dark:border-[#00E5FF]/30 border-[#0077B6]/30 border-2
+                  dark:text-[#00E5FF] text-[#0077B6] dark:bg-transparent bg-transparent
+                  dark:hover:bg-[rgba(0,229,255,0.1)] hover:bg-[rgba(0,180,220,0.1)]
+                  font-orbitron uppercase tracking-wider text-xs font-bold transition-all duration-200 rounded-lg"
               >
                 Bearbeiten
               </button>
@@ -436,13 +494,21 @@ export function QuarterlyReviewForm({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-6 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-8 py-3 dark:bg-gradient-to-r dark:from-[#00E5FF] dark:to-[#00B8D4]
+                  bg-gradient-to-r from-[#0077B6] to-[#005F8F]
+                  text-white font-bold font-orbitron uppercase tracking-wider text-xs
+                  dark:border-[#00E5FF]/30 border-[#0077B6]/30 border-2
+                  dark:shadow-[0_0_15px_rgba(0,229,255,0.3)] shadow-[0_4px_12px_rgba(0,119,182,0.3)]
+                  dark:hover:shadow-[0_0_25px_rgba(0,229,255,0.5)] hover:shadow-[0_6px_20px_rgba(0,119,182,0.5)]
+                  hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
+                  transition-all duration-300 rounded-lg"
               >
                 {isSubmitting ? "Speichert..." : "Speichern"}
               </button>
             )}
           </div>
         </form>
+        </div>
       </div>
     </div>
   );

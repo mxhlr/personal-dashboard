@@ -8,8 +8,10 @@ interface MonthlyComparisonProps {
 
 export function MonthlyComparison({ monthlyStats }: MonthlyComparisonProps) {
   return (
-    <Card className="p-6 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 rounded-xl shadow-sm">
-      <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-6">
+    <Card className="p-6 dark:border-[rgba(0,230,118,0.15)] border-[rgba(76,175,80,0.2)] dark:bg-card/50 bg-white/80
+      shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
+      dark:hover:border-[rgba(0,230,118,0.25)] hover:border-[rgba(76,175,80,0.3)]">
+      <h3 className="text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#00E676] text-[#4CAF50] mb-6">
         📊 MONTHLY COMPARISON
       </h3>
 
@@ -17,24 +19,32 @@ export function MonthlyComparison({ monthlyStats }: MonthlyComparisonProps) {
         {monthlyStats.map((stat) => (
           <div key={stat.month} className="flex items-center gap-4">
             {/* Month Label */}
-            <div className="w-12 text-sm font-medium text-gray-900 dark:text-white">
+            <div
+              className="w-12 text-sm font-medium dark:text-[#E0E0E0] text-[#1A1A1A]"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            >
               {stat.month}
             </div>
 
             {/* Progress Bar */}
-            <div className="flex-1 h-6 bg-gray-200 dark:bg-[#2A2A2E] rounded overflow-hidden">
+            <div className="flex-1 h-6 dark:bg-[#2A2A2E] bg-[#e9ecef] rounded overflow-hidden
+              dark:border-[rgba(0,230,118,0.1)] border-[rgba(76,175,80,0.15)] border">
               {stat.score > 0 ? (
                 <div
-                  className="h-full bg-gradient-to-r from-[#D4AF37] to-[#FFD700] transition-all duration-300"
+                  className="h-full dark:bg-gradient-to-r dark:from-[#FFD700] dark:to-[#FFA000]
+                    bg-gradient-to-r from-[#FFC107] to-[#FF9800] transition-all duration-300"
                   style={{ width: `${stat.score}%` }}
                 />
               ) : (
-                <div className="h-full bg-gray-300 dark:bg-gray-800" />
+                <div className="h-full dark:bg-[#2A2A2E] bg-[#e9ecef]" />
               )}
             </div>
 
             {/* Percentage */}
-            <div className="w-12 text-right text-sm font-medium text-gray-900 dark:text-white">
+            <div
+              className="w-12 text-right text-sm font-medium dark:text-[#E0E0E0] text-[#1A1A1A]"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            >
               {stat.score > 0 ? `${stat.score}%` : "–"}
             </div>
           </div>

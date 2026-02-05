@@ -49,7 +49,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     <div
       className="min-h-[calc(100vh-64px)] relative overflow-hidden"
       style={{
-        background: 'radial-gradient(ellipse at center, #12121F 0%, #0A0A0F 100%)'
+        background: 'radial-gradient(ellipse at center, var(--daily-log-bg-start) 0%, var(--daily-log-bg-end) 100%)'
       }}
     >
       {/* Subtle grid overlay for HUD effect */}
@@ -94,10 +94,11 @@ export function Dashboard({ onNavigate }: DashboardProps) {
       <TodaysWinCondition />
 
         {/* North Stars - Gaming HUD Style */}
-        <Card className="p-6 border dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80 shadow-sm hover:shadow-xl transition-all duration-300"
+        <Card className="p-6 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
+          shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
+          dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]"
           style={{
-            background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)',
-            borderRadius: '16px'
+            background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
           }}
         >
           <div className="flex items-center justify-center gap-12 flex-wrap">
@@ -134,26 +135,30 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         {/* Main Widgets Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Today's Log - Gaming HUD Style */}
-          <Card className="p-6 border dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+          <Card className="p-6 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
+            shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl
+            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-[#00E5FF]" />
-                <h3 className="font-bold font-orbitron text-[#00E5FF]">Today&apos;s Log</h3>
+                <Calendar className="h-5 w-5 dark:text-[#00E5FF] text-[#0077B6]" />
+                <h3 className="font-bold font-orbitron dark:text-[#00E5FF] text-[#0077B6]">Today&apos;s Log</h3>
               </div>
 
             {todayComplete ? (
               <>
                 <div className="flex items-center gap-4">
-                  <CheckCircle2 className="h-12 w-12 text-green-500" />
+                  <CheckCircle2 className="h-12 w-12 dark:text-[#00E676] text-[#4CAF50]" />
                   <div>
-                    <p className="text-sm font-medium">Tag abgeschlossen ✓</p>
-                    <p className="text-sm text-muted-foreground">{todayProgress}% • {todayXP} XP</p>
+                    <p className="text-sm font-medium dark:text-[#E0E0E0] text-[#1A1A1A]">Tag abgeschlossen ✓</p>
+                    <p className="text-sm dark:text-[#888888] text-[#666666]">{todayProgress}% • {todayXP} XP</p>
                   </div>
                 </div>
                 <Button
                   onClick={() => onNavigate("daily-log")}
                   variant="outline"
-                  className="w-full border-[#00E5FF]/30 text-[#00E5FF] hover:bg-[#00E5FF]/10 font-orbitron uppercase tracking-wider text-xs"
+                  className="w-full dark:border-[#00E5FF]/30 border-[#0077B6]/30 dark:text-[#00E5FF] text-[#0077B6]
+                    dark:hover:bg-[rgba(0,229,255,0.1)] hover:bg-[rgba(0,180,220,0.1)]
+                    font-orbitron uppercase tracking-wider text-xs transition-all duration-200"
                 >
                   Details ansehen →
                 </Button>
@@ -171,7 +176,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                         stroke="currentColor"
                         strokeWidth="4"
                         fill="none"
-                        className="text-muted"
+                        className="dark:text-[#2a2a2a] text-[#e9ecef]"
                       />
                       <circle
                         cx="32"
@@ -182,23 +187,25 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                         fill="none"
                         strokeDasharray={`${2 * Math.PI * 28}`}
                         strokeDashoffset={`${2 * Math.PI * 28 * (1 - todayProgress / 100)}`}
-                        className="text-primary"
+                        className="dark:text-[#00E5FF] text-[#0077B6]"
                       />
                     </svg>
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-sm font-bold">{todayProgress}%</span>
+                      <span className="text-sm font-bold dark:text-[#E0E0E0] text-[#1A1A1A]">{todayProgress}%</span>
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm font-medium">{completedHabits}/{totalHabits} Habits erledigt</p>
-                    <p className="text-sm text-muted-foreground">{todayXP} XP earned</p>
+                    <p className="text-sm font-medium dark:text-[#E0E0E0] text-[#1A1A1A]">{completedHabits}/{totalHabits} Habits erledigt</p>
+                    <p className="text-sm dark:text-[#888888] text-[#666666]">{todayXP} XP earned</p>
                   </div>
                 </div>
                 <Button
                   onClick={() => onNavigate("daily-log")}
-                  className="w-full bg-gradient-to-r from-[#00E5FF] to-[#00B8D4] text-white font-bold font-orbitron uppercase tracking-wider text-xs
-                    border border-[#00E5FF]/30 shadow-[0_0_15px_rgba(0,229,255,0.3)]
-                    hover:shadow-[0_0_25px_rgba(0,229,255,0.5)] hover:scale-105
+                  className="w-full dark:bg-gradient-to-r dark:from-[#00E5FF] dark:to-[#00B8D4] bg-gradient-to-r from-[#0077B6] to-[#005F8F]
+                    text-white font-bold font-orbitron uppercase tracking-wider text-xs
+                    dark:border-[#00E5FF]/30 border-[#0077B6]/30
+                    dark:shadow-[0_0_15px_rgba(0,229,255,0.3)] shadow-[0_4px_12px_rgba(0,119,182,0.3)]
+                    dark:hover:shadow-[0_0_25px_rgba(0,229,255,0.5)] hover:shadow-[0_6px_20px_rgba(0,119,182,0.5)] hover:scale-105
                     transition-all duration-300"
                 >
                   Zum Daily Log →
@@ -209,29 +216,33 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         </Card>
 
           {/* Weekly Progress - Gaming HUD Style */}
-          <Card className="p-6 border dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+          <Card className="p-6 dark:border-[rgba(0,230,118,0.15)] border-[rgba(76,175,80,0.2)] dark:bg-card/50 bg-white/80
+            shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl
+            dark:hover:border-[rgba(0,230,118,0.25)] hover:border-[rgba(76,175,80,0.3)]">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-[#00E676]" />
-                <h3 className="font-bold font-orbitron text-[#00E676]">Weekly Progress</h3>
+                <TrendingUp className="h-5 w-5 dark:text-[#00E676] text-[#4CAF50]" />
+                <h3 className="font-bold font-orbitron dark:text-[#00E676] text-[#4CAF50]">Weekly Progress</h3>
               </div>
             <div className="space-y-3">
               <div>
-                <p className="text-2xl font-bold">{userStats.weekScore}/7 Days</p>
-                <p className="text-sm text-muted-foreground">Diese Woche</p>
+                <p className="text-2xl font-bold dark:text-[#E0E0E0] text-[#1A1A1A]">{userStats.weekScore}/7 Days</p>
+                <p className="text-sm dark:text-[#888888] text-[#666666]">Diese Woche</p>
               </div>
               <div>
-                <p className="text-lg font-semibold text-primary">{userStats.totalXP} XP</p>
-                <p className="text-sm text-muted-foreground">Diese Woche</p>
+                <p className="text-lg font-semibold dark:text-[#00E676] text-[#4CAF50]">{userStats.totalXP} XP</p>
+                <p className="text-sm dark:text-[#888888] text-[#666666]">Diese Woche</p>
               </div>
               <div>
-                <p className="text-lg font-semibold">🔥 {userStats.currentStreak} Tage Streak</p>
+                <p className="text-lg font-semibold dark:text-[#E0E0E0] text-[#1A1A1A]">🔥 {userStats.currentStreak} Tage Streak</p>
               </div>
             </div>
               <Button
                 onClick={() => onNavigate("data")}
                 variant="outline"
-                className="w-full border-[#00E676]/30 text-[#00E676] hover:bg-[#00E676]/10 font-orbitron uppercase tracking-wider text-xs"
+                className="w-full dark:border-[#00E676]/30 border-[#4CAF50]/30 dark:text-[#00E676] text-[#4CAF50]
+                  dark:hover:bg-[rgba(0,230,118,0.1)] hover:bg-[rgba(76,175,80,0.1)]
+                  font-orbitron uppercase tracking-wider text-xs transition-all duration-200"
               >
                 View All Data →
               </Button>
@@ -239,18 +250,21 @@ export function Dashboard({ onNavigate }: DashboardProps) {
           </Card>
 
           {/* Visionboard Preview - Gaming HUD Style */}
-          <Card className="p-6 border dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+          <Card className="p-6 dark:border-[rgba(139,92,246,0.15)] border-[rgba(139,92,246,0.2)] dark:bg-card/50 bg-white/80
+            shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl
+            dark:hover:border-[rgba(139,92,246,0.25)] hover:border-[rgba(139,92,246,0.3)]">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <ImageIcon className="h-5 w-5 text-[#8B5CF6]" />
-                <h3 className="font-bold font-orbitron text-[#8B5CF6]">Visionboard</h3>
+                <ImageIcon className="h-5 w-5 dark:text-[#8B5CF6] text-[#7C3AED]" />
+                <h3 className="font-bold font-orbitron dark:text-[#8B5CF6] text-[#7C3AED]">Visionboard</h3>
               </div>
             {hasVisionboardImages ? (
               <div className="flex gap-2 overflow-hidden">
                 {visionboardPreview.map((image) => (
                   <div
                     key={image._id}
-                    className="w-20 h-20 rounded-lg overflow-hidden bg-muted relative flex-shrink-0"
+                    className="w-20 h-20 rounded-lg overflow-hidden dark:bg-[#2a2a2a] bg-[#f1f3f5] relative flex-shrink-0
+                      border dark:border-[rgba(139,92,246,0.2)] border-[rgba(139,92,246,0.15)]"
                   >
                     <Image
                       src={image.url}
@@ -262,12 +276,14 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">No images yet</p>
+              <p className="text-sm dark:text-[#888888] text-[#666666]">No images yet</p>
             )}
               <Button
                 onClick={() => onNavigate("visionboard")}
                 variant="outline"
-                className="w-full border-[#8B5CF6]/30 text-[#8B5CF6] hover:bg-[#8B5CF6]/10 font-orbitron uppercase tracking-wider text-xs"
+                className="w-full dark:border-[#8B5CF6]/30 border-[#7C3AED]/30 dark:text-[#8B5CF6] text-[#7C3AED]
+                  dark:hover:bg-[rgba(139,92,246,0.1)] hover:bg-[rgba(124,58,237,0.1)]
+                  font-orbitron uppercase tracking-wider text-xs transition-all duration-200"
               >
                 {hasVisionboardImages ? "Zum Visionboard" : "Add Images"}
               </Button>
@@ -275,19 +291,23 @@ export function Dashboard({ onNavigate }: DashboardProps) {
           </Card>
 
           {/* Coach Quick Access - Gaming HUD Style */}
-          <Card className="p-6 border dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+          <Card className="p-6 dark:border-[rgba(255,152,0,0.15)] border-[rgba(255,152,0,0.2)] dark:bg-card/50 bg-white/80
+            shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl
+            dark:hover:border-[rgba(255,152,0,0.25)] hover:border-[rgba(255,152,0,0.3)]">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <MessageSquare className="h-5 w-5 text-[#FF9800]" />
-                <h3 className="font-bold font-orbitron text-[#FF9800]">AI Coach</h3>
+                <MessageSquare className="h-5 w-5 dark:text-[#FF9800] text-[#F57C00]" />
+                <h3 className="font-bold font-orbitron dark:text-[#FF9800] text-[#F57C00]">AI Coach</h3>
               </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm dark:text-[#888888] text-[#666666]">
               Get personalized guidance and support
             </p>
               <Button
                 onClick={() => onNavigate("coach")}
                 variant="outline"
-                className="w-full border-[#FF9800]/30 text-[#FF9800] hover:bg-[#FF9800]/10 font-orbitron uppercase tracking-wider text-xs"
+                className="w-full dark:border-[#FF9800]/30 border-[#F57C00]/30 dark:text-[#FF9800] text-[#F57C00]
+                  dark:hover:bg-[rgba(255,152,0,0.1)] hover:bg-[rgba(245,124,0,0.1)]
+                  font-orbitron uppercase tracking-wider text-xs transition-all duration-200"
               >
                 Start Chat
               </Button>

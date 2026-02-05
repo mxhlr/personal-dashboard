@@ -12,16 +12,28 @@ export function SkipPatterns({ patterns }: SkipPatternsProps) {
   }
 
   return (
-    <Card className="p-6 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 rounded-xl shadow-sm">
-      <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-6">
+    <Card className="p-6 dark:border-[rgba(255,68,68,0.15)] border-[rgba(244,67,54,0.2)] dark:bg-card/50 bg-white/80
+      shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
+      dark:hover:border-[rgba(255,68,68,0.25)] hover:border-[rgba(244,67,54,0.3)]">
+      <h3 className="text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#FF4444] text-[#F44336] mb-6">
         ⚠️ SKIP PATTERNS
       </h3>
 
       <div className="space-y-3">
         {patterns.map((pattern, idx) => (
           <div key={idx} className="text-sm">
-            <span className="font-bold text-gray-900 dark:text-white">{pattern.reason}</span>
-            <span className="text-gray-500 dark:text-gray-400">: {pattern.count} times</span>
+            <span
+              className="font-bold dark:text-[#E0E0E0] text-[#1A1A1A]"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            >
+              {pattern.reason}
+            </span>
+            <span
+              className="dark:text-[#888888] text-[#666666]"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            >
+              : {pattern.count} times
+            </span>
           </div>
         ))}
       </div>

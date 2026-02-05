@@ -459,56 +459,85 @@ export function Visionboard() {
   };
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCorners}
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      onDragEnd={handleDragEnd}
+    <div
+      className="min-h-[calc(100vh-64px)] relative overflow-hidden"
+      style={{
+        background: 'radial-gradient(ellipse at center, var(--daily-log-bg-start) 0%, var(--daily-log-bg-end) 100%)'
+      }}
     >
-      <div className="h-full flex flex-col">
-        {/* Trello-style horizontal scrolling container - centered */}
-        <div className="flex-1 overflow-x-auto overflow-y-hidden pt-6">
-          <div className="flex justify-center px-4 min-w-full">
-            <div className="inline-flex gap-4 py-4 h-full items-start">
-              {allLists.map((list) => {
-              const listKey = list?._id || "default";
+      {/* Grid overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.015]"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(0, 229, 255, 0.3) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 229, 255, 0.3) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px'
+        }}
+      />
 
-              return (
-                <DroppableList
-                  key={listKey}
-                  list={list || undefined}
-                  onUpdateListName={handleUpdateListName}
-                  onConvertDefaultList={async (name: string) => {
-                    try {
-                      await convertDefaultListToReal({ name });
-                      toast.success("Liste erstellt");
-                    } catch (error) {
-                      console.error("Convert error:", error);
-                      toast.error("Fehler beim Umbenennen");
-                    }
-                  }}
-                  onDelete={handleDelete}
-                  onUpdateSubtitle={handleUpdateSubtitle}
-                  onFileUpload={handleFileUpload}
-                />
-              );
-            })}
+      {/* Scanline */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        style={{
+          background: 'linear-gradient(transparent 40%, rgba(0, 229, 255, 0.2) 50%, transparent 60%)',
+          backgroundSize: '100% 4px',
+          animation: 'scanline 8s linear infinite'
+        }}
+      />
+
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+      >
+        <div className="h-full flex flex-col relative z-10">
+          {/* Trello-style horizontal scrolling container - centered */}
+          <div className="flex-1 overflow-x-auto overflow-y-hidden pt-6">
+            <div className="flex justify-center px-4 min-w-full">
+              <div className="inline-flex gap-4 py-4 h-full items-start">
+                {allLists.map((list) => {
+                const listKey = list?._id || "default";
+
+                return (
+                  <DroppableList
+                    key={listKey}
+                    list={list || undefined}
+                    onUpdateListName={handleUpdateListName}
+                    onConvertDefaultList={async (name: string) => {
+                      try {
+                        await convertDefaultListToReal({ name });
+                        toast.success("Liste erstellt");
+                      } catch (error) {
+                        console.error("Convert error:", error);
+                        toast.error("Fehler beim Umbenennen");
+                      }
+                    }}
+                    onDelete={handleDelete}
+                    onUpdateSubtitle={handleUpdateSubtitle}
+                    onFileUpload={handleFileUpload}
+                  />
+                );
+              })}
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Drag overlay for visual feedback */}
-      <DragOverlay>
-        {activeId ? (
-          <div className="w-[256px] opacity-90 rotate-3">
-            <div className="bg-white rounded-lg shadow-xl">
-              <div className="text-sm p-4 text-center">Verschieben...</div>
+        {/* Drag overlay for visual feedback */}
+        <DragOverlay>
+          {activeId ? (
+            <div className="w-[256px] opacity-90 rotate-3">
+              <div className="bg-white rounded-lg shadow-xl">
+                <div className="text-sm p-4 text-center">Verschieben...</div>
+              </div>
             </div>
-          </div>
-        ) : null}
-      </DragOverlay>
-    </DndContext>
+          ) : null}
+        </DragOverlay>
+      </DndContext>
+    </div>
   );
 }
