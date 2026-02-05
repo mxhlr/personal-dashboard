@@ -86,10 +86,10 @@ export function Dashboard({ onNavigate }: DashboardProps) {
               textShadow: '0 0 30px rgba(0, 229, 255, 0.2)'
             }}
           >
-            Welcome back, {profile.name}! 👋
+            Welcome back, {profile.name}! <span className="text-white">👋</span>
           </h1>
           <p
-            className="text-lg dark:text-[#888888] text-[#666666]"
+            className="text-lg dark:text-[#AAAAAA] text-[#888888]"
             style={{
               fontFamily: '"Courier New", "Monaco", monospace',
               fontVariantNumeric: 'tabular-nums'
