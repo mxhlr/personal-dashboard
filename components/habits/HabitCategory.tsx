@@ -49,7 +49,22 @@ export function HabitCategory({
 
   // Check if icon is a hex color (starts with #) or an emoji
   const isColor = icon?.startsWith("#");
-  const circleColor = isColor ? icon : "#2A2A3E";
+  const categoryColor = isColor ? icon : "#888888";
+
+  // Helper to convert hex to rgba
+  const hexToRgba = (hex: string, alpha: number) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
+
+  // Skip color tint if gray is selected
+  const isGray = categoryColor === "#888888";
+  const bgColor = isGray ? undefined : hexToRgba(categoryColor, 0.06);
+  const bgColorLight = isGray ? undefined : hexToRgba(categoryColor, 0.04);
+  const borderColor = isGray ? undefined : hexToRgba(categoryColor, 0.15);
+  const borderColorLight = isGray ? undefined : hexToRgba(categoryColor, 0.1);
 
   const handleToggle = (habitId: string) => {
     onHabitToggle(name, habitId);
@@ -67,19 +82,25 @@ export function HabitCategory({
   };
 
   return (
-    <Card className="group border-border/50 bg-card/50 shadow-sm transition-colors hover:border-border">
+    <Card
+      className="group border-border/50 bg-card/50 shadow-sm transition-colors hover:border-border"
+      style={{
+        backgroundColor: bgColor,
+        borderColor: borderColor,
+        // Light mode overrides via CSS variable if needed
+        ...(bgColorLight && { '--bg-light': bgColorLight } as React.CSSProperties),
+        ...(borderColorLight && { '--border-light': borderColorLight } as React.CSSProperties),
+      }}
+    >
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="flex items-center gap-3 text-left"
           >
-            <div
-              className="flex h-8 w-8 items-center justify-center rounded-lg border-2 text-sm font-medium text-[#E0E0E0] bg-transparent"
-              style={{ borderColor: circleColor }}
-            >
+            <span className="text-lg font-bold text-[#E0E0E0] dark:text-[#E0E0E0] text-[#333333]">
               {categoryNumber}
-            </div>
+            </span>
             <div>
               <h3 className="text-base font-semibold">{name}</h3>
             </div>

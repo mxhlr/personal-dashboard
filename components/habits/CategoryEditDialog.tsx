@@ -29,6 +29,7 @@ interface CategoryEditDialogProps {
 }
 
 const PREDEFINED_COLORS = [
+  { name: "Gray", value: "#888888" },
   { name: "Cyan", value: "#00BCD4" },
   { name: "Green", value: "#4CAF50" },
   { name: "Orange", value: "#FF9800" },

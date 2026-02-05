@@ -124,7 +124,7 @@ export function HabitItem({
       <Checkbox
         checked={completed}
         onCheckedChange={handleToggle}
-        className="h-5 w-5 rounded-md border-border data-[state=checked]:border-0 data-[state=checked]:bg-[#4CAF50] data-[state=checked]:text-[#000000] data-[state=checked]:rounded-[6px]"
+        className="h-5 w-5 rounded-md border-border data-[state=checked]:!border-0 data-[state=checked]:!bg-[#4CAF50] data-[state=checked]:!text-[#FFFFFF] data-[state=checked]:!rounded-[6px] data-[state=checked]:!opacity-100"
       />
 
       <div className="flex-1">
@@ -145,7 +145,9 @@ export function HabitItem({
 
       <div className="flex items-center gap-3 justify-end">
         {completed ? (
-          <div className="text-xl font-bold text-[#00E676]">✓</div>
+          <div className="text-sm font-semibold text-[#4CAF50]">
+            +{xp}
+          </div>
         ) : (
           <>
             {isEditingXP ? (
@@ -162,7 +164,7 @@ export function HabitItem({
             ) : (
               <button
                 onClick={handleXPClick}
-                className="cursor-pointer rounded px-1.5 py-0.5 text-sm font-semibold text-orange-500 transition-colors hover:bg-orange-500/10"
+                className="cursor-pointer rounded px-1.5 py-0.5 text-sm font-semibold text-[#FF9800] transition-colors hover:bg-orange-500/10"
                 title="Click to edit XP"
               >
                 +{xp}
