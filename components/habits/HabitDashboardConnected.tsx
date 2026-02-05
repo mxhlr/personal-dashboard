@@ -10,6 +10,7 @@ import { HabitCategory } from "./HabitCategory";
 import { PatternIntelligence } from "./PatternIntelligence";
 import { MilestonePopup } from "./MilestonePopup";
 import { SprintTimer } from "./SprintTimer";
+import { BlockTimerButton } from "./BlockTimerButton";
 import { LevelProgressBar } from "./LevelProgressBar";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -265,6 +266,9 @@ export function HabitDashboardConnected() {
             <div className="flex-1" />
           </div>
           <SprintTimer endOfDayHour={18} />
+          <div className="mt-4">
+            <BlockTimerButton />
+          </div>
         </header>
 
         {/* Progress Ring */}

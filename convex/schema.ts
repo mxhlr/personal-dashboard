@@ -355,45 +355,19 @@ export default defineSchema({
   })
     .index("by_user", ["userId"]),
 
+  // Category Block Times - Timer tracking for habit categories
   categoryBlockTimes: defineTable({
     userId: v.string(),
     date: v.string(), // "YYYY-MM-DD"
     categoryId: v.id("habitCategories"),
     durationMinutes: v.number(),
     startedAt: v.string(),
-    completedAt: v.string(),
+    completedAt: v.optional(v.string()), // null if timer still running
     createdAt: v.string(),
   })
     .index("by_user_date", ["userId", "date"])
     .index("by_category", ["categoryId"])
-    .index("by_user_category", ["userId", "categoryId"]),
-
-  // ============================================
-  // WORK BLOCKS (User-defined time blocks for tracking)
-  // ============================================
-
-  workBlocks: defineTable({
-    userId: v.string(),
-    name: v.string(), // "Deep Work", "Admin", "Creative", etc.
-    color: v.optional(v.string()), // Hex color for UI
-    order: v.number(),
-    createdAt: v.string(),
-  })
-    .index("by_user", ["userId"])
-    .index("by_user_order", ["userId", "order"]),
-
-  blockTimeSessions: defineTable({
-    userId: v.string(),
-    date: v.string(), // "YYYY-MM-DD"
-    blockId: v.id("workBlocks"),
-    durationMinutes: v.number(),
-    startedAt: v.string(),
-    completedAt: v.optional(v.string()), // null if still running
-    createdAt: v.string(),
-  })
-    .index("by_user_date", ["userId", "date"])
-    .index("by_block", ["blockId"])
-    .index("by_user_block", ["userId", "blockId"])
+    .index("by_user_category", ["userId", "categoryId"])
     .index("by_user_running", ["userId", "completedAt"]),
 
   winConditions: defineTable({
