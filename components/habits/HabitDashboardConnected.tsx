@@ -274,7 +274,7 @@ export function HabitDashboardConnected() {
         <ProgressRing current={totalXP} total={maxXP} />
 
         {/* Win Condition */}
-        <WinConditionBanner isAchieved={progress === 100} />
+        <WinConditionBanner />
 
         {/* Stats Bar */}
         <StatsBar
