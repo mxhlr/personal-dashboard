@@ -125,7 +125,7 @@ export function HabitItem({
       <Checkbox
         checked={completed}
         onCheckedChange={handleToggle}
-        className="h-5 w-5 rounded-md data-[state=checked]:border-[#00E676] data-[state=checked]:bg-[#00E676] data-[state=checked]:text-white"
+        className="h-5 w-5 rounded-md data-[state=checked]:!border-[#00E676] data-[state=checked]:!bg-[#00E676] data-[state=checked]:!text-white"
       />
 
       <div className="flex-1">
@@ -144,52 +144,56 @@ export function HabitItem({
         )}
       </div>
 
-      {!completed && (
-        <div className="flex items-center gap-2">
-          {isEditingXP ? (
-            <Input
-              ref={inputRef}
-              type="number"
-              min="1"
-              value={xpValue}
-              onChange={(e) => setXpValue(e.target.value)}
-              onBlur={handleXPSave}
-              onKeyDown={handleXPKeyDown}
-              className="h-7 w-16 text-center text-sm font-semibold"
-            />
-          ) : (
-            <button
-              onClick={handleXPClick}
-              className="cursor-pointer rounded px-1.5 py-0.5 text-sm font-semibold text-orange-500 transition-colors hover:bg-orange-500/10"
-              title="Click to edit XP"
-            >
-              +{xp}
-            </button>
-          )}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 px-2 text-xs opacity-0 transition-opacity hover:opacity-100"
+      <div className="flex items-center gap-2">
+        {completed ? (
+          <div className="text-lg text-[#00FF88]">✓</div>
+        ) : (
+          <>
+            {isEditingXP ? (
+              <Input
+                ref={inputRef}
+                type="number"
+                min="1"
+                value={xpValue}
+                onChange={(e) => setXpValue(e.target.value)}
+                onBlur={handleXPSave}
+                onKeyDown={handleXPKeyDown}
+                className="h-7 w-16 text-center text-sm font-semibold"
+              />
+            ) : (
+              <button
+                onClick={handleXPClick}
+                className="cursor-pointer rounded px-1.5 py-0.5 text-sm font-semibold text-orange-500 transition-colors hover:bg-orange-500/10"
+                title="Click to edit XP"
               >
-                Skip
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              {SKIP_REASONS.map((reason) => (
-                <DropdownMenuItem
-                  key={reason}
-                  onClick={() => onSkip(id, reason)}
-                  className="text-sm"
+                +{xp}
+              </button>
+            )}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 px-2 text-xs opacity-0 transition-opacity hover:opacity-100"
                 >
-                  {reason}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      )}
+                  Skip
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                {SKIP_REASONS.map((reason) => (
+                  <DropdownMenuItem
+                    key={reason}
+                    onClick={() => onSkip(id, reason)}
+                    className="text-sm"
+                  >
+                    {reason}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </>
+        )}
+      </div>
 
       {isAnimating && (
         <div className="pointer-events-none absolute right-3 top-0 animate-[slide-up_0.6s_ease-out] text-lg font-bold text-orange-500">
