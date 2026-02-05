@@ -307,14 +307,12 @@ export function HabitDashboardConnected() {
           ))}
         </div>
 
-        {/* Pattern Intelligence - always show with example if empty */}
+        {/* Pattern Intelligence - only show real data */}
         {patternData && (
           <PatternIntelligence
             data={{
               lowCompletionHabits: patternData.lowCompletionHabits,
-              commonSkipReasons: patternData.commonSkipReasons.length > 0
-                ? patternData.commonSkipReasons
-                : [{ reason: "Not enough time", count: 12 }],
+              commonSkipReasons: patternData.commonSkipReasons,
               recommendations: patternData.recommendations,
             }}
           />
