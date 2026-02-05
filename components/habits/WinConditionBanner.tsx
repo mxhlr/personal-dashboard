@@ -42,13 +42,13 @@ export function WinConditionBanner({ isAchieved = false }: WinConditionBannerPro
       style={{
         background: isAchieved
           ? 'rgba(255, 215, 0, 0.15)'
-          : 'rgba(255, 255, 255, 0.8)',
+          : 'linear-gradient(135deg, rgba(107, 33, 168, 0.85) 0%, rgba(139, 92, 246, 0.75) 100%)',
         borderRadius: '16px',
         backgroundImage: isAchieved
           ? 'linear-gradient(rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.15)), linear-gradient(135deg, rgba(255, 215, 0, 0.3) 0%, transparent 100%)'
-          : 'linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), linear-gradient(135deg, rgba(107, 33, 168, 0.4) 0%, transparent 100%)',
-        backgroundOrigin: 'border-box',
-        backgroundClip: 'padding-box, border-box',
+          : undefined,
+        backgroundOrigin: isAchieved ? 'border-box' : undefined,
+        backgroundClip: isAchieved ? 'padding-box, border-box' : undefined,
       }}
     >
       <div className="relative space-y-4 text-center">
