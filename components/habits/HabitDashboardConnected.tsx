@@ -232,7 +232,7 @@ export function HabitDashboardConnected() {
               <p className="font-mono text-4xl font-bold text-foreground">
                 {currentTime}
               </p>
-              <p className="text-lg font-semibold text-cyan-400 dark:text-cyan-400">Execute.</p>
+              <p className="text-lg font-semibold text-[#1A1A1A] dark:text-[#E0E0E0]">Execute.</p>
             </div>
             <div className="flex-1" />
           </div>

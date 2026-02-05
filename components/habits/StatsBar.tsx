@@ -9,7 +9,7 @@ interface StatsBarProps {
 
 export function StatsBar({ streak, level, weekCompleted, totalXP }: StatsBarProps) {
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-4 gap-6">
       <StatCard
         icon="🔥"
         label="Streak"
@@ -29,7 +29,7 @@ export function StatsBar({ streak, level, weekCompleted, totalXP }: StatsBarProp
       <StatCard
         label="Total XP"
         value={totalXP}
-        accentColor="text-purple-400"
+        accentColor="text-[#FFD700]"
       />
     </div>
   );
@@ -47,14 +47,12 @@ function StatCard({
   accentColor: string;
 }) {
   return (
-    <div className="rounded-lg border border-border/50 bg-card/50 p-4 transition-colors hover:bg-card/80">
-      <div className="space-y-1">
-        <p className="text-xs text-muted-foreground">{label}</p>
-        <p className={`text-2xl font-semibold ${accentColor}`}>
-          {icon && <span className="mr-1">{icon}</span>}
-          {value}
-        </p>
-      </div>
+    <div className="text-center">
+      <p className={`text-3xl font-bold ${accentColor}`}>
+        {icon && <span className="mr-1">{icon}</span>}
+        {value}
+      </p>
+      <p className="text-xs mt-1 text-[#666666] dark:text-[#888888]">{label}</p>
     </div>
   );
 }

@@ -39,7 +39,7 @@ export function SprintTimer({ endOfDayHour = 18 }: SprintTimerProps) {
   }, [endOfDayHour]);
 
   return (
-    <p className="text-sm text-muted-foreground">
+    <p className="text-sm text-center text-foreground dark:text-white">
       Sprint: <span className="font-mono">{timeRemaining}</span>
     </p>
   );
