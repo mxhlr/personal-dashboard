@@ -59,10 +59,14 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
 
     setIsSubmitting(true);
     try {
+      // Filter out empty goals
+      const validGoals = nextWeekGoals.filter(g => g.goal.trim() !== "");
+
       await submitReview({
         year,
         weekNumber,
         responses: formData,
+        nextWeekGoals: validGoals.length > 0 ? validGoals : undefined,
       });
       setIsReadOnly(true);
       toast.success("Weekly Review erfolgreich gespeichert!");
@@ -72,6 +76,22 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const addGoal = () => {
+    if (nextWeekGoals.length < 5) {
+      setNextWeekGoals([...nextWeekGoals, { goal: "", category: "Work" }]);
+    }
+  };
+
+  const removeGoal = (index: number) => {
+    setNextWeekGoals(nextWeekGoals.filter((_, i) => i !== index));
+  };
+
+  const updateGoal = (index: number, field: "goal" | "category", value: string) => {
+    const updated = [...nextWeekGoals];
+    updated[index][field] = value;
+    setNextWeekGoals(updated);
   };
 
   const handleEdit = () => {
