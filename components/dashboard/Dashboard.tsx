@@ -157,7 +157,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                   onClick={() => onNavigate("planning")}
                   className="w-full"
                 >
-                  Zum Sprint →
+                  Zum Daily Log →
                 </Button>
               </>
             )}
