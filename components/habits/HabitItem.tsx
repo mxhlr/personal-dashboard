@@ -19,6 +19,7 @@ import { toast } from "sonner";
 interface HabitItemProps {
   id: string;
   name: string;
+  subtitle?: string;
   xp: number;
   completed: boolean;
   completedAt?: string;
@@ -37,6 +38,7 @@ const SKIP_REASONS = [
 export function HabitItem({
   id,
   name,
+  subtitle,
   xp,
   completed,
   completedAt,
@@ -115,9 +117,16 @@ export function HabitItem({
         className="h-5 w-5 data-[state=checked]:border-green-500 data-[state=checked]:bg-green-500"
       />
 
-      <span className={`flex-1 text-sm ${completed ? "text-muted-foreground line-through" : "text-foreground"}`}>
-        {name}
-      </span>
+      <div className="flex-1">
+        <div className={`text-sm ${completed ? "text-muted-foreground line-through" : "text-foreground"}`}>
+          {name}
+        </div>
+        {subtitle && (
+          <div className="text-xs text-muted-foreground/70 mt-0.5">
+            {subtitle}
+          </div>
+        )}
+      </div>
 
       {completed && completedAt ? (
         <div className="flex items-center gap-2 text-xs text-green-500">

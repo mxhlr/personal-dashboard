@@ -25,6 +25,7 @@ interface HabitEditDialogProps {
   habit?: {
     id: string;
     name: string;
+    subtitle?: string;
     xp: number;
     isCore: boolean;
   } | null;
@@ -39,6 +40,7 @@ export function HabitEditDialog({
   mode,
 }: HabitEditDialogProps) {
   const [name, setName] = useState(habit?.name || "");
+  const [subtitle, setSubtitle] = useState(habit?.subtitle || "");
   const [xp, setXp] = useState(habit?.xp?.toString() || "10");
   const [isCore, setIsCore] = useState(habit?.isCore ?? true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -67,6 +69,7 @@ export function HabitEditDialog({
         await createTemplate({
           categoryId: categoryId as Id<"habitCategories">,
           name: name.trim(),
+          subtitle: subtitle.trim() || undefined,
           xpValue,
           isCore,
         });
@@ -75,6 +78,7 @@ export function HabitEditDialog({
         await updateTemplate({
           templateId: habit.id as Id<"habitTemplates">,
           name: name.trim(),
+          subtitle: subtitle.trim() || undefined,
           xpValue,
           isCore,
         });
@@ -93,6 +97,7 @@ export function HabitEditDialog({
 
   const resetForm = () => {
     setName("");
+    setSubtitle("");
     setXp("10");
     setIsCore(true);
   };
@@ -101,6 +106,7 @@ export function HabitEditDialog({
   const handleOpenChange = (newOpen: boolean) => {
     if (newOpen) {
       setName(habit?.name || "");
+      setSubtitle(habit?.subtitle || "");
       setXp(habit?.xp?.toString() || "10");
       setIsCore(habit?.isCore ?? true);
     } else {
@@ -133,6 +139,19 @@ export function HabitEditDialog({
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Exercise for 30 minutes"
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="subtitle">Subtitle (optional)</Label>
+              <Input
+                id="subtitle"
+                value={subtitle}
+                onChange={(e) => setSubtitle(e.target.value)}
+                placeholder="e.g., BTC, ETH, majors"
+              />
+              <p className="text-xs text-muted-foreground">
+                Context hint or workflow path (e.g., X → Typefully, Discord → Notion)
+              </p>
             </div>
 
             <div className="space-y-2">

@@ -319,6 +319,7 @@ export default defineSchema({
     userId: v.string(),
     categoryId: v.id("habitCategories"),
     name: v.string(),
+    subtitle: v.optional(v.string()), // Optional subtitle/description for context
     xpValue: v.number(), // user-configurable
     isCore: v.boolean(), // core habits must be completed to unlock extras
     order: v.number(),

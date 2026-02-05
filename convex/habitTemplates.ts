@@ -44,6 +44,7 @@ export const createTemplate = mutation({
   args: {
     categoryId: v.id("habitCategories"),
     name: v.string(),
+    subtitle: v.optional(v.string()),
     xpValue: v.number(),
     isCore: v.boolean(),
   },
@@ -70,6 +71,7 @@ export const createTemplate = mutation({
       userId: identity.subject,
       categoryId: args.categoryId,
       name: args.name,
+      subtitle: args.subtitle,
       xpValue: args.xpValue,
       isCore: args.isCore,
       order: maxOrder + 1,
@@ -85,6 +87,7 @@ export const updateTemplate = mutation({
   args: {
     templateId: v.id("habitTemplates"),
     name: v.optional(v.string()),
+    subtitle: v.optional(v.string()),
     xpValue: v.optional(v.number()),
     isCore: v.optional(v.boolean()),
   },
@@ -99,6 +102,7 @@ export const updateTemplate = mutation({
     const updates: any = {};
 
     if (args.name !== undefined) updates.name = args.name;
+    if (args.subtitle !== undefined) updates.subtitle = args.subtitle;
     if (args.xpValue !== undefined) updates.xpValue = args.xpValue;
     if (args.isCore !== undefined) updates.isCore = args.isCore;
 

@@ -10,13 +10,13 @@ import { HabitCategory } from "./HabitCategory";
 import { PatternIntelligence } from "./PatternIntelligence";
 import { SprintTimer } from "./SprintTimer";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { Id } from "@/convex/_generated/dataModel";
 
 interface Habit {
   id: string;
   name: string;
+  subtitle?: string;
   xp: number;
   completed: boolean;
   completedAt?: string;
@@ -77,6 +77,7 @@ export function HabitDashboardConnected() {
         return {
           id: template._id,
           name: template.name,
+          subtitle: template.subtitle,
           xp: template.xpValue,
           completed: daily?.completed || false,
           completedAt: daily?.completedAt,
@@ -252,24 +253,22 @@ export function HabitDashboardConnected() {
         {/* Progress Ring */}
         <ProgressRing current={totalXP} total={maxXP} />
 
-        {/* Habit Categories and Pattern Intelligence */}
-        <ScrollArea className="h-[600px] pr-4">
-          <div className="space-y-4">
-            {localCategories.map((category) => (
-              <HabitCategory
-                key={category.id}
-                icon={category.icon}
-                name={category.name}
-                habits={category.habits}
-                onHabitToggle={handleHabitToggle}
-                onHabitSkip={handleHabitSkip}
-              />
-            ))}
+        {/* Habit Categories */}
+        <div className="space-y-4">
+          {localCategories.map((category) => (
+            <HabitCategory
+              key={category.id}
+              icon={category.icon}
+              name={category.name}
+              habits={category.habits}
+              onHabitToggle={handleHabitToggle}
+              onHabitSkip={handleHabitSkip}
+            />
+          ))}
+        </div>
 
-            {/* Pattern Intelligence */}
-            {patternData && <PatternIntelligence data={patternData} />}
-          </div>
-        </ScrollArea>
+        {/* Pattern Intelligence */}
+        {patternData && <PatternIntelligence data={patternData} />}
 
         {/* Finish Day Button */}
         <Button

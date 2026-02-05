@@ -67,6 +67,7 @@ export function ManageHabitsDialog({
   const [selectedHabit, setSelectedHabit] = useState<{
     id: string;
     name: string;
+    subtitle?: string;
     xp: number;
     isCore: boolean;
   } | null>(null);
@@ -110,7 +111,7 @@ export function ManageHabitsDialog({
 
   const handleEditHabit = (
     categoryId: string,
-    habit: { id: string; name: string; xp: number; isCore: boolean }
+    habit: { id: string; name: string; subtitle?: string; xp: number; isCore: boolean }
   ) => {
     setHabitEditMode("edit");
     setSelectedCategoryId(categoryId);
@@ -427,6 +428,7 @@ export function ManageHabitsDialog({
                                       handleEditHabit(category._id, {
                                         id: habit._id,
                                         name: habit.name,
+                                        subtitle: habit.subtitle,
                                         xp: habit.xpValue,
                                         isCore: habit.isCore,
                                       })
