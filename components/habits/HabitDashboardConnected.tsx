@@ -255,12 +255,13 @@ export function HabitDashboardConnected() {
 
         {/* Habit Categories */}
         <div className="space-y-4">
-          {localCategories.map((category) => (
+          {localCategories.map((category, index) => (
             <HabitCategory
               key={category.id}
               icon={category.icon}
               name={category.name}
               habits={category.habits}
+              categoryNumber={index + 1}
               onHabitToggle={handleHabitToggle}
               onHabitSkip={handleHabitSkip}
             />

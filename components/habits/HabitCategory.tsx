@@ -10,6 +10,7 @@ import { toast } from "sonner";
 interface Habit {
   id: string;
   name: string;
+  subtitle?: string;
   xp: number;
   completed: boolean;
   completedAt?: string;
@@ -20,14 +21,15 @@ interface HabitCategoryProps {
   icon: string;
   name: string;
   habits: Habit[];
+  categoryNumber: number;
   onHabitToggle: (categoryId: string, habitId: string) => void;
   onHabitSkip: (categoryId: string, habitId: string, reason: string) => void;
 }
 
 export function HabitCategory({
-  icon,
   name,
   habits,
+  categoryNumber,
   onHabitToggle,
   onHabitSkip,
 }: HabitCategoryProps) {
@@ -67,7 +69,9 @@ export function HabitCategory({
             onClick={() => setIsExpanded(!isExpanded)}
             className="flex flex-1 items-center gap-3 text-left"
           >
-            <span className="text-2xl">{icon}</span>
+            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-cyan-500 text-xs font-bold text-white">
+              {categoryNumber}
+            </div>
             <div>
               <h3 className="text-base font-semibold">{name}</h3>
               <p className="text-xs text-muted-foreground">
@@ -89,7 +93,7 @@ export function HabitCategory({
         <Progress
           value={progress}
           className={`mt-3 h-2 ${isComplete ? "bg-green-950" : "bg-muted/30"}`}
-          indicatorClassName={isComplete ? "bg-green-500" : "bg-cyan-500"}
+          indicatorClassName="bg-[#00FF88]"
         />
       </CardHeader>
 
@@ -97,21 +101,15 @@ export function HabitCategory({
         <CardContent className="space-y-4 pt-0">
           {/* Core Habits Section */}
           {coreHabits.length > 0 && (
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
-                <span>Core Habits</span>
-                <div className="h-px flex-1 bg-border/50" />
-              </div>
-              <div className="space-y-2">
-                {coreHabits.map((habit) => (
-                  <HabitItem
-                    key={habit.id}
-                    {...habit}
-                    onToggle={handleToggle}
-                    onSkip={(id, reason) => onHabitSkip(name, id, reason)}
-                  />
-                ))}
-              </div>
+            <div className="space-y-0">
+              {coreHabits.map((habit) => (
+                <HabitItem
+                  key={habit.id}
+                  {...habit}
+                  onToggle={handleToggle}
+                  onSkip={(id, reason) => onHabitSkip(name, id, reason)}
+                />
+              ))}
             </div>
           )}
 
@@ -143,7 +141,7 @@ export function HabitCategory({
                   </div>
 
                   {/* Extra Habits List - always shown when unlocked */}
-                  <div className="space-y-2 pt-2">
+                  <div className="space-y-0 pt-2">
                     {extraHabits.map((habit) => (
                       <HabitItem
                         key={habit.id}

@@ -10,7 +10,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Check } from "lucide-react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -109,8 +108,20 @@ export function HabitItem({
     }
   }, [isEditingXP]);
 
+  // Format timestamp as "✓ HH:MM AM/PM"
+  const formatTimestamp = (timestamp?: string) => {
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? "PM" : "AM";
+    const displayHours = hours % 12 || 12;
+    const displayMinutes = minutes.toString().padStart(2, "0");
+    return `✓ ${displayHours}:${displayMinutes} ${ampm}`;
+  };
+
   return (
-    <div className="group relative flex items-center gap-3 rounded-md border border-border/50 bg-card/30 p-3 transition-all hover:bg-card/50">
+    <div className="group relative flex items-center gap-3 py-2 transition-all border-b border-[#1A1A2E]/30 last:border-b-0">
       <Checkbox
         checked={completed}
         onCheckedChange={handleToggle}
@@ -130,8 +141,7 @@ export function HabitItem({
 
       {completed && completedAt ? (
         <div className="flex items-center gap-2 text-xs text-green-500">
-          <Check className="h-4 w-4" />
-          <span>{completedAt}</span>
+          <span>{formatTimestamp(completedAt)}</span>
         </div>
       ) : (
         <div className="flex items-center gap-2">
@@ -160,7 +170,7 @@ export function HabitItem({
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-7 px-2 text-xs opacity-0 transition-opacity group-hover:opacity-100"
+                className="h-7 px-2 text-xs opacity-0 transition-opacity hover:opacity-100"
               >
                 Skip
               </Button>

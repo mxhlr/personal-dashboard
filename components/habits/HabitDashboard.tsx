@@ -153,12 +153,13 @@ export function HabitDashboard() {
         {/* Habit Categories */}
         <ScrollArea className="h-[600px] pr-4">
           <div className="space-y-4">
-            {categories.map((category) => (
+            {categories.map((category, index) => (
               <HabitCategory
                 key={category.id}
                 icon={category.icon}
                 name={category.name}
                 habits={category.habits}
+                categoryNumber={index + 1}
                 onHabitToggle={handleHabitToggle}
                 onHabitSkip={handleHabitSkip}
               />
