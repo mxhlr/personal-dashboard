@@ -7,6 +7,13 @@ interface MonthlyComparisonProps {
 }
 
 export function MonthlyComparison({ monthlyStats }: MonthlyComparisonProps) {
+  // Ensure all 12 months are always displayed (Jan-Dec)
+  const allMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const displayStats = allMonths.map(month => {
+    const existingStat = monthlyStats.find(s => s.month === month);
+    return existingStat || { month, score: 0 };
+  });
+
   return (
     <Card className="p-6 dark:border-[rgba(0,230,118,0.15)] border-[rgba(76,175,80,0.2)] dark:bg-card/50 bg-white/80
       shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
@@ -16,7 +23,7 @@ export function MonthlyComparison({ monthlyStats }: MonthlyComparisonProps) {
       </h3>
 
       <div className="space-y-3">
-        {monthlyStats.map((stat) => (
+        {displayStats.map((stat) => (
           <div key={stat.month} className="flex items-center gap-4">
             {/* Month Label */}
             <div

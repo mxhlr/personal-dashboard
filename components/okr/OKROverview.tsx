@@ -11,6 +11,7 @@ export function OKROverview() {
   const currentWeekNumber = getWeek(currentDate, { weekStartsOn: 1 });
   const currentMonth = getMonth(currentDate) + 1;
   const currentYear = getYear(currentDate);
+  const currentQuarter = Math.floor((currentMonth - 1) / 3) + 1;
 
   const profile = useQuery(api.userProfile.getUserProfile);
   const weeklyGoals = useQuery(api.weeklyReview.getWeeklyGoals, {
@@ -29,6 +30,11 @@ export function OKROverview() {
       </div>
     );
   }
+
+  // Extract quarterly milestones
+  const quarterlyMilestones = profile.milestones?.filter(
+    (m) => m.year === currentYear && m.quarter === currentQuarter
+  ) || [];
 
   const monthNames = [
     "January", "February", "March", "April", "May", "June",
