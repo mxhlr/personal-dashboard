@@ -15,9 +15,10 @@ import { QuarterlyReviewForm } from "@/components/reviews/QuarterlyReviewForm";
 import { AnnualReviewForm } from "@/components/reviews/AnnualReviewForm";
 import { SettingsModal } from "@/components/settings/SettingsModal";
 import { AnalyticsDashboard } from "@/components/analytics/AnalyticsDashboard";
+import { OKROverview } from "@/components/okr/OKROverview";
 
 type ReviewType = "weekly" | "monthly" | "quarterly" | "annual";
-type TabType = "dashboard" | "daily-log" | "visionboard" | "planning" | "data" | "coach";
+type TabType = "dashboard" | "daily-log" | "visionboard" | "planning" | "data" | "coach" | "okr";
 
 // Helper function to get current week number (ISO 8601)
 function getWeekNumber(date: Date): number {
@@ -144,7 +145,12 @@ export default function DashboardPage() {
             <AnalyticsDashboard />
           )}
 
-          {/* Tab 4: Coach */}
+          {/* Tab 4: OKR Overview */}
+          {activeTab === "okr" && (
+            <OKROverview />
+          )}
+
+          {/* Tab 5: Coach */}
           {activeTab === "coach" && (
             <div className="container mx-auto px-4 py-8">
               <CoachChat />

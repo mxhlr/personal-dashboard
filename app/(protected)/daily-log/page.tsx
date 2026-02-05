@@ -13,7 +13,7 @@ export default function DailyLogPage() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [selectedReview] = useState<ReviewType>("weekly");
 
-  const handleTabChange = (tab: "dashboard" | "daily-log" | "visionboard" | "planning" | "data" | "coach") => {
+  const handleTabChange = (tab: "dashboard" | "daily-log" | "visionboard" | "planning" | "data" | "coach" | "okr") => {
     if (tab === "daily-log") {
       // Already on daily-log page
       return;
