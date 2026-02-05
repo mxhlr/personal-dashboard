@@ -1,8 +1,5 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-
 interface PatternData {
   lowCompletionHabits: Array<{ name: string; rate: number }>;
   commonSkipReasons: Array<{ reason: string; count: number }>;
@@ -14,67 +11,46 @@ interface PatternIntelligenceProps {
 }
 
 export function PatternIntelligence({ data }: PatternIntelligenceProps) {
+  const topSkipReason = data.commonSkipReasons[0];
+
   return (
-    <Card className="border-border/50 bg-card/30">
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-base">
-          <span>🧠</span>
-          Pattern Intelligence
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4 text-sm">
-        {data.lowCompletionHabits.length > 0 && (
-          <div className="space-y-2">
-            <h4 className="font-medium text-muted-foreground">
-              Struggling with:
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {data.lowCompletionHabits.map((habit) => (
-                <Badge
-                  key={habit.name}
-                  variant="secondary"
-                  className="bg-orange-950/30 text-orange-400 hover:bg-orange-950/40"
-                >
-                  {habit.name} ({habit.rate}%)
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
+    <div className="rounded-xl border border-[rgba(0,180,220,0.15)] dark:border-[rgba(0,229,255,0.15)] bg-[rgba(0,180,220,0.03)] dark:bg-[rgba(0,229,255,0.03)] p-5 space-y-4">
+      <h3 className="text-base font-bold text-[#00E5FF]">
+        🧠 Pattern Intelligence
+      </h3>
 
-        {data.commonSkipReasons.length > 0 && (
-          <div className="space-y-2">
-            <h4 className="font-medium text-muted-foreground">
-              Common skip reasons:
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {data.commonSkipReasons.map((item) => (
-                <Badge
-                  key={item.reason}
-                  variant="outline"
-                  className="border-border/50"
-                >
-                  {item.reason} ({item.count}x)
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
+      <div className="space-y-4">
+        {data.lowCompletionHabits.map((habit) => (
+          <p key={habit.name} className="text-sm leading-relaxed">
+            <span className="font-bold text-[#E0E0E0] dark:text-[#E0E0E0] text-[#1A1A1A]">
+              {habit.name}
+            </span>
+            {" "}only completed{" "}
+            <span className="font-bold text-[#FF4444]">
+              {habit.rate}%
+            </span>
+            {" "}
+            <span className="text-[#666666] dark:text-[#999999]">
+              of days. Consider restructuring.
+            </span>
+          </p>
+        ))}
 
-        {data.recommendations.length > 0 && (
-          <div className="space-y-2">
-            <h4 className="font-medium text-cyan-700 dark:text-cyan-400">Recommendations:</h4>
-            <ul className="space-y-1 text-muted-foreground">
-              {data.recommendations.map((rec, i) => (
-                <li key={i} className="flex gap-2">
-                  <span className="text-cyan-600 dark:text-cyan-500">→</span>
-                  <span>{rec}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+        {topSkipReason && (
+          <p className="text-sm leading-relaxed">
+            <span className="text-[#666666] dark:text-[#999999]">
+              Top skip reason:{" "}
+            </span>
+            <span className="font-bold text-[#FF4444]">
+              &quot;{topSkipReason.reason}&quot;
+            </span>
+            {" "}
+            <span className="text-[#666666] dark:text-[#999999]">
+              ({topSkipReason.count} times). Address this blocker.
+            </span>
+          </p>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
