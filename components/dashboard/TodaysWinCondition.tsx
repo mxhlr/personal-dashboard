@@ -2,7 +2,6 @@
 
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { Card, CardContent } from "@/components/ui/card";
 
 export function TodaysWinCondition() {
   const today = new Date().toISOString().split("T")[0];
@@ -13,20 +12,25 @@ export function TodaysWinCondition() {
   }
 
   return (
-    <Card className="border-l-4 border-l-purple-500 dark:bg-card/50 bg-white/80">
-      <CardContent className="pt-6">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="text-lg">⚡</span>
-            <h3 className="text-sm font-semibold uppercase tracking-wider dark:text-[#00E5FF] text-[#0077B6]">
-              Today&apos;s Win Condition
-            </h3>
-          </div>
-          <p className="text-base font-medium dark:text-white text-gray-900 pl-7">
-            {winConditionData.winCondition}
-          </p>
-        </div>
-      </CardContent>
-    </Card>
+    <div
+      className="relative overflow-hidden p-6 backdrop-blur-[10px] border dark:border-white/[0.1] border-black/[0.1] transition-all duration-500"
+      style={{
+        background: 'linear-gradient(135deg, rgba(107, 33, 168, 0.85) 0%, rgba(139, 92, 246, 0.75) 100%)',
+        borderRadius: '16px',
+        boxShadow: '0 8px 32px rgba(107, 33, 168, 0.3)',
+      }}
+    >
+      <div className="relative space-y-3 text-center">
+        <h3
+          className="text-[13px] font-semibold font-orbitron uppercase flex items-center justify-center gap-2 text-white"
+          style={{ letterSpacing: '1px' }}
+        >
+          ⚡ TODAY&apos;S WIN CONDITION
+        </h3>
+        <p className="text-base font-medium text-white">
+          {winConditionData.winCondition}
+        </p>
+      </div>
+    </div>
   );
 }
