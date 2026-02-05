@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { ProgressIndicator } from "@/components/dashboard/ProgressIndicator";
+import { toast } from "sonner";
 
 interface QuarterlyReviewFormProps {
   year: number;
@@ -96,6 +98,28 @@ export function QuarterlyReviewForm({
     }
   }, [existingReview, currentMilestones]);
 
+  const calculateProgress = () => {
+    let totalFields = 5; // 5 reflection questions
+    let filledFields = 0;
+
+    // Check reflection questions
+    if (formData.proudestMilestone.trim()) filledFields++;
+    if (formData.approachDifferently.trim()) filledFields++;
+    if (formData.learnedAboutGoals.trim()) filledFields++;
+    if (formData.decisionDifferently.trim()) filledFields++;
+    if (formData.needForNextQuarter.trim()) filledFields++;
+
+    // Check if all life areas have at least one milestone
+    const areas = ["wealth", "health", "love", "happiness"];
+    const hasAllAreas = areas.every((area) =>
+      nextQuarterMilestones[area].some((m) => m.trim())
+    );
+    totalFields += 1; // For the milestone planning
+    if (hasAllAreas) filledFields++;
+
+    return Math.round((filledFields / totalFields) * 100);
+  };
+
   const handleMilestoneToggle = (index: number) => {
     const updated = [...milestoneReview];
     updated[index].completed = !updated[index].completed;
@@ -144,7 +168,7 @@ export function QuarterlyReviewForm({
       !formData.decisionDifferently.trim() ||
       !formData.needForNextQuarter.trim()
     ) {
-      alert("Bitte fülle alle Reflexionsfragen aus.");
+      toast.error("Bitte fülle alle Reflexionsfragen aus.");
       return;
     }
 
@@ -160,7 +184,7 @@ export function QuarterlyReviewForm({
     for (const area of areas) {
       const hasArea = nextMilestones.some((m) => m.area === area);
       if (!hasArea) {
-        alert(
+        toast.error(
           `Bitte definiere mindestens einen Milestone für ${AREA_LABELS[area]}.`
         );
         return;
@@ -177,10 +201,10 @@ export function QuarterlyReviewForm({
         nextQuarterMilestones: nextMilestones,
       });
       setIsReadOnly(true);
-      alert("Quarterly Review erfolgreich gespeichert!");
+      toast.success("Quarterly Review erfolgreich gespeichert!");
     } catch (error) {
       console.error("Error submitting review:", error);
-      alert("Fehler beim Speichern des Reviews.");
+      toast.error("Fehler beim Speichern des Reviews.");
     } finally {
       setIsSubmitting(false);
     }
@@ -232,12 +256,15 @@ export function QuarterlyReviewForm({
           >
             Quarterly Review
           </h1>
-          <p className="text-[13px] dark:text-[#888888] text-[#666666]"
+          <p className="text-[13px] dark:text-[#888888] text-[#666666] font-medium"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
           >
             Q{quarter} {year}
           </p>
         </div>
+
+        {/* Progress Indicator */}
+        <ProgressIndicator percentage={calculateProgress()} />
 
         {/* Completion Badge */}
         {existingReview && isReadOnly && (
@@ -247,8 +274,7 @@ export function QuarterlyReviewForm({
               dark:border dark:border-white/[0.1] border border-black/[0.08]"
               style={{
                 color: '#00E676',
-                boxShadow: '0 0 15px rgba(0, 230, 118, 0.3)',
-                fontFamily: '"Courier New", "Monaco", monospace'
+                boxShadow: '0 0 15px rgba(0, 230, 118, 0.3)'
               }}
             >
               ✓ Review Complete

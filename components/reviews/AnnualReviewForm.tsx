@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { ProgressIndicator } from "@/components/dashboard/ProgressIndicator";
+import { toast } from "sonner";
 
 interface AnnualReviewFormProps {
   year: number;
@@ -66,6 +68,40 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
     }
   }, [existingReview, currentNorthStars]);
 
+  const calculateProgress = () => {
+    let totalFields = 0;
+    let filledFields = 0;
+
+    // North Star reviews (4 areas, 2 fields each = 8 fields)
+    const areas: Array<keyof typeof northStarReview> = [
+      "wealth",
+      "health",
+      "love",
+      "happiness",
+    ];
+    areas.forEach((area) => {
+      totalFields += 2; // achieved + notes
+      if (northStarReview[area].achieved) filledFields++;
+      if (northStarReview[area].notes.trim()) filledFields++;
+    });
+
+    // Reflection questions (5 fields)
+    totalFields += 5;
+    if (formData.yearInOneSentence.trim()) filledFields++;
+    if (formData.turningPoint.trim()) filledFields++;
+    if (formData.mostProudOf.trim()) filledFields++;
+    if (formData.topThreeLearnings.trim()) filledFields++;
+    if (formData.stopStartContinue.trim()) filledFields++;
+
+    // Next year North Stars (4 fields)
+    totalFields += 4;
+    areas.forEach((area) => {
+      if (nextYearNorthStars[area].trim()) filledFields++;
+    });
+
+    return Math.round((filledFields / totalFields) * 100);
+  };
+
   const handleNorthStarReviewChange = (
     area: keyof typeof northStarReview,
     field: "achieved" | "notes",
@@ -95,7 +131,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
         !northStarReview[area].achieved ||
         !northStarReview[area].notes.trim()
       ) {
-        alert(
+        toast.error(
           `Bitte fülle die North Star Review für ${AREA_LABELS[area]} vollständig aus.`
         );
         return;
@@ -110,14 +146,14 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
       !formData.topThreeLearnings.trim() ||
       !formData.stopStartContinue.trim()
     ) {
-      alert("Bitte fülle alle Reflexionsfragen aus.");
+      toast.error("Bitte fülle alle Reflexionsfragen aus.");
       return;
     }
 
     // Validate all next year North Stars are filled
     for (const area of areas) {
       if (!nextYearNorthStars[area].trim()) {
-        alert(
+        toast.error(
           `Bitte definiere einen North Star für ${AREA_LABELS[area]} für nächstes Jahr.`
         );
         return;
@@ -135,10 +171,10 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
         },
       });
       setIsReadOnly(true);
-      alert("Annual Review erfolgreich gespeichert!");
+      toast.success("Annual Review erfolgreich gespeichert!");
     } catch (error) {
       console.error("Error submitting review:", error);
-      alert("Fehler beim Speichern des Reviews.");
+      toast.error("Fehler beim Speichern des Reviews.");
     } finally {
       setIsSubmitting(false);
     }
@@ -190,12 +226,15 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
           >
             Annual Review
           </h1>
-          <p className="text-[13px] dark:text-[#888888] text-[#666666]"
+          <p className="text-[13px] dark:text-[#888888] text-[#666666] font-medium"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
           >
             {year}
           </p>
         </div>
+
+        {/* Progress Indicator */}
+        <ProgressIndicator percentage={calculateProgress()} />
 
         {/* Completion Badge */}
         {existingReview && isReadOnly && (
@@ -205,8 +244,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
               dark:border dark:border-white/[0.1] border border-black/[0.08]"
               style={{
                 color: '#00E676',
-                boxShadow: '0 0 15px rgba(0, 230, 118, 0.3)',
-                fontFamily: '"Courier New", "Monaco", monospace'
+                boxShadow: '0 0 15px rgba(0, 230, 118, 0.3)'
               }}
             >
               ✓ Review Complete
