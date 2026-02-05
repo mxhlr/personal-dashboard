@@ -38,10 +38,12 @@ export function WinConditionBanner({ isAchieved = false }: WinConditionBannerPro
         isAchieved
           ? 'ring-2 ring-[#FFD700]/30 shadow-[0_0_20px_rgba(255,215,0,0.15)] dark:border-[#FFD700]/50 border-[#FFD700]/30'
           : 'shadow-sm dark:border-border/50 border-border/30 hover:shadow-xl hover:-translate-y-1 dark:hover:border-border hover:border-border/50'
-      } dark:bg-card/50 bg-white/80`}
+      }`}
       style={{
         borderRadius: '16px',
-        backgroundColor: isAchieved ? 'rgba(255, 215, 0, 0.06)' : undefined,
+        background: isAchieved
+          ? 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(255, 180, 0, 0.04) 100%), rgba(26, 26, 26, 0.5)'
+          : 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)',
       }}
     >
       <div className="relative space-y-4 text-center">
