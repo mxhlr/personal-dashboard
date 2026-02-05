@@ -83,6 +83,16 @@ export default function Header({
             >
               Daily Log
             </Button>
+            <Button
+              variant={activeTab === "data" ? "default" : "ghost"}
+              onClick={() => onTabChange("data")}
+              className={`font-medium font-orbitron text-[13px] uppercase tracking-wider transition-all duration-200
+                ${activeTab === "data"
+                  ? 'dark:bg-[rgba(0,229,255,0.15)] bg-[rgba(0,180,220,0.15)] dark:text-[#00E5FF] text-[#0077B6] dark:shadow-[0_0_12px_rgba(0,229,255,0.25)] shadow-sm border-0'
+                  : 'dark:text-[#888888] text-[#666666] dark:hover:text-[#00E5FF] hover:text-[#0077B6] dark:hover:bg-white/5 hover:bg-black/5'}`}
+            >
+              Data
+            </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -117,16 +127,6 @@ export default function Header({
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button
-              variant={activeTab === "data" ? "default" : "ghost"}
-              onClick={() => onTabChange("data")}
-              className={`font-medium font-orbitron text-[13px] uppercase tracking-wider transition-all duration-200
-                ${activeTab === "data"
-                  ? 'dark:bg-[rgba(0,229,255,0.15)] bg-[rgba(0,180,220,0.15)] dark:text-[#00E5FF] text-[#0077B6] dark:shadow-[0_0_12px_rgba(0,229,255,0.25)] shadow-sm border-0'
-                  : 'dark:text-[#888888] text-[#666666] dark:hover:text-[#00E5FF] hover:text-[#0077B6] dark:hover:bg-white/5 hover:bg-black/5'}`}
-            >
-              Data
-            </Button>
             <Button
               variant={activeTab === "visionboard" ? "default" : "ghost"}
               onClick={() => onTabChange("visionboard")}
