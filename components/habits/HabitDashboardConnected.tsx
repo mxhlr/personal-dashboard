@@ -7,12 +7,14 @@ import { WinConditionBanner } from "./WinConditionBanner";
 import { StatsBar } from "./StatsBar";
 import { ProgressRing } from "./ProgressRing";
 import { HabitCategory } from "./HabitCategory";
-// import { PatternIntelligence } from "./PatternIntelligence";
+import { PatternIntelligence } from "./PatternIntelligence";
 import { SprintTimer } from "./SprintTimer";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { Id } from "@/convex/_generated/dataModel";
+import { ManageHabitsDialog } from "./ManageHabitsDialog";
+import { Settings } from "lucide-react";
 
 interface Habit {
   id: string;
@@ -41,7 +43,7 @@ export function HabitDashboardConnected() {
   const categories = useQuery(api.habitCategories.listCategories);
   const habitTemplates = useQuery(api.habitTemplates.listTemplates, {});
   const dailyHabits = useQuery(api.dailyHabits.getHabitsForDate, { date: today });
-  // const patternData = useQuery(api.analytics.getPatternIntelligence);
+  const patternData = useQuery(api.habitAnalytics.getPatternIntelligence, {});
 
   // Mutations
   const completeHabit = useMutation(api.gamification.completeHabit);
@@ -49,6 +51,7 @@ export function HabitDashboardConnected() {
 
   const [currentTime, setCurrentTime] = useState("");
   const [localCategories, setLocalCategories] = useState<Category[]>([]);
+  const [manageDialogOpen, setManageDialogOpen] = useState(false);
 
   // Update time every second
   useEffect(() => {
@@ -223,11 +226,27 @@ export function HabitDashboardConnected() {
     <div className="min-h-screen bg-[#0a0a0a] p-6">
       <div className="mx-auto max-w-4xl space-y-6">
         {/* Header */}
-        <header className="space-y-2 text-center">
-          <p className="font-mono text-4xl font-bold text-foreground">
-            {currentTime}
-          </p>
-          <p className="text-lg font-semibold text-cyan-400">Execute.</p>
+        <header className="space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex-1" />
+            <div className="flex-1 text-center">
+              <p className="font-mono text-4xl font-bold text-foreground">
+                {currentTime}
+              </p>
+              <p className="text-lg font-semibold text-cyan-400">Execute.</p>
+            </div>
+            <div className="flex flex-1 justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setManageDialogOpen(true)}
+                className="gap-2"
+              >
+                <Settings className="h-4 w-4" />
+                Manage Habits
+              </Button>
+            </div>
+          </div>
           <SprintTimer endOfDayHour={18} />
         </header>
 
@@ -256,14 +275,14 @@ export function HabitDashboardConnected() {
                 habits={category.habits}
                 onHabitToggle={handleHabitToggle}
                 onHabitSkip={handleHabitSkip}
+                onManage={() => setManageDialogOpen(true)}
               />
             ))}
           </div>
         </ScrollArea>
 
         {/* Pattern Intelligence */}
-        {/* TODO: Re-enable after aligning data format */}
-        {/* {patternData && <PatternIntelligence data={patternData} />} */}
+        {patternData && <PatternIntelligence data={patternData} />}
 
         {/* Finish Day Button */}
         <Button
@@ -275,6 +294,12 @@ export function HabitDashboardConnected() {
           Finish Day
         </Button>
       </div>
+
+      {/* Manage Habits Dialog */}
+      <ManageHabitsDialog
+        open={manageDialogOpen}
+        onOpenChange={setManageDialogOpen}
+      />
     </div>
   );
 }

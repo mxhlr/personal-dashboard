@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import { HabitItem } from "./HabitItem";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, Settings } from "lucide-react";
 import { toast } from "sonner";
 
 interface Habit {
@@ -22,6 +23,7 @@ interface HabitCategoryProps {
   habits: Habit[];
   onHabitToggle: (categoryId: string, habitId: string) => void;
   onHabitSkip: (categoryId: string, habitId: string, reason: string) => void;
+  onManage?: () => void;
 }
 
 export function HabitCategory({
@@ -30,6 +32,7 @@ export function HabitCategory({
   habits,
   onHabitToggle,
   onHabitSkip,
+  onManage,
 }: HabitCategoryProps) {
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -59,13 +62,13 @@ export function HabitCategory({
   };
 
   return (
-    <Card className="border-border/50 bg-card/50 shadow-sm transition-colors hover:border-border">
+    <Card className="group border-border/50 bg-card/50 shadow-sm transition-colors hover:border-border">
       <CardHeader className="pb-3">
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="flex w-full items-center justify-between text-left"
-        >
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="flex flex-1 items-center gap-3 text-left"
+          >
             <span className="text-2xl">{icon}</span>
             <div>
               <h3 className="text-base font-semibold">{name}</h3>
@@ -73,13 +76,34 @@ export function HabitCategory({
                 {completedTotal}/{habits.length} completed · {totalXP}/{maxXP} XP
               </p>
             </div>
+          </button>
+          <div className="flex items-center gap-2">
+            {onManage && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onManage();
+                }}
+                className="h-8 gap-1.5 px-2 text-xs opacity-0 transition-opacity group-hover:opacity-100 hover:bg-card/80"
+              >
+                <Settings className="h-3.5 w-3.5" />
+                Manage
+              </Button>
+            )}
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="p-1"
+            >
+              {isExpanded ? (
+                <ChevronDown className="h-5 w-5 text-muted-foreground" />
+              ) : (
+                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+              )}
+            </button>
           </div>
-          {isExpanded ? (
-            <ChevronDown className="h-5 w-5 text-muted-foreground" />
-          ) : (
-            <ChevronRight className="h-5 w-5 text-muted-foreground" />
-          )}
-        </button>
+        </div>
         <Progress
           value={progress}
           className={`mt-3 h-2 ${isComplete ? "bg-green-950" : "bg-muted/30"}`}

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,6 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Check } from "lucide-react";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
+import { toast } from "sonner";
 
 interface HabitItemProps {
   id: string;
@@ -39,6 +44,11 @@ export function HabitItem({
   onSkip,
 }: HabitItemProps) {
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isEditingXP, setIsEditingXP] = useState(false);
+  const [xpValue, setXpValue] = useState(xp.toString());
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const updateTemplate = useMutation(api.habitTemplates.updateTemplate);
 
   const handleToggle = () => {
     if (!completed) {
@@ -47,6 +57,55 @@ export function HabitItem({
     }
     onToggle(id);
   };
+
+  const handleXPClick = () => {
+    if (!completed) {
+      setIsEditingXP(true);
+      setXpValue(xp.toString());
+    }
+  };
+
+  const handleXPSave = async () => {
+    const newXP = parseInt(xpValue, 10);
+    if (isNaN(newXP) || newXP <= 0) {
+      toast.error("XP must be a positive number");
+      setXpValue(xp.toString());
+      setIsEditingXP(false);
+      return;
+    }
+
+    if (newXP !== xp) {
+      try {
+        await updateTemplate({
+          templateId: id as Id<"habitTemplates">,
+          xpValue: newXP,
+        });
+        toast.success("XP value updated");
+      } catch (error) {
+        console.error("Failed to update XP:", error);
+        toast.error("Failed to update XP");
+        setXpValue(xp.toString());
+      }
+    }
+
+    setIsEditingXP(false);
+  };
+
+  const handleXPKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleXPSave();
+    } else if (e.key === "Escape") {
+      setXpValue(xp.toString());
+      setIsEditingXP(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isEditingXP && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [isEditingXP]);
 
   return (
     <div className="group relative flex items-center gap-3 rounded-md border border-border/50 bg-card/30 p-3 transition-all hover:bg-card/50">
@@ -67,7 +126,26 @@ export function HabitItem({
         </div>
       ) : (
         <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-orange-500">+{xp}</span>
+          {isEditingXP ? (
+            <Input
+              ref={inputRef}
+              type="number"
+              min="1"
+              value={xpValue}
+              onChange={(e) => setXpValue(e.target.value)}
+              onBlur={handleXPSave}
+              onKeyDown={handleXPKeyDown}
+              className="h-7 w-16 text-center text-sm font-semibold"
+            />
+          ) : (
+            <button
+              onClick={handleXPClick}
+              className="cursor-pointer rounded px-1.5 py-0.5 text-sm font-semibold text-orange-500 transition-colors hover:bg-orange-500/10"
+              title="Click to edit XP"
+            >
+              +{xp}
+            </button>
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
