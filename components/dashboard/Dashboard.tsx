@@ -28,15 +28,28 @@ interface DashboardProps {
 
 // Dynamic greeting based on time of day and day of week
 function getDynamicGreeting(name: string, currentStreak: number): { message: string; emoji: string } {
-  const hour = new Date().getHours();
-  const day = new Date().getDay(); // 0 = Sunday, 6 = Saturday
+  const now = new Date();
+  const hour = now.getHours();
+  const day = now.getDay(); // 0 = Sunday, 6 = Saturday
 
-  // Time-based greetings with variations
+  // Get 30-minute block (0-47 blocks per day)
+  const minuteBlock = Math.floor(now.getMinutes() / 30);
+  const timeBlock = hour * 2 + minuteBlock;
+
+  // Time-based greetings with variations (doubled + stoic touches)
   const morningGreetings = [
     `Good morning, ${name}`,
     `Rise and shine, ${name}`,
     `Fresh start, ${name}`,
     `New day, ${name}`,
+    `Seize the morning, ${name}`,
+    `Conquer the day, ${name}`,
+    `Your day awaits, ${name}`,
+    `Make it count, ${name}`,
+    `Own this day, ${name}`,
+    `Time to build, ${name}`,
+    `Begin with purpose, ${name}`,
+    `Command your morning, ${name}`,
   ];
 
   const afternoonGreetings = [
@@ -44,6 +57,14 @@ function getDynamicGreeting(name: string, currentStreak: number): { message: str
     `Keep pushing, ${name}`,
     `Halfway there, ${name}`,
     `Making progress, ${name}`,
+    `Stay focused, ${name}`,
+    `Momentum is yours, ${name}`,
+    `Keep building, ${name}`,
+    `Execute your plan, ${name}`,
+    `Power through, ${name}`,
+    `Control what you can, ${name}`,
+    `Strength in action, ${name}`,
+    `Progress over perfection, ${name}`,
   ];
 
   const eveningGreetings = [
@@ -51,6 +72,14 @@ function getDynamicGreeting(name: string, currentStreak: number): { message: str
     `Finishing strong, ${name}`,
     `Winding down, ${name}`,
     `Almost there, ${name}`,
+    `Close it out, ${name}`,
+    `End with intention, ${name}`,
+    `Reflect and prepare, ${name}`,
+    `Tomorrow starts tonight, ${name}`,
+    `Own the finish, ${name}`,
+    `Cap the day, ${name}`,
+    `Complete the circle, ${name}`,
+    `Seal the victory, ${name}`,
   ];
 
   const nightGreetings = [
@@ -58,6 +87,14 @@ function getDynamicGreeting(name: string, currentStreak: number): { message: str
     `Late night hustle, ${name}`,
     `Night owl mode, ${name}`,
     `Still grinding, ${name}`,
+    `Own the night, ${name}`,
+    `Silent hours, ${name}`,
+    `Nocturnal progress, ${name}`,
+    `Rest is earned, ${name}`,
+    `Night warrior, ${name}`,
+    `Quiet power, ${name}`,
+    `After hours excellence, ${name}`,
+    `Moon shift activated, ${name}`,
   ];
 
   // Weekday-specific variations
@@ -98,8 +135,9 @@ function getDynamicGreeting(name: string, currentStreak: number): { message: str
     emoji = "🔥"; // Fire for hot streaks
   }
 
-  // Randomly select a greeting variation
-  const baseGreeting = greetings[Math.floor(Math.random() * greetings.length)];
+  // Select greeting based on 30-minute time block (changes every 30 min)
+  const greetingIndex = timeBlock % greetings.length;
+  const baseGreeting = greetings[greetingIndex];
 
   // Occasionally add weekday flavor (30% chance)
   const addWeekdayFlavor = Math.random() > 0.7;
