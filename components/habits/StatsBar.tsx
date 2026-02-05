@@ -11,7 +11,6 @@ export function StatsBar({ streak, level, weekCompleted, totalXP }: StatsBarProp
   return (
     <div className="grid grid-cols-4 gap-6">
       <StatCard
-        icon="🔥"
         label="Streak"
         value={streak}
         accentColor="text-orange-500"
@@ -36,12 +35,10 @@ export function StatsBar({ streak, level, weekCompleted, totalXP }: StatsBarProp
 }
 
 function StatCard({
-  icon,
   label,
   value,
   accentColor,
 }: {
-  icon?: string;
   label: string;
   value: number | string;
   accentColor: string;
@@ -49,7 +46,6 @@ function StatCard({
   return (
     <div className="text-center">
       <p className={`text-3xl font-bold ${accentColor}`}>
-        {icon && <span className="mr-1">{icon}</span>}
         {value}
       </p>
       <p className="text-xs mt-1 text-[#666666] dark:text-[#888888]">{label}</p>

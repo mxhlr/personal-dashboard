@@ -18,7 +18,7 @@ export function WinConditionBanner() {
       `}</style>
       <div className="relative space-y-3">
         <h3 className="text-xs font-medium text-[#5B21B6] dark:text-[#FFD700]">
-          ⚡ Win Condition
+          Win Condition
         </h3>
         <Input
           placeholder="If I do nothing else, I will..."

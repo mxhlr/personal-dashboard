@@ -277,7 +277,6 @@ export function HabitDashboardConnected() {
           size="lg"
           className="w-full bg-green-600 text-lg font-semibold text-white transition-colors hover:bg-green-700"
         >
-          <span className="mr-2">🎊</span>
           Finish Day
         </Button>
       </div>
