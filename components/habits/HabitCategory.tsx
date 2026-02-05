@@ -50,7 +50,7 @@ export function HabitCategory({
 
   // Check if icon is a hex color (starts with #) or an emoji
   const isColor = icon?.startsWith("#");
-  const circleColor = isColor ? icon : "#88CCDD";
+  const circleColor = isColor ? icon : "#2A2A3E";
 
   const handleToggle = (habitId: string) => {
     onHabitToggle(name, habitId);
@@ -76,12 +76,12 @@ export function HabitCategory({
             className="flex items-center gap-3 text-left"
           >
             {allHabitsComplete ? (
-              <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[#00E676] text-white">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#4CAF50] text-white">
                 <span className="text-sm">✓</span>
               </div>
             ) : (
               <div
-                className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium text-white"
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-medium text-[#E0E0E0]"
                 style={{ backgroundColor: circleColor }}
               >
                 {categoryNumber}
@@ -92,9 +92,6 @@ export function HabitCategory({
             </div>
           </button>
           <div className="flex items-center gap-2">
-            <span className="rounded-full bg-white/8 dark:bg-white/8 bg-black/6 px-2 py-0.5 text-[11px] text-[#666666] dark:text-[#888888]">
-              min
-            </span>
             <span className="text-[13px] text-[#666666] dark:text-[#888888]">
               {completedTotal}/{habits.length}
             </span>
@@ -108,8 +105,8 @@ export function HabitCategory({
         </div>
         <Progress
           value={progress}
-          className={`mt-3 h-2 ${isComplete ? "bg-green-950" : "bg-muted/30"}`}
-          indicatorClassName="bg-[#00FF88]"
+          className="mt-3 h-2 bg-[#2A2A2E]"
+          indicatorClassName={isComplete ? "bg-[#00FF88]" : "bg-[#00E5FF]"}
         />
       </CardHeader>
 
