@@ -252,7 +252,7 @@ export function HabitDashboardConnected() {
         {/* Progress Ring */}
         <ProgressRing current={totalXP} total={maxXP} />
 
-        {/* Habit Categories */}
+        {/* Habit Categories and Pattern Intelligence */}
         <ScrollArea className="h-[600px] pr-4">
           <div className="space-y-4">
             {localCategories.map((category) => (
@@ -265,11 +265,11 @@ export function HabitDashboardConnected() {
                 onHabitSkip={handleHabitSkip}
               />
             ))}
+
+            {/* Pattern Intelligence */}
+            {patternData && <PatternIntelligence data={patternData} />}
           </div>
         </ScrollArea>
-
-        {/* Pattern Intelligence */}
-        {patternData && <PatternIntelligence data={patternData} />}
 
         {/* Finish Day Button */}
         <Button
