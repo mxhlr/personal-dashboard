@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,21 +25,14 @@ interface SettingsModalProps {
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const profile = useQuery(api.settings.getProfile);
-  const trackingFields = useQuery(api.trackingFields.getAllTrackingFields);
 
   const updateProfile = useMutation(api.settings.updateProfile);
   const updateNorthStars = useMutation(api.settings.updateNorthStars);
   const updateCoachTone = useMutation(api.settings.updateCoachTone);
-  const toggleFieldActive = useMutation(api.trackingFields.toggleFieldActive);
-  const updateWeeklyTarget = useMutation(api.trackingFields.updateWeeklyTarget);
-  const deleteTrackingField = useMutation(api.trackingFields.deleteTrackingField);
-  const createTrackingField = useMutation(api.trackingFields.createTrackingField);
   const seedHabitSystem = useMutation(api.migrations.migrateUser.migrateToHabitSystem);
   const resetHabitSystem = useMutation(api.migrations.migrateUser.resetHabitSystem);
 
   const [isSaving, setIsSaving] = useState(false);
-  const [newFieldName, setNewFieldName] = useState("");
-  const [isAddingField, setIsAddingField] = useState(false);
 
   // Profile form state
   const [profileForm, setProfileForm] = useState({
@@ -112,62 +104,9 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     }
   };
 
-  const handleToggleField = async (fieldId: Id<"trackingFields">, isActive: boolean) => {
-    try {
-      await toggleFieldActive({ fieldId, isActive });
-    } catch (error) {
-      console.error("Failed to toggle field:", error);
-      toast.error("Fehler beim Aktivieren/Deaktivieren");
-    }
-  };
-
-  const handleUpdateWeeklyTarget = async (fieldId: Id<"trackingFields">, target: number) => {
-    try {
-      await updateWeeklyTarget({ fieldId, target });
-    } catch (error) {
-      console.error("Failed to update weekly target:", error);
-      toast.error("Fehler beim Speichern");
-    }
-  };
-
-  const handleDeleteField = async (fieldId: Id<"trackingFields">) => {
-    if (!confirm("Möchtest du dieses Feld wirklich löschen?")) return;
-
-    try {
-      await deleteTrackingField({ fieldId });
-      toast.success("Feld gelöscht!");
-    } catch (error) {
-      console.error("Failed to delete field:", error);
-      toast.error("Fehler beim Löschen");
-    }
-  };
-
-  const handleAddField = async () => {
-    if (!newFieldName.trim()) {
-      toast.error("Bitte Feldname eingeben");
-      return;
-    }
-
-    setIsAddingField(true);
-    try {
-      await createTrackingField({
-        name: newFieldName.trim(),
-        type: "text",
-        hasStreak: false,
-      });
-      toast.success("Feld hinzugefügt!");
-      setNewFieldName("");
-    } catch (error) {
-      console.error("Failed to add field:", error);
-      toast.error("Fehler beim Hinzufügen");
-    } finally {
-      setIsAddingField(false);
-    }
-  };
-
   if (!isOpen) return null;
 
-  if (profile === undefined || trackingFields === undefined) {
+  if (profile === undefined) {
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
         <div className="bg-card border border-border rounded-lg p-6">
@@ -191,10 +130,9 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">
           <Tabs defaultValue="profile" className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="profile">Profil</TabsTrigger>
               <TabsTrigger value="northstars">North Stars</TabsTrigger>
-              <TabsTrigger value="tracking">Tracking</TabsTrigger>
               <TabsTrigger value="habits">Habits</TabsTrigger>
               <TabsTrigger value="coach">Coach</TabsTrigger>
             </TabsList>
@@ -326,97 +264,6 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </TabsContent>
 
             {/* Tracking Fields Tab */}
-            <TabsContent value="tracking" className="space-y-4 mt-6">
-              <p className="text-sm text-muted-foreground mb-4">
-                Verwalte deine täglichen Tracking-Felder
-              </p>
-
-              {/* Add Custom Field */}
-              <div className="flex gap-2 pb-4 border-b">
-                <Input
-                  placeholder="Neues Feld hinzufügen..."
-                  value={newFieldName}
-                  onChange={(e) => setNewFieldName(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") handleAddField();
-                  }}
-                />
-                <Button onClick={handleAddField} disabled={isAddingField}>
-                  {isAddingField ? "..." : "Hinzufügen"}
-                </Button>
-              </div>
-
-              <div className="space-y-3">
-                {trackingFields.map((field) => (
-                  <div
-                    key={field._id}
-                    className="flex items-center justify-between p-3 border border-border rounded-lg"
-                  >
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">{field.name}</span>
-                        <span className="text-xs text-muted-foreground">
-                          ({field.type})
-                        </span>
-                        {field.isDefault && (
-                          <span className="text-xs bg-muted px-2 py-0.5 rounded">
-                            Default
-                          </span>
-                        )}
-                      </div>
-                      {field.hasStreak && (
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Streak: {field.currentStreak || 0} | Longest:{" "}
-                          {field.longestStreak || 0}
-                        </p>
-                      )}
-                      {field.weeklyTarget && (
-                        <div className="flex items-center gap-2 mt-2">
-                          <Label className="text-xs">Weekly Target:</Label>
-                          <Input
-                            type="number"
-                            min={1}
-                            max={7}
-                            value={field.weeklyTarget}
-                            onChange={(e) =>
-                              handleUpdateWeeklyTarget(
-                                field._id,
-                                parseInt(e.target.value)
-                              )
-                            }
-                            className="w-16 h-7 text-xs"
-                          />
-                          <span className="text-xs text-muted-foreground">
-                            Tage/Woche
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant={field.isActive ? "default" : "outline"}
-                        size="sm"
-                        onClick={() =>
-                          handleToggleField(field._id, !field.isActive)
-                        }
-                      >
-                        {field.isActive ? "Aktiv" : "Inaktiv"}
-                      </Button>
-                      {!["Movement", "Phone Jail", "Vibes", "Breakfast", "Lunch", "Dinner", "Work Hours", "Work Notes"].includes(field.name) && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteField(field._id)}
-                        >
-                          Löschen
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
-
             {/* Habits Tab */}
             <TabsContent value="habits" className="space-y-4 mt-6">
               <p className="text-sm text-muted-foreground mb-4">
@@ -463,7 +310,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     <li>• <strong>Keine Wellbeing-Sliders mehr</strong> - Evening Routine wurde entfernt</li>
                     <li>• <strong>115 XP pro Tag</strong> wenn alle Habits completed</li>
                     <li>• Du kannst alles nach der Initialisierung anpassen (XP, Namen, etc.)</li>
-                    <li>• Nutze "Manage Habits" im Daily Log für volle Kontrolle</li>
+                    <li>• Nutze &quot;Manage Habits&quot; im Daily Log für volle Kontrolle</li>
                   </ul>
                 </div>
               </div>
