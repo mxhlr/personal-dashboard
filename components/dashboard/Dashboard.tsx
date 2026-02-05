@@ -32,9 +32,8 @@ function getDynamicGreeting(name: string, currentStreak: number): { message: str
   const hour = now.getHours();
   const day = now.getDay(); // 0 = Sunday, 6 = Saturday
 
-  // Get 30-minute block (0-47 blocks per day)
-  const minuteBlock = Math.floor(now.getMinutes() / 30);
-  const timeBlock = hour * 2 + minuteBlock;
+  // Get 2-hour block (0-11 blocks per day)
+  const timeBlock = Math.floor(hour / 2);
 
   // Time-based greetings with variations (doubled + stoic touches)
   const morningGreetings = [
