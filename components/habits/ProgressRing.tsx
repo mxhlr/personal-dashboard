@@ -67,7 +67,7 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
           >
             {percentage}%
           </p>
-          <p className="text-[14px] text-[#888888]">
+          <p className="text-[14px] dark:text-[#888888] text-[#666666]">
             {current}/{total}
           </p>
         </div>
@@ -75,15 +75,15 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
 
       {/* Status Badge */}
       <div
-        className="px-5 py-1.5 rounded-2xl uppercase text-[12px] font-medium"
+        className="px-5 py-1.5 rounded-2xl uppercase text-[12px] font-medium dark:bg-[rgba(255,255,255,0.06)] bg-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.15)] border-[rgba(0,0,0,0.15)]"
         style={{
           letterSpacing: '2px',
-          background: 'rgba(255, 255, 255, 0.06)',
-          border: '1px solid rgba(255, 255, 255, 0.15)',
-          color: isComplete ? '#00E676' : '#888888'
+          color: isComplete ? '#00E676' : undefined
         }}
       >
-        {isComplete ? 'COMPLETE' : 'IN PROGRESS'}
+        <span className={isComplete ? '' : 'dark:text-[#888888] text-[#666666]'}>
+          {isComplete ? 'COMPLETE' : 'IN PROGRESS'}
+        </span>
       </div>
     </div>
   );

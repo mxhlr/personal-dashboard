@@ -49,7 +49,7 @@ function StatCard({
         {value}
       </p>
       <p
-        className="text-[11px] mt-1 text-[#666666] uppercase"
+        className="text-[11px] mt-1 dark:text-[#666666] text-[#999999] uppercase"
         style={{ letterSpacing: '2px' }}
       >
         {label}

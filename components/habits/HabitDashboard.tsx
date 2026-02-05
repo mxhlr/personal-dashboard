@@ -161,7 +161,7 @@ export function HabitDashboard() {
               Execute.
             </p>
             <p style={{ fontSize: '14px' }}>
-              <span className="text-[#999] font-normal">Sprint: </span>
+              <span className="dark:text-[#999] text-[#666] font-normal">Sprint: </span>
               <span className="font-bold dark:text-[#E0E0E0] text-[#1A1A1A]">6h 14m</span>
             </p>
           </header>
