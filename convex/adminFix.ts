@@ -155,3 +155,42 @@ export const createTestFieldAction = action({
     });
   },
 });
+
+// Admin function to remove leading numbers from category names
+export const fixCategoryNames = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const categories = await ctx.db.query("habitCategories").collect();
+
+    let updated = 0;
+    const changes: Array<{ old: string; new: string }> = [];
+
+    for (const category of categories) {
+      // Remove leading numbers and dots/spaces (e.g., "1. Plan day" -> "Plan day")
+      const cleanName = category.name.replace(/^\d+\.\s*/, "").trim();
+
+      if (cleanName !== category.name) {
+        await ctx.db.patch(category._id, {
+          name: cleanName,
+          updatedAt: new Date().toISOString(),
+        });
+        changes.push({ old: category.name, new: cleanName });
+        updated++;
+      }
+    }
+
+    return {
+      message: `Updated ${updated} category names`,
+      total: categories.length,
+      changes
+    };
+  },
+});
+
+// Action wrapper for fixCategoryNames
+export const fixCategoryNamesAction = action({
+  args: {},
+  handler: async (ctx): Promise<any> => {
+    return await ctx.runMutation(internal.adminFix.fixCategoryNames);
+  },
+});
