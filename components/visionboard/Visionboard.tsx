@@ -224,7 +224,7 @@ function DroppableList({
     <div
       ref={setNodeRef}
       data-list-id={listId}
-      className="w-[272px] flex-shrink-0 bg-white dark:bg-black rounded-lg p-2"
+      className="w-[272px] flex-shrink-0 rounded-lg p-2"
     >
       {/* List Header - editable name */}
       <div className="mb-2 px-2 flex items-center justify-between group">
