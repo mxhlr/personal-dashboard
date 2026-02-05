@@ -149,20 +149,30 @@ export function HabitDashboard() {
             <p
               className="font-bold dark:text-[#00E5FF] text-[#0077B6]"
               style={{
-                fontFamily: 'var(--font-orbitron), "Courier New", monospace',
+                fontFamily: '"Courier New", "Monaco", monospace',
                 fontSize: '56px',
                 fontWeight: 700,
                 letterSpacing: '2px',
+                fontVariantNumeric: 'tabular-nums'
               }}
             >
               {currentTime}
             </p>
-            <p className="font-normal dark:text-[#E0E0E0] text-[#1A1A1A]" style={{ fontSize: '18px' }}>
-              Execute.
+            <p className="font-normal dark:text-[#E0E0E0] text-[#1A1A1A]" style={{ fontSize: '18px', fontFamily: '"Courier New", "Monaco", monospace' }}>
+              Execute.<span className="animate-pulse">|</span>
             </p>
             <p style={{ fontSize: '14px' }}>
               <span className="dark:text-[#999] text-[#666] font-normal">Sprint: </span>
-              <span className="font-bold dark:text-[#E0E0E0] text-[#1A1A1A]">6h 14m</span>
+              <span
+                className="font-bold dark:text-[#E0E0E0] text-[#1A1A1A]"
+                style={{
+                  fontFamily: '"Courier New", "Monaco", monospace',
+                  animation: 'neon-pulse 2s ease-in-out infinite',
+                  color: '#00E5FF'
+                }}
+              >
+                6h 14m
+              </span>
             </p>
           </header>
 

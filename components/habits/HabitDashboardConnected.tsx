@@ -279,6 +279,8 @@ export function HabitDashboardConnected() {
           level={userStats.level}
           weekCompleted={userStats.weekScore}
           totalXP={userStats.totalXP}
+          currentLevelXP={userStats.totalXP}
+          nextLevelXP={1000}
         />
 
         {/* Level Progress Bar */}

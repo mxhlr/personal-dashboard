@@ -102,13 +102,18 @@ export function HabitCategory({
             onClick={() => setIsExpanded(!isExpanded)}
             className="flex items-center gap-3 text-left group/header"
           >
-            {/* Category number with completion indicator */}
-            <div className={`relative flex items-center justify-center w-8 h-8 rounded-lg font-bold font-orbitron text-sm
+            {/* Category number with completion indicator - Hexagon shape */}
+            <div
+              className={`relative flex items-center justify-center w-8 h-8 font-bold font-orbitron text-sm
               transition-all duration-300
               ${isComplete
-                ? 'bg-[#00E676]/20 text-[#00E676] shadow-[0_0_10px_rgba(0,230,118,0.3)]'
-                : 'dark:bg-white/5 bg-black/5 dark:text-[#E0E0E0] text-[#333333]'
+                ? 'text-[#00E676] shadow-[0_0_10px_rgba(0,230,118,0.3)]'
+                : 'dark:text-[#E0E0E0] text-[#333333]'
               }`}
+              style={{
+                clipPath: 'polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%)',
+                backgroundColor: isComplete ? 'rgba(0, 230, 118, 0.2)' : 'rgba(255, 255, 255, 0.05)'
+              }}
             >
               {isComplete ? '✓' : categoryNumber}
             </div>

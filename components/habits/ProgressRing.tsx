@@ -56,6 +56,11 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
   return (
     <div className="flex flex-col items-center justify-center p-8 space-y-6">
       <div className="relative h-52 w-52">
+        {/* Corner brackets for HUD effect */}
+        <div className="absolute -top-2 -left-2 w-6 h-6 border-t-2 border-l-2 border-[#00E5FF] opacity-40" />
+        <div className="absolute -top-2 -right-2 w-6 h-6 border-t-2 border-r-2 border-[#00E5FF] opacity-40" />
+        <div className="absolute -bottom-2 -left-2 w-6 h-6 border-b-2 border-l-2 border-[#00E5FF] opacity-40" />
+        <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-2 border-r-2 border-[#00E5FF] opacity-40" />
         {/* Celebration particles */}
         {showCelebration && (
           <div className="absolute inset-0 pointer-events-none">
@@ -133,15 +138,17 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
           ) : (
             <>
               <p
-                className="text-[44px] font-bold font-orbitron"
+                className="text-[44px] font-bold"
                 style={{
                   color: ringColor,
-                  textShadow: `0 0 20px ${glowColor}, 0 0 40px ${glowColor}`
+                  textShadow: `0 0 20px ${glowColor}, 0 0 40px ${glowColor}`,
+                  fontFamily: '"Courier New", "Monaco", monospace',
+                  fontVariantNumeric: 'tabular-nums'
                 }}
               >
                 {percentage}%
               </p>
-              <p className="text-[13px] dark:text-[#888888] text-[#666666] font-medium">
+              <p className="text-[13px] dark:text-[#888888] text-[#666666] font-medium" style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                 {current}/{total} XP
               </p>
             </>
