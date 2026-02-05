@@ -19,7 +19,7 @@ export function TodaysWinCondition() {
           <div className="flex items-center gap-2">
             <span className="text-lg">⚡</span>
             <h3 className="text-sm font-semibold uppercase tracking-wider dark:text-[#00E5FF] text-[#0077B6]">
-              Today's Win Condition
+              Today&apos;s Win Condition
             </h3>
           </div>
           <p className="text-base font-medium dark:text-white text-gray-900 pl-7">

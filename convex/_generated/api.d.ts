@@ -30,6 +30,7 @@ import type * as userProfile from "../userProfile.js";
 import type * as visionboard from "../visionboard.js";
 import type * as visionboardLists from "../visionboardLists.js";
 import type * as weeklyReview from "../weeklyReview.js";
+import type * as winConditions from "../winConditions.js";
 
 import type {
   ApiFromModules,
@@ -60,6 +61,7 @@ declare const fullApi: ApiFromModules<{
   visionboard: typeof visionboard;
   visionboardLists: typeof visionboardLists;
   weeklyReview: typeof weeklyReview;
+  winConditions: typeof winConditions;
 }>;
 
 /**
