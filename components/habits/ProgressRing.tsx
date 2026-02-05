@@ -67,7 +67,7 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
           >
             {percentage}%
           </p>
-          <p className="text-sm text-[#888]">
+          <p className="text-[14px] text-[#888888]">
             {current}/{total}
           </p>
         </div>
@@ -80,7 +80,7 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
           letterSpacing: '2px',
           background: 'rgba(255, 255, 255, 0.06)',
           border: '1px solid rgba(255, 255, 255, 0.15)',
-          color: isComplete ? '#00E676' : '#888'
+          color: isComplete ? '#00E676' : '#888888'
         }}
       >
         {isComplete ? 'COMPLETE' : 'IN PROGRESS'}

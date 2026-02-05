@@ -133,16 +133,32 @@ export function HabitDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] p-6">
+    <div
+      className="min-h-screen p-6"
+      style={{
+        background: 'radial-gradient(circle at center, #12121F 0%, #0A0A0F 100%)',
+      }}
+    >
       <MilestonePopup progress={progress} />
       <div className="mx-auto max-w-4xl space-y-6">
         {/* Header */}
         <header className="space-y-2 text-center">
-          <p className="font-mono text-4xl font-bold text-foreground">
+          <p
+            className="font-bold dark:text-[#00E5FF] text-[#0077B6]"
+            style={{
+              fontFamily: 'var(--font-orbitron), "Courier New", monospace',
+              fontSize: '56px',
+              fontWeight: 700,
+              letterSpacing: '2px',
+            }}
+          >
             {currentTime}
           </p>
-          <p className="text-lg font-semibold text-cyan-400">Execute.</p>
-          <p className="text-sm text-muted-foreground">Sprint: 6h 14m</p>
+          <p className="text-lg font-normal dark:text-[#E0E0E0] text-[#1A1A1A]">Execute.</p>
+          <p className="text-sm">
+            <span className="text-[#999] font-normal">Sprint: </span>
+            <span className="font-bold dark:text-[#E0E0E0] text-[#1A1A1A]">6h 14m</span>
+          </p>
         </header>
 
         {/* Win Condition */}
