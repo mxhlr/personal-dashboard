@@ -102,17 +102,22 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
         }}
       />
 
-      <div className="relative max-w-4xl mx-auto px-6 py-8 space-y-8">
+      <div className="relative max-w-4xl mx-auto px-8 py-8 space-y-8">
         {/* Header */}
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold font-orbitron text-white"
+          <h1 className="text-[44px] font-bold text-white"
             style={{
-              textShadow: '0 0 30px rgba(255, 255, 255, 0.2)'
+              textShadow: '0 0 30px rgba(255, 255, 255, 0.2)',
+              fontFamily: '"Courier New", "Monaco", monospace',
+              fontVariantNumeric: 'tabular-nums',
+              letterSpacing: '2px'
             }}
           >
             Monthly Review
           </h1>
-          <p className="text-sm dark:text-[#AAAAAA] text-[#888888]">
+          <p className="text-[13px] dark:text-[#888888] text-[#666666] font-medium"
+            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+          >
             {format(new Date(year, month - 1), "MMMM yyyy")}
           </p>
         </div>
@@ -120,13 +125,33 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
         {/* Progress Indicator */}
         <ProgressIndicator percentage={percentage} />
 
+        {/* Completion Badge */}
+        {existingReview && isReadOnly && (
+          <div className="flex justify-center">
+            <div className="px-5 py-2 rounded-full uppercase text-[11px] font-bold tracking-wider
+              dark:bg-white/[0.06] bg-black/[0.04]
+              dark:border dark:border-white/[0.1] border border-black/[0.08]"
+              style={{
+                color: '#00E676',
+                boxShadow: '0 0 15px rgba(0, 230, 118, 0.3)'
+              }}
+            >
+              ✓ Review Complete
+            </div>
+          </div>
+        )}
+
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Question 1 */}
-          <div className="p-6 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
-            shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl border
-            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]">
-            <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#00E5FF] text-[#0077B6] mb-4">
+          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+            transition-all duration-300 ease-out
+            hover:shadow-xl hover:-translate-y-1 shadow-sm
+            dark:hover:border-border hover:border-border/50
+            rounded-xl border p-6">
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            >
               Was war dein größter Erfolg diesen Monat?
             </label>
             <textarea
@@ -135,19 +160,24 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                 setFormData({ ...formData, biggestSuccess: e.target.value })
               }
               disabled={isReadOnly}
-              className="w-full min-h-[120px] px-4 py-3 border-0 dark:bg-transparent bg-transparent resize-none
-                focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)] rounded-lg
+              className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
+                focus:outline-none focus:ring-0
                 disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Beschreibe deinen größten Erfolg..."
             />
           </div>
 
           {/* Question 2 */}
-          <div className="p-6 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
-            shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl border
-            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]">
-            <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#00E5FF] text-[#0077B6] mb-4">
+          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+            transition-all duration-300 ease-out
+            hover:shadow-xl hover:-translate-y-1 shadow-sm
+            dark:hover:border-border hover:border-border/50
+            rounded-xl border p-6">
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            >
               Welches Muster möchtest du ändern?
             </label>
             <textarea
@@ -156,19 +186,24 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                 setFormData({ ...formData, patternToChange: e.target.value })
               }
               disabled={isReadOnly}
-              className="w-full min-h-[120px] px-4 py-3 border-0 dark:bg-transparent bg-transparent resize-none
-                focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)] rounded-lg
+              className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
+                focus:outline-none focus:ring-0
                 disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Welches Verhaltensmuster möchtest du ändern?"
             />
           </div>
 
           {/* Question 3 */}
-          <div className="p-6 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
-            shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl border
-            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]">
-            <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#00E5FF] text-[#0077B6] mb-4">
+          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+            transition-all duration-300 ease-out
+            hover:shadow-xl hover:-translate-y-1 shadow-sm
+            dark:hover:border-border hover:border-border/50
+            rounded-xl border p-6">
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            >
               Was hast du über dich selbst gelernt?
             </label>
             <textarea
@@ -177,19 +212,24 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                 setFormData({ ...formData, learnedAboutSelf: e.target.value })
               }
               disabled={isReadOnly}
-              className="w-full min-h-[120px] px-4 py-3 border-0 dark:bg-transparent bg-transparent resize-none
-                focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)] rounded-lg
+              className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
+                focus:outline-none focus:ring-0
                 disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Was hast du über dich gelernt?"
             />
           </div>
 
           {/* Question 4 */}
-          <div className="p-6 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
-            shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl border
-            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]">
-            <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#00E5FF] text-[#0077B6] mb-4">
+          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+            transition-all duration-300 ease-out
+            hover:shadow-xl hover:-translate-y-1 shadow-sm
+            dark:hover:border-border hover:border-border/50
+            rounded-xl border p-6">
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            >
               Was war die größte Überraschung?
             </label>
             <textarea
@@ -198,19 +238,24 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                 setFormData({ ...formData, biggestSurprise: e.target.value })
               }
               disabled={isReadOnly}
-              className="w-full min-h-[120px] px-4 py-3 border-0 dark:bg-transparent bg-transparent resize-none
-                focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)] rounded-lg
+              className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
+                focus:outline-none focus:ring-0
                 disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Was hat dich überrascht?"
             />
           </div>
 
           {/* Question 5 */}
-          <div className="p-6 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
-            shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl border
-            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]">
-            <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#00E5FF] text-[#0077B6] mb-4">
+          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+            transition-all duration-300 ease-out
+            hover:shadow-xl hover:-translate-y-1 shadow-sm
+            dark:hover:border-border hover:border-border/50
+            rounded-xl border p-6">
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            >
               Worauf bist du stolz?
             </label>
             <textarea
@@ -219,19 +264,24 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                 setFormData({ ...formData, proudOf: e.target.value })
               }
               disabled={isReadOnly}
-              className="w-full min-h-[120px] px-4 py-3 border-0 dark:bg-transparent bg-transparent resize-none
-                focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)] rounded-lg
+              className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
+                focus:outline-none focus:ring-0
                 disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Worauf bist du stolz?"
             />
           </div>
 
           {/* Question 6 */}
-          <div className="p-6 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
-            shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl border
-            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]">
-            <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#00E5FF] text-[#0077B6] mb-4">
+          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+            transition-all duration-300 ease-out
+            hover:shadow-xl hover:-translate-y-1 shadow-sm
+            dark:hover:border-border hover:border-border/50
+            rounded-xl border p-6">
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            >
               Was ist dein Fokus für nächsten Monat?
             </label>
             <textarea
@@ -240,10 +290,11 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                 setFormData({ ...formData, nextMonthFocus: e.target.value })
               }
               disabled={isReadOnly}
-              className="w-full min-h-[120px] px-4 py-3 border-0 dark:bg-transparent bg-transparent resize-none
-                focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)] rounded-lg
+              className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
+                focus:outline-none focus:ring-0
                 disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Dein Fokus für nächsten Monat..."
             />
           </div>
@@ -254,10 +305,13 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
               <button
                 type="button"
                 onClick={handleEdit}
-                className="px-8 py-3 dark:border-[#00E5FF]/30 border-[#0077B6]/30 border-2
-                  dark:text-[#00E5FF] text-[#0077B6] dark:bg-transparent bg-transparent
-                  dark:hover:bg-[rgba(0,229,255,0.1)] hover:bg-[rgba(0,180,220,0.1)]
-                  font-orbitron uppercase tracking-wider text-xs font-bold transition-all duration-200 rounded-lg"
+                className="px-12 py-3 dark:bg-white/[0.06] bg-black/[0.04]
+                  dark:border dark:border-white/[0.1] border border-black/[0.08]
+                  dark:text-[#E0E0E0] text-[#1A1A1A]
+                  dark:hover:bg-white/[0.1] hover:bg-black/[0.06]
+                  uppercase tracking-wider text-[11px] font-bold transition-all duration-200 rounded-lg
+                  hover:scale-[1.02]"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
               >
                 Bearbeiten
               </button>
@@ -265,14 +319,12 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-8 py-3 dark:bg-gradient-to-r dark:from-[#00E5FF] dark:to-[#00B8D4]
-                  bg-gradient-to-r from-[#0077B6] to-[#005F8F]
-                  text-white font-bold font-orbitron uppercase tracking-wider text-xs
-                  dark:border-[#00E5FF]/30 border-[#0077B6]/30 border-2
-                  dark:shadow-[0_0_15px_rgba(0,229,255,0.3)] shadow-[0_4px_12px_rgba(0,119,182,0.3)]
-                  dark:hover:shadow-[0_0_25px_rgba(0,229,255,0.5)] hover:shadow-[0_6px_20px_rgba(0,119,182,0.5)]
-                  hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
+                className="px-12 py-3 bg-[#00E676] dark:text-black text-black font-bold uppercase tracking-wider text-[11px]
+                  border border-[#00E676]/50 shadow-sm
+                  hover:bg-[#00C853] hover:shadow-md hover:scale-[1.02]
+                  disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
                   transition-all duration-300 rounded-lg"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
               >
                 {isSubmitting ? "Speichert..." : "Speichern"}
               </button>

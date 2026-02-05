@@ -23,6 +23,7 @@ export function MonthlyDataView() {
   const [month, setMonth] = useState(today.getMonth() + 1);
 
   const logs = useQuery(api.analytics.getMonthlyLogs, { year, month });
+  const habitCompletion = useQuery(api.analytics.getMonthlyHabitCompletion, { year, month });
   const wellbeingTrends = useQuery(api.analytics.getWellbeingTrends, {
     startDate: getMonthStartDate(year, month),
     endDate: getMonthEndDate(year, month),
@@ -56,6 +57,7 @@ export function MonthlyDataView() {
 
   if (
     logs === undefined ||
+    habitCompletion === undefined ||
     wellbeingTrends === undefined ||
     trackingPerformance === undefined ||
     reviewStatus === undefined
@@ -144,16 +146,17 @@ export function MonthlyDataView() {
 
             const dateStr = day.toISOString().split("T")[0];
             const log = logs.find((l) => l.date === dateStr);
+            const habitData = habitCompletion.find((h) => h.date === dateStr);
             const isToday = dateStr === new Date().toISOString().split("T")[0];
             const isFuture = day > new Date();
 
-            // Calculate completion percentage if log exists
-            const completionPercentage = log ? calculateDayCompletionPercentage(log) : 0;
+            // Use habit completion data if available, otherwise check legacy log
+            const completionPercentage = habitData ? habitData.completionPercentage : (log?.completed ? 100 : 0);
 
             // Determine background color based on completion percentage
             const getBgColor = () => {
               if (isFuture) return ""; // No color for future days
-              if (!log) return "bg-red-100"; // No daily entry = red
+              if (!habitData && !log) return "bg-red-100"; // No entry at all = red
               if (completionPercentage === 0) return "bg-red-100"; // 0% = red
               if (completionPercentage <= 25) return "bg-orange-100"; // ≤25% = orange
               if (completionPercentage <= 50) return "bg-yellow-100"; // ≤50% = yellow
@@ -291,50 +294,6 @@ export function MonthlyDataView() {
 }
 
 // Helper functions
-
-/**
- * Calculate the completion percentage of a daily log based on filled fields
- * Returns a percentage from 0-100
- */
-function calculateDayCompletionPercentage(log: MonthlyLog & { tracking: any; wellbeing?: any }): number {
-  const fields = [];
-
-  // Check tracking fields
-  if (log.tracking?.movement && log.tracking.movement.length > 0) fields.push(1);
-  if (log.tracking?.phoneJail === true) fields.push(1);
-  if (log.tracking?.vibes && log.tracking.vibes.length > 0) fields.push(1);
-  if (log.tracking?.breakfast && log.tracking.breakfast.length > 0) fields.push(1);
-  if (log.tracking?.lunch && log.tracking.lunch.length > 0) fields.push(1);
-  if (log.tracking?.dinner && log.tracking.dinner.length > 0) fields.push(1);
-  if (log.tracking?.workHours !== undefined && log.tracking.workHours > 0) fields.push(1);
-
-  // Check custom toggles
-  if (log.tracking?.customToggles && log.tracking.customToggles.length > 0) {
-    log.tracking.customToggles.forEach((toggle: any) => {
-      if (toggle.value === true) fields.push(1);
-    });
-  }
-
-  // Check custom texts
-  if (log.tracking?.customTexts && log.tracking.customTexts.length > 0) {
-    log.tracking.customTexts.forEach((text: any) => {
-      if (text.value && text.value.length > 0) fields.push(1);
-    });
-  }
-
-  // Check wellbeing (all 3 must be filled)
-  if (log.wellbeing?.energy && log.wellbeing?.satisfaction && log.wellbeing?.stress) {
-    fields.push(1);
-  }
-
-  // Total possible fields: assume minimum 10 fields to track
-  // This creates a reasonable baseline for percentage calculation
-  const totalFields = 10;
-  const filledFields = fields.length;
-
-  return Math.round((filledFields / totalFields) * 100);
-}
-
 function getMonthStartDate(year: number, month: number): string {
   return new Date(year, month - 1, 1).toISOString().split("T")[0];
 }

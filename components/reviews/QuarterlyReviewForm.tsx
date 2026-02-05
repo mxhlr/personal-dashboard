@@ -219,52 +219,74 @@ export function QuarterlyReviewForm({
         }}
       />
 
-      <div className="relative max-w-4xl mx-auto px-6 py-8">
-        <div className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
-          shadow-sm rounded-2xl border">
-          <div className="mb-8 text-center">
-            <h2 className="text-3xl font-bold font-orbitron text-white mb-2"
+      <div className="relative max-w-4xl mx-auto px-8 py-8 space-y-8">
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <h1 className="text-[44px] font-bold text-white"
+            style={{
+              textShadow: '0 0 30px rgba(255, 255, 255, 0.2)',
+              fontFamily: '"Courier New", "Monaco", monospace',
+              fontVariantNumeric: 'tabular-nums',
+              letterSpacing: '2px'
+            }}
+          >
+            Quarterly Review
+          </h1>
+          <p className="text-[13px] dark:text-[#888888] text-[#666666]"
+            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+          >
+            Q{quarter} {year}
+          </p>
+        </div>
+
+        {/* Completion Badge */}
+        {existingReview && isReadOnly && (
+          <div className="flex justify-center">
+            <div className="px-5 py-2 rounded-full uppercase text-[11px] font-bold tracking-wider
+              dark:bg-white/[0.06] bg-black/[0.04]
+              dark:border dark:border-white/[0.1] border border-black/[0.08]"
               style={{
-                textShadow: '0 0 30px rgba(255, 255, 255, 0.2)'
+                color: '#00E676',
+                boxShadow: '0 0 15px rgba(0, 230, 118, 0.3)',
+                fontFamily: '"Courier New", "Monaco", monospace'
               }}
             >
-              Quarterly Review
-            </h2>
-            <p className="dark:text-[#AAAAAA] text-[#888888]">
-              Q{quarter} {year}
-            </p>
-          </div>
-
-          {existingReview && isReadOnly ? (
-            <div className="mb-6 p-4 dark:bg-[rgba(0,230,118,0.1)] bg-[rgba(76,175,80,0.1)]
-              dark:border-[rgba(0,230,118,0.3)] border-[rgba(76,175,80,0.3)] border rounded-lg">
-              <p className="dark:text-[#00E676] text-[#4CAF50] font-medium">
-                ✓ Review abgeschlossen am{" "}
-                {new Date(existingReview.completedAt).toLocaleDateString("de-DE")}
-              </p>
+              ✓ Review Complete
             </div>
-          ) : null}
+          </div>
+        )}
 
-        <form onSubmit={handleSubmit} className="space-y-8">
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Part 1: Milestone Check */}
-          <div>
-            <h3 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0077B6] mb-4">
+          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+            transition-all duration-300 ease-out
+            hover:shadow-xl hover:-translate-y-1 shadow-sm
+            dark:hover:border-border hover:border-border/50
+            rounded-xl border p-6">
+            <h3 className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-4"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            >
               Teil 1: Milestone Check
             </h3>
-            <p className="text-sm dark:text-[#888888] text-[#666666] mb-4">
+            <p className="text-[13px] dark:text-[#888888] text-[#666666] mb-4"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            >
               Markiere welche Milestones du erreicht hast.
             </p>
 
             {milestoneReview.length === 0 ? (
-              <p className="dark:text-[#888888] text-[#666666]">
+              <p className="dark:text-[#888888] text-[#666666]"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px' }}
+              >
                 Keine Milestones für dieses Quartal definiert.
               </p>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {milestoneReview.map((milestone, index) => (
                   <div
                     key={index}
-                    className="p-4 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] border rounded-xl
+                    className="p-4 dark:border-border/30 border-border/20 border rounded-lg
                       dark:bg-[rgba(26,26,26,0.3)] bg-white/50"
                   >
                     <div className="flex items-start gap-3 mb-2">
@@ -273,14 +295,20 @@ export function QuarterlyReviewForm({
                         checked={milestone.completed}
                         onChange={() => handleMilestoneToggle(index)}
                         disabled={isReadOnly}
-                        className="mt-1 w-5 h-5 rounded dark:border-[rgba(0,229,255,0.3)] border-[rgba(0,180,220,0.3)]
-                          dark:checked:bg-[#00E5FF] checked:bg-[#0077B6] transition-colors"
+                        className="mt-1 w-5 h-5 rounded dark:border-border/50 border-border/30
+                          dark:checked:bg-[#00E676] checked:bg-[#00E676] transition-colors"
                       />
                       <div className="flex-1">
-                        <div className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-1">
+                        <div className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-1"
+                          style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                        >
                           {AREA_LABELS[milestone.area]}
                         </div>
-                        <div className="font-medium dark:text-[#E0E0E0] text-[#1A1A1A]">{milestone.milestone}</div>
+                        <div className="font-medium dark:text-[#E0E0E0] text-[#1A1A1A]"
+                          style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px' }}
+                        >
+                          {milestone.milestone}
+                        </div>
                       </div>
                     </div>
                     <textarea
@@ -290,10 +318,10 @@ export function QuarterlyReviewForm({
                       }
                       disabled={isReadOnly}
                       placeholder="Optionale Notizen..."
-                      className="w-full mt-2 px-3 py-2 text-sm dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
-                        border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                      className="w-full mt-2 px-0 py-0 border-0 dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A] resize-none
                         disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
-                        focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
+                        focus:outline-none focus:ring-0"
+                      style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
                     />
                   </div>
                 ))}
@@ -302,122 +330,149 @@ export function QuarterlyReviewForm({
           </div>
 
           {/* Part 2: Reflection Questions */}
-          <div>
-            <h3 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0077B6] mb-4">
-              Teil 2: Reflexionsfragen
-            </h3>
+          {/* Question 1 */}
+          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+            transition-all duration-300 ease-out
+            hover:shadow-xl hover:-translate-y-1 shadow-sm
+            dark:hover:border-border hover:border-border/50
+            rounded-xl border p-6">
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            >
+              Welcher Milestone macht dich am stolzesten?
+            </label>
+            <textarea
+              value={formData.proudestMilestone}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  proudestMilestone: e.target.value,
+                })
+              }
+              disabled={isReadOnly}
+              className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
+                focus:outline-none focus:ring-0
+                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                dark:text-[#E0E0E0] text-[#1A1A1A]"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
+              placeholder="Welcher Milestone..."
+            />
+          </div>
 
-            <div className="space-y-6">
-              {/* Question 1 */}
-              <div>
-                <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
-                  Welcher Milestone macht dich am stolzesten?
-                </label>
-                <textarea
-                  value={formData.proudestMilestone}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      proudestMilestone: e.target.value,
-                    })
-                  }
-                  disabled={isReadOnly}
-                  className="w-full min-h-[100px] px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
-                    border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
-                    disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
-                    focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
-                  placeholder="Welcher Milestone..."
-                />
-              </div>
+          {/* Question 2 */}
+          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+            transition-all duration-300 ease-out
+            hover:shadow-xl hover:-translate-y-1 shadow-sm
+            dark:hover:border-border hover:border-border/50
+            rounded-xl border p-6">
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            >
+              Welches Ziel hättest du anders angehen sollen?
+            </label>
+            <textarea
+              value={formData.approachDifferently}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  approachDifferently: e.target.value,
+                })
+              }
+              disabled={isReadOnly}
+              className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
+                focus:outline-none focus:ring-0
+                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                dark:text-[#E0E0E0] text-[#1A1A1A]"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
+              placeholder="Was würdest du anders machen?"
+            />
+          </div>
 
-              {/* Question 2 */}
-              <div>
-                <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
-                  Welches Ziel hättest du anders angehen sollen?
-                </label>
-                <textarea
-                  value={formData.approachDifferently}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      approachDifferently: e.target.value,
-                    })
-                  }
-                  disabled={isReadOnly}
-                  className="w-full min-h-[100px] px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
-                    border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
-                    disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
-                    focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
-                  placeholder="Was würdest du anders machen?"
-                />
-              </div>
+          {/* Question 3 */}
+          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+            transition-all duration-300 ease-out
+            hover:shadow-xl hover:-translate-y-1 shadow-sm
+            dark:hover:border-border hover:border-border/50
+            rounded-xl border p-6">
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            >
+              Was hast du über deine Zielsetzung gelernt?
+            </label>
+            <textarea
+              value={formData.learnedAboutGoals}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  learnedAboutGoals: e.target.value,
+                })
+              }
+              disabled={isReadOnly}
+              className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
+                focus:outline-none focus:ring-0
+                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                dark:text-[#E0E0E0] text-[#1A1A1A]"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
+              placeholder="Deine Learnings..."
+            />
+          </div>
 
-              {/* Question 3 */}
-              <div>
-                <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
-                  Was hast du über deine Zielsetzung gelernt?
-                </label>
-                <textarea
-                  value={formData.learnedAboutGoals}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      learnedAboutGoals: e.target.value,
-                    })
-                  }
-                  disabled={isReadOnly}
-                  className="w-full min-h-[100px] px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
-                    border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
-                    disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
-                    focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
-                  placeholder="Deine Learnings..."
-                />
-              </div>
+          {/* Question 4 */}
+          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+            transition-all duration-300 ease-out
+            hover:shadow-xl hover:-translate-y-1 shadow-sm
+            dark:hover:border-border hover:border-border/50
+            rounded-xl border p-6">
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            >
+              Welche Entscheidung würdest du anders treffen?
+            </label>
+            <textarea
+              value={formData.decisionDifferently}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  decisionDifferently: e.target.value,
+                })
+              }
+              disabled={isReadOnly}
+              className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
+                focus:outline-none focus:ring-0
+                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                dark:text-[#E0E0E0] text-[#1A1A1A]"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
+              placeholder="Welche Entscheidung..."
+            />
+          </div>
 
-              {/* Question 4 */}
-              <div>
-                <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
-                  Welche Entscheidung würdest du anders treffen?
-                </label>
-                <textarea
-                  value={formData.decisionDifferently}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      decisionDifferently: e.target.value,
-                    })
-                  }
-                  disabled={isReadOnly}
-                  className="w-full min-h-[100px] px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
-                    border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
-                    disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
-                    focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
-                  placeholder="Welche Entscheidung..."
-                />
-              </div>
-
-              {/* Question 5 */}
-              <div>
-                <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
-                  Was brauchst du, um nächstes Quartal erfolgreicher zu sein?
-                </label>
-                <textarea
-                  value={formData.needForNextQuarter}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      needForNextQuarter: e.target.value,
-                    })
-                  }
-                  disabled={isReadOnly}
-                  className="w-full min-h-[100px] px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
-                    border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
-                    disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
-                    focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
-                  placeholder="Was brauchst du..."
-                />
-              </div>
-            </div>
+          {/* Question 5 */}
+          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+            transition-all duration-300 ease-out
+            hover:shadow-xl hover:-translate-y-1 shadow-sm
+            dark:hover:border-border hover:border-border/50
+            rounded-xl border p-6">
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            >
+              Was brauchst du, um nächstes Quartal erfolgreicher zu sein?
+            </label>
+            <textarea
+              value={formData.needForNextQuarter}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  needForNextQuarter: e.target.value,
+                })
+              }
+              disabled={isReadOnly}
+              className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
+                focus:outline-none focus:ring-0
+                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                dark:text-[#E0E0E0] text-[#1A1A1A]"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
+              placeholder="Was brauchst du..."
+            />
           </div>
 
           {/* Part 3: Next Quarter Milestones */}

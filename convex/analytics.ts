@@ -67,6 +67,78 @@ export const getMonthlyLogs = query({
   },
 });
 
+// Get monthly habit completion data (new system)
+export const getMonthlyHabitCompletion = query({
+  args: {
+    year: v.number(),
+    month: v.number(), // 1-12
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    // Calculate start and end dates for the month
+    const startDate = new Date(args.year, args.month - 1, 1);
+    const endDate = new Date(args.year, args.month, 0);
+
+    const startDateStr = startDate.toISOString().split("T")[0];
+    const endDateStr = endDate.toISOString().split("T")[0];
+
+    // Get all dailyHabits for the month
+    const allHabits = await ctx.db
+      .query("dailyHabits")
+      .withIndex("by_user_date", (q) => q.eq("userId", identity.subject))
+      .collect();
+
+    const habitsInMonth = allHabits.filter(
+      (h) => h.date >= startDateStr && h.date <= endDateStr
+    );
+
+    // Get all templates to calculate total possible habits per day
+    const templates = await ctx.db
+      .query("habitTemplates")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .collect();
+
+    const totalPossibleHabitsPerDay = templates.length;
+
+    // Group by date and calculate completion percentage
+    const dateMap = new Map<string, { completed: number; total: number; completionPercentage: number }>();
+
+    habitsInMonth.forEach((habit) => {
+      const existing = dateMap.get(habit.date);
+      if (existing) {
+        existing.total++;
+        if (habit.completed) existing.completed++;
+      } else {
+        dateMap.set(habit.date, {
+          completed: habit.completed ? 1 : 0,
+          total: 1,
+          completionPercentage: 0,
+        });
+      }
+    });
+
+    // Calculate completion percentage for each date
+    dateMap.forEach((data, date) => {
+      data.completionPercentage = totalPossibleHabitsPerDay > 0
+        ? Math.round((data.completed / totalPossibleHabitsPerDay) * 100)
+        : 0;
+    });
+
+    // Convert to array format
+    return Array.from(dateMap.entries()).map(([date, data]) => ({
+      date,
+      completed: data.completed,
+      total: data.total,
+      totalPossible: totalPossibleHabitsPerDay,
+      completionPercentage: data.completionPercentage,
+    }));
+  },
+});
+
 // Get quarterly logs
 export const getQuarterlyLogs = query({
   args: {
