@@ -35,6 +35,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const updateWeeklyTarget = useMutation(api.trackingFields.updateWeeklyTarget);
   const deleteTrackingField = useMutation(api.trackingFields.deleteTrackingField);
   const createTrackingField = useMutation(api.trackingFields.createTrackingField);
+  const seedHabitSystem = useMutation(api.migrations.migrateUser.migrateToHabitSystem);
 
   const [isSaving, setIsSaving] = useState(false);
   const [newFieldName, setNewFieldName] = useState("");
@@ -189,10 +190,11 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">
           <Tabs defaultValue="profile" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="profile">Profil</TabsTrigger>
               <TabsTrigger value="northstars">North Stars</TabsTrigger>
               <TabsTrigger value="tracking">Tracking</TabsTrigger>
+              <TabsTrigger value="habits">Habits</TabsTrigger>
               <TabsTrigger value="coach">Coach</TabsTrigger>
             </TabsList>
 
@@ -411,6 +413,45 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     </div>
                   </div>
                 ))}
+              </div>
+            </TabsContent>
+
+            {/* Habits Tab */}
+            <TabsContent value="habits" className="space-y-4 mt-6">
+              <p className="text-sm text-muted-foreground mb-4">
+                Verwalte dein gamifiziertes Habit-Tracking System
+              </p>
+
+              <div className="space-y-4">
+                <div className="rounded-lg border border-border bg-card p-4">
+                  <h3 className="font-semibold mb-2">Habit System initialisieren</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Klicke hier, um dein Habit-Tracking System mit Standard-Kategorien und Habits zu initialisieren.
+                    Dies erstellt 4 Kategorien (Physical, Mental, Work, Evening) mit insgesamt 10 Habits.
+                  </p>
+                  <Button
+                    onClick={async () => {
+                      try {
+                        await seedHabitSystem();
+                        toast.success("Habit System erfolgreich initialisiert!");
+                      } catch (error) {
+                        console.error("Failed to seed:", error);
+                        toast.error("Fehler beim Initialisieren");
+                      }
+                    }}
+                  >
+                    System initialisieren
+                  </Button>
+                </div>
+
+                <div className="rounded-lg border border-border bg-card p-4">
+                  <h3 className="font-semibold mb-2">Info</h3>
+                  <ul className="text-sm text-muted-foreground space-y-1">
+                    <li>• Du kannst Kategorien und Habits nach der Initialisierung anpassen</li>
+                    <li>• XP-Werte sind individuell konfigurierbar</li>
+                    <li>• Das System trackt Streaks, Level und wöchentliche Fortschritte</li>
+                  </ul>
+                </div>
               </div>
             </TabsContent>
 

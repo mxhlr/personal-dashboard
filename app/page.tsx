@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Header from "@/components/layout/Header";
 import { Dashboard } from "@/components/dashboard/Dashboard";
-import { DailyTracker } from "@/components/dashboard/DailyTracker";
+import { HabitDashboardConnected } from "@/components/habits/HabitDashboardConnected";
 import { WeeklyOverview } from "@/components/dashboard/WeeklyOverview";
 import { Visionboard } from "@/components/visionboard/Visionboard";
 import { CoachChat } from "@/components/coach/CoachChat";
@@ -133,7 +133,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Review Forms */}
-              {selectedReview === "daily" && <DailyTracker />}
+              {selectedReview === "daily" && <HabitDashboardConnected />}
 
               {selectedReview === "weekly" && (
                 <WeeklyReviewForm year={currentYear} weekNumber={currentWeek} />

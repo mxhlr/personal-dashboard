@@ -1,0 +1,282 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { WinConditionBanner } from "./WinConditionBanner";
+import { StatsBar } from "./StatsBar";
+import { ProgressRing } from "./ProgressRing";
+import { HabitCategory } from "./HabitCategory";
+import { PatternIntelligence } from "./PatternIntelligence";
+import { SprintTimer } from "./SprintTimer";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useToast } from "@/hooks/use-toast";
+import { Id } from "@/convex/_generated/dataModel";
+
+interface Habit {
+  id: string;
+  name: string;
+  xp: number;
+  completed: boolean;
+  completedAt?: string;
+  isExtra?: boolean;
+  skipped?: boolean;
+  skipReason?: string;
+}
+
+interface Category {
+  id: string;
+  icon: string;
+  name: string;
+  habits: Habit[];
+}
+
+export function HabitDashboardConnected() {
+  const { toast } = useToast();
+  const today = new Date().toISOString().split("T")[0];
+
+  // Fetch data from Convex
+  const userStats = useQuery(api.gamification.getUserStats);
+  const categories = useQuery(api.habitCategories.list);
+  const habitTemplates = useQuery(api.habitTemplates.list);
+  const dailyHabits = useQuery(api.dailyHabits.getByDate, { date: today });
+  const patternData = useQuery(api.analytics.getPatternIntelligence);
+
+  // Mutations
+  const completeHabit = useMutation(api.dailyHabits.complete);
+  const skipHabit = useMutation(api.dailyHabits.skip);
+  const finishDay = useMutation(api.dailyHabits.finishDay);
+
+  const [currentTime, setCurrentTime] = useState("");
+  const [localCategories, setLocalCategories] = useState<Category[]>([]);
+
+  // Update time every second
+  useEffect(() => {
+    const updateTime = () => {
+      setCurrentTime(
+        new Date().toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })
+      );
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Transform Convex data into local format
+  useEffect(() => {
+    if (!categories || !habitTemplates || !dailyHabits) return;
+
+    const transformed = categories.map((cat) => {
+      const templates = habitTemplates.filter((t) => t.categoryId === cat._id);
+      const habits = templates.map((template) => {
+        const daily = dailyHabits.find((d) => d.templateId === template._id);
+        return {
+          id: template._id,
+          name: template.name,
+          xp: template.xpValue,
+          completed: daily?.completed || false,
+          completedAt: daily?.completedAt,
+          isExtra: !template.isCore,
+          skipped: daily?.skipped || false,
+          skipReason: daily?.skipReason,
+        };
+      });
+
+      return {
+        id: cat._id,
+        icon: cat.icon,
+        name: cat.name,
+        habits,
+      };
+    });
+
+    setLocalCategories(transformed);
+  }, [categories, habitTemplates, dailyHabits]);
+
+  const totalXP = localCategories.reduce(
+    (sum, cat) =>
+      sum + cat.habits.reduce((s, h) => s + (h.completed ? h.xp : 0), 0),
+    0
+  );
+
+  const maxXP = localCategories.reduce(
+    (sum, cat) => sum + cat.habits.reduce((s, h) => s + h.xp, 0),
+    0
+  );
+
+  const handleHabitToggle = async (categoryName: string, habitId: string) => {
+    const category = localCategories.find((c) => c.name === categoryName);
+    const habit = category?.habits.find((h) => h.id === habitId);
+
+    if (!habit) return;
+
+    try {
+      if (!habit.completed) {
+        // Complete the habit
+        await completeHabit({
+          templateId: habitId as Id<"habitTemplates">,
+          date: today,
+        });
+
+        // Show XP gain toast
+        toast({
+          title: `+${habit.xp} XP`,
+          description: `${habit.name} completed!`,
+          duration: 2000,
+        });
+
+        // Check if category is now complete
+        const updatedHabits = category.habits.map((h) =>
+          h.id === habitId ? { ...h, completed: true } : h
+        );
+        const categoryComplete = updatedHabits
+          .filter((h) => !h.isExtra)
+          .every((h) => h.completed);
+
+        if (categoryComplete) {
+          toast({
+            title: `✓ ${categoryName} complete!`,
+            description: "Great job! Keep the momentum going.",
+            duration: 3000,
+          });
+        }
+      } else {
+        // Uncomplete the habit (toggle off)
+        await completeHabit({
+          templateId: habitId as Id<"habitTemplates">,
+          date: today,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to toggle habit:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update habit. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleHabitSkip = async (
+    categoryName: string,
+    habitId: string,
+    reason: string
+  ) => {
+    try {
+      await skipHabit({
+        templateId: habitId as Id<"habitTemplates">,
+        date: today,
+        reason,
+      });
+
+      toast({
+        title: "Habit skipped",
+        description: `${reason}`,
+        duration: 2000,
+      });
+    } catch (error) {
+      console.error("Failed to skip habit:", error);
+      toast({
+        title: "Error",
+        description: "Failed to skip habit. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleFinishDay = async () => {
+    try {
+      const result = await finishDay({ date: today });
+
+      toast({
+        title: "🎊 Day Complete!",
+        description: `You earned ${result.totalXP} XP today! ${
+          result.streakIncreased ? `🔥 ${result.newStreak} day streak!` : ""
+        }`,
+        duration: 5000,
+      });
+    } catch (error) {
+      console.error("Failed to finish day:", error);
+      toast({
+        title: "Error",
+        description: "Failed to finish day. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Show loading state
+  if (!userStats || !categories || !habitTemplates) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#0a0a0a]">
+        <div className="text-center">
+          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-cyan-400"></div>
+          <p className="text-muted-foreground">Loading your habits...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#0a0a0a] p-6">
+      <div className="mx-auto max-w-4xl space-y-6">
+        {/* Header */}
+        <header className="space-y-2 text-center">
+          <p className="font-mono text-4xl font-bold text-foreground">
+            {currentTime}
+          </p>
+          <p className="text-lg font-semibold text-cyan-400">Execute.</p>
+          <SprintTimer endOfDayHour={18} />
+        </header>
+
+        {/* Win Condition */}
+        <WinConditionBanner />
+
+        {/* Stats Bar */}
+        <StatsBar
+          streak={userStats.currentStreak}
+          level={userStats.level}
+          weekCompleted={userStats.weekScore}
+          totalXP={userStats.totalXP}
+        />
+
+        {/* Progress Ring */}
+        <ProgressRing current={totalXP} total={maxXP} />
+
+        {/* Habit Categories */}
+        <ScrollArea className="h-[600px] pr-4">
+          <div className="space-y-4">
+            {localCategories.map((category) => (
+              <HabitCategory
+                key={category.id}
+                icon={category.icon}
+                name={category.name}
+                habits={category.habits}
+                onHabitToggle={handleHabitToggle}
+                onHabitSkip={handleHabitSkip}
+              />
+            ))}
+          </div>
+        </ScrollArea>
+
+        {/* Pattern Intelligence */}
+        {patternData && <PatternIntelligence data={patternData} />}
+
+        {/* Finish Day Button */}
+        <Button
+          onClick={handleFinishDay}
+          size="lg"
+          className="w-full bg-green-600 text-lg font-semibold text-white transition-colors hover:bg-green-700"
+        >
+          <span className="mr-2">🎊</span>
+          Finish Day
+        </Button>
+      </div>
+    </div>
+  );
+}
