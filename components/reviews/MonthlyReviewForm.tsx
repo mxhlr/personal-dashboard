@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { format } from "date-fns";
-import { TrackingCard } from "@/components/dashboard/TrackingCard";
 import { ProgressIndicator } from "@/components/dashboard/ProgressIndicator";
 import { toast } from "sonner";
 
