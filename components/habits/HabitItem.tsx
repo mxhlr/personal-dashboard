@@ -44,6 +44,7 @@ export function HabitItem({
   onSkip,
 }: HabitItemProps) {
   const [isAnimating, setIsAnimating] = useState(false);
+  const [showRowHighlight, setShowRowHighlight] = useState(false);
   const [isEditingXP, setIsEditingXP] = useState(false);
   const [xpValue, setXpValue] = useState(xp.toString());
   const inputRef = useRef<HTMLInputElement>(null);
@@ -52,8 +53,11 @@ export function HabitItem({
 
   const handleToggle = () => {
     if (!completed) {
+      // Trigger animations
       setIsAnimating(true);
-      setTimeout(() => setIsAnimating(false), 600);
+      setShowRowHighlight(true);
+      setTimeout(() => setIsAnimating(false), 1000);
+      setTimeout(() => setShowRowHighlight(false), 800);
     }
     onToggle(id);
   };
@@ -120,24 +124,40 @@ export function HabitItem({
   };
 
   return (
-    <div className="group relative flex items-center gap-3 py-2 transition-all">
+    <div
+      className={`group relative flex items-center gap-3 py-3 px-2 -mx-2 rounded-lg transition-all duration-300 ${
+        showRowHighlight ? 'animate-[row-highlight_0.8s_ease-out]' : ''
+      } hover:bg-foreground/[0.02]`}
+    >
+      {/* Enhanced Checkbox with pulse animation */}
       <Checkbox
         checked={completed}
         onCheckedChange={handleToggle}
-        className="h-5 w-5 rounded-md border-border data-[state=checked]:!border-0 data-[state=checked]:!bg-[#4CAF50] data-[state=checked]:!text-[#FFFFFF] data-[state=checked]:!rounded-[6px] data-[state=checked]:!opacity-100"
+        className={`h-6 w-6 rounded-md border-2 border-border transition-all duration-200
+          hover:scale-105 hover:border-[#4CAF50]/50
+          data-[state=checked]:!border-0 data-[state=checked]:!bg-[#4CAF50]
+          data-[state=checked]:!text-[#FFFFFF] data-[state=checked]:!rounded-[6px]
+          data-[state=checked]:!opacity-100 data-[state=checked]:scale-110
+          ${isAnimating ? 'animate-[checkbox-pulse_0.6s_ease-out]' : ''}`}
       />
 
-      <div className="flex-1">
-        <div className={`text-sm ${completed ? "text-muted-foreground line-through" : "text-foreground"}`}>
+      <div className="flex-1 min-w-0">
+        <div className={`text-sm font-medium transition-all duration-300 ${
+          completed
+            ? "text-muted-foreground line-through"
+            : "text-foreground"
+        }`}>
           {name}
         </div>
         {subtitle && (
-          <div className={`text-xs text-muted-foreground/70 mt-0.5 ${completed ? "line-through" : ""}`}>
+          <div className={`text-xs text-muted-foreground/70 mt-0.5 truncate ${
+            completed ? "line-through" : ""
+          }`}>
             {subtitle}
           </div>
         )}
         {completed && completedAt && (
-          <div className="text-xs text-[#00FF88] mt-0.5">
+          <div className="text-xs text-[#00FF88] mt-0.5 font-medium">
             {formatTimestamp(completedAt)}
           </div>
         )}
@@ -145,7 +165,8 @@ export function HabitItem({
 
       <div className="flex items-center gap-3 justify-end">
         {completed ? (
-          <div className="text-sm font-semibold text-[#4CAF50]">
+          <div className="text-sm font-bold text-[#4CAF50] flex items-center gap-1">
+            <span className="text-[#00FF88]">✓</span>
             +{xp}
           </div>
         ) : (
@@ -164,7 +185,7 @@ export function HabitItem({
             ) : (
               <button
                 onClick={handleXPClick}
-                className="cursor-pointer rounded px-1.5 py-0.5 text-sm font-semibold text-[#FF9800] transition-colors hover:bg-orange-500/10"
+                className="cursor-pointer rounded-md px-2 py-1 text-sm font-bold text-[#FF9800] transition-all duration-200 hover:bg-orange-500/15 hover:scale-105"
                 title="Click to edit XP"
               >
                 +{xp}
@@ -172,7 +193,7 @@ export function HabitItem({
             )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="text-[12px] dark:text-[#555555] text-[#999999] bg-transparent border-0 px-0 py-0 h-auto">
+                <button className="text-[11px] font-medium dark:text-[#666666] text-[#999999] bg-transparent border-0 px-2 py-1 rounded-md transition-all duration-200 hover:bg-foreground/5 hover:text-foreground/60">
                   Skip
                 </button>
               </DropdownMenuTrigger>
@@ -192,9 +213,15 @@ export function HabitItem({
         )}
       </div>
 
+      {/* Enhanced XP Float Animation */}
       {isAnimating && (
-        <div className="pointer-events-none absolute right-3 top-0 animate-[slide-up_0.6s_ease-out] text-lg font-bold text-orange-500">
-          +{xp}
+        <div
+          className="pointer-events-none absolute right-12 top-1/2 -translate-y-1/2 animate-[xp-float_1s_ease-out] text-xl font-bold text-[#FF9800]"
+          style={{
+            textShadow: '0 0 10px rgba(255, 152, 0, 0.6), 0 0 20px rgba(255, 152, 0, 0.3)'
+          }}
+        >
+          +{xp} XP
         </div>
       )}
     </div>

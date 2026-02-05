@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState, useRef } from "react";
+
 interface ProgressRingProps {
   current: number;
   total: number;
@@ -8,6 +10,9 @@ interface ProgressRingProps {
 export function ProgressRing({ current, total }: ProgressRingProps) {
   const percentage = total > 0 ? Math.round((current / total) * 100) : 0;
   const isComplete = percentage === 100;
+  const [showCelebration, setShowCelebration] = useState(false);
+  const prevPercentageRef = useRef(percentage);
+
   const circumference = 2 * Math.PI * 90;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
@@ -18,11 +23,50 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
   const dotY = 100 + 90 * Math.sin(angleRad);
 
   const ringColor = isComplete ? '#00E676' : '#00E5FF';
-  const glowColor = isComplete ? 'rgba(0, 230, 118, 0.4)' : 'rgba(0, 229, 255, 0.4)';
+  const glowColor = isComplete ? 'rgba(0, 230, 118, 0.5)' : 'rgba(0, 229, 255, 0.4)';
+
+  // Detect when hitting 100%
+  useEffect(() => {
+    if (percentage === 100 && prevPercentageRef.current < 100) {
+      setShowCelebration(true);
+      setTimeout(() => setShowCelebration(false), 2000);
+    }
+    prevPercentageRef.current = percentage;
+  }, [percentage]);
+
+  // Progress stage labels
+  const getProgressStage = () => {
+    if (percentage === 100) return { label: 'DOMINATION', color: '#00E676' };
+    if (percentage >= 75) return { label: 'ON FIRE', color: '#FF9800' };
+    if (percentage >= 50) return { label: 'MOMENTUM', color: '#00E5FF' };
+    if (percentage >= 25) return { label: 'WARMING UP', color: '#00E5FF' };
+    return { label: 'START', color: '#888888' };
+  };
+
+  const stage = getProgressStage();
 
   return (
     <div className="flex flex-col items-center justify-center p-8 space-y-4">
-      <div className="relative h-48 w-48">
+      <div className="relative h-52 w-52">
+        {/* Celebration particles */}
+        {showCelebration && (
+          <div className="absolute inset-0 pointer-events-none">
+            {[...Array(12)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-2 h-2 rounded-full animate-[confetti-fall_2s_ease-out_forwards]"
+                style={{
+                  left: '50%',
+                  top: '50%',
+                  backgroundColor: ['#00E676', '#00E5FF', '#FFD700', '#FF9800'][i % 4],
+                  transform: `rotate(${i * 30}deg) translateY(-60px)`,
+                  animationDelay: `${i * 0.05}s`,
+                }}
+              />
+            ))}
+          </div>
+        )}
+
         <svg className="h-full w-full -rotate-90 transform" viewBox="0 0 200 200">
           {/* Background circle */}
           <circle
@@ -39,14 +83,16 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
             cy="100"
             r="90"
             stroke={ringColor}
-            strokeWidth="8"
+            strokeWidth="10"
             fill="none"
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
             strokeLinecap="round"
-            className="transition-all duration-500"
+            className={`transition-all duration-700 ease-out ${
+              showCelebration ? 'animate-[ring-celebration_0.5s_ease-in-out_3]' : ''
+            }`}
             style={{
-              filter: `drop-shadow(0 0 6px ${glowColor})`
+              filter: `drop-shadow(0 0 ${showCelebration ? '15px' : '8px'} ${glowColor})`
             }}
           />
           {/* Progress dot */}
@@ -54,36 +100,56 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
             <circle
               cx={dotX}
               cy={dotY}
-              r="5"
+              r="6"
               fill={ringColor}
               className="transition-all duration-500"
+              style={{
+                filter: `drop-shadow(0 0 4px ${glowColor})`
+              }}
             />
           )}
         </svg>
+
+        {/* Center content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <p
-            className="text-[40px] font-bold"
-            style={{ color: ringColor }}
-          >
-            {percentage}%
-          </p>
-          <p className="text-[14px] dark:text-[#888888] text-[#666666]">
-            {current}/{total}
-          </p>
+          {isComplete ? (
+            <div className="text-center">
+              <span className="text-4xl">🏆</span>
+              <p
+                className="text-3xl font-bold mt-1"
+                style={{ color: ringColor }}
+              >
+                100%
+              </p>
+            </div>
+          ) : (
+            <>
+              <p
+                className="text-[44px] font-bold"
+                style={{ color: ringColor }}
+              >
+                {percentage}%
+              </p>
+              <p className="text-[13px] dark:text-[#888888] text-[#666666] font-medium">
+                {current}/{total} XP
+              </p>
+            </>
+          )}
         </div>
       </div>
 
-      {/* Status Badge */}
+      {/* Status Badge with stage */}
       <div
-        className="px-5 py-1.5 rounded-2xl uppercase text-[12px] font-medium dark:bg-[rgba(255,255,255,0.06)] bg-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.15)] border-[rgba(0,0,0,0.15)]"
+        className={`px-5 py-2 rounded-full uppercase text-[11px] font-bold tracking-wider transition-all duration-500
+          dark:bg-white/[0.06] bg-black/[0.04]
+          dark:border dark:border-white/[0.1] border border-black/[0.08]
+          ${showCelebration ? 'scale-110' : ''}`}
         style={{
-          letterSpacing: '2px',
-          color: isComplete ? '#00E676' : undefined
+          color: stage.color,
+          boxShadow: isComplete ? `0 0 15px ${glowColor}` : undefined,
         }}
       >
-        <span className={isComplete ? '' : 'dark:text-[#888888] text-[#666666]'}>
-          {isComplete ? 'COMPLETE' : 'IN PROGRESS'}
-        </span>
+        {stage.label}
       </div>
     </div>
   );

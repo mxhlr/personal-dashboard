@@ -83,10 +83,14 @@ export function HabitCategory({
 
   return (
     <Card
-      className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80 shadow-sm transition-colors dark:hover:border-border hover:border-border/50"
+      className={`group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+        transition-all duration-300 ease-out
+        hover:shadow-xl hover:-translate-y-1
+        ${isComplete ? 'ring-2 ring-[#00E676]/30 shadow-[0_0_20px_rgba(0,230,118,0.15)]' : 'shadow-sm'}
+        dark:hover:border-border hover:border-border/50`}
       style={{
         backgroundColor: bgColor,
-        borderColor: borderColor,
+        borderColor: isComplete ? 'rgba(0, 230, 118, 0.3)' : borderColor,
         // Light mode overrides via CSS variable if needed
         ...(bgColorLight && { '--bg-light': bgColorLight } as React.CSSProperties),
         ...(borderColorLight && { '--border-light': borderColorLight } as React.CSSProperties),
@@ -96,32 +100,58 @@ export function HabitCategory({
         <div className="flex items-center justify-between">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-3 text-left"
+            className="flex items-center gap-3 text-left group/header"
           >
-            <span className="text-lg font-bold dark:text-[#E0E0E0] text-[#333333]">
-              {categoryNumber}
-            </span>
+            {/* Category number with completion indicator */}
+            <div className={`relative flex items-center justify-center w-8 h-8 rounded-lg font-bold text-sm
+              transition-all duration-300
+              ${isComplete
+                ? 'bg-[#00E676]/20 text-[#00E676] shadow-[0_0_10px_rgba(0,230,118,0.3)]'
+                : 'dark:bg-white/5 bg-black/5 dark:text-[#E0E0E0] text-[#333333]'
+              }`}
+            >
+              {isComplete ? '✓' : categoryNumber}
+            </div>
             <div>
-              <h3 className="text-base font-semibold">{name}</h3>
+              <h3 className={`text-base font-semibold transition-colors duration-200
+                ${isComplete ? 'text-[#00E676]' : 'group-hover/header:text-[#00E5FF]'}`}>
+                {name}
+              </h3>
             </div>
           </button>
-          <div className="flex items-center gap-2">
-            <span className="text-[13px] dark:text-[#888888] text-[#666666]">
+          <div className="flex items-center gap-3">
+            {/* Progress fraction with visual enhancement */}
+            <div className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-300
+              ${isComplete
+                ? 'bg-[#00E676]/20 text-[#00E676]'
+                : 'dark:bg-white/5 bg-black/5 dark:text-[#888888] text-[#666666]'
+              }`}>
               {completedTotal}/{habits.length}
-            </span>
+            </div>
+            {/* Animated chevron */}
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="text-[10px] dark:text-[#666666] text-[#999999]"
+              className={`p-1 rounded transition-all duration-300
+                dark:text-[#666666] text-[#999999]
+                hover:dark:text-[#00E5FF] hover:text-[#00B8D4]
+                ${isExpanded ? 'rotate-0' : '-rotate-90'}`}
             >
-              {isExpanded ? "▼" : "▶"}
+              <ChevronDown className="h-4 w-4" />
             </button>
           </div>
         </div>
-        <Progress
-          value={progress}
-          className="mt-3 h-2 dark:bg-[#2A2A2E] bg-[#E5E5E5]"
-          indicatorClassName={isComplete ? "bg-[#00FF88]" : "bg-[#00E5FF]"}
-        />
+        {/* Enhanced progress bar */}
+        <div className="relative mt-3">
+          <Progress
+            value={progress}
+            className="h-2 dark:bg-[#2A2A2E] bg-[#E5E5E5] overflow-hidden"
+            indicatorClassName={`transition-all duration-500 ${isComplete ? "bg-[#00FF88] shadow-[0_0_8px_rgba(0,255,136,0.5)]" : "bg-[#00E5FF]"}`}
+          />
+          {/* Progress glow effect when complete */}
+          {isComplete && (
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_2s_ease-in-out_infinite]" />
+          )}
+        </div>
       </CardHeader>
 
       {isExpanded && (
