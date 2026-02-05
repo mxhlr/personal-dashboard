@@ -42,6 +42,15 @@ export const submitMonthlyReview = mutation({
       proudOf: v.string(),
       nextMonthFocus: v.string(),
     }),
+    nextMonthOKRs: v.optional(v.array(v.object({
+      objective: v.string(),
+      area: v.string(),
+      keyResults: v.array(v.object({
+        description: v.string(),
+        target: v.number(),
+        unit: v.string(),
+      })),
+    }))),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -61,6 +70,7 @@ export const submitMonthlyReview = mutation({
       // Update existing review
       await ctx.db.patch(existingReview._id, {
         responses: args.responses,
+        nextMonthOKRs: args.nextMonthOKRs,
         completedAt: new Date().toISOString(),
       });
       return existingReview._id;
@@ -71,9 +81,46 @@ export const submitMonthlyReview = mutation({
         year: args.year,
         month: args.month,
         responses: args.responses,
+        nextMonthOKRs: args.nextMonthOKRs,
         completedAt: new Date().toISOString(),
       });
       return reviewId;
     }
+  },
+});
+
+/**
+ * Get monthly OKRs for the current month
+ */
+export const getMonthlyOKRs = query({
+  args: {
+    year: v.number(),
+    month: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    // OKRs are set in LAST month's review for THIS month
+    // So we need to look at (year, month - 1)
+    let targetYear = args.year;
+    let targetMonth = args.month - 1;
+
+    // Handle month 1 edge case (get from December of previous year)
+    if (targetMonth < 1) {
+      targetYear = args.year - 1;
+      targetMonth = 12;
+    }
+
+    const review = await ctx.db
+      .query("monthlyReview")
+      .withIndex("by_user_year_month", (q) =>
+        q.eq("userId", identity.subject).eq("year", targetYear).eq("month", targetMonth)
+      )
+      .first();
+
+    return review?.nextMonthOKRs || [];
   },
 });

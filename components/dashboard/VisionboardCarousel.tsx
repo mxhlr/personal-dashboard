@@ -1,43 +1,15 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+const CARDS_PER_PAGE = 5;
+
 export function VisionboardCarousel() {
   const visionboardImages = useQuery(api.visionboard.getAllImages);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
-
-  const updateScrollButtons = () => {
-    if (scrollRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-      setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-    }
-  };
-
-  useEffect(() => {
-    updateScrollButtons();
-    window.addEventListener("resize", updateScrollButtons);
-    return () => window.removeEventListener("resize", updateScrollButtons);
-  }, [visionboardImages]);
-
-  const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      const scrollAmount = 280; // Card width (256px) + gap (24px)
-      const newScrollLeft =
-        scrollRef.current.scrollLeft +
-        (direction === "left" ? -scrollAmount : scrollAmount);
-      scrollRef.current.scrollTo({
-        left: newScrollLeft,
-        behavior: "smooth",
-      });
-      setTimeout(updateScrollButtons, 300);
-    }
-  };
+  const [currentPage, setCurrentPage] = useState(0);
 
   if (!visionboardImages || visionboardImages.length === 0) {
     return (
@@ -57,6 +29,22 @@ export function VisionboardCarousel() {
     );
   }
 
+  const totalPages = Math.ceil(visionboardImages.length / CARDS_PER_PAGE);
+  const startIndex = currentPage * CARDS_PER_PAGE;
+  const endIndex = startIndex + CARDS_PER_PAGE;
+  const currentImages = visionboardImages.slice(startIndex, endIndex);
+
+  const handlePrevious = () => {
+    setCurrentPage((prev) => (prev > 0 ? prev - 1 : totalPages - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : 0));
+  };
+
+  const canGoPrevious = totalPages > 1;
+  const canGoNext = totalPages > 1;
+
   return (
     <div className="relative group">
       {/* Header */}
@@ -72,67 +60,63 @@ export function VisionboardCarousel() {
           style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
         >
           {visionboardImages.length} {visionboardImages.length === 1 ? "Bild" : "Bilder"}
+          {totalPages > 1 && ` • Seite ${currentPage + 1}/${totalPages}`}
         </span>
       </div>
 
-      {/* Scrollable Cards Container */}
+      {/* Slideshow Container */}
       <div className="relative">
         {/* Left Arrow */}
-        {canScrollLeft && (
+        {canGoPrevious && (
           <button
-            onClick={() => scroll("left")}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10
-              w-10 h-10 rounded-full
-              dark:bg-black/60 bg-white/90
+            onClick={handlePrevious}
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10
+              w-12 h-12 rounded-full
+              dark:bg-black/70 bg-white/90
               dark:border dark:border-white/20 border border-black/10
               flex items-center justify-center
               opacity-0 group-hover:opacity-100
               hover:scale-110
               transition-all duration-200
-              backdrop-blur-sm shadow-lg"
-            aria-label="Scroll left"
+              backdrop-blur-sm shadow-xl"
+            aria-label="Previous page"
           >
-            <ChevronLeft className="w-5 h-5 dark:text-white text-black" />
+            <ChevronLeft className="w-6 h-6 dark:text-white text-black" />
           </button>
         )}
 
         {/* Right Arrow */}
-        {canScrollRight && (
+        {canGoNext && (
           <button
-            onClick={() => scroll("right")}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10
-              w-10 h-10 rounded-full
-              dark:bg-black/60 bg-white/90
+            onClick={handleNext}
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10
+              w-12 h-12 rounded-full
+              dark:bg-black/70 bg-white/90
               dark:border dark:border-white/20 border border-black/10
               flex items-center justify-center
               opacity-0 group-hover:opacity-100
               hover:scale-110
               transition-all duration-200
-              backdrop-blur-sm shadow-lg"
-            aria-label="Scroll right"
+              backdrop-blur-sm shadow-xl"
+            aria-label="Next page"
           >
-            <ChevronRight className="w-5 h-5 dark:text-white text-black" />
+            <ChevronRight className="w-6 h-6 dark:text-white text-black" />
           </button>
         )}
 
-        {/* Cards */}
-        <div
-          ref={scrollRef}
-          onScroll={updateScrollButtons}
-          className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-2"
-          style={{
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-          }}
-        >
-          {visionboardImages.map((image) => (
+        {/* Cards Grid - Fixed 5 cards per page */}
+        <div className="grid grid-cols-5 gap-4">
+          {currentImages.map((image) => (
             <div
               key={image._id}
-              className="flex-shrink-0 w-[256px] rounded-lg overflow-hidden shadow-sm
-                hover:shadow-lg transition-shadow duration-200"
+              className="rounded-lg overflow-hidden shadow-sm
+                hover:shadow-lg transition-all duration-200 hover:scale-[1.02]"
             >
               {/* Image */}
-              <div className="relative" style={{ borderRadius: image.subtitle ? "8px 8px 0 0" : "8px" }}>
+              <div
+                className="relative"
+                style={{ borderRadius: image.subtitle ? "8px 8px 0 0" : "8px" }}
+              >
                 <img
                   src={image.url}
                   alt={image.subtitle || "Vision board image"}
@@ -159,15 +143,42 @@ export function VisionboardCarousel() {
               )}
             </div>
           ))}
+
+          {/* Fill empty slots if less than 5 images on last page */}
+          {currentImages.length < CARDS_PER_PAGE &&
+            Array.from({ length: CARDS_PER_PAGE - currentImages.length }).map(
+              (_, index) => (
+                <div
+                  key={`empty-${index}`}
+                  className="rounded-lg border-2 border-dashed dark:border-white/10 border-black/10
+                    aspect-square flex items-center justify-center"
+                >
+                  <span className="text-[11px] dark:text-[#666666] text-[#999999]">
+                    {/* Empty slot */}
+                  </span>
+                </div>
+              )
+            )}
         </div>
       </div>
 
-      {/* Hide scrollbar CSS */}
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
+      {/* Page Dots */}
+      {totalPages > 1 && (
+        <div className="flex justify-center gap-2 mt-4">
+          {Array.from({ length: totalPages }).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentPage(index)}
+              className={`h-2 rounded-full transition-all duration-200 ${
+                index === currentPage
+                  ? "w-8 dark:bg-white bg-black"
+                  : "w-2 dark:bg-white/30 bg-black/30 hover:dark:bg-white/50 hover:bg-black/50"
+              }`}
+              aria-label={`Go to page ${index + 1}`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

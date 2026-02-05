@@ -31,10 +31,26 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isReadOnly, setIsReadOnly] = useState(false);
 
+  // OKR State
+  const [nextMonthOKRs, setNextMonthOKRs] = useState<Array<{
+    objective: string;
+    area: string;
+    keyResults: Array<{ description: string; target: number; unit: string }>;
+  }>>([
+    {
+      objective: "",
+      area: "Wealth",
+      keyResults: [{ description: "", target: 0, unit: "" }],
+    },
+  ]);
+
   // Load existing review data
   useEffect(() => {
     if (existingReview) {
       setFormData(existingReview.responses);
+      if (existingReview.nextMonthOKRs && existingReview.nextMonthOKRs.length > 0) {
+        setNextMonthOKRs(existingReview.nextMonthOKRs);
+      }
       setIsReadOnly(true);
     }
   }, [existingReview]);
