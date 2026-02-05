@@ -190,82 +190,10 @@ export const getAnnualLogs = query({
   },
 });
 
-// Calculate wellbeing trends for a set of logs
-export const getWellbeingTrends = query({
-  args: {
-    startDate: v.string(),
-    endDate: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
+// REMOVED: getWellbeingTrends - Legacy system not used anymore
+// REMOVED: getTrackingPerformance - Legacy system not used anymore
 
-    const logs = await ctx.db
-      .query("dailyLog")
-      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
-      .filter((q) =>
-        q.and(
-          q.gte(q.field("date"), args.startDate),
-          q.lte(q.field("date"), args.endDate)
-        )
-      )
-      .collect();
-
-    if (logs.length === 0) {
-      return {
-        avgEnergy: 0,
-        avgSatisfaction: 0,
-        avgStress: 0,
-        count: 0,
-        trend: [],
-      };
-    }
-
-    const withWellbeing = logs.filter((log) => log.wellbeing);
-
-    if (withWellbeing.length === 0) {
-      return {
-        avgEnergy: 0,
-        avgSatisfaction: 0,
-        avgStress: 0,
-        count: 0,
-        trend: [],
-      };
-    }
-
-    const totalEnergy = withWellbeing.reduce(
-      (sum, log) => sum + (log.wellbeing?.energy || 0),
-      0
-    );
-    const totalSatisfaction = withWellbeing.reduce(
-      (sum, log) => sum + (log.wellbeing?.satisfaction || 0),
-      0
-    );
-    const totalStress = withWellbeing.reduce(
-      (sum, log) => sum + (log.wellbeing?.stress || 0),
-      0
-    );
-
-    return {
-      avgEnergy: Math.round((totalEnergy / withWellbeing.length) * 10) / 10,
-      avgSatisfaction:
-        Math.round((totalSatisfaction / withWellbeing.length) * 10) / 10,
-      avgStress: Math.round((totalStress / withWellbeing.length) * 10) / 10,
-      count: withWellbeing.length,
-      trend: withWellbeing.map((log) => ({
-        date: log.date,
-        energy: log.wellbeing?.energy || 0,
-        satisfaction: log.wellbeing?.satisfaction || 0,
-        stress: log.wellbeing?.stress || 0,
-      })),
-    };
-  },
-});
-
-// Get tracking performance for date range
-export const getTrackingPerformance = query({
+export const getTrackingPerformance_REMOVED = query({
   args: {
     startDate: v.string(),
     endDate: v.string(),

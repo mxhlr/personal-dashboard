@@ -24,14 +24,6 @@ export function MonthlyDataView() {
 
   const logs = useQuery(api.analytics.getMonthlyLogs, { year, month });
   const habitCompletion = useQuery(api.analytics.getMonthlyHabitCompletion, { year, month });
-  const wellbeingTrends = useQuery(api.analytics.getWellbeingTrends, {
-    startDate: getMonthStartDate(year, month),
-    endDate: getMonthEndDate(year, month),
-  });
-  const trackingPerformance = useQuery(api.analytics.getTrackingPerformance, {
-    startDate: getMonthStartDate(year, month),
-    endDate: getMonthEndDate(year, month),
-  });
   const reviewStatus = useQuery(api.analytics.getMonthlyReviewStatus, {
     year,
     month,
@@ -58,8 +50,6 @@ export function MonthlyDataView() {
   if (
     logs === undefined ||
     habitCompletion === undefined ||
-    wellbeingTrends === undefined ||
-    trackingPerformance === undefined ||
     reviewStatus === undefined
   ) {
     return (
