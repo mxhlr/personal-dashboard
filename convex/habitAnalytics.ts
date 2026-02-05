@@ -221,13 +221,11 @@ export const getComprehensiveAnalytics = query({
       dailyScores[date] = { score, xp };
     });
 
-    // Calculate monthly comparison (last 12 months)
+    // Calculate monthly comparison (current year: January - December)
     const monthlyStats: Array<{ month: string; score: number }> = [];
-    for (let i = 11; i >= 0; i--) {
-      const targetDate = new Date(currentDate);
-      targetDate.setMonth(targetDate.getMonth() - i);
-      const targetYear = targetDate.getFullYear();
-      const targetMonth = targetDate.getMonth() + 1;
+    for (let monthNum = 1; monthNum <= 12; monthNum++) {
+      const targetYear = year;
+      const targetMonth = monthNum;
 
       const monthHabits = allDailyHabits.filter((h) => {
         const [y, m] = h.date.split("-").map(Number);
@@ -255,8 +253,11 @@ export const getComprehensiveAnalytics = query({
             )
           : 0;
 
+      // Generate month label
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
       monthlyStats.push({
-        month: targetDate.toLocaleString("en-US", { month: "short" }),
+        month: monthNames[monthNum - 1],
         score: avgScore,
       });
     }
