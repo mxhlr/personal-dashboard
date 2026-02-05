@@ -34,19 +34,14 @@ export function WinConditionBanner({ isAchieved = false }: WinConditionBannerPro
 
   return (
     <div
-      className={`relative overflow-hidden p-6 backdrop-blur-[10px] border transition-all duration-500 ${
+      className={`relative overflow-hidden p-6 border transition-all duration-300 ease-out ${
         isAchieved
-          ? 'border-[#FFD700] dark:border-[#FFD700] shadow-[0_0_25px_rgba(255,215,0,0.4)]'
-          : 'dark:border-white/[0.1] border-black/[0.1]'
-      }`}
+          ? 'ring-2 ring-[#FFD700]/30 shadow-[0_0_20px_rgba(255,215,0,0.15)] dark:border-[#FFD700]/50 border-[#FFD700]/30'
+          : 'shadow-sm dark:border-border/50 border-border/30 hover:shadow-xl hover:-translate-y-1 dark:hover:border-border hover:border-border/50'
+      } dark:bg-card/50 bg-white/80`}
       style={{
-        background: isAchieved
-          ? 'linear-gradient(135deg, rgba(255, 215, 0, 0.25) 0%, rgba(255, 180, 0, 0.2) 100%)'
-          : 'linear-gradient(135deg, rgba(107, 33, 168, 0.95) 0%, rgba(139, 92, 246, 0.85) 100%)',
         borderRadius: '16px',
-        boxShadow: isAchieved
-          ? '0 8px 32px rgba(255, 215, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-          : '0 8px 32px rgba(139, 92, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+        backgroundColor: isAchieved ? 'rgba(255, 215, 0, 0.06)' : undefined,
       }}
     >
       <div className="relative space-y-4 text-center">
