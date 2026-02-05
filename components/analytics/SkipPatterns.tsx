@@ -20,7 +20,7 @@ export function SkipPatterns({ patterns }: SkipPatternsProps) {
       <div className="space-y-3">
         {patterns.map((pattern, idx) => (
           <div key={idx} className="text-sm">
-            <span className="font-bold text-foreground">"{pattern.reason}"</span>
+            <span className="font-bold text-foreground">&ldquo;{pattern.reason}&rdquo;</span>
             <span className="text-muted-foreground">: {pattern.count} times</span>
           </div>
         ))}

@@ -8,14 +8,12 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Header from "@/components/layout/Header";
 import { Dashboard } from "@/components/dashboard/Dashboard";
 import { HabitDashboardConnected } from "@/components/habits/HabitDashboardConnected";
-import { WeeklyOverview } from "@/components/dashboard/WeeklyOverview";
 import { Visionboard } from "@/components/visionboard/Visionboard";
 import { CoachChat } from "@/components/coach/CoachChat";
 import { WeeklyReviewForm } from "@/components/reviews/WeeklyReviewForm";
 import { MonthlyReviewForm } from "@/components/reviews/MonthlyReviewForm";
 import { QuarterlyReviewForm } from "@/components/reviews/QuarterlyReviewForm";
 import { AnnualReviewForm } from "@/components/reviews/AnnualReviewForm";
-import { DataView } from "@/components/data/DataView";
 import { SettingsModal } from "@/components/settings/SettingsModal";
 import { AnalyticsDashboard } from "@/components/analytics/AnalyticsDashboard";
 import {
@@ -28,7 +26,6 @@ import {
 
 type ReviewType = "daily" | "weekly" | "monthly" | "quarterly" | "annual";
 type TabType = "dashboard" | "visionboard" | "planning" | "data" | "coach";
-type DataViewType = "weekly" | "monthly" | "quarterly" | "annual";
 
 // Helper function to get current week number (ISO 8601)
 function getWeekNumber(date: Date): number {
@@ -51,7 +48,6 @@ export default function DashboardPage() {
   const hasCompletedSetup = useQuery(api.userProfile.hasCompletedSetup);
   const [activeTab, setActiveTab] = useState<TabType>("dashboard");
   const [selectedReview, setSelectedReview] = useState<ReviewType>("daily");
-  const [selectedDataView, setSelectedDataView] = useState<DataViewType>("weekly");
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   // Get current date info for reviews

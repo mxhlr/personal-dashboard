@@ -123,7 +123,6 @@ export function HabitDashboardConnected() {
     // Check category completion status BEFORE toggle
     const coreHabitsBeforeToggle = category.habits.filter((h) => !h.isExtra);
     const wasNoneCompleted = coreHabitsBeforeToggle.every((h) => !h.completed);
-    const wasAllCompleted = coreHabitsBeforeToggle.every((h) => h.completed);
 
     try {
       // Toggle habit (completeHabit now works as a toggle)
