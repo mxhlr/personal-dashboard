@@ -131,43 +131,8 @@ export default function Header({
             </Button>
           </nav>
 
-          {/* Right: Date Navigation & Settings */}
+          {/* Right: Settings */}
           <div className="flex items-center gap-2">
-            {/* Date Navigation (only show on Planning & Review tab) */}
-            {activeTab === "planning" && onDateNavigation && (
-              <div className="flex items-center gap-0 border dark:border-[rgba(0,229,255,0.2)] border-[rgba(0,180,220,0.3)] rounded-lg overflow-hidden
-                dark:bg-white/5 bg-black/5">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => onDateNavigation("prev")}
-                  aria-label="Previous day"
-                  className="h-8 w-8 rounded-none dark:hover:bg-[rgba(0,229,255,0.1)] hover:bg-[rgba(0,180,220,0.15)] dark:hover:text-[#00E5FF] hover:text-[#0077B6]"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <div className="h-5 w-[1px] dark:bg-[rgba(0,229,255,0.2)] bg-[rgba(0,180,220,0.3)]" />
-                <Button
-                  variant="ghost"
-                  onClick={() => onDateNavigation("today")}
-                  className="h-8 px-4 rounded-none text-xs font-bold font-orbitron uppercase tracking-wider
-                    dark:hover:bg-[rgba(0,229,255,0.1)] hover:bg-[rgba(0,180,220,0.15)] dark:hover:text-[#00E5FF] hover:text-[#0077B6]"
-                >
-                  TODAY
-                </Button>
-                <div className="h-5 w-[1px] dark:bg-[rgba(0,229,255,0.2)] bg-[rgba(0,180,220,0.3)]" />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => onDateNavigation("next")}
-                  aria-label="Next day"
-                  className="h-8 w-8 rounded-none dark:hover:bg-[rgba(0,229,255,0.1)] hover:bg-[rgba(0,180,220,0.15)] dark:hover:text-[#00E5FF] hover:text-[#0077B6]"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
-
             {/* Theme Toggle */}
             <div className="dark:hover:bg-white/5 hover:bg-black/5 rounded-lg transition-colors duration-200">
               <ThemeToggle />
