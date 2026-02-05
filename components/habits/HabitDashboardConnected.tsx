@@ -318,13 +318,18 @@ export function HabitDashboardConnected() {
         )}
 
         {/* Finish Day Button */}
-        <Button
-          onClick={handleFinishDay}
-          size="lg"
-          className="w-full bg-green-600 text-lg font-semibold text-white transition-colors hover:bg-green-700"
-        >
-          Finish Day
-        </Button>
+        <div className="flex justify-center">
+          <Button
+            onClick={handleFinishDay}
+            size="lg"
+            className="px-12 py-6 bg-gradient-to-r from-[#00E676] to-[#00C853] text-white font-bold font-orbitron uppercase tracking-wider text-sm
+              border border-[#00E676]/30 shadow-[0_0_20px_rgba(0,230,118,0.3)]
+              hover:shadow-[0_0_30px_rgba(0,230,118,0.5)] hover:scale-105
+              transition-all duration-300"
+          >
+            🎊 Finish Day
+          </Button>
+        </div>
       </div>
 
     </div>
