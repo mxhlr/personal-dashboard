@@ -157,6 +157,12 @@ export default defineSchema({
       nextWeekFocus: v.string(),         // Worauf fokussierst du dich nächste Woche?
     }),
 
+    // Next Week Goals (User definiert Goals für nächste Woche)
+    nextWeekGoals: v.optional(v.array(v.object({
+      goal: v.string(),
+      category: v.string(), // "Work", "Health", "Learning", "Personal"
+    }))),
+
     completedAt: v.string(),
   })
     .index("by_user", ["userId"])
@@ -180,6 +186,17 @@ export default defineSchema({
       proudOf: v.string(),               // Worauf bist du stolz?
       nextMonthFocus: v.string(),        // Was ist dein Fokus für nächsten Monat?
     }),
+
+    // Next Month OKRs (User definiert OKRs für nächsten Monat)
+    nextMonthOKRs: v.optional(v.array(v.object({
+      objective: v.string(),           // "Build stronger fitness foundation"
+      area: v.string(),                // "Wealth", "Health", "Love", "Happiness"
+      keyResults: v.array(v.object({
+        description: v.string(),       // "Run 3x per week"
+        target: v.number(),            // 12
+        unit: v.string(),              // "runs", "hours", "pages", etc.
+      })),
+    }))),
 
     completedAt: v.string(),
   })

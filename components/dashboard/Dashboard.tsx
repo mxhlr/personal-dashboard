@@ -16,6 +16,9 @@ import Image from "next/image";
 import { TodaysWinCondition } from "./TodaysWinCondition";
 import { StoicQuote } from "./StoicQuote";
 import { ReviewNotificationBar } from "./ReviewNotificationBar";
+import { WeeklyProgressTracker } from "./WeeklyProgressTracker";
+import { QuickStatsBadge } from "./QuickStatsBadge";
+import { VisionboardCarousel } from "./VisionboardCarousel";
 
 interface DashboardProps {
   onNavigate: (tab: "daily-log" | "visionboard" | "planning" | "data" | "coach") => void;
@@ -187,6 +190,25 @@ export function Dashboard({ onNavigate }: DashboardProps) {
           </p>
         </div>
 
+      {/* Review Notifications + Weekly Progress - Side by Side */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Review Notifications - Left */}
+        <Card className="p-6 dark:bg-card/50 bg-white/80
+          shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
+          dark:border-border/50 border-border/30
+          dark:hover:border-border hover:border-border/50">
+          <ReviewNotificationBar />
+        </Card>
+
+        {/* Weekly Progress - Right */}
+        <Card className="p-6 dark:bg-card/50 bg-white/80
+          shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
+          dark:border-border/50 border-border/30
+          dark:hover:border-border hover:border-border/50">
+          <WeeklyProgressTracker />
+        </Card>
+      </div>
+
       {/* Win Condition & Stoic Quote - Side by Side */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Daily Stoic Quote - Left */}
@@ -195,9 +217,6 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         {/* Today's Win Condition - Right */}
         <TodaysWinCondition />
       </div>
-
-      {/* Review Notifications */}
-      <ReviewNotificationBar />
 
         {/* North Stars - Gaming HUD Style */}
         <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
@@ -240,9 +259,9 @@ export function Dashboard({ onNavigate }: DashboardProps) {
           </div>
         </Card>
 
-        {/* Main Widgets Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-          {/* Today's Log - Gaming HUD Style */}
+        {/* Today's Log (compact) + Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-[60%_40%] gap-6">
+          {/* Today's Log - Compact Version */}
           <Card
             className={`p-6 dark:bg-card/50 bg-white/80
             shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl
@@ -394,58 +413,15 @@ export function Dashboard({ onNavigate }: DashboardProps) {
           </div>
         </Card>
 
-          {/* Weekly Progress - Gaming HUD Style */}
-          <Card
-            className="p-6 dark:border-[rgba(0,230,118,0.15)] border-[rgba(76,175,80,0.2)] dark:bg-card/50 bg-white/80
-            shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl
-            dark:hover:border-[rgba(0,230,118,0.25)] hover:border-[rgba(76,175,80,0.3)]
-            dark:hover:shadow-[0_0_30px_rgba(0,230,118,0.2)] hover:shadow-[0_8px_30px_rgba(76,175,80,0.25)]"
-            style={{
-              background: 'linear-gradient(135deg, rgba(0, 230, 118, 0.05) 0%, rgba(26, 26, 26, 0.5) 100%)'
-            }}
-          >
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 dark:text-[#00E676] text-[#4CAF50]" />
-                <h3 className="font-bold font-orbitron dark:text-[#00E676] text-[#4CAF50]">Weekly Progress</h3>
-              </div>
-            <div className="space-y-3">
-              <div>
-                <p className="text-2xl font-bold dark:text-[#E0E0E0] text-[#1A1A1A] font-orbitron">{userStats.weekScore}/7 Days</p>
-                <p className="text-sm dark:text-[#888888] text-[#666666]">Diese Woche</p>
-              </div>
-              <div>
-                <p className="text-lg font-semibold dark:text-[#00E676] text-[#4CAF50] font-orbitron"
-                  style={{ fontVariantNumeric: 'tabular-nums' }}
-                >
-                  {userStats.totalXP} XP
-                </p>
-                <p className="text-sm dark:text-[#888888] text-[#666666]">Diese Woche</p>
-              </div>
-              <div>
-                <p className="text-lg font-semibold dark:text-[#E0E0E0] text-[#1A1A1A]">
-                  <span className="inline-block" style={{ animation: userStats.currentStreak > 0 ? 'fire-flicker 0.5s infinite' : 'none' }}>
-                    🔥
-                  </span>
-                  {' '}
-                  <span className="font-orbitron" style={{ fontVariantNumeric: 'tabular-nums' }}>{userStats.currentStreak}</span>
-                  {' '}Tage Streak
-                </p>
-              </div>
-            </div>
-              <Button
-                onClick={() => onNavigate("data")}
-                variant="outline"
-                className="w-full dark:border-[#00E676]/30 border-[#4CAF50]/30 dark:text-[#00E676] text-[#4CAF50]
-                  dark:hover:bg-[rgba(0,230,118,0.1)] hover:bg-[rgba(76,175,80,0.1)]
-                  font-orbitron uppercase tracking-wider text-xs transition-all duration-200"
-              >
-                View All Data →
-              </Button>
-            </div>
-          </Card>
+          {/* Quick Stats Badge */}
+          <QuickStatsBadge />
+        </div>
 
-          {/* Visionboard Preview - Gaming HUD Style */}
+        {/* Visionboard Carousel - Full Width */}
+        <VisionboardCarousel />
+
+        {/* Old Visionboard kept below for reference - DELETE THIS */}
+        <div className="hidden">
           <Card
             className="p-6 dark:border-[rgba(139,92,246,0.15)] border-[rgba(139,92,246,0.2)] dark:bg-card/50 bg-white/80
             shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl
@@ -491,7 +467,10 @@ export function Dashboard({ onNavigate }: DashboardProps) {
               </Button>
             </div>
           </Card>
+        </div>
 
+        {/* Quick Actions Grid - Keep existing structure */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Coach Quick Access - Gaming HUD Style */}
           <Card
             className="p-6 dark:border-[rgba(255,152,0,0.15)] border-[rgba(255,152,0,0.2)] dark:bg-card/50 bg-white/80

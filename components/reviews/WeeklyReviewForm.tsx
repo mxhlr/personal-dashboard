@@ -26,6 +26,10 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
     nextWeekFocus: "",
   });
 
+  const [nextWeekGoals, setNextWeekGoals] = useState<Array<{ goal: string; category: string }>>([
+    { goal: "", category: "Work" },
+  ]);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isReadOnly, setIsReadOnly] = useState(false);
 
@@ -33,6 +37,9 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
   useEffect(() => {
     if (existingReview) {
       setFormData(existingReview.responses);
+      if (existingReview.nextWeekGoals && existingReview.nextWeekGoals.length > 0) {
+        setNextWeekGoals(existingReview.nextWeekGoals);
+      }
       setIsReadOnly(true);
     }
   }, [existingReview]);

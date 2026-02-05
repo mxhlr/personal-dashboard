@@ -40,6 +40,10 @@ export const submitWeeklyReview = mutation({
       learned: v.string(),
       nextWeekFocus: v.string(),
     }),
+    nextWeekGoals: v.optional(v.array(v.object({
+      goal: v.string(),
+      category: v.string(),
+    }))),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -59,6 +63,7 @@ export const submitWeeklyReview = mutation({
       // Update existing review
       await ctx.db.patch(existingReview._id, {
         responses: args.responses,
+        nextWeekGoals: args.nextWeekGoals,
         completedAt: new Date().toISOString(),
       });
       return existingReview._id;
@@ -69,9 +74,46 @@ export const submitWeeklyReview = mutation({
         year: args.year,
         weekNumber: args.weekNumber,
         responses: args.responses,
+        nextWeekGoals: args.nextWeekGoals,
         completedAt: new Date().toISOString(),
       });
       return reviewId;
     }
+  },
+});
+
+/**
+ * Get weekly goals for the current week
+ */
+export const getWeeklyGoals = query({
+  args: {
+    year: v.number(),
+    weekNumber: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    // Goals are set in LAST week's review for THIS week
+    // So we need to look at (year, weekNumber - 1)
+    let targetYear = args.year;
+    let targetWeek = args.weekNumber - 1;
+
+    // Handle week 1 edge case (get from last week of previous year)
+    if (targetWeek < 1) {
+      targetYear = args.year - 1;
+      targetWeek = 52; // Approximate last week of previous year
+    }
+
+    const review = await ctx.db
+      .query("weeklyReview")
+      .withIndex("by_user_year_week", (q) =>
+        q.eq("userId", identity.subject).eq("year", targetYear).eq("weekNumber", targetWeek)
+      )
+      .first();
+
+    return review?.nextWeekGoals || [];
   },
 });
