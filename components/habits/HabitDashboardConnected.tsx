@@ -13,8 +13,6 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { Id } from "@/convex/_generated/dataModel";
-import { ManageHabitsDialog } from "./ManageHabitsDialog";
-import { Settings } from "lucide-react";
 
 interface Habit {
   id: string;
@@ -51,7 +49,6 @@ export function HabitDashboardConnected() {
 
   const [currentTime, setCurrentTime] = useState("");
   const [localCategories, setLocalCategories] = useState<Category[]>([]);
-  const [manageDialogOpen, setManageDialogOpen] = useState(false);
 
   // Update time every second
   useEffect(() => {
@@ -214,9 +211,9 @@ export function HabitDashboardConnected() {
   // Show loading state
   if (!userStats || !categories || !habitTemplates) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#0a0a0a]">
+      <div className="flex min-h-screen items-center justify-center bg-white dark:bg-[#0a0a0a]">
         <div className="text-center">
-          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-cyan-400"></div>
+          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-cyan-600 dark:border-cyan-400"></div>
           <p className="text-muted-foreground">Loading your habits...</p>
         </div>
       </div>
@@ -224,7 +221,7 @@ export function HabitDashboardConnected() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] p-6">
+    <div className="min-h-screen bg-white dark:bg-[#0a0a0a] p-6">
       <div className="mx-auto max-w-4xl space-y-6">
         {/* Header */}
         <header className="space-y-2">
@@ -234,19 +231,9 @@ export function HabitDashboardConnected() {
               <p className="font-mono text-4xl font-bold text-foreground">
                 {currentTime}
               </p>
-              <p className="text-lg font-semibold text-cyan-400">Execute.</p>
+              <p className="text-lg font-semibold text-cyan-400 dark:text-cyan-400">Execute.</p>
             </div>
-            <div className="flex flex-1 justify-end">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setManageDialogOpen(true)}
-                className="gap-2"
-              >
-                <Settings className="h-4 w-4" />
-                Manage Habits
-              </Button>
-            </div>
+            <div className="flex-1" />
           </div>
           <SprintTimer endOfDayHour={18} />
         </header>
@@ -295,11 +282,6 @@ export function HabitDashboardConnected() {
         </Button>
       </div>
 
-      {/* Manage Habits Dialog */}
-      <ManageHabitsDialog
-        open={manageDialogOpen}
-        onOpenChange={setManageDialogOpen}
-      />
     </div>
   );
 }

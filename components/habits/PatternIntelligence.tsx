@@ -63,11 +63,11 @@ export function PatternIntelligence({ data }: PatternIntelligenceProps) {
 
         {data.recommendations.length > 0 && (
           <div className="space-y-2">
-            <h4 className="font-medium text-cyan-400">Recommendations:</h4>
+            <h4 className="font-medium text-cyan-700 dark:text-cyan-400">Recommendations:</h4>
             <ul className="space-y-1 text-muted-foreground">
               {data.recommendations.map((rec, i) => (
                 <li key={i} className="flex gap-2">
-                  <span className="text-cyan-500">→</span>
+                  <span className="text-cyan-600 dark:text-cyan-500">→</span>
                   <span>{rec}</span>
                 </li>
               ))}

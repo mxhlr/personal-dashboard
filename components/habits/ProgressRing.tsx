@@ -35,11 +35,11 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
             strokeLinecap="round"
-            className="text-cyan-500 transition-all duration-500"
+            className="text-cyan-600 dark:text-cyan-500 transition-all duration-500"
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <p className="text-4xl font-bold text-cyan-400">{percentage}%</p>
+          <p className="text-4xl font-bold text-cyan-600 dark:text-cyan-400">{percentage}%</p>
           <p className="text-sm text-muted-foreground">
             {current}/{total} XP
           </p>
