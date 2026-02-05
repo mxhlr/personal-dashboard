@@ -23,10 +23,6 @@ export function QuarterlyDataView() {
     year,
     quarter,
   });
-  const wellbeingTrends = useQuery(api.analytics.getWellbeingTrends, {
-    startDate: getQuarterStartDate(year, quarter),
-    endDate: getQuarterEndDate(year, quarter),
-  });
   const reviewStatus = useQuery(api.analytics.getQuarterlyReviewStatus, {
     year,
     quarter,
@@ -53,7 +49,6 @@ export function QuarterlyDataView() {
   if (
     logs === undefined ||
     milestones === undefined ||
-    wellbeingTrends === undefined ||
     reviewStatus === undefined
   ) {
     return (
@@ -216,34 +211,6 @@ export function QuarterlyDataView() {
         </div>
       )}
 
-      {/* Wellbeing Trends */}
-      {wellbeingTrends.count > 0 && (
-        <div className="bg-card border border-border rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-4">Wellbeing Durchschnitt</h3>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600">
-                {wellbeingTrends.avgEnergy}
-              </div>
-              <div className="text-sm text-muted-foreground mt-1">Energie</div>
-            </div>
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <div className="text-2xl font-bold text-green-600">
-                {wellbeingTrends.avgSatisfaction}
-              </div>
-              <div className="text-sm text-muted-foreground mt-1">
-                Zufriedenheit
-              </div>
-            </div>
-            <div className="text-center p-4 bg-red-50 rounded-lg">
-              <div className="text-2xl font-bold text-red-600">
-                {wellbeingTrends.avgStress}
-              </div>
-              <div className="text-sm text-muted-foreground mt-1">Stress</div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {logs.length === 0 && (Array.isArray(milestones) || milestones.total === 0) && (
         <div className="bg-card border border-border rounded-lg p-12 text-center">

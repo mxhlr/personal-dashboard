@@ -231,14 +231,6 @@ export function MonthlyDataView() {
 }
 
 // Helper functions
-function getMonthStartDate(year: number, month: number): string {
-  return new Date(year, month - 1, 1).toISOString().split("T")[0];
-}
-
-function getMonthEndDate(year: number, month: number): string {
-  return new Date(year, month, 0).toISOString().split("T")[0];
-}
-
 function getDaysInMonth(year: number, month: number): number {
   return new Date(year, month, 0).getDate();
 }

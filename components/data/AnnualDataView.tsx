@@ -19,10 +19,6 @@ export function AnnualDataView() {
 
   const logs = useQuery(api.analytics.getAnnualLogs, { year });
   const profile = useQuery(api.userProfile.getUserProfile);
-  const wellbeingTrends = useQuery(api.analytics.getWellbeingTrends, {
-    startDate: `${year}-01-01`,
-    endDate: `${year}-12-31`,
-  });
   const reviewStatus = useQuery(api.analytics.getAnnualReviewStatus, { year });
 
   const navigateYear = (direction: "prev" | "next") => {
@@ -32,7 +28,6 @@ export function AnnualDataView() {
   if (
     logs === undefined ||
     profile === undefined ||
-    wellbeingTrends === undefined ||
     reviewStatus === undefined
   ) {
     return (
@@ -207,32 +202,6 @@ export function AnnualDataView() {
         </div>
       )}
 
-      {/* Wellbeing Trends */}
-      {wellbeingTrends.count > 0 && (
-        <div className="bg-card border border-border rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-4">Wellbeing Durchschnitt</h3>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="text-center p-6 bg-blue-50 rounded-lg">
-              <div className="text-3xl font-bold text-blue-600 mb-2">
-                {wellbeingTrends.avgEnergy}
-              </div>
-              <div className="text-sm text-muted-foreground">Energie</div>
-            </div>
-            <div className="text-center p-6 bg-green-50 rounded-lg">
-              <div className="text-3xl font-bold text-green-600 mb-2">
-                {wellbeingTrends.avgSatisfaction}
-              </div>
-              <div className="text-sm text-muted-foreground">Zufriedenheit</div>
-            </div>
-            <div className="text-center p-6 bg-red-50 rounded-lg">
-              <div className="text-3xl font-bold text-red-600 mb-2">
-                {wellbeingTrends.avgStress}
-              </div>
-              <div className="text-sm text-muted-foreground">Stress</div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Overall Stats */}
       <div className="bg-card border border-border rounded-lg p-6">
