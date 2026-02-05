@@ -12,8 +12,8 @@ interface AllTimeStatsProps {
 
 export function AllTimeStats({ stats }: AllTimeStatsProps) {
   return (
-    <Card className="p-6 bg-gray-900 border-gray-800 rounded-xl">
-      <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-6">
+    <Card className="p-6 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 rounded-xl shadow-sm">
+      <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-6">
         📈 ALL-TIME STATS
       </h3>
 
@@ -30,7 +30,7 @@ export function AllTimeStats({ stats }: AllTimeStatsProps) {
 
         {/* Perfect */}
         <div className="text-center">
-          <div className="text-4xl font-bold text-white mb-2">
+          <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
             {stats.perfect}
           </div>
           <div className="text-xs uppercase tracking-wider text-gray-500">
