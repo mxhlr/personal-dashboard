@@ -145,19 +145,34 @@ export function MonthlyDataView() {
             const dateStr = day.toISOString().split("T")[0];
             const log = logs.find((l) => l.date === dateStr);
             const isToday = dateStr === new Date().toISOString().split("T")[0];
+            const isFuture = day > new Date();
+
+            // Calculate completion percentage if log exists
+            const completionPercentage = log ? calculateDayCompletionPercentage(log) : 0;
+
+            // Determine background color based on completion percentage
+            const getBgColor = () => {
+              if (isFuture) return ""; // No color for future days
+              if (!log) return "bg-red-100"; // No daily entry = red
+              if (completionPercentage === 0) return "bg-red-100"; // 0% = red
+              if (completionPercentage <= 25) return "bg-orange-100"; // ≤25% = orange
+              if (completionPercentage <= 50) return "bg-yellow-100"; // ≤50% = yellow
+              if (completionPercentage <= 75) return "bg-lime-100"; // ≤75% = lime
+              return "bg-green-100"; // 76-100% = green
+            };
 
             return (
               <div
                 key={dateStr}
                 className={`p-3 border rounded-lg text-center ${
                   isToday ? "border-primary bg-primary/5" : ""
-                } ${log?.completed ? "bg-green-50" : ""}`}
+                } ${getBgColor()}`}
               >
                 <div className="text-sm font-medium mb-1">{day.getDate()}</div>
                 <div>
                   {log?.completed ? (
                     <CheckCircle2 className="h-4 w-4 text-green-600 mx-auto" />
-                  ) : day <= new Date() ? (
+                  ) : day <= new Date() && !isFuture ? (
                     <Circle className="h-4 w-4 text-muted-foreground mx-auto" />
                   ) : null}
                 </div>
@@ -275,6 +290,50 @@ export function MonthlyDataView() {
 }
 
 // Helper functions
+
+/**
+ * Calculate the completion percentage of a daily log based on filled fields
+ * Returns a percentage from 0-100
+ */
+function calculateDayCompletionPercentage(log: MonthlyLog & { tracking: any; wellbeing?: any }): number {
+  const fields = [];
+
+  // Check tracking fields
+  if (log.tracking?.movement && log.tracking.movement.length > 0) fields.push(1);
+  if (log.tracking?.phoneJail === true) fields.push(1);
+  if (log.tracking?.vibes && log.tracking.vibes.length > 0) fields.push(1);
+  if (log.tracking?.breakfast && log.tracking.breakfast.length > 0) fields.push(1);
+  if (log.tracking?.lunch && log.tracking.lunch.length > 0) fields.push(1);
+  if (log.tracking?.dinner && log.tracking.dinner.length > 0) fields.push(1);
+  if (log.tracking?.workHours !== undefined && log.tracking.workHours > 0) fields.push(1);
+
+  // Check custom toggles
+  if (log.tracking?.customToggles && log.tracking.customToggles.length > 0) {
+    log.tracking.customToggles.forEach((toggle: any) => {
+      if (toggle.value === true) fields.push(1);
+    });
+  }
+
+  // Check custom texts
+  if (log.tracking?.customTexts && log.tracking.customTexts.length > 0) {
+    log.tracking.customTexts.forEach((text: any) => {
+      if (text.value && text.value.length > 0) fields.push(1);
+    });
+  }
+
+  // Check wellbeing (all 3 must be filled)
+  if (log.wellbeing?.energy && log.wellbeing?.satisfaction && log.wellbeing?.stress) {
+    fields.push(1);
+  }
+
+  // Total possible fields: assume minimum 10 fields to track
+  // This creates a reasonable baseline for percentage calculation
+  const totalFields = 10;
+  const filledFields = fields.length;
+
+  return Math.round((filledFields / totalFields) * 100);
+}
+
 function getMonthStartDate(year: number, month: number): string {
   return new Date(year, month - 1, 1).toISOString().split("T")[0];
 }
