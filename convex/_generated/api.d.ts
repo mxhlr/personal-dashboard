@@ -12,6 +12,7 @@ import type * as adminFix from "../adminFix.js";
 import type * as analytics from "../analytics.js";
 import type * as annualReview from "../annualReview.js";
 import type * as categoryTimeTracking from "../categoryTimeTracking.js";
+import type * as categoryTimer from "../categoryTimer.js";
 import type * as coachMessages from "../coachMessages.js";
 import type * as dailyHabits from "../dailyHabits.js";
 import type * as dailyLog from "../dailyLog.js";
@@ -31,7 +32,6 @@ import type * as visionboard from "../visionboard.js";
 import type * as visionboardLists from "../visionboardLists.js";
 import type * as weeklyReview from "../weeklyReview.js";
 import type * as winConditions from "../winConditions.js";
-import type * as workBlocks from "../workBlocks.js";
 
 import type {
   ApiFromModules,
@@ -44,6 +44,7 @@ declare const fullApi: ApiFromModules<{
   analytics: typeof analytics;
   annualReview: typeof annualReview;
   categoryTimeTracking: typeof categoryTimeTracking;
+  categoryTimer: typeof categoryTimer;
   coachMessages: typeof coachMessages;
   dailyHabits: typeof dailyHabits;
   dailyLog: typeof dailyLog;
@@ -63,7 +64,6 @@ declare const fullApi: ApiFromModules<{
   visionboardLists: typeof visionboardLists;
   weeklyReview: typeof weeklyReview;
   winConditions: typeof winConditions;
-  workBlocks: typeof workBlocks;
 }>;
 
 /**
