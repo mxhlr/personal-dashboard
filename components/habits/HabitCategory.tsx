@@ -83,7 +83,7 @@ export function HabitCategory({
 
   return (
     <Card
-      className="group border-border/50 bg-card/50 shadow-sm transition-colors hover:border-border"
+      className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80 shadow-sm transition-colors dark:hover:border-border hover:border-border/50"
       style={{
         backgroundColor: bgColor,
         borderColor: borderColor,
@@ -98,7 +98,7 @@ export function HabitCategory({
             onClick={() => setIsExpanded(!isExpanded)}
             className="flex items-center gap-3 text-left"
           >
-            <span className="text-lg font-bold text-[#E0E0E0] dark:text-[#E0E0E0] text-[#333333]">
+            <span className="text-lg font-bold dark:text-[#E0E0E0] text-[#333333]">
               {categoryNumber}
             </span>
             <div>
@@ -106,12 +106,12 @@ export function HabitCategory({
             </div>
           </button>
           <div className="flex items-center gap-2">
-            <span className="text-[13px] text-[#666666] dark:text-[#888888]">
+            <span className="text-[13px] dark:text-[#888888] text-[#666666]">
               {completedTotal}/{habits.length}
             </span>
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="text-[10px] text-[#999999] dark:text-[#666666]"
+              className="text-[10px] dark:text-[#666666] text-[#999999]"
             >
               {isExpanded ? "▼" : "▶"}
             </button>
@@ -119,7 +119,7 @@ export function HabitCategory({
         </div>
         <Progress
           value={progress}
-          className="mt-3 h-2 bg-[#2A2A2E]"
+          className="mt-3 h-2 dark:bg-[#2A2A2E] bg-[#E5E5E5]"
           indicatorClassName={isComplete ? "bg-[#00FF88]" : "bg-[#00E5FF]"}
         />
       </CardHeader>
@@ -128,7 +128,7 @@ export function HabitCategory({
         <CardContent className="space-y-4 pt-0">
           {/* Core Habits Section */}
           {coreHabits.length > 0 && (
-            <div className="space-y-0 divide-y divide-white/[0.06] dark:divide-white/[0.06]">
+            <div className="space-y-0 divide-y dark:divide-white/[0.06] divide-black/[0.06]">
               {coreHabits.map((habit) => (
                 <HabitItem
                   key={habit.id}
@@ -142,7 +142,7 @@ export function HabitCategory({
 
           {/* Extra Habits Collapse Section */}
           {extraHabits.length > 0 && (
-            <div className="space-y-0 border-t border-white/[0.06] dark:border-white/[0.06] pt-4">
+            <div className="space-y-0 border-t dark:border-white/[0.06] border-black/[0.06] pt-4">
               {!coreComplete ? (
                 <div className="flex w-full items-center gap-2 px-1 py-2 text-xs opacity-60">
                   <ChevronRight className="h-3 w-3 text-muted-foreground/40" />
@@ -150,25 +150,25 @@ export function HabitCategory({
                     Complete core to unlock
                   </span>
                   <div className="flex-1" />
-                  <span className="text-[13px] text-[#AAAAAA] dark:text-[#555555]">
+                  <span className="text-[13px] dark:text-[#555555] text-[#999999]">
                     {completedExtra}/{extraHabits.length}
                   </span>
                 </div>
               ) : (
-                <div className="space-y-0 rounded-lg border border-[#00E5FF]/30 dark:border-[#00E5FF]/30 bg-[rgba(0,180,220,0.03)] dark:bg-[rgba(0,229,255,0.03)] p-3">
+                <div className="space-y-0 rounded-lg border dark:border-[#00E5FF]/30 border-[#00E5FF]/20 dark:bg-[rgba(0,229,255,0.03)] bg-[rgba(0,180,220,0.04)] p-3">
                   <div className="flex w-full items-center gap-2 px-1 py-2 text-xs">
                     <ChevronDown className="h-3 w-3 text-cyan-500" />
                     <span className="text-cyan-600 dark:text-cyan-400 font-medium">
                       Extras unlocked
                     </span>
                     <div className="flex-1" />
-                    <span className="text-[13px] text-[#AAAAAA] dark:text-[#555555]">
+                    <span className="text-[13px] dark:text-[#555555] text-[#999999]">
                       {completedExtra}/{extraHabits.length}
                     </span>
                   </div>
 
                   {/* Extra Habits List - always shown when unlocked */}
-                  <div className="space-y-0 divide-y divide-white/[0.06] dark:divide-white/[0.06]">
+                  <div className="space-y-0 divide-y dark:divide-white/[0.06] divide-black/[0.06]">
                     {extraHabits.map((habit) => (
                       <HabitItem
                         key={habit.id}

@@ -42,6 +42,8 @@
 
   /* Daily Log custom properties */
   --page-background: #f8f9fa;
+  --daily-log-bg-start: #e8eef5;
+  --daily-log-bg-end: #f5f7fa;
 }
 
 .dark {
@@ -82,6 +84,8 @@
 
   /* Daily Log custom properties */
   --page-background: radial-gradient(circle at center, #12121F 0%, #0A0A0F 100%);
+  --daily-log-bg-start: #12121F;
+  --daily-log-bg-end: #0A0A0F;
 }
 
 @theme inline {

@@ -14,15 +14,15 @@ export function PatternIntelligence({ data }: PatternIntelligenceProps) {
   const topSkipReason = data.commonSkipReasons[0];
 
   return (
-    <div className="rounded-xl border border-[rgba(0,180,220,0.15)] dark:border-[rgba(0,229,255,0.15)] bg-[rgba(0,180,220,0.03)] dark:bg-[rgba(0,229,255,0.03)] p-5 space-y-4">
-      <h3 className="text-base font-bold text-[#00E5FF]">
+    <div className="rounded-xl border dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-[rgba(0,229,255,0.03)] bg-[rgba(0,180,220,0.04)] p-5 space-y-4">
+      <h3 className="text-base font-bold dark:text-[#00E5FF] text-[#0077B6]">
         🧠 Pattern Intelligence
       </h3>
 
       <div className="space-y-4">
         {data.lowCompletionHabits.map((habit) => (
           <p key={habit.name} className="text-sm leading-relaxed">
-            <span className="font-bold text-[#E0E0E0] dark:text-[#E0E0E0] text-[#1A1A1A]">
+            <span className="font-bold dark:text-[#E0E0E0] text-[#1A1A1A]">
               {habit.name}
             </span>
             {" "}only completed{" "}
@@ -30,7 +30,7 @@ export function PatternIntelligence({ data }: PatternIntelligenceProps) {
               {habit.rate}%
             </span>
             {" "}
-            <span className="text-[#666666] dark:text-[#999999]">
+            <span className="dark:text-[#999999] text-[#666666]">
               of days. Consider restructuring.
             </span>
           </p>
@@ -38,14 +38,14 @@ export function PatternIntelligence({ data }: PatternIntelligenceProps) {
 
         {topSkipReason && (
           <p className="text-sm leading-relaxed">
-            <span className="text-[#666666] dark:text-[#999999]">
+            <span className="dark:text-[#999999] text-[#666666]">
               Top skip reason:{" "}
             </span>
             <span className="font-bold text-[#FF4444]">
               &quot;{topSkipReason.reason}&quot;
             </span>
             {" "}
-            <span className="text-[#666666] dark:text-[#999999]">
+            <span className="dark:text-[#999999] text-[#666666]">
               ({topSkipReason.count} times). Address this blocker.
             </span>
           </p>

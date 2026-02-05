@@ -29,7 +29,7 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
             cx="100"
             cy="100"
             r="90"
-            stroke="rgba(42, 42, 46, 0.4)"
+            className="dark:stroke-[rgba(42,42,46,0.4)] stroke-[rgba(200,200,200,0.5)]"
             strokeWidth="8"
             fill="none"
           />

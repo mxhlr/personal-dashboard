@@ -172,7 +172,7 @@ export function HabitItem({
             )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="text-[12px] text-[#999999] dark:text-[#555555] bg-transparent border-0 px-0 py-0 h-auto">
+                <button className="text-[12px] dark:text-[#555555] text-[#999999] bg-transparent border-0 px-0 py-0 h-auto">
                   Skip
                 </button>
               </DropdownMenuTrigger>

@@ -120,7 +120,7 @@ export function MilestonePopup({ progress }: MilestonePopupProps) {
           </h2>
 
           {/* Description */}
-          <p className="text-base text-[#666666] dark:text-[#999999]">
+          <p className="text-base dark:text-[#999999] text-[#666666]">
             {content.description}
           </p>
 

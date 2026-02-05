@@ -246,13 +246,13 @@ export function HabitDashboardConnected() {
 
   return (
     <div
-      className="min-h-screen p-6"
+      className="min-h-screen"
       style={{
-        background: 'radial-gradient(ellipse at center, #12121F 0%, #0A0A0F 100%)'
+        background: 'radial-gradient(ellipse at center, var(--daily-log-bg-start) 0%, var(--daily-log-bg-end) 100%)'
       }}
     >
       <MilestonePopup progress={progress} />
-      <div className="mx-auto max-w-4xl space-y-6">
+      <div className="mx-auto max-w-4xl space-y-6 px-6 py-6">
         {/* Header */}
         <header className="space-y-2">
           <div className="flex items-center justify-between">
