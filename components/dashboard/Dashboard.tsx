@@ -13,6 +13,7 @@ import {
   CheckCircle2
 } from "lucide-react";
 import Image from "next/image";
+import { TodaysWinCondition } from "./TodaysWinCondition";
 
 interface DashboardProps {
   onNavigate: (tab: "visionboard" | "planning" | "data" | "coach") => void;
@@ -55,6 +56,9 @@ export function Dashboard({ onNavigate }: DashboardProps) {
           {format(new Date(), "EEEE, MMMM d, yyyy")}
         </p>
       </div>
+
+      {/* Today's Win Condition */}
+      <TodaysWinCondition />
 
       {/* North Stars - Compact Single Row */}
       <Card className="p-6 bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
