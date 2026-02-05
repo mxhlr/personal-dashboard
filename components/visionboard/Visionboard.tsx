@@ -474,7 +474,7 @@ export function Visionboard() {
 
         {/* Trello-style horizontal scrolling container - centered */}
         <div className="flex-1 overflow-x-auto overflow-y-hidden">
-          <div className="max-w-[1400px] mx-auto px-4">
+          <div className="flex justify-center px-4 min-w-full">
             <div className="inline-flex gap-4 py-4 h-full items-start">
               {allLists.map((list) => {
               const listKey = list?._id || "default";
