@@ -113,7 +113,7 @@ export function HabitDashboardConnected() {
     0
   );
 
-  const progress = maxXP > 0 ? (totalXP / maxXP) * 100 : 0;
+  const progress = maxXP > 0 ? Math.round((totalXP / maxXP) * 100) : 0;
 
   const handleHabitToggle = async (categoryName: string, habitId: string) => {
     const category = localCategories.find((c) => c.name === categoryName);
@@ -270,6 +270,9 @@ export function HabitDashboardConnected() {
         {/* Win Condition */}
         <WinConditionBanner isAchieved={progress === 100} />
 
+        {/* Progress Ring */}
+        <ProgressRing current={totalXP} total={maxXP} />
+
         {/* Stats Bar */}
         <StatsBar
           streak={userStats.currentStreak}
@@ -277,9 +280,6 @@ export function HabitDashboardConnected() {
           weekCompleted={userStats.weekScore}
           totalXP={userStats.totalXP}
         />
-
-        {/* Progress Ring */}
-        <ProgressRing current={totalXP} total={maxXP} />
 
         {/* Level Progress Bar */}
         <LevelProgressBar
