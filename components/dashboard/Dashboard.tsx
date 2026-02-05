@@ -28,9 +28,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     weekNumber: getWeekNumber(new Date()),
     year: new Date().getFullYear(),
   });
-  const visionboardImages = useQuery(api.visionboard.getImagesForList, {
-    listId: undefined, // Get images without listId (default list)
-  });
+  const visionboardImages = useQuery(api.visionboard.getAllImages);
 
   if (!profile) {
     return (
@@ -42,6 +40,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
 
   const todayComplete = todayLog?.completed || false;
   const visionboardPreview = visionboardImages?.slice(0, 4) || [];
+  const hasVisionboardImages = visionboardImages && visionboardImages.length > 0;
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
@@ -156,12 +155,12 @@ export function Dashboard({ onNavigate }: DashboardProps) {
               <ImageIcon className="h-5 w-5 text-primary" />
               <h3 className="font-semibold">Visionboard</h3>
             </div>
-            {visionboardPreview.length > 0 ? (
-              <div className="grid grid-cols-2 gap-2">
+            {hasVisionboardImages ? (
+              <div className="flex gap-2 overflow-hidden">
                 {visionboardPreview.map((image) => (
                   <div
                     key={image._id}
-                    className="aspect-square rounded-md overflow-hidden bg-muted relative"
+                    className="w-20 h-20 rounded-lg overflow-hidden bg-muted relative flex-shrink-0"
                   >
                     <Image
                       src={image.url}
@@ -180,7 +179,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
               variant="outline"
               className="w-full"
             >
-              {visionboardPreview.length > 0 ? "View All" : "Add Images"}
+              {hasVisionboardImages ? "Zum Visionboard" : "Add Images"}
             </Button>
           </div>
         </Card>

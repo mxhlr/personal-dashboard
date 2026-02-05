@@ -206,6 +206,49 @@ export const moveImageToList = mutation({
   },
 });
 
+// Get all images from all lists (for dashboard preview)
+export const getAllImages = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    // Get all images for this user, regardless of list
+    const images = await ctx.db
+      .query("visionboard")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .collect();
+
+    // Sort by createdAt (newest first) to show most recent images
+    const sortedImages = images.sort((a, b) => {
+      const dateA = new Date(a.createdAt || 0).getTime();
+      const dateB = new Date(b.createdAt || 0).getTime();
+      return dateB - dateA;
+    });
+
+    // Get URLs for all images
+    const imagesWithUrls = await Promise.all(
+      sortedImages.map(async (image) => {
+        const url = await ctx.storage.getUrl(image.storageId);
+        return {
+          _id: image._id,
+          url: url || "",
+          subtitle: image.subtitle,
+          width: image.width ?? 800,
+          height: image.height ?? 600,
+          position: image.position ?? 0,
+          listId: image.listId,
+          createdAt: image.createdAt,
+        };
+      })
+    );
+
+    return imagesWithUrls;
+  },
+});
+
 // Delete image from visionboard
 export const deleteImage = mutation({
   args: {
