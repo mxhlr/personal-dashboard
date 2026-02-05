@@ -22,8 +22,15 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
   const dotX = 100 + 90 * Math.cos(angleRad);
   const dotY = 100 + 90 * Math.sin(angleRad);
 
-  const ringColor = isComplete ? '#00E676' : '#00E5FF';
-  const glowColor = isComplete ? 'rgba(0, 230, 118, 0.5)' : 'rgba(0, 229, 255, 0.4)';
+  // Progressive color thresholds for better visual feedback
+  const getRingColor = () => {
+    if (percentage === 100) return { color: '#FFD700', glow: 'rgba(255, 215, 0, 0.6)' }; // Gold
+    if (percentage >= 80) return { color: '#00E676', glow: 'rgba(0, 230, 118, 0.5)' }; // Green
+    if (percentage >= 50) return { color: '#00E5FF', glow: 'rgba(0, 229, 255, 0.4)' }; // Cyan
+    return { color: '#888888', glow: 'rgba(136, 136, 136, 0.3)' }; // Gray
+  };
+
+  const { color: ringColor, glow: glowColor } = getRingColor();
 
   // Detect when hitting 100%
   useEffect(() => {
@@ -36,17 +43,18 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
 
   // Progress stage labels
   const getProgressStage = () => {
-    if (percentage === 100) return { label: 'DOMINATION', color: '#00E676' };
+    if (percentage === 100) return { label: 'PERFECT DAY 🌟', color: '#FFD700' };
     if (percentage >= 75) return { label: 'ON FIRE', color: '#FF9800' };
     if (percentage >= 50) return { label: 'MOMENTUM', color: '#00E5FF' };
     if (percentage >= 25) return { label: 'WARMING UP', color: '#00E5FF' };
-    return { label: 'START', color: '#888888' };
+    if (percentage > 0) return { label: 'IN PROGRESS', color: '#00E5FF' };
+    return { label: 'NOT STARTED', color: '#888888' };
   };
 
   const stage = getProgressStage();
 
   return (
-    <div className="flex flex-col items-center justify-center p-8 space-y-4">
+    <div className="flex flex-col items-center justify-center p-8 space-y-6">
       <div className="relative h-52 w-52">
         {/* Celebration particles */}
         {showCelebration && (

@@ -9,15 +9,16 @@ interface StatsBarProps {
 
 export function StatsBar({ streak, level, weekCompleted, totalXP }: StatsBarProps) {
   return (
-    <div className="grid grid-cols-4 gap-3">
+    <div className="grid grid-cols-4 gap-4">
       <StatCard
         label="STREAK"
         value={streak}
         icon="🔥"
         accentColor="#FF9800"
-        glowColor="rgba(255, 152, 0, 0.3)"
+        glowColor={streak >= 7 ? "rgba(255, 152, 0, 0.6)" : "rgba(255, 152, 0, 0.3)"}
         isHighlight={streak >= 7}
         showFlicker={streak > 0}
+        streakLevel={streak >= 7 ? "fire" : "normal"}
       />
       <StatCard
         label="LEVEL"
@@ -55,6 +56,7 @@ function StatCard({
   glowColor,
   isHighlight,
   showFlicker,
+  streakLevel,
 }: {
   label: string;
   value: number | string;
@@ -63,6 +65,7 @@ function StatCard({
   glowColor: string;
   isHighlight?: boolean;
   showFlicker?: boolean;
+  streakLevel?: "normal" | "fire";
 }) {
   return (
     <div
@@ -84,7 +87,8 @@ function StatCard({
       {/* Content */}
       <div className="relative">
         <span
-          className={`text-lg mb-1 inline-block ${showFlicker ? 'animate-[fire-flicker_0.5s_ease-in-out_infinite]' : ''}`}
+          className={`text-lg mb-1 inline-block ${showFlicker ? 'animate-[fire-flicker_0.5s_ease-in-out_infinite]' : ''} ${streakLevel === 'fire' ? 'scale-110' : ''}`}
+          style={streakLevel === 'fire' ? { filter: 'drop-shadow(0 0 8px rgba(255, 152, 0, 0.8))' } : undefined}
         >
           {icon}
         </span>

@@ -5,7 +5,11 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Input } from "@/components/ui/input";
 
-export function WinConditionBanner() {
+interface WinConditionBannerProps {
+  isAchieved?: boolean;
+}
+
+export function WinConditionBanner({ isAchieved = false }: WinConditionBannerProps = {}) {
   const today = new Date().toISOString().split("T")[0];
   const winConditionData = useQuery(api.winConditions.getWinCondition, { date: today });
   const saveWinCondition = useMutation(api.winConditions.saveWinCondition);
@@ -30,21 +34,29 @@ export function WinConditionBanner() {
 
   return (
     <div
-      className="relative overflow-hidden p-6 backdrop-blur-[10px] border dark:border-white/[0.1] border-black/[0.1]"
+      className={`relative overflow-hidden p-6 backdrop-blur-[10px] border transition-all duration-500 ${
+        isAchieved
+          ? 'border-[#FFD700] dark:border-[#FFD700] shadow-[0_0_25px_rgba(255,215,0,0.4)]'
+          : 'dark:border-white/[0.1] border-black/[0.1]'
+      }`}
       style={{
-        background: 'rgba(255, 255, 255, 0.8)',
-        borderRadius: '12px',
-        backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), linear-gradient(135deg, rgba(107, 33, 168, 0.4) 0%, transparent 100%)',
+        background: isAchieved
+          ? 'rgba(255, 215, 0, 0.15)'
+          : 'rgba(255, 255, 255, 0.8)',
+        borderRadius: '16px',
+        backgroundImage: isAchieved
+          ? 'linear-gradient(rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.15)), linear-gradient(135deg, rgba(255, 215, 0, 0.3) 0%, transparent 100%)'
+          : 'linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), linear-gradient(135deg, rgba(107, 33, 168, 0.4) 0%, transparent 100%)',
         backgroundOrigin: 'border-box',
         backgroundClip: 'padding-box, border-box',
       }}
     >
-      <div className="relative space-y-3 text-center">
+      <div className="relative space-y-4 text-center">
         <h3
-          className="text-[13px] font-semibold text-[#1A1A1A] uppercase"
+          className="text-[13px] font-semibold text-[#1A1A1A] uppercase flex items-center justify-center gap-2"
           style={{ letterSpacing: '1px' }}
         >
-          ⚡ TODAY&apos;S WIN CONDITION
+          {isAchieved ? '🏆' : '⚡'} TODAY&apos;S WIN CONDITION {isAchieved && <span className="text-[#FFD700]">ACHIEVED</span>}
         </h3>
         <Input
           placeholder="If I do nothing else, I will..."
@@ -59,11 +71,13 @@ export function WinConditionBanner() {
       {/* Dark mode override */}
       <style jsx>{`
         :global(.dark) div {
-          background: rgba(15, 15, 30, 0.8) !important;
-          background-image: linear-gradient(rgba(15, 15, 30, 0.8), rgba(15, 15, 30, 0.8)), linear-gradient(135deg, rgba(107, 33, 168, 0.4) 0%, transparent 100%) !important;
+          background: ${isAchieved ? 'rgba(255, 215, 0, 0.15)' : 'rgba(15, 15, 30, 0.8)'} !important;
+          background-image: ${isAchieved
+            ? 'linear-gradient(rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.15)), linear-gradient(135deg, rgba(255, 215, 0, 0.3) 0%, transparent 100%)'
+            : 'linear-gradient(rgba(15, 15, 30, 0.8), rgba(15, 15, 30, 0.8)), linear-gradient(135deg, rgba(107, 33, 168, 0.4) 0%, transparent 100%)'} !important;
         }
         :global(.dark) div h3 {
-          color: white !important;
+          color: ${isAchieved ? '#FFD700' : 'white'} !important;
         }
         :global(.dark) div input {
           color: white !important;

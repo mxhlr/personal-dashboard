@@ -113,7 +113,7 @@ export function HabitCategory({
               {isComplete ? '✓' : categoryNumber}
             </div>
             <div>
-              <h3 className={`text-base font-semibold transition-colors duration-200
+              <h3 className={`text-xl font-semibold transition-colors duration-200
                 ${isComplete ? 'text-[#00E676]' : 'group-hover/header:text-[#00E5FF]'}`}>
                 {name}
               </h3>

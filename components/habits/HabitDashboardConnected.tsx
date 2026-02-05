@@ -10,6 +10,7 @@ import { HabitCategory } from "./HabitCategory";
 import { PatternIntelligence } from "./PatternIntelligence";
 import { MilestonePopup } from "./MilestonePopup";
 import { SprintTimer } from "./SprintTimer";
+import { LevelProgressBar } from "./LevelProgressBar";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Id } from "@/convex/_generated/dataModel";
@@ -245,9 +246,9 @@ export function HabitDashboardConnected() {
   }
 
   return (
-    <div className="flex-1">
+    <div className="flex-1" style={{ background: 'var(--page-background)' }}>
       <MilestonePopup progress={progress} />
-      <div className="mx-auto max-w-4xl space-y-6 px-6 py-6">
+      <div className="mx-auto max-w-4xl space-y-8 px-8 py-8">
         {/* Header */}
         <header className="space-y-2">
           <div className="flex items-center justify-between">
@@ -266,8 +267,8 @@ export function HabitDashboardConnected() {
           <SprintTimer endOfDayHour={18} />
         </header>
 
-        {/* Win Condition */}
-        <WinConditionBanner />
+        {/* Progress Ring */}
+        <ProgressRing current={totalXP} total={maxXP} />
 
         {/* Stats Bar */}
         <StatsBar
@@ -277,11 +278,17 @@ export function HabitDashboardConnected() {
           totalXP={userStats.totalXP}
         />
 
-        {/* Progress Ring */}
-        <ProgressRing current={totalXP} total={maxXP} />
+        {/* Level Progress Bar */}
+        <LevelProgressBar
+          level={userStats.level}
+          currentXP={userStats.totalXP}
+        />
+
+        {/* Win Condition */}
+        <WinConditionBanner isAchieved={progress === 100} />
 
         {/* Habit Categories */}
-        <div className="space-y-4">
+        <div className="space-y-6">
           {localCategories.map((category, index) => (
             <HabitCategory
               key={category.id}
