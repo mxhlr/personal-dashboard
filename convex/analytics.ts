@@ -86,6 +86,14 @@ export const getMonthlyHabitCompletion = query({
     const startDateStr = startDate.toISOString().split("T")[0];
     const endDateStr = endDate.toISOString().split("T")[0];
 
+    // Get all habit templates to know total possible XP per day
+    const templates = await ctx.db
+      .query("habitTemplates")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .collect();
+
+    const totalPossibleXP = templates.reduce((sum, t) => sum + t.xpValue, 0);
+
     // Get all dailyHabits for the month
     const allHabits = await ctx.db
       .query("dailyHabits")
@@ -96,45 +104,31 @@ export const getMonthlyHabitCompletion = query({
       (h) => h.date >= startDateStr && h.date <= endDateStr
     );
 
-    // Get all templates to calculate total possible habits per day
-    const templates = await ctx.db
-      .query("habitTemplates")
-      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
-      .collect();
-
-    const totalPossibleHabitsPerDay = templates.length;
-
-    // Group by date and calculate completion percentage
-    const dateMap = new Map<string, { completed: number; total: number; completionPercentage: number }>();
+    // Group by date and calculate XP-based completion percentage
+    const dateMap = new Map<string, { earnedXP: number; totalXP: number }>();
 
     habitsInMonth.forEach((habit) => {
       const existing = dateMap.get(habit.date);
+      const xp = habit.completed ? habit.xpEarned : 0;
+
       if (existing) {
-        existing.total++;
-        if (habit.completed) existing.completed++;
+        existing.earnedXP += xp;
       } else {
         dateMap.set(habit.date, {
-          completed: habit.completed ? 1 : 0,
-          total: 1,
-          completionPercentage: 0,
+          earnedXP: xp,
+          totalXP: totalPossibleXP,
         });
       }
     });
 
-    // Calculate completion percentage for each date
-    dateMap.forEach((data, date) => {
-      data.completionPercentage = totalPossibleHabitsPerDay > 0
-        ? Math.round((data.completed / totalPossibleHabitsPerDay) * 100)
-        : 0;
-    });
-
-    // Convert to array format
+    // Convert to array format with percentage
     return Array.from(dateMap.entries()).map(([date, data]) => ({
       date,
-      completed: data.completed,
-      total: data.total,
-      totalPossible: totalPossibleHabitsPerDay,
-      completionPercentage: data.completionPercentage,
+      earnedXP: data.earnedXP,
+      totalXP: data.totalXP,
+      completionPercentage: data.totalXP > 0
+        ? Math.round((data.earnedXP / data.totalXP) * 100)
+        : 0,
     }));
   },
 });

@@ -476,18 +476,28 @@ export function QuarterlyReviewForm({
           </div>
 
           {/* Part 3: Next Quarter Milestones */}
-          <div>
-            <h3 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0077B6] mb-4">
+          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+            transition-all duration-300 ease-out
+            hover:shadow-xl hover:-translate-y-1 shadow-sm
+            dark:hover:border-border hover:border-border/50
+            rounded-xl border p-6">
+            <h3 className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-4"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            >
               Teil 3: Milestones für nächstes Quartal
             </h3>
-            <p className="text-sm dark:text-[#888888] text-[#666666] mb-4">
+            <p className="text-[13px] dark:text-[#888888] text-[#666666] mb-4"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            >
               Definiere mindestens einen Milestone pro Lebensbereich.
             </p>
 
-            <div className="space-y-6">
+            <div className="space-y-5">
               {Object.entries(AREA_LABELS).map(([area, label]) => (
                 <div key={area}>
-                  <label className="block text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2"
+                    style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                  >
                     {label}
                   </label>
                   <div className="space-y-2">
@@ -505,18 +515,20 @@ export function QuarterlyReviewForm({
                           }
                           disabled={isReadOnly}
                           placeholder="Milestone..."
-                          className="flex-1 px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
+                          className="flex-1 px-3 py-2 dark:border-border/50 border-border/30
                             border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
                             disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
-                            focus:outline-none focus:ring-2 focus:ring-[rgba(0,229,255,0.3)]"
+                            focus:outline-none focus:ring-0"
+                          style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px' }}
                         />
                         {!isReadOnly && nextQuarterMilestones[area].length > 1 && (
                           <button
                             type="button"
                             onClick={() => removeNextMilestone(area, index)}
-                            className="px-3 py-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
-                              border rounded-lg dark:hover:bg-[rgba(0,229,255,0.1)] hover:bg-[rgba(0,180,220,0.1)]
+                            className="px-3 py-2 dark:border-border/50 border-border/30
+                              border rounded-lg dark:hover:bg-white/[0.06] hover:bg-black/[0.04]
                               dark:text-[#E0E0E0] text-[#1A1A1A] transition-colors"
+                            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                           >
                             ✕
                           </button>
@@ -527,7 +539,8 @@ export function QuarterlyReviewForm({
                       <button
                         type="button"
                         onClick={() => addNextMilestone(area)}
-                        className="text-sm dark:text-[#00E5FF] text-[#0077B6] hover:underline font-medium"
+                        className="text-[11px] dark:text-[#888888] text-[#666666] hover:underline font-medium"
+                        style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                       >
                         + Weiterer Milestone
                       </button>
@@ -539,15 +552,18 @@ export function QuarterlyReviewForm({
           </div>
 
           {/* Buttons */}
-          <div className="flex gap-3 justify-center">
+          <div className="flex gap-3 justify-center pt-4">
             {isReadOnly ? (
               <button
                 type="button"
                 onClick={handleEdit}
-                className="px-8 py-3 dark:border-[#00E5FF]/30 border-[#0077B6]/30 border-2
-                  dark:text-[#00E5FF] text-[#0077B6] dark:bg-transparent bg-transparent
-                  dark:hover:bg-[rgba(0,229,255,0.1)] hover:bg-[rgba(0,180,220,0.1)]
-                  font-orbitron uppercase tracking-wider text-xs font-bold transition-all duration-200 rounded-lg"
+                className="px-12 py-3 dark:bg-white/[0.06] bg-black/[0.04]
+                  dark:border dark:border-white/[0.1] border border-black/[0.08]
+                  dark:text-[#E0E0E0] text-[#1A1A1A]
+                  dark:hover:bg-white/[0.1] hover:bg-black/[0.06]
+                  uppercase tracking-wider text-[11px] font-bold transition-all duration-200 rounded-lg
+                  hover:scale-[1.02]"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
               >
                 Bearbeiten
               </button>
@@ -555,21 +571,18 @@ export function QuarterlyReviewForm({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-8 py-3 dark:bg-gradient-to-r dark:from-[#00E5FF] dark:to-[#00B8D4]
-                  bg-gradient-to-r from-[#0077B6] to-[#005F8F]
-                  text-white font-bold font-orbitron uppercase tracking-wider text-xs
-                  dark:border-[#00E5FF]/30 border-[#0077B6]/30 border-2
-                  dark:shadow-[0_0_15px_rgba(0,229,255,0.3)] shadow-[0_4px_12px_rgba(0,119,182,0.3)]
-                  dark:hover:shadow-[0_0_25px_rgba(0,229,255,0.5)] hover:shadow-[0_6px_20px_rgba(0,119,182,0.5)]
-                  hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
+                className="px-12 py-3 bg-[#00E676] dark:text-black text-black font-bold uppercase tracking-wider text-[11px]
+                  border border-[#00E676]/50 shadow-sm
+                  hover:bg-[#00C853] hover:shadow-md hover:scale-[1.02]
+                  disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
                   transition-all duration-300 rounded-lg"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
               >
                 {isSubmitting ? "Speichert..." : "Speichern"}
               </button>
             )}
           </div>
         </form>
-        </div>
       </div>
     </div>
   );
