@@ -16,7 +16,7 @@ import Image from "next/image";
 import { TodaysWinCondition } from "./TodaysWinCondition";
 
 interface DashboardProps {
-  onNavigate: (tab: "visionboard" | "planning" | "data" | "coach") => void;
+  onNavigate: (tab: "daily-log" | "visionboard" | "planning" | "data" | "coach") => void;
 }
 
 export function Dashboard({ onNavigate }: DashboardProps) {
@@ -110,7 +110,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                   </div>
                 </div>
                 <Button
-                  onClick={() => onNavigate("planning")}
+                  onClick={() => onNavigate("daily-log")}
                   variant="outline"
                   className="w-full"
                 >
@@ -154,7 +154,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                   </div>
                 </div>
                 <Button
-                  onClick={() => onNavigate("planning")}
+                  onClick={() => onNavigate("daily-log")}
                   className="w-full"
                 >
                   Zum Daily Log →

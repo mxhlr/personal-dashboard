@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Header from "@/components/layout/Header";
 import { Dashboard } from "@/components/dashboard/Dashboard";
-import { HabitDashboardConnected } from "@/components/habits/HabitDashboardConnected";
 import { Visionboard } from "@/components/visionboard/Visionboard";
 import { CoachChat } from "@/components/coach/CoachChat";
 import { WeeklyReviewForm } from "@/components/reviews/WeeklyReviewForm";
@@ -17,8 +16,8 @@ import { AnnualReviewForm } from "@/components/reviews/AnnualReviewForm";
 import { SettingsModal } from "@/components/settings/SettingsModal";
 import { AnalyticsDashboard } from "@/components/analytics/AnalyticsDashboard";
 
-type ReviewType = "daily" | "weekly" | "monthly" | "quarterly" | "annual";
-type TabType = "dashboard" | "visionboard" | "planning" | "data" | "coach";
+type ReviewType = "weekly" | "monthly" | "quarterly" | "annual";
+type TabType = "dashboard" | "daily-log" | "visionboard" | "planning" | "data" | "coach";
 
 // Helper function to get current week number (ISO 8601)
 function getWeekNumber(date: Date): number {
@@ -40,7 +39,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const hasCompletedSetup = useQuery(api.userProfile.hasCompletedSetup);
   const [activeTab, setActiveTab] = useState<TabType>("dashboard");
-  const [selectedReview, setSelectedReview] = useState<ReviewType>("daily");
+  const [selectedReview, setSelectedReview] = useState<ReviewType>("weekly");
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   // Get current date info for reviews
@@ -78,12 +77,20 @@ export default function DashboardPage() {
     console.log("Date navigation:", direction);
   };
 
+  const handleTabChange = (tab: TabType) => {
+    if (tab === "daily-log") {
+      router.push("/daily-log");
+    } else {
+      setActiveTab(tab);
+    }
+  };
+
   return (
     <ErrorBoundary>
       <div className="min-h-screen bg-background">
         <Header
           activeTab={activeTab}
-          onTabChange={setActiveTab}
+          onTabChange={handleTabChange}
           onSettingsClick={() => setSettingsOpen(true)}
           onDateNavigation={handleDateNavigation}
           selectedReview={selectedReview}
@@ -93,7 +100,7 @@ export default function DashboardPage() {
         <main>
           {/* Tab 0: Dashboard */}
           {activeTab === "dashboard" && (
-            <Dashboard onNavigate={setActiveTab} />
+            <Dashboard onNavigate={handleTabChange} />
           )}
 
           {/* Tab 1: Visionboard */}
@@ -101,19 +108,10 @@ export default function DashboardPage() {
             <Visionboard />
           )}
 
-          {/* Tab 2: Planning & Review */}
+          {/* Tab 2: Review & Planning */}
           {activeTab === "planning" && (
-            <div
-              className="min-h-[calc(100vh-64px)]"
-              style={{
-                background: selectedReview === "daily"
-                  ? 'radial-gradient(ellipse at center, var(--daily-log-bg-start) 0%, var(--daily-log-bg-end) 100%)'
-                  : undefined
-              }}
-            >
-              {/* Review Forms - Clean without dropdown */}
-              {selectedReview === "daily" && <HabitDashboardConnected />}
-
+            <div className="min-h-[calc(100vh-64px)]">
+              {/* Review Forms */}
               {selectedReview === "weekly" && (
                 <div className="container mx-auto px-4 py-8">
                   <WeeklyReviewForm year={currentYear} weekNumber={currentWeek} />

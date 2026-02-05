@@ -10,11 +10,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-type ReviewType = "daily" | "weekly" | "monthly" | "quarterly" | "annual";
+type ReviewType = "weekly" | "monthly" | "quarterly" | "annual";
 
 interface HeaderProps {
-  activeTab: "dashboard" | "visionboard" | "planning" | "data" | "coach";
-  onTabChange: (tab: "dashboard" | "visionboard" | "planning" | "data" | "coach") => void;
+  activeTab: "dashboard" | "daily-log" | "visionboard" | "planning" | "data" | "coach";
+  onTabChange: (tab: "dashboard" | "daily-log" | "visionboard" | "planning" | "data" | "coach") => void;
   onSettingsClick: () => void;
   onDateNavigation?: (direction: "prev" | "next" | "today") => void;
   selectedReview?: ReviewType;
@@ -22,7 +22,6 @@ interface HeaderProps {
 }
 
 const reviewLabels: Record<ReviewType, string> = {
-  daily: "Daily Log",
   weekly: "Weekly Review",
   monthly: "Monthly Review",
   quarterly: "Quarterly Review",
@@ -34,14 +33,14 @@ export default function Header({
   onTabChange,
   onSettingsClick,
   onDateNavigation,
-  selectedReview = "daily",
+  selectedReview = "weekly",
   onReviewChange,
 }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card backdrop-blur-sm shadow-sm transition-shadow duration-200">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between gap-8">
-          {/* Left: 5 Main Tabs */}
+          {/* Left: 6 Main Tabs */}
           <nav className="flex items-center gap-1">
             <Button
               variant={activeTab === "dashboard" ? "default" : "ghost"}
@@ -50,20 +49,24 @@ export default function Header({
             >
               Dashboard
             </Button>
+            <Button
+              variant={activeTab === "daily-log" ? "default" : "ghost"}
+              onClick={() => onTabChange("daily-log")}
+              className="font-medium"
+            >
+              Daily Log
+            </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant={activeTab === "planning" ? "default" : "ghost"}
                   className="font-medium gap-1"
                 >
-                  {activeTab === "planning" ? reviewLabels[selectedReview] : "Planning & Review"}
+                  {activeTab === "planning" ? reviewLabels[selectedReview] : "Review & Planning"}
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
-                <DropdownMenuItem onClick={() => { onTabChange("planning"); onReviewChange?.("daily"); }}>
-                  Daily Log
-                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => { onTabChange("planning"); onReviewChange?.("weekly"); }}>
                   Weekly Review
                 </DropdownMenuItem>
