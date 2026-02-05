@@ -130,14 +130,14 @@ function SortableImage({
 
       {/* Subtitle section - only show if subtitle exists or editing */}
       {(image.subtitle || isEditingSubtitle) && (
-        <div className="p-2 bg-white rounded-b-lg">
+        <div className="p-2 bg-white dark:bg-gray-800 rounded-b-lg">
           {isEditingSubtitle ? (
             <div className="flex items-center gap-1">
               <Input
                 value={subtitleText}
                 onChange={(e) => setSubtitleText(e.target.value)}
                 placeholder="Untertitel..."
-                className="h-7 text-xs bg-white text-gray-900"
+                className="h-7 text-xs bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 autoFocus
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleSaveSubtitle();
@@ -149,13 +149,13 @@ function SortableImage({
               />
               <button
                 onClick={handleSaveSubtitle}
-                className="p-1 rounded hover:bg-gray-100 text-gray-900"
+                className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100"
               >
                 <Check className="h-3 w-3" />
               </button>
             </div>
           ) : (
-            <p className="text-xs text-center text-gray-900">{image.subtitle}</p>
+            <p className="text-xs text-center text-gray-900 dark:text-gray-100">{image.subtitle}</p>
           )}
         </div>
       )}
@@ -224,7 +224,7 @@ function DroppableList({
     <div
       ref={setNodeRef}
       data-list-id={listId}
-      className="w-[272px] flex-shrink-0 bg-white dark:bg-white rounded-lg p-2 border border-gray-200 dark:border-gray-300"
+      className="w-[272px] flex-shrink-0 bg-white dark:bg-gray-900 rounded-lg p-2 border border-gray-200 dark:border-gray-700"
     >
       {/* List Header - editable name */}
       <div className="mb-2 px-2 flex items-center justify-between group">
@@ -233,7 +233,7 @@ function DroppableList({
             <Input
               value={listName}
               onChange={(e) => setListName(e.target.value)}
-              className="h-7 text-sm font-semibold bg-white text-gray-900"
+              className="h-7 text-sm font-semibold bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               autoFocus
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleSaveListName();
@@ -244,13 +244,13 @@ function DroppableList({
               }}
               onBlur={handleSaveListName}
             />
-            <button onClick={handleSaveListName} className="text-gray-900">
+            <button onClick={handleSaveListName} className="text-gray-900 dark:text-gray-100">
               <Check className="h-3 w-3" />
             </button>
           </div>
         ) : (
           <h2
-            className="text-sm font-semibold flex-1 cursor-pointer hover:bg-gray-100 rounded px-2 py-1 text-gray-900"
+            className="text-sm font-semibold flex-1 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded px-2 py-1 text-gray-900 dark:text-gray-100"
             onClick={() => setIsEditingName(true)}
           >
             {listName}
@@ -280,7 +280,7 @@ function DroppableList({
       <div className="mt-2">
         <label
           htmlFor={`image-upload-${listId}`}
-          className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-gray-100 cursor-pointer text-sm text-gray-600"
+          className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer text-sm text-gray-600 dark:text-gray-400"
         >
           <Plus className="h-4 w-4" />
           <span>Karte hinzufügen</span>

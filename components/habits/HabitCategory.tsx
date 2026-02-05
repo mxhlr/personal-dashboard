@@ -32,7 +32,6 @@ export function HabitCategory({
   onHabitSkip,
 }: HabitCategoryProps) {
   const [isExpanded, setIsExpanded] = useState(true);
-  const [extrasExpanded, setExtrasExpanded] = useState(false);
 
   const coreHabits = habits.filter((h) => !h.isExtra);
   const extraHabits = habits.filter((h) => h.isExtra);
@@ -119,44 +118,41 @@ export function HabitCategory({
           {/* Extra Habits Collapse Section */}
           {extraHabits.length > 0 && (
             <div className="space-y-0">
-              <button
-                onClick={() => coreComplete && setExtrasExpanded(!extrasExpanded)}
-                disabled={!coreComplete}
-                className={`flex w-full items-center gap-2 px-1 py-2 text-xs ${
-                  coreComplete
-                    ? "cursor-pointer hover:bg-accent/30 rounded"
-                    : "cursor-not-allowed opacity-60"
-                }`}
-              >
-                {coreComplete ? (
-                  extrasExpanded ? (
-                    <ChevronDown className="h-3 w-3 text-cyan-500" />
-                  ) : (
-                    <ChevronRight className="h-3 w-3 text-cyan-500" />
-                  )
-                ) : (
+              {!coreComplete ? (
+                <div className="flex w-full items-center gap-2 px-1 py-2 text-xs opacity-60">
                   <ChevronRight className="h-3 w-3 text-muted-foreground/40" />
-                )}
-                <span className={coreComplete ? "text-cyan-600 dark:text-cyan-400 font-medium" : "text-muted-foreground/60"}>
-                  {coreComplete ? "Extras unlocked" : "Complete core to unlock"}
-                </span>
-                <div className="flex-1" />
-                <span className="text-muted-foreground/60 text-xs">
-                  {completedExtra}/{extraHabits.length}
-                </span>
-              </button>
+                  <span className="text-muted-foreground/60">
+                    Complete core to unlock
+                  </span>
+                  <div className="flex-1" />
+                  <span className="text-muted-foreground/60 text-xs">
+                    {completedExtra}/{extraHabits.length}
+                  </span>
+                </div>
+              ) : (
+                <div className="space-y-0">
+                  <div className="flex w-full items-center gap-2 px-1 py-2 text-xs">
+                    <ChevronDown className="h-3 w-3 text-cyan-500" />
+                    <span className="text-cyan-600 dark:text-cyan-400 font-medium">
+                      Extras unlocked
+                    </span>
+                    <div className="flex-1" />
+                    <span className="text-muted-foreground/60 text-xs">
+                      {completedExtra}/{extraHabits.length}
+                    </span>
+                  </div>
 
-              {/* Extra Habits List - only shown when unlocked and expanded */}
-              {coreComplete && extrasExpanded && (
-                <div className="space-y-2 pt-2">
-                  {extraHabits.map((habit) => (
-                    <HabitItem
-                      key={habit.id}
-                      {...habit}
-                      onToggle={handleToggle}
-                      onSkip={(id, reason) => onHabitSkip(name, id, reason)}
-                    />
-                  ))}
+                  {/* Extra Habits List - always shown when unlocked */}
+                  <div className="space-y-2 pt-2">
+                    {extraHabits.map((habit) => (
+                      <HabitItem
+                        key={habit.id}
+                        {...habit}
+                        onToggle={handleToggle}
+                        onSkip={(id, reason) => onHabitSkip(name, id, reason)}
+                      />
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
