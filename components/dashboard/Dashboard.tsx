@@ -81,12 +81,12 @@ export function Dashboard({ onNavigate }: DashboardProps) {
       <div className="relative max-w-7xl mx-auto px-6 py-8 space-y-6">
         {/* Welcome Header */}
         <div className="text-center space-y-3 mb-2">
-          <h1 className="text-5xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0077B6]"
+          <h1 className="text-5xl font-bold font-orbitron text-white"
             style={{
-              textShadow: '0 0 30px rgba(0, 229, 255, 0.2)'
+              textShadow: '0 0 30px rgba(255, 255, 255, 0.2)'
             }}
           >
-            Welcome back, {profile.name}! <span className="text-white">👋</span>
+            Welcome back, {profile.name}! 👋
           </h1>
           <p
             className="text-lg dark:text-[#AAAAAA] text-[#888888]"
