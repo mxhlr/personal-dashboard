@@ -267,11 +267,11 @@ export function HabitDashboardConnected() {
           <SprintTimer endOfDayHour={18} />
         </header>
 
-        {/* Win Condition */}
-        <WinConditionBanner isAchieved={progress === 100} />
-
         {/* Progress Ring */}
         <ProgressRing current={totalXP} total={maxXP} />
+
+        {/* Win Condition */}
+        <WinConditionBanner isAchieved={progress === 100} />
 
         {/* Stats Bar */}
         <StatsBar
