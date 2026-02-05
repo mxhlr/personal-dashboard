@@ -235,7 +235,7 @@ export function HabitDashboardConnected() {
   // Show loading state
   if (!userStats || !categories || !habitTemplates) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-white dark:bg-[#0a0a0a]">
+      <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">
           <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-cyan-600 dark:border-cyan-400"></div>
           <p className="text-muted-foreground">Loading your habits...</p>
@@ -245,12 +245,7 @@ export function HabitDashboardConnected() {
   }
 
   return (
-    <div
-      className="min-h-screen"
-      style={{
-        background: 'radial-gradient(ellipse at center, var(--daily-log-bg-start) 0%, var(--daily-log-bg-end) 100%)'
-      }}
-    >
+    <div className="flex-1">
       <MilestonePopup progress={progress} />
       <div className="mx-auto max-w-4xl space-y-6 px-6 py-6">
         {/* Header */}

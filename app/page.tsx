@@ -108,14 +108,25 @@ export default function DashboardPage() {
 
           {/* Tab 2: Planning & Review */}
           {activeTab === "planning" && (
-            <div className="container mx-auto px-4 py-8 space-y-6">
+            <div
+              className="min-h-[calc(100vh-64px)]"
+              style={{
+                background: selectedReview === "daily"
+                  ? 'radial-gradient(ellipse at center, var(--daily-log-bg-start) 0%, var(--daily-log-bg-end) 100%)'
+                  : undefined
+              }}
+            >
               {/* Dropdown for Review Selection */}
-              <div className="max-w-4xl mx-auto px-6">
+              <div className="max-w-4xl mx-auto px-6 pt-6">
                 <Select
                   value={selectedReview}
                   onValueChange={(value) => setSelectedReview(value as ReviewType)}
                 >
-                  <SelectTrigger className="w-[240px] bg-card shadow-sm">
+                  <SelectTrigger className={`w-[240px] shadow-sm ${
+                    selectedReview === "daily"
+                      ? "bg-white/80 dark:bg-[#1a1a2e]/80 backdrop-blur-sm border-black/10 dark:border-white/10"
+                      : "bg-card"
+                  }`}>
                     <SelectValue placeholder="Select review type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -132,19 +143,27 @@ export default function DashboardPage() {
               {selectedReview === "daily" && <HabitDashboardConnected />}
 
               {selectedReview === "weekly" && (
-                <WeeklyReviewForm year={currentYear} weekNumber={currentWeek} />
+                <div className="container mx-auto px-4 py-8">
+                  <WeeklyReviewForm year={currentYear} weekNumber={currentWeek} />
+                </div>
               )}
 
               {selectedReview === "monthly" && (
-                <MonthlyReviewForm year={currentYear} month={currentMonth} />
+                <div className="container mx-auto px-4 py-8">
+                  <MonthlyReviewForm year={currentYear} month={currentMonth} />
+                </div>
               )}
 
               {selectedReview === "quarterly" && (
-                <QuarterlyReviewForm year={currentYear} quarter={currentQuarter} />
+                <div className="container mx-auto px-4 py-8">
+                  <QuarterlyReviewForm year={currentYear} quarter={currentQuarter} />
+                </div>
               )}
 
               {selectedReview === "annual" && (
-                <AnnualReviewForm year={currentYear} />
+                <div className="container mx-auto px-4 py-8">
+                  <AnnualReviewForm year={currentYear} />
+                </div>
               )}
             </div>
           )}
