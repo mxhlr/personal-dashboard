@@ -278,7 +278,7 @@ export function HabitDashboardConnected() {
           streak={userStats.currentStreak}
           level={userStats.level}
           weekCompleted={userStats.weekScore}
-          totalXP={userStats.totalXP}
+          totalXP={userStats.totalXP % 1000}
           currentLevelXP={userStats.totalXP}
           nextLevelXP={1000}
         />
