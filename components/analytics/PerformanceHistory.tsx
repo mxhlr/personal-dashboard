@@ -40,22 +40,22 @@ export function PerformanceHistory({
   }
 
   const getScoreColor = (score: number, isWeekendFlag: boolean, hasData: boolean) => {
-    // Weekends without data: completely dark, no border
+    // Weekends without data: completely light/dark, no border
     if (isWeekendFlag && !hasData) {
-      return "bg-[#0a0a0a] border-0";
+      return "bg-gray-100 dark:bg-[#0a0a0a] border-0";
     }
 
-    // Days with no data: dark gray/black background
+    // Days with no data: light gray in light mode, dark in dark mode
     if (!hasData || score === 0) {
-      return "bg-[#1A1A2E] border border-gray-800";
+      return "bg-gray-200 dark:bg-[#1A1A2E] border border-gray-300 dark:border-gray-800";
     }
 
-    // Completion-based color scheme
+    // Completion-based color scheme (same colors for both modes)
     if (score === 100) return "bg-[#00C853]"; // Bright green (emerald-500)
     if (score >= 85) return "bg-[#A08C28]"; // Gold/Dark yellow (muted mustard gold)
     if (score < 85) return "bg-[#7A6B1F]"; // Darker gold/brown
 
-    return "bg-[#1A1A2E] border border-gray-800"; // Default fallback
+    return "bg-gray-200 dark:bg-[#1A1A2E] border border-gray-300 dark:border-gray-800"; // Default fallback
   };
 
   const isToday = (day: number) => {
@@ -94,10 +94,10 @@ export function PerformanceHistory({
   ];
 
   return (
-    <Card className="p-6 bg-gray-900 border-gray-800 rounded-xl">
+    <Card className="p-6 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 rounded-xl shadow-sm">
       {/* Header */}
       <div className="mb-6">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4">
           📅 PERFORMANCE HISTORY
         </h3>
 
@@ -112,7 +112,7 @@ export function PerformanceHistory({
             <ChevronLeft className="h-5 w-5" />
           </Button>
 
-          <span className="text-lg font-medium">
+          <span className="text-lg font-medium text-gray-900 dark:text-white">
             {monthNames[month]} {year}
           </span>
 
@@ -134,7 +134,7 @@ export function PerformanceHistory({
           {["M", "T", "W", "T", "F", "S", "S"].map((day, idx) => (
             <div
               key={idx}
-              className="text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className="text-center text-xs font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider"
             >
               {day}
             </div>
@@ -161,13 +161,13 @@ export function PerformanceHistory({
                 className={`
                   aspect-square rounded-lg flex flex-col items-center justify-center
                   ${scoreColor}
-                  ${isTodayFlag ? "ring-2 ring-cyan-400" : ""}
+                  ${isTodayFlag ? "ring-2 ring-cyan-400 dark:ring-cyan-400" : ""}
                   transition-all hover:scale-105
                 `}
               >
-                <div className="text-lg font-bold">{day}</div>
+                <div className="text-lg font-bold text-gray-900 dark:text-white">{day}</div>
                 {hasData && (
-                  <div className="text-xs">{score}%</div>
+                  <div className="text-xs text-gray-700 dark:text-gray-300">{score}%</div>
                 )}
               </div>
             );
