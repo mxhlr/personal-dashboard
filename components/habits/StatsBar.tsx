@@ -64,7 +64,7 @@ function StatItem({
       {/* Icon */}
       <span
         className={`text-2xl ${showFlicker ? 'animate-[fire-flicker_0.5s_ease-in-out_infinite]' : ''}`}
-        style={isHighlight ? { filter: 'drop-shadow(0 0 8px rgba(255, 152, 0, 0.8))' } : undefined}
+        style={isHighlight ? { filter: 'drop-shadow(0 0 4px rgba(255, 152, 0, 0.4))' } : undefined}
       >
         {icon}
       </span>
@@ -75,7 +75,7 @@ function StatItem({
           className="text-3xl font-bold font-orbitron leading-none"
           style={{
             color: accentColor,
-            textShadow: isHighlight ? `0 0 15px ${accentColor}` : `0 0 8px ${accentColor}`
+            textShadow: isHighlight ? `0 0 6px ${accentColor}` : `0 0 3px ${accentColor}`
           }}
         >
           {value}
