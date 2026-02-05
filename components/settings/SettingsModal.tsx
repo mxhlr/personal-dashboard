@@ -36,6 +36,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const deleteTrackingField = useMutation(api.trackingFields.deleteTrackingField);
   const createTrackingField = useMutation(api.trackingFields.createTrackingField);
   const seedHabitSystem = useMutation(api.migrations.migrateUser.migrateToHabitSystem);
+  const resetHabitSystem = useMutation(api.migrations.migrateUser.resetHabitSystem);
 
   const [isSaving, setIsSaving] = useState(false);
   const [newFieldName, setNewFieldName] = useState("");
@@ -424,32 +425,45 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
               <div className="space-y-4">
                 <div className="rounded-lg border border-border bg-card p-4">
-                  <h3 className="font-semibold mb-2">Habit System initialisieren</h3>
+                  <h3 className="font-semibold mb-2">Habit System zurücksetzen & neu initialisieren</h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Klicke hier, um dein Habit-Tracking System mit Standard-Kategorien und Habits zu initialisieren.
-                    Dies erstellt 4 Kategorien (Physical, Mental, Work, Evening) mit insgesamt 10 Habits.
+                    Setzt dein Habit-System komplett zurück und erstellt die neuen Standard-Kategorien:
+                    <br />• 🏃 Physical Foundation (Movement, Breakfast, Lunch, Dinner)
+                    <br />• 🧠 Mental Clarity (Phone Jail, Vibes/Energy)
+                    <br />• 💼 Deep Work (Work Hours, Work Notes)
+                    <br /><br />
+                    <strong className="text-destructive">Achtung:</strong> Löscht alle bestehenden Kategorien, Habits und History!
                   </p>
-                  <Button
-                    onClick={async () => {
-                      try {
-                        await seedHabitSystem();
-                        toast.success("Habit System erfolgreich initialisiert!");
-                      } catch (error) {
-                        console.error("Failed to seed:", error);
-                        toast.error("Fehler beim Initialisieren");
-                      }
-                    }}
-                  >
-                    System initialisieren
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="destructive"
+                      onClick={async () => {
+                        if (!confirm("Wirklich ALLES löschen und neu starten? Diese Aktion kann nicht rückgängig gemacht werden!")) {
+                          return;
+                        }
+                        try {
+                          await resetHabitSystem({ confirmReset: true });
+                          await seedHabitSystem();
+                          toast.success("System zurückgesetzt und neu initialisiert!");
+                          window.location.reload(); // Reload to fetch new data
+                        } catch (error) {
+                          console.error("Failed to reset:", error);
+                          toast.error("Fehler beim Zurücksetzen");
+                        }
+                      }}
+                    >
+                      Alles löschen & neu starten
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="rounded-lg border border-border bg-card p-4">
-                  <h3 className="font-semibold mb-2">Info</h3>
+                  <h3 className="font-semibold mb-2">Info: Neue Standard-Kategorien</h3>
                   <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• Du kannst Kategorien und Habits nach der Initialisierung anpassen</li>
-                    <li>• XP-Werte sind individuell konfigurierbar</li>
-                    <li>• Das System trackt Streaks, Level und wöchentliche Fortschritte</li>
+                    <li>• <strong>Keine Wellbeing-Sliders mehr</strong> - Evening Routine wurde entfernt</li>
+                    <li>• <strong>115 XP pro Tag</strong> wenn alle Habits completed</li>
+                    <li>• Du kannst alles nach der Initialisierung anpassen (XP, Namen, etc.)</li>
+                    <li>• Nutze "Manage Habits" im Daily Log für volle Kontrolle</li>
                   </ul>
                 </div>
               </div>
