@@ -36,11 +36,15 @@ export function Dashboard({ onNavigate }: DashboardProps) {
   }
 
   // Calculate today's progress
+  const coreHabits = habitTemplates.filter((h) => !h.isExtra);
+  const extraHabits = habitTemplates.filter((h) => h.isExtra);
   const totalHabits = habitTemplates.length;
   const completedHabits = dailyHabits.filter((h) => h.completed).length;
+  const completedCore = dailyHabits.filter((h) => h.completed && !habitTemplates.find(t => t._id === h.templateId)?.isExtra).length;
   const todayProgress = totalHabits > 0 ? Math.round((completedHabits / totalHabits) * 100) : 0;
   const todayXP = dailyHabits.reduce((sum, h) => sum + (h.completed ? h.xpEarned : 0), 0);
-  const todayComplete = todayProgress === 100;
+  const coreComplete = completedCore === coreHabits.length && coreHabits.length > 0;
+  const todayComplete = todayProgress === 100; // Core + Extra all done = PERFECT DAY (Gold)
 
   const visionboardPreview = visionboardImages?.slice(0, 4) || [];
   const hasVisionboardImages = visionboardImages && visionboardImages.length > 0;
@@ -141,12 +145,16 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl
             ${todayComplete
               ? 'dark:border-[rgba(255,215,0,0.3)] border-[rgba(255,215,0,0.4)] dark:hover:border-[rgba(255,215,0,0.4)] hover:border-[rgba(255,215,0,0.5)] dark:hover:shadow-[0_0_40px_rgba(255,215,0,0.3)] hover:shadow-[0_8px_40px_rgba(255,215,0,0.4)]'
-              : 'dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)] dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.25)]'
+              : coreComplete
+                ? 'dark:border-[rgba(0,230,118,0.25)] border-[rgba(76,175,80,0.3)] dark:hover:border-[rgba(0,230,118,0.35)] hover:border-[rgba(76,175,80,0.4)] dark:hover:shadow-[0_0_35px_rgba(0,230,118,0.25)] hover:shadow-[0_8_35px_rgba(76,175,80,0.3)]'
+                : 'dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)] dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.25)]'
             }`"
             style={{
               background: todayComplete
                 ? 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(0, 230, 118, 0.06) 100%), rgba(26, 26, 26, 0.5)'
-                : 'linear-gradient(135deg, rgba(0, 229, 255, 0.05) 0%, rgba(26, 26, 26, 0.5) 100%)'
+                : coreComplete
+                  ? 'linear-gradient(135deg, rgba(0, 230, 118, 0.08) 0%, rgba(0, 229, 255, 0.04) 100%), rgba(26, 26, 26, 0.5)'
+                  : 'linear-gradient(135deg, rgba(0, 229, 255, 0.05) 0%, rgba(26, 26, 26, 0.5) 100%)'
             }}
           >
             <div className="space-y-4">
@@ -192,6 +200,34 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                     transition-all duration-300"
                 >
                   Celebration Mode ✨
+                </Button>
+              </>
+            ) : coreComplete ? (
+              <>
+                <div className="flex items-center gap-4">
+                  <CheckCircle2 className="h-12 w-12 dark:text-[#00E676] text-[#4CAF50]"
+                    style={{
+                      filter: 'drop-shadow(0 0 6px rgba(0, 230, 118, 0.5))'
+                    }}
+                  />
+                  <div>
+                    <p className="text-sm font-medium font-orbitron dark:text-[#00E676] text-[#4CAF50]">
+                      SOLID DAY ✓
+                    </p>
+                    <p className="text-sm dark:text-[#888888] text-[#666666]">
+                      Core erledigt • Extras offen
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  onClick={() => onNavigate("daily-log")}
+                  className="w-full dark:bg-gradient-to-r dark:from-[#00E676] dark:to-[#00C853] bg-gradient-to-r from-[#4CAF50] to-[#388E3C]
+                    text-black font-bold font-orbitron uppercase tracking-wider text-xs
+                    dark:shadow-[0_0_15px_rgba(0,230,118,0.3)] shadow-[0_4px_12px_rgba(76,175,80,0.3)]
+                    dark:hover:shadow-[0_0_25px_rgba(0,230,118,0.5)] hover:shadow-[0_6px_20px_rgba(76,175,80,0.5)] hover:scale-105
+                    transition-all duration-300"
+                >
+                  Complete Extras →
                 </Button>
               </>
             ) : (
