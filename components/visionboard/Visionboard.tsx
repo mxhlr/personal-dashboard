@@ -467,13 +467,8 @@ export function Visionboard() {
       onDragEnd={handleDragEnd}
     >
       <div className="h-full flex flex-col">
-        {/* Centered Page Title */}
-        <div className="text-center py-6">
-          <h1 className="text-3xl font-semibold">Vision Board</h1>
-        </div>
-
         {/* Trello-style horizontal scrolling container - centered */}
-        <div className="flex-1 overflow-x-auto overflow-y-hidden">
+        <div className="flex-1 overflow-x-auto overflow-y-hidden pt-6">
           <div className="flex justify-center px-4 min-w-full">
             <div className="inline-flex gap-4 py-4 h-full items-start">
               {allLists.map((list) => {
