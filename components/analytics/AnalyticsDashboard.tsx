@@ -39,11 +39,13 @@ export function AnalyticsDashboard() {
       {/* All-Time Stats - Full Width */}
       <AllTimeStats stats={analytics.allTimeStats} />
 
-      {/* Skip Patterns & Average Block Times - Side by Side */}
+      {/* Skip Patterns - Full Width (if exists) */}
+      {analytics.skipPatterns.length > 0 && (
+        <SkipPatterns patterns={analytics.skipPatterns} />
+      )}
+
+      {/* Average Block Times - Half Width (Left Aligned) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {analytics.skipPatterns.length > 0 && (
-          <SkipPatterns patterns={analytics.skipPatterns} />
-        )}
         <AverageBlockTimes blockTimes={analytics.avgBlockTimes} />
       </div>
     </div>

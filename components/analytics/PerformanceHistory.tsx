@@ -39,12 +39,23 @@ export function PerformanceHistory({
     calendarDays.push(day);
   }
 
-  const getScoreColor = (score: number) => {
-    if (score === 100) return "bg-[#00E676]"; // Bright green
-    if (score >= 80) return "bg-[#8B8000]"; // Gold/Olive
-    if (score >= 50) return "bg-[#5C5500]"; // Darker gold
-    if (score >= 1) return "bg-[#5C2200]"; // Dark red/brown
-    return "bg-[#1A1A2E] dark:bg-[#1A1A2E] border border-border"; // Default background
+  const getScoreColor = (score: number, isWeekendFlag: boolean, hasData: boolean) => {
+    // Weekends without data: completely dark, no border
+    if (isWeekendFlag && !hasData) {
+      return "bg-[#0a0a0a] border-0";
+    }
+
+    // Days with no data: dark gray/black background
+    if (!hasData || score === 0) {
+      return "bg-[#1A1A2E] border border-gray-800";
+    }
+
+    // Completion-based color scheme
+    if (score === 100) return "bg-[#00C853]"; // Bright green (emerald-500)
+    if (score >= 85) return "bg-[#A08C28]"; // Gold/Dark yellow (muted mustard gold)
+    if (score < 85) return "bg-[#7A6B1F]"; // Darker gold/brown
+
+    return "bg-[#1A1A2E] border border-gray-800"; // Default fallback
   };
 
   const isToday = (day: number) => {
@@ -83,10 +94,12 @@ export function PerformanceHistory({
   ];
 
   return (
-    <Card className="p-6 bg-card border shadow-sm">
+    <Card className="p-6 bg-gray-900 border-gray-800 rounded-xl">
       {/* Header */}
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-center mb-4">Performance History</h2>
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-4">
+          📅 PERFORMANCE HISTORY
+        </h3>
 
         {/* Month Navigation */}
         <div className="flex items-center justify-between max-w-md mx-auto">
@@ -115,13 +128,13 @@ export function PerformanceHistory({
       </div>
 
       {/* Calendar Grid */}
-      <div className="max-w-4xl mx-auto">
+      <div className="w-full">
         {/* Day Headers */}
         <div className="grid grid-cols-7 gap-2 mb-2">
           {["M", "T", "W", "T", "F", "S", "S"].map((day, idx) => (
             <div
               key={idx}
-              className="text-center text-sm font-medium text-muted-foreground"
+              className="text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               {day}
             </div>
@@ -137,9 +150,10 @@ export function PerformanceHistory({
 
             const dayData = getDayScore(day);
             const score = dayData?.score || 0;
-            const scoreColor = getScoreColor(score);
+            const hasData = !!dayData;
             const isTodayFlag = isToday(day);
             const isWeekendFlag = isWeekend(day);
+            const scoreColor = getScoreColor(score, isWeekendFlag, hasData);
 
             return (
               <div
@@ -148,12 +162,11 @@ export function PerformanceHistory({
                   aspect-square rounded-lg flex flex-col items-center justify-center
                   ${scoreColor}
                   ${isTodayFlag ? "ring-2 ring-cyan-400" : ""}
-                  ${isWeekendFlag ? "opacity-60" : ""}
                   transition-all hover:scale-105
                 `}
               >
-                <div className="text-base font-bold">{day}</div>
-                {dayData && (
+                <div className="text-lg font-bold">{day}</div>
+                {hasData && (
                   <div className="text-xs">{score}%</div>
                 )}
               </div>

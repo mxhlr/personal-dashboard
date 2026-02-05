@@ -12,38 +12,38 @@ interface AllTimeStatsProps {
 
 export function AllTimeStats({ stats }: AllTimeStatsProps) {
   return (
-    <Card className="p-6 bg-card border shadow-sm">
-      <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-6">
+    <Card className="p-6 bg-gray-900 border-gray-800 rounded-xl">
+      <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-6">
         📈 ALL-TIME STATS
       </h3>
 
       <div className="grid grid-cols-3 gap-8">
         {/* Wins */}
         <div className="text-center">
-          <div className="text-4xl font-bold text-[#00E676] mb-2">
+          <div className="text-4xl font-bold text-green-500 mb-2">
             {stats.wins}
           </div>
-          <div className="text-xs uppercase tracking-wide text-muted-foreground">
+          <div className="text-xs uppercase tracking-wider text-gray-500">
             WINS
           </div>
         </div>
 
         {/* Perfect */}
         <div className="text-center">
-          <div className="text-4xl font-bold text-[#E0E0E0] mb-2">
+          <div className="text-4xl font-bold text-white mb-2">
             {stats.perfect}
           </div>
-          <div className="text-xs uppercase tracking-wide text-muted-foreground">
+          <div className="text-xs uppercase tracking-wider text-gray-500">
             PERFECT
           </div>
         </div>
 
         {/* Best Streak */}
         <div className="text-center">
-          <div className="text-4xl font-bold text-[#FF9800] mb-2">
+          <div className="text-4xl font-bold text-orange-500 mb-2">
             {stats.bestStreak}
           </div>
-          <div className="text-xs uppercase tracking-wide text-muted-foreground">
+          <div className="text-xs uppercase tracking-wider text-gray-500">
             BEST STREAK
           </div>
         </div>
