@@ -276,7 +276,6 @@ export function HabitDashboardConnected() {
                 habits={category.habits}
                 onHabitToggle={handleHabitToggle}
                 onHabitSkip={handleHabitSkip}
-                onManage={() => setManageDialogOpen(true)}
               />
             ))}
           </div>

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { HabitItem } from "./HabitItem";
-import { ChevronDown, ChevronRight, Settings } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 
 interface Habit {
@@ -23,7 +23,6 @@ interface HabitCategoryProps {
   habits: Habit[];
   onHabitToggle: (categoryId: string, habitId: string) => void;
   onHabitSkip: (categoryId: string, habitId: string, reason: string) => void;
-  onManage?: () => void;
 }
 
 export function HabitCategory({
@@ -32,7 +31,6 @@ export function HabitCategory({
   habits,
   onHabitToggle,
   onHabitSkip,
-  onManage,
 }: HabitCategoryProps) {
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -77,32 +75,16 @@ export function HabitCategory({
               </p>
             </div>
           </button>
-          <div className="flex items-center gap-2">
-            {onManage && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onManage();
-                }}
-                className="h-8 gap-1.5 px-2 text-xs opacity-0 transition-opacity group-hover:opacity-100 hover:bg-card/80"
-              >
-                <Settings className="h-3.5 w-3.5" />
-                Manage
-              </Button>
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="p-1"
+          >
+            {isExpanded ? (
+              <ChevronDown className="h-5 w-5 text-muted-foreground" />
+            ) : (
+              <ChevronRight className="h-5 w-5 text-muted-foreground" />
             )}
-            <button
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="p-1"
-            >
-              {isExpanded ? (
-                <ChevronDown className="h-5 w-5 text-muted-foreground" />
-              ) : (
-                <ChevronRight className="h-5 w-5 text-muted-foreground" />
-              )}
-            </button>
-          </div>
+          </button>
         </div>
         <Progress
           value={progress}
@@ -141,21 +123,24 @@ export function HabitCategory({
                 <span>Extra Habits</span>
                 <div className="h-px flex-1 bg-border/50" />
               </div>
-              {!coreComplete && (
-                <p className="text-xs text-muted-foreground/60 text-center">
-                  Complete core to unlock extras
-                </p>
+              {!coreComplete ? (
+                <div className="py-6 text-center">
+                  <p className="text-sm text-muted-foreground/80">
+                    Complete core to unlock
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {extraHabits.map((habit) => (
+                    <HabitItem
+                      key={habit.id}
+                      {...habit}
+                      onToggle={handleToggle}
+                      onSkip={(id, reason) => onHabitSkip(name, id, reason)}
+                    />
+                  ))}
+                </div>
               )}
-              <div className={`space-y-2 ${!coreComplete ? "opacity-40" : ""}`}>
-                {extraHabits.map((habit) => (
-                  <HabitItem
-                    key={habit.id}
-                    {...habit}
-                    onToggle={handleToggle}
-                    onSkip={(id, reason) => onHabitSkip(name, id, reason)}
-                  />
-                ))}
-              </div>
             </div>
           )}
         </CardContent>

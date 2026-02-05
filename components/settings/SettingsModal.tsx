@@ -15,8 +15,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { X } from "lucide-react";
+import { X, Settings } from "lucide-react";
 import { toast } from "sonner";
+import { ManageHabitsDialog } from "@/components/habits/ManageHabitsDialog";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -33,6 +34,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const resetHabitSystem = useMutation(api.migrations.migrateUser.resetHabitSystem);
 
   const [isSaving, setIsSaving] = useState(false);
+  const [manageHabitsOpen, setManageHabitsOpen] = useState(false);
 
   // Profile form state
   const [profileForm, setProfileForm] = useState({
@@ -272,6 +274,19 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
               <div className="space-y-4">
                 <div className="rounded-lg border border-border bg-card p-4">
+                  <h3 className="font-semibold mb-2">Habits verwalten</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Erstelle, bearbeite und organisiere deine Habit-Kategorien und einzelne Habits.
+                  </p>
+                  <Button
+                    onClick={() => setManageHabitsOpen(true)}
+                    className="gap-2"
+                  >
+                    <Settings className="h-4 w-4" />
+                    Manage Habits
+                  </Button>
+                </div>
+                <div className="rounded-lg border border-border bg-card p-4">
                   <h3 className="font-semibold mb-2">Habit System zurücksetzen & neu initialisieren</h3>
                   <p className="text-sm text-muted-foreground mb-4">
                     Setzt dein Habit-System komplett zurück und erstellt die neuen Standard-Kategorien:
@@ -310,7 +325,6 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     <li>• <strong>Keine Wellbeing-Sliders mehr</strong> - Evening Routine wurde entfernt</li>
                     <li>• <strong>115 XP pro Tag</strong> wenn alle Habits completed</li>
                     <li>• Du kannst alles nach der Initialisierung anpassen (XP, Namen, etc.)</li>
-                    <li>• Nutze &quot;Manage Habits&quot; im Daily Log für volle Kontrolle</li>
                   </ul>
                 </div>
               </div>
@@ -372,6 +386,12 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           </Tabs>
         </div>
       </div>
+
+      {/* Manage Habits Dialog */}
+      <ManageHabitsDialog
+        open={manageHabitsOpen}
+        onOpenChange={setManageHabitsOpen}
+      />
     </div>
   );
 }
