@@ -32,7 +32,7 @@ export function OKROverview() {
   }
 
   // Extract quarterly milestones
-  const quarterlyMilestones = profile.milestones?.filter(
+  const quarterlyMilestones = profile?.quarterlyMilestones?.filter(
     (m) => m.year === currentYear && m.quarter === currentQuarter
   ) || [];
 
@@ -288,7 +288,7 @@ export function OKROverview() {
                         </div>
                         <p className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
                           style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                          {milestone.description}
+                          {milestone.milestone}
                         </p>
                       </div>
                     </div>
