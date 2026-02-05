@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface ReviewNotification {
   type: "weekly" | "monthly" | "quarterly" | "annual";
@@ -10,7 +11,12 @@ interface ReviewNotification {
 }
 
 export function ReviewNotificationBar() {
+  const router = useRouter();
   const [notifications, setNotifications] = useState<ReviewNotification[]>([]);
+
+  const handleStartReview = (type: string) => {
+    router.push(`/?tab=planning&review=${type}`);
+  };
 
   useEffect(() => {
     const calculateNotifications = () => {
@@ -78,40 +84,76 @@ export function ReviewNotificationBar() {
     return () => clearInterval(interval);
   }, []);
 
-  if (notifications.length === 0) return null;
+  if (notifications.length === 0) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <p
+          className="text-[11px] dark:text-[#666666] text-[#999999]"
+          style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+        >
+          Keine anstehenden Reviews
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-2">
-      {notifications.map((notif) => (
-        <div
-          key={notif.type}
-          className="group flex items-center justify-between px-4 py-3 rounded-lg
-            dark:bg-white/[0.03] bg-black/[0.02]
-            dark:border dark:border-white/[0.08] border border-black/[0.05]
-            hover:dark:bg-white/[0.05] hover:bg-black/[0.03]
-            transition-all duration-200"
+    <div className="h-full flex flex-col justify-between">
+      <div>
+        <h3
+          className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-4"
+          style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
         >
-          <div className="flex items-center gap-3">
-            <div className={`w-2 h-2 rounded-full ${
-              notif.daysUntil === 0 ? 'bg-red-500 animate-pulse' :
-              notif.daysUntil === 1 ? 'bg-orange-500' :
-              'bg-yellow-500'
-            }`} />
-            <span
-              className="text-[12px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666]"
-              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+          Upcoming Reviews
+        </h3>
+
+        <div className="space-y-2">
+          {notifications.map((notif) => (
+            <div
+              key={notif.type}
+              className="group flex items-center justify-between px-3 py-2 rounded-lg
+                dark:bg-white/[0.03] bg-black/[0.02]
+                dark:border dark:border-white/[0.08] border border-black/[0.05]
+                hover:dark:bg-white/[0.05] hover:bg-black/[0.03]
+                transition-all duration-200"
             >
-              {notif.label}
-            </span>
-          </div>
-          <span
-            className="text-[12px] dark:text-[#E0E0E0] text-[#1A1A1A] font-medium"
-            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
-          >
-            {notif.timeString}
-          </span>
+              <div className="flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${
+                  notif.daysUntil === 0 ? 'bg-red-500 animate-pulse' :
+                  notif.daysUntil === 1 ? 'bg-orange-500' :
+                  'bg-yellow-500'
+                }`} />
+                <span
+                  className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666]"
+                  style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                >
+                  {notif.label}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span
+                  className="text-[11px] dark:text-[#E0E0E0] text-[#1A1A1A] font-medium"
+                  style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                >
+                  {notif.timeString}
+                </span>
+                <button
+                  onClick={() => handleStartReview(notif.type)}
+                  className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider
+                    dark:bg-white/[0.06] bg-black/[0.04]
+                    dark:border dark:border-white/[0.1] border border-black/[0.08]
+                    dark:text-[#E0E0E0] text-[#1A1A1A]
+                    dark:hover:bg-white/[0.1] hover:bg-black/[0.06]
+                    transition-all duration-200 rounded"
+                  style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                >
+                  Start
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
   );
 }
