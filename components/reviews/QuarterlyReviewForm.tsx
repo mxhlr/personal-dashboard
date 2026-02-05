@@ -285,11 +285,15 @@ export function QuarterlyReviewForm({
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Part 1: Milestone Check */}
-          <div className="group dark:border-border/50 border-border/30
+          <div className="group dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
-            dark:hover:border-border hover:border-border/50
-            rounded-xl p-6">
+            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]
+            dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.2)]
+            rounded-2xl p-6"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
+            }}>
             <h3 className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-4"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
@@ -357,11 +361,15 @@ export function QuarterlyReviewForm({
 
           {/* Part 2: Reflection Questions */}
           {/* Question 1 */}
-          <div className="group dark:border-border/50 border-border/30
+          <div className="group dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
-            dark:hover:border-border hover:border-border/50
-            rounded-xl p-6">
+            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]
+            dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.2)]
+            rounded-2xl p-6"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
+            }}>
             <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
@@ -386,11 +394,15 @@ export function QuarterlyReviewForm({
           </div>
 
           {/* Question 2 */}
-          <div className="group dark:border-border/50 border-border/30
+          <div className="group dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
-            dark:hover:border-border hover:border-border/50
-            rounded-xl p-6">
+            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]
+            dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.2)]
+            rounded-2xl p-6"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
+            }}>
             <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
@@ -415,11 +427,15 @@ export function QuarterlyReviewForm({
           </div>
 
           {/* Question 3 */}
-          <div className="group dark:border-border/50 border-border/30
+          <div className="group dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
-            dark:hover:border-border hover:border-border/50
-            rounded-xl p-6">
+            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]
+            dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.2)]
+            rounded-2xl p-6"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
+            }}>
             <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
@@ -444,11 +460,15 @@ export function QuarterlyReviewForm({
           </div>
 
           {/* Question 4 */}
-          <div className="group dark:border-border/50 border-border/30
+          <div className="group dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
-            dark:hover:border-border hover:border-border/50
-            rounded-xl p-6">
+            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]
+            dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.2)]
+            rounded-2xl p-6"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
+            }}>
             <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
@@ -473,11 +493,15 @@ export function QuarterlyReviewForm({
           </div>
 
           {/* Question 5 */}
-          <div className="group dark:border-border/50 border-border/30
+          <div className="group dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
-            dark:hover:border-border hover:border-border/50
-            rounded-xl p-6">
+            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]
+            dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.2)]
+            rounded-2xl p-6"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
+            }}>
             <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
@@ -502,11 +526,15 @@ export function QuarterlyReviewForm({
           </div>
 
           {/* Part 3: Next Quarter Milestones */}
-          <div className="group dark:border-border/50 border-border/30
+          <div className="group dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
-            dark:hover:border-border hover:border-border/50
-            rounded-xl p-6">
+            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]
+            dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.2)]
+            rounded-2xl p-6"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
+            }}>
             <h3 className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-4"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
