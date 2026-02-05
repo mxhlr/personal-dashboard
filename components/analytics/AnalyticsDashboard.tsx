@@ -39,10 +39,14 @@ export function AnalyticsDashboard() {
       {/* All-Time Stats - Full Width */}
       <AllTimeStats stats={analytics.allTimeStats} />
 
-      {/* Skip Patterns - Full Width (if exists) */}
-      {analytics.skipPatterns.length > 0 && (
-        <SkipPatterns patterns={analytics.skipPatterns} />
-      )}
+      {/* Skip Patterns - Full Width (always show with example if empty) */}
+      <SkipPatterns
+        patterns={analytics.skipPatterns.length > 0 ? analytics.skipPatterns : [
+          { reason: "Ran out of time", count: 16 },
+          { reason: "Interrupted", count: 12 },
+          { reason: "Low energy", count: 9 }
+        ]}
+      />
 
       {/* Average Block Times - Half Width (Left Aligned) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
