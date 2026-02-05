@@ -15,6 +15,7 @@ import {
 import Image from "next/image";
 import { TodaysWinCondition } from "./TodaysWinCondition";
 import { StoicQuote } from "./StoicQuote";
+import { ReviewNotificationBar } from "./ReviewNotificationBar";
 
 interface DashboardProps {
   onNavigate: (tab: "daily-log" | "visionboard" | "planning" | "data" | "coach") => void;
@@ -194,6 +195,9 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         {/* Today's Win Condition - Right */}
         <TodaysWinCondition />
       </div>
+
+      {/* Review Notifications */}
+      <ReviewNotificationBar />
 
         {/* North Stars - Gaming HUD Style */}
         <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
