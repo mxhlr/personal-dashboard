@@ -172,7 +172,7 @@ export function HabitCategory({
               {!coreComplete ? (
                 <div className="flex w-full items-center gap-2 px-1 py-2 text-xs opacity-60">
                   <ChevronRight className="h-3 w-3 text-muted-foreground/40" />
-                  <span className="text-muted-foreground/60">
+                  <span className="text-muted-foreground/60 font-orbitron">
                     Complete core to unlock
                   </span>
                   <div className="flex-1" />
@@ -184,7 +184,7 @@ export function HabitCategory({
                 <div className="space-y-0 rounded-lg border dark:border-[#00E5FF]/30 border-[#00E5FF]/20 dark:bg-[rgba(0,229,255,0.03)] bg-[rgba(0,180,220,0.04)] p-3">
                   <div className="flex w-full items-center gap-2 px-1 py-2 text-xs">
                     <ChevronDown className="h-3 w-3 text-cyan-500" />
-                    <span className="text-cyan-600 dark:text-cyan-400 font-medium">
+                    <span className="text-cyan-600 dark:text-cyan-400 font-medium font-orbitron">
                       Extras unlocked
                     </span>
                     <div className="flex-1" />

@@ -150,14 +150,14 @@ export function HabitItem({
           {name}
         </div>
         {subtitle && (
-          <div className={`text-xs text-muted-foreground/70 mt-0.5 truncate ${
+          <div className={`text-xs text-muted-foreground/70 mt-0.5 truncate font-orbitron ${
             completed ? "line-through" : ""
           }`}>
             {subtitle}
           </div>
         )}
         {completed && completedAt && (
-          <div className="text-xs text-[#00FF88] mt-0.5 font-medium">
+          <div className="text-xs text-[#00FF88] mt-0.5 font-medium font-orbitron">
             {formatTimestamp(completedAt)}
           </div>
         )}
@@ -196,7 +196,7 @@ export function HabitItem({
             )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="text-[11px] font-medium dark:text-[#666666] text-[#999999] bg-transparent border-0 px-2 py-1 rounded-md transition-all duration-200 hover:bg-foreground/5 hover:text-foreground/60">
+                <button className="text-[11px] font-medium font-orbitron dark:text-[#666666] text-[#999999] bg-transparent border-0 px-2 py-1 rounded-md transition-all duration-200 hover:bg-foreground/5 hover:text-foreground/60">
                   Skip
                 </button>
               </DropdownMenuTrigger>
