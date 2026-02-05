@@ -27,7 +27,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
   });
 
   const [nextWeekGoals, setNextWeekGoals] = useState<Array<{ goal: string; category: string }>>([
-    { goal: "", category: "Work" },
+    { goal: "", category: "Wealth" },
   ]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -80,7 +80,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
 
   const addGoal = () => {
     if (nextWeekGoals.length < 5) {
-      setNextWeekGoals([...nextWeekGoals, { goal: "", category: "Work" }]);
+      setNextWeekGoals([...nextWeekGoals, { goal: "", category: "Wealth" }]);
     }
   };
 
@@ -391,10 +391,10 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
                       disabled:cursor-not-allowed text-[13px]"
                     style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                   >
-                    <option value="Work">Work</option>
+                    <option value="Wealth">Wealth</option>
                     <option value="Health">Health</option>
-                    <option value="Learning">Learning</option>
-                    <option value="Personal">Personal</option>
+                    <option value="Love">Love</option>
+                    <option value="Happiness">Happiness</option>
                   </select>
                 </div>
               </div>
