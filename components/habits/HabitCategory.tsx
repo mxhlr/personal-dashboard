@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { HabitItem } from "./HabitItem";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { toast } from "sonner";
 
 interface Habit {
   id: string;
@@ -68,17 +67,6 @@ export function HabitCategory({
 
   const handleToggle = (habitId: string) => {
     onHabitToggle(name, habitId);
-
-    const habit = habits.find((h) => h.id === habitId);
-    if (habit && !habit.completed) {
-      const newCompletedTotal = completedTotal + 1;
-      if (newCompletedTotal === habits.length) {
-        toast.success(`✓ ${name} complete!`, {
-          position: "top-center",
-          duration: 2000,
-        });
-      }
-    }
   };
 
   return (
