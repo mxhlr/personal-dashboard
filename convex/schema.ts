@@ -368,10 +368,39 @@ export default defineSchema({
     .index("by_category", ["categoryId"])
     .index("by_user_category", ["userId", "categoryId"]),
 
+  // ============================================
+  // WORK BLOCKS (User-defined time blocks for tracking)
+  // ============================================
+
+  workBlocks: defineTable({
+    userId: v.string(),
+    name: v.string(), // "Deep Work", "Admin", "Creative", etc.
+    color: v.optional(v.string()), // Hex color for UI
+    order: v.number(),
+    createdAt: v.string(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_order", ["userId", "order"]),
+
+  blockTimeSessions: defineTable({
+    userId: v.string(),
+    date: v.string(), // "YYYY-MM-DD"
+    blockId: v.id("workBlocks"),
+    durationMinutes: v.number(),
+    startedAt: v.string(),
+    completedAt: v.optional(v.string()), // null if still running
+    createdAt: v.string(),
+  })
+    .index("by_user_date", ["userId", "date"])
+    .index("by_block", ["blockId"])
+    .index("by_user_block", ["userId", "blockId"])
+    .index("by_user_running", ["userId", "completedAt"]),
+
   winConditions: defineTable({
     userId: v.string(),
     date: v.string(), // "YYYY-MM-DD"
     winCondition: v.string(), // The one thing the user will do today
+    achieved: v.optional(v.boolean()), // Whether it was completed
     createdAt: v.string(),
     updatedAt: v.string(),
   })

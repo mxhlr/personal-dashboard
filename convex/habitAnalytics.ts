@@ -293,8 +293,15 @@ export const getComprehensiveAnalytics = query({
       previousDate = currentDate;
     });
 
-    // Skip patterns
+    // Skip patterns - Initialize all categories with 0
     const skipReasons: Record<string, number> = {};
+
+    // First, add all categories with 0
+    categories.forEach((category) => {
+      skipReasons[category.name] = 0;
+    });
+
+    // Then count actual skips
     allDailyHabits
       .filter((h) => h.skipped && h.skipReason)
       .forEach((h) => {

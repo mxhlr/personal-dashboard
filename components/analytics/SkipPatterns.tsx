@@ -7,10 +7,6 @@ interface SkipPatternsProps {
 }
 
 export function SkipPatterns({ patterns }: SkipPatternsProps) {
-  if (patterns.length === 0) {
-    return null;
-  }
-
   return (
     <Card className="p-6 dark:border-[rgba(255,68,68,0.15)] border-[rgba(244,67,54,0.2)] dark:bg-card/50 bg-white/80
       shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl

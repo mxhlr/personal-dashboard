@@ -102,7 +102,7 @@ export function HabitCategory({
             </div>
             <div>
               <h3 className={`text-xl font-bold font-orbitron transition-colors duration-200
-                ${isComplete ? 'text-[#00E676]' : 'group-hover/header:text-[#00E5FF]'}`}>
+                ${isComplete ? 'text-[#00E676]' : 'dark:text-[#E0E0E0] text-[#1A1A1A]'}`}>
                 {name}
               </h3>
             </div>
