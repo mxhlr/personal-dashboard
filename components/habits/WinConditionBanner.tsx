@@ -32,17 +32,20 @@ export function WinConditionBanner({ isAchieved = false }: WinConditionBannerPro
     }
   };
 
+  // Show green border if user has filled in the win condition
+  const isFilled = value.trim().length > 0;
+
   return (
     <div
       className={`relative overflow-hidden p-6 border transition-all duration-300 ease-out ${
-        isAchieved
-          ? 'ring-2 ring-[#FFD700]/30 shadow-[0_0_20px_rgba(255,215,0,0.15)] dark:border-[#FFD700]/50 border-[#FFD700]/30'
+        isFilled
+          ? 'ring-2 ring-[#00E676]/30 shadow-[0_0_20px_rgba(0,230,118,0.15)] dark:border-[#00E676]/50 border-[#00E676]/30'
           : 'shadow-sm dark:border-border/50 border-border/30 hover:shadow-xl hover:-translate-y-1 dark:hover:border-border hover:border-border/50'
       }`}
       style={{
         borderRadius: '16px',
-        background: isAchieved
-          ? 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(255, 180, 0, 0.04) 100%), rgba(26, 26, 26, 0.5)'
+        background: isFilled
+          ? 'linear-gradient(135deg, rgba(0, 230, 118, 0.08) 0%, rgba(0, 200, 83, 0.04) 100%), rgba(26, 26, 26, 0.5)'
           : 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)',
       }}
     >
@@ -51,7 +54,7 @@ export function WinConditionBanner({ isAchieved = false }: WinConditionBannerPro
           className="text-[13px] font-semibold font-orbitron uppercase flex items-center justify-center gap-2 text-white"
           style={{ letterSpacing: '1px' }}
         >
-          {isAchieved ? '🏆' : '⚡'} TODAY&apos;S WIN CONDITION {isAchieved && <span className="text-[#FFD700]">ACHIEVED</span>}
+          {isFilled ? '✓' : '⚡'} TODAY&apos;S WIN CONDITION
         </h3>
         <Input
           placeholder="If I do nothing else, I will..."
