@@ -46,7 +46,6 @@ export function HabitCategory({
   const progress = maxXP > 0 ? (totalXP / maxXP) * 100 : 0;
   const isComplete = completedTotal === habits.length;
   const coreComplete = completedCore === coreHabits.length && coreHabits.length > 0;
-  const allHabitsComplete = habits.every((h) => h.completed);
 
   // Check if icon is a hex color (starts with #) or an emoji
   const isColor = icon?.startsWith("#");
