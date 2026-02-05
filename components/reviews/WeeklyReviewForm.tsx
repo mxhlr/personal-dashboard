@@ -321,6 +321,103 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
             />
           </div>
 
+          {/* Next Week Goals Section */}
+          <div className="space-y-4 pt-8">
+            <div className="text-center pb-2">
+              <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7]"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                Next Week Goals (Plan Ahead)
+              </h3>
+              <p className="text-[11px] dark:text-[#888888] text-[#666666] mt-1"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                Set 3-5 goals for the upcoming week
+              </p>
+            </div>
+
+            {nextWeekGoals.map((goal, index) => (
+              <div
+                key={index}
+                className="group dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,151,167,0.2)] border-2
+                  dark:bg-[rgba(0,229,255,0.02)] bg-[rgba(0,151,167,0.03)]
+                  backdrop-blur-sm rounded-xl p-6 transition-all duration-200
+                  hover:dark:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,151,167,0.3)]"
+              >
+                <div className="flex items-start justify-between gap-4 mb-3">
+                  <label className="text-[11px] font-bold uppercase tracking-wider
+                    dark:text-[#00E5FF] text-[#0097A7] flex-shrink-0"
+                    style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                    Goal {index + 1}
+                  </label>
+                  {!isReadOnly && nextWeekGoals.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeGoal(index)}
+                      className="text-[10px] dark:text-[#888888] text-[#666666]
+                        dark:hover:text-red-400 hover:text-red-600
+                        uppercase tracking-wider transition-colors"
+                      style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+
+                <textarea
+                  value={goal.goal}
+                  onChange={(e) => updateGoal(index, "goal", e.target.value)}
+                  disabled={isReadOnly}
+                  className="w-full min-h-[80px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
+                    focus:outline-none focus:ring-0 mb-3
+                    disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                    dark:text-[#E0E0E0] text-[#1A1A1A]"
+                  style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
+                  placeholder="Describe your goal for next week..."
+                />
+
+                <div className="pt-2 border-t dark:border-[rgba(0,229,255,0.1)] border-[rgba(0,151,167,0.15)]">
+                  <label className="text-[10px] font-bold uppercase tracking-wider
+                    dark:text-[#888888] text-[#666666] block mb-2"
+                    style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                    Category
+                  </label>
+                  <select
+                    value={goal.category}
+                    onChange={(e) => updateGoal(index, "category", e.target.value)}
+                    disabled={isReadOnly}
+                    className="w-full px-3 py-2 dark:bg-white/[0.03] bg-black/[0.02]
+                      dark:border-white/[0.1] border-black/[0.08] border rounded-lg
+                      dark:text-[#E0E0E0] text-[#1A1A1A]
+                      focus:outline-none focus:ring-2 focus:ring-[#00E5FF]/50
+                      disabled:cursor-not-allowed text-[13px]"
+                    style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                  >
+                    <option value="Work">Work</option>
+                    <option value="Health">Health</option>
+                    <option value="Learning">Learning</option>
+                    <option value="Personal">Personal</option>
+                  </select>
+                </div>
+              </div>
+            ))}
+
+            {!isReadOnly && nextWeekGoals.length < 5 && (
+              <button
+                type="button"
+                onClick={addGoal}
+                className="w-full px-6 py-3 dark:bg-white/[0.03] bg-black/[0.02]
+                  dark:border dark:border-dashed dark:border-white/[0.15] border border-dashed border-black/[0.1]
+                  dark:text-[#888888] text-[#666666]
+                  dark:hover:bg-white/[0.06] hover:bg-black/[0.04]
+                  dark:hover:border-[#00E5FF]/30 hover:border-[#0097A7]/30
+                  dark:hover:text-[#00E5FF] hover:text-[#0097A7]
+                  uppercase tracking-wider text-[11px] font-bold transition-all duration-200 rounded-lg"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+              >
+                + Add Goal ({nextWeekGoals.length}/5)
+              </button>
+            )}
+          </div>
+
           {/* Buttons */}
           <div className="flex gap-3 justify-center pt-4">
             {isReadOnly ? (
