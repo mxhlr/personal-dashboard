@@ -103,7 +103,7 @@ export function HabitCategory({
             className="flex items-center gap-3 text-left group/header"
           >
             {/* Category number with completion indicator */}
-            <div className={`relative flex items-center justify-center w-8 h-8 rounded-lg font-bold text-sm
+            <div className={`relative flex items-center justify-center w-8 h-8 rounded-lg font-bold font-orbitron text-sm
               transition-all duration-300
               ${isComplete
                 ? 'bg-[#00E676]/20 text-[#00E676] shadow-[0_0_10px_rgba(0,230,118,0.3)]'
@@ -113,7 +113,7 @@ export function HabitCategory({
               {isComplete ? '✓' : categoryNumber}
             </div>
             <div>
-              <h3 className={`text-xl font-semibold transition-colors duration-200
+              <h3 className={`text-xl font-bold font-orbitron transition-colors duration-200
                 ${isComplete ? 'text-[#00E676]' : 'group-hover/header:text-[#00E5FF]'}`}>
                 {name}
               </h3>
@@ -121,7 +121,7 @@ export function HabitCategory({
           </button>
           <div className="flex items-center gap-3">
             {/* Progress fraction with visual enhancement */}
-            <div className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-300
+            <div className={`px-2.5 py-1 rounded-full text-xs font-bold font-orbitron transition-all duration-300
               ${isComplete
                 ? 'bg-[#00E676]/20 text-[#00E676]'
                 : 'dark:bg-white/5 bg-black/5 dark:text-[#888888] text-[#666666]'
@@ -176,7 +176,7 @@ export function HabitCategory({
                     Complete core to unlock
                   </span>
                   <div className="flex-1" />
-                  <span className="text-[13px] dark:text-[#555555] text-[#999999]">
+                  <span className="text-[13px] font-bold font-orbitron dark:text-[#555555] text-[#999999]">
                     {completedExtra}/{extraHabits.length}
                   </span>
                 </div>
@@ -188,7 +188,7 @@ export function HabitCategory({
                       Extras unlocked
                     </span>
                     <div className="flex-1" />
-                    <span className="text-[13px] dark:text-[#555555] text-[#999999]">
+                    <span className="text-[13px] font-bold font-orbitron dark:text-[#555555] text-[#999999]">
                       {completedExtra}/{extraHabits.length}
                     </span>
                   </div>

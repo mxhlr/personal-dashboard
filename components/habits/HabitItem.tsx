@@ -142,7 +142,7 @@ export function HabitItem({
       />
 
       <div className="flex-1 min-w-0">
-        <div className={`text-sm font-medium transition-all duration-300 ${
+        <div className={`text-sm font-semibold font-orbitron transition-all duration-300 ${
           completed
             ? "text-muted-foreground line-through"
             : "text-foreground"
