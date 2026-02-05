@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { Id } from "@/convex/_generated/dataModel";
 
 export function BlockTimerButton() {
-  const categories = useQuery(api.habitTemplates.listCategories);
+  const categories = useQuery(api.habitCategories.listCategories);
   const currentTimer = useQuery(api.categoryTimer.getCurrentTimer);
   const startTimer = useMutation(api.categoryTimer.startCategoryTimer);
   const stopTimer = useMutation(api.categoryTimer.stopCategoryTimer);

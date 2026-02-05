@@ -46,62 +46,31 @@ const CONFETTI_COLORS = ["#00E676", "#00E5FF", "#FFD700", "#FF9800", "#E040FB", 
 
 export function MilestonePopup({ progress }: MilestonePopupProps) {
   const [showMilestone, setShowMilestone] = useState<Milestone | null>(null);
-  const [shownToday, setShownToday] = useState<Set<Milestone>>(new Set());
-
-  useEffect(() => {
-    // Get today's date as key
-    const today = new Date().toDateString();
-    const storedKey = `milestones_${today}`;
-
-    // Load shown milestones for today
-    const stored = localStorage.getItem(storedKey);
-    if (stored) {
-      setShownToday(new Set(JSON.parse(stored)));
-    }
-
-    // Clean up old milestone data (keep only today)
-    const allKeys = Object.keys(localStorage).filter(k => k.startsWith("milestones_"));
-    allKeys.forEach(key => {
-      if (key !== storedKey) {
-        localStorage.removeItem(key);
-      }
-    });
-  }, []);
+  const [lastProgress, setLastProgress] = useState(0);
 
   useEffect(() => {
     // Determine which milestone should be shown
     let milestone: Milestone | null = null;
 
-    if (progress >= 100 && !shownToday.has(100)) {
+    // Only show milestone when crossing a threshold (not on every render)
+    if (progress >= 100 && lastProgress < 100) {
       milestone = 100;
-    } else if (progress >= 75 && !shownToday.has(75)) {
+    } else if (progress >= 75 && lastProgress < 75) {
       milestone = 75;
-    } else if (progress >= 50 && !shownToday.has(50)) {
+    } else if (progress >= 50 && lastProgress < 50) {
       milestone = 50;
-    } else if (progress >= 25 && !shownToday.has(25)) {
+    } else if (progress >= 25 && lastProgress < 25) {
       milestone = 25;
     }
 
-    if (milestone && milestone !== showMilestone) {
+    if (milestone) {
       setShowMilestone(milestone);
+      setLastProgress(progress);
     }
-  }, [progress, shownToday, showMilestone]);
+  }, [progress, lastProgress]);
 
   const handleContinue = () => {
-    if (showMilestone) {
-      const today = new Date().toDateString();
-      const storedKey = `milestones_${today}`;
-
-      // Mark this milestone as shown
-      const newShown = new Set(shownToday);
-      newShown.add(showMilestone);
-      setShownToday(newShown);
-
-      // Save to localStorage
-      localStorage.setItem(storedKey, JSON.stringify(Array.from(newShown)));
-
-      setShowMilestone(null);
-    }
+    setShowMilestone(null);
   };
 
   // Generate confetti particles once when milestone shown
