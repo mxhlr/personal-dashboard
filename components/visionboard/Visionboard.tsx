@@ -300,7 +300,6 @@ function DroppableList({
 // Main Visionboard component with global drag & drop context
 export function Visionboard() {
   const lists = useQuery(api.visionboardLists.getLists);
-  const createList = useMutation(api.visionboardLists.createList);
   const updateListName = useMutation(api.visionboardLists.updateListName);
   const convertDefaultListToReal = useMutation(api.visionboardLists.convertDefaultListToReal);
 
@@ -317,7 +316,6 @@ export function Visionboard() {
   const updateSubtitle = useMutation(api.visionboard.updateSubtitle);
   const moveImageToList = useMutation(api.visionboard.moveImageToList);
 
-  const [isUploading, setIsUploading] = useState(false);
   const [activeId, setActiveId] = useState<Id<"visionboard"> | null>(null);
 
   // Get all lists (including default if it has images)
@@ -332,16 +330,6 @@ export function Visionboard() {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-
-  const handleCreateList = async () => {
-    try {
-      await createList({ name: "Neue Liste" });
-      toast.success("Liste erstellt");
-    } catch (error) {
-      console.error("Create list error:", error);
-      toast.error("Fehler beim Erstellen");
-    }
-  };
 
   const handleUpdateListName = async (
     listId: Id<"visionboardLists">,
@@ -373,7 +361,6 @@ export function Visionboard() {
       return;
     }
 
-    setIsUploading(true);
     try {
       const img = await new Promise<HTMLImageElement>((resolve, reject) => {
         const imgElement = new window.Image();
@@ -401,7 +388,6 @@ export function Visionboard() {
       console.error("Upload error:", error);
       toast.error("Fehler beim Hochladen");
     } finally {
-      setIsUploading(false);
       e.target.value = "";
     }
   };
