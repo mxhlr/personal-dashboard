@@ -20,6 +20,90 @@ interface DashboardProps {
   onNavigate: (tab: "daily-log" | "visionboard" | "planning" | "data" | "coach") => void;
 }
 
+// Dynamic greeting based on time of day and day of week
+function getDynamicGreeting(name: string, currentStreak: number): { message: string; emoji: string } {
+  const hour = new Date().getHours();
+  const day = new Date().getDay(); // 0 = Sunday, 6 = Saturday
+
+  // Time-based greetings with variations
+  const morningGreetings = [
+    `Good morning, ${name}`,
+    `Rise and shine, ${name}`,
+    `Fresh start, ${name}`,
+    `New day, ${name}`,
+  ];
+
+  const afternoonGreetings = [
+    `Good afternoon, ${name}`,
+    `Keep pushing, ${name}`,
+    `Halfway there, ${name}`,
+    `Making progress, ${name}`,
+  ];
+
+  const eveningGreetings = [
+    `Good evening, ${name}`,
+    `Finishing strong, ${name}`,
+    `Winding down, ${name}`,
+    `Almost there, ${name}`,
+  ];
+
+  const nightGreetings = [
+    `Burning midnight oil, ${name}`,
+    `Late night hustle, ${name}`,
+    `Night owl mode, ${name}`,
+    `Still grinding, ${name}`,
+  ];
+
+  // Weekday-specific variations
+  const weekdayMessages: { [key: number]: string } = {
+    1: "Monday momentum", // Monday
+    2: "Tuesday grind", // Tuesday
+    3: "Midweek power", // Wednesday
+    4: "Thursday drive", // Thursday
+    5: "Friday energy", // Friday
+    6: "Weekend warrior", // Saturday
+    0: "Sunday focus", // Sunday
+  };
+
+  // Time-based emoji selection (white/subtle emojis)
+  let emoji = "🤍"; // Default white heart
+  let greetings = morningGreetings;
+
+  if (hour >= 5 && hour < 12) {
+    // Morning: 5am - 12pm
+    greetings = morningGreetings;
+    emoji = "🌅";
+  } else if (hour >= 12 && hour < 18) {
+    // Afternoon: 12pm - 6pm
+    greetings = afternoonGreetings;
+    emoji = "☀️";
+  } else if (hour >= 18 && hour < 23) {
+    // Evening: 6pm - 11pm
+    greetings = eveningGreetings;
+    emoji = "🌆";
+  } else {
+    // Night: 11pm - 5am
+    greetings = nightGreetings;
+    emoji = "🌙";
+  }
+
+  // Add streak-based motivation
+  if (currentStreak >= 7) {
+    emoji = "🔥"; // Fire for hot streaks
+  }
+
+  // Randomly select a greeting variation
+  const baseGreeting = greetings[Math.floor(Math.random() * greetings.length)];
+
+  // Occasionally add weekday flavor (30% chance)
+  const addWeekdayFlavor = Math.random() > 0.7;
+  const message = addWeekdayFlavor
+    ? `${baseGreeting}! ${weekdayMessages[day]}!`
+    : `${baseGreeting}!`;
+
+  return { message, emoji };
+}
+
 export function Dashboard({ onNavigate }: DashboardProps) {
   const today = format(new Date(), "yyyy-MM-dd");
   const profile = useQuery(api.userProfile.getUserProfile);
@@ -48,6 +132,9 @@ export function Dashboard({ onNavigate }: DashboardProps) {
 
   const visionboardPreview = visionboardImages?.slice(0, 4) || [];
   const hasVisionboardImages = visionboardImages && visionboardImages.length > 0;
+
+  // Get dynamic greeting
+  const greeting = getDynamicGreeting(profile.name, userStats.currentStreak);
 
   return (
     <div
@@ -86,7 +173,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
               textShadow: '0 0 30px rgba(255, 255, 255, 0.2)'
             }}
           >
-            Welcome back, {profile.name}! 👋
+            {greeting.message} {greeting.emoji}
           </h1>
           <p
             className="text-lg dark:text-[#AAAAAA] text-[#888888]"

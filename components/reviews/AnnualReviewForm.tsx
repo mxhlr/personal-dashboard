@@ -221,7 +221,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50
-            rounded-xl border p-6">
+            rounded-xl p-6">
             <h3 className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-4"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
@@ -332,7 +332,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50
-            rounded-xl border p-6">
+            rounded-xl p-6">
             <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
@@ -361,7 +361,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50
-            rounded-xl border p-6">
+            rounded-xl p-6">
             <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
@@ -387,7 +387,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50
-            rounded-xl border p-6">
+            rounded-xl p-6">
             <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
@@ -413,7 +413,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50
-            rounded-xl border p-6">
+            rounded-xl p-6">
             <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
@@ -442,7 +442,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50
-            rounded-xl border p-6">
+            rounded-xl p-6">
             <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
@@ -471,7 +471,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50
-            rounded-xl border p-6">
+            rounded-xl p-6">
             <h3 className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-4"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
