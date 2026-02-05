@@ -8,6 +8,7 @@ import { StatsBar } from "./StatsBar";
 import { ProgressRing } from "./ProgressRing";
 import { HabitCategory } from "./HabitCategory";
 import { PatternIntelligence } from "./PatternIntelligence";
+import { MilestonePopup } from "./MilestonePopup";
 import { SprintTimer } from "./SprintTimer";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -108,6 +109,8 @@ export function HabitDashboardConnected() {
     (sum, cat) => sum + cat.habits.reduce((s, h) => s + h.xp, 0),
     0
   );
+
+  const progress = maxXP > 0 ? (totalXP / maxXP) * 100 : 0;
 
   const handleHabitToggle = async (categoryName: string, habitId: string) => {
     const category = localCategories.find((c) => c.name === categoryName);
@@ -223,6 +226,7 @@ export function HabitDashboardConnected() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a] p-6">
+      <MilestonePopup progress={progress} />
       <div className="mx-auto max-w-4xl space-y-6">
         {/* Header */}
         <header className="space-y-2">
