@@ -114,7 +114,7 @@ export function HabitCategory({
         <CardContent className="space-y-4 pt-0">
           {/* Core Habits Section */}
           {coreHabits.length > 0 && (
-            <div className="space-y-0">
+            <div className="space-y-0 divide-y divide-white/[0.06] dark:divide-white/[0.06]">
               {coreHabits.map((habit) => (
                 <HabitItem
                   key={habit.id}
@@ -128,7 +128,7 @@ export function HabitCategory({
 
           {/* Extra Habits Collapse Section */}
           {extraHabits.length > 0 && (
-            <div className="space-y-0">
+            <div className="space-y-0 border-t border-white/[0.06] dark:border-white/[0.06] pt-4">
               {!coreComplete ? (
                 <div className="flex w-full items-center gap-2 px-1 py-2 text-xs opacity-60">
                   <ChevronRight className="h-3 w-3 text-muted-foreground/40" />
@@ -141,7 +141,7 @@ export function HabitCategory({
                   </span>
                 </div>
               ) : (
-                <div className="space-y-0">
+                <div className="space-y-0 rounded-lg border border-[#00E5FF]/30 dark:border-[#00E5FF]/30 bg-[rgba(0,180,220,0.03)] dark:bg-[rgba(0,229,255,0.03)] p-3">
                   <div className="flex w-full items-center gap-2 px-1 py-2 text-xs">
                     <ChevronDown className="h-3 w-3 text-cyan-500" />
                     <span className="text-cyan-600 dark:text-cyan-400 font-medium">
@@ -154,7 +154,7 @@ export function HabitCategory({
                   </div>
 
                   {/* Extra Habits List - always shown when unlocked */}
-                  <div className="space-y-0 pt-2">
+                  <div className="space-y-0 divide-y divide-white/[0.06] dark:divide-white/[0.06]">
                     {extraHabits.map((habit) => (
                       <HabitItem
                         key={habit.id}

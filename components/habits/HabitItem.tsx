@@ -120,11 +120,11 @@ export function HabitItem({
   };
 
   return (
-    <div className="group relative flex items-center gap-3 py-2 transition-all border-b border-[#1A1A2E]/30 last:border-b-0">
+    <div className="group relative flex items-center gap-3 py-2 transition-all">
       <Checkbox
         checked={completed}
         onCheckedChange={handleToggle}
-        className="h-5 w-5 rounded-md border-border data-[state=checked]:border-[#00E676] data-[state=checked]:bg-[#00E676] data-[state=checked]:text-white data-[state=checked]:rounded-[6px]"
+        className="h-5 w-5 rounded-md border-border data-[state=checked]:border-0 data-[state=checked]:bg-[#4CAF50] data-[state=checked]:text-white data-[state=checked]:rounded-[6px]"
       />
 
       <div className="flex-1">
