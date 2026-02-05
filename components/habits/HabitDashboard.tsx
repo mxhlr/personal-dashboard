@@ -6,6 +6,7 @@ import { StatsBar } from "./StatsBar";
 import { ProgressRing } from "./ProgressRing";
 import { HabitCategory } from "./HabitCategory";
 import { PatternIntelligence } from "./PatternIntelligence";
+import { MilestonePopup } from "./MilestonePopup";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -90,6 +91,8 @@ export function HabitDashboard() {
     0
   );
 
+  const progress = maxXP > 0 ? (totalXP / maxXP) * 100 : 0;
+
   const handleHabitToggle = (categoryName: string, habitId: string) => {
     setCategories((prev) =>
       prev.map((cat) =>
@@ -131,6 +134,7 @@ export function HabitDashboard() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] p-6">
+      <MilestonePopup progress={progress} />
       <div className="mx-auto max-w-4xl space-y-6">
         {/* Header */}
         <header className="space-y-2 text-center">

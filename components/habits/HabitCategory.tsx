@@ -75,18 +75,12 @@ export function HabitCategory({
             onClick={() => setIsExpanded(!isExpanded)}
             className="flex items-center gap-3 text-left"
           >
-            {allHabitsComplete ? (
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#4CAF50] text-white">
-                <span className="text-sm">✓</span>
-              </div>
-            ) : (
-              <div
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-medium text-[#E0E0E0]"
-                style={{ backgroundColor: circleColor }}
-              >
-                {categoryNumber}
-              </div>
-            )}
+            <div
+              className="flex h-8 w-8 items-center justify-center rounded-lg border-2 text-sm font-medium text-[#E0E0E0] bg-transparent"
+              style={{ borderColor: circleColor }}
+            >
+              {categoryNumber}
+            </div>
             <div>
               <h3 className="text-base font-semibold">{name}</h3>
             </div>
