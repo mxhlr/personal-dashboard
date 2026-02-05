@@ -125,7 +125,7 @@ export function HabitItem({
       <Checkbox
         checked={completed}
         onCheckedChange={handleToggle}
-        className="h-5 w-5 rounded-md data-[state=checked]:!border-[#00E676] data-[state=checked]:!bg-[#00E676] data-[state=checked]:!text-white"
+        className="h-5 w-5 rounded-md border-border data-[state=checked]:border-[#00E676] data-[state=checked]:bg-[#00E676] data-[state=checked]:text-white"
       />
 
       <div className="flex-1">
