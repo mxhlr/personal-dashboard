@@ -175,7 +175,7 @@ export function StoicQuote() {
 
         <blockquote className="pl-5 space-y-2">
           <p className="text-[15px] leading-relaxed dark:text-[#E0E0E0] text-[#1A1A1A] font-medium italic">
-            "{todayQuote.text}"
+            &ldquo;{todayQuote.text}&rdquo;
           </p>
           <footer className="text-sm dark:text-[#888888] text-[#666666] font-orbitron">
             — {todayQuote.author}

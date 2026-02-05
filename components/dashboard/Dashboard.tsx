@@ -37,11 +37,10 @@ export function Dashboard({ onNavigate }: DashboardProps) {
   }
 
   // Calculate today's progress
-  const coreHabits = habitTemplates.filter((h) => !h.isExtra);
-  const extraHabits = habitTemplates.filter((h) => h.isExtra);
+  const coreHabits = habitTemplates.filter((h) => h.isCore);
   const totalHabits = habitTemplates.length;
   const completedHabits = dailyHabits.filter((h) => h.completed).length;
-  const completedCore = dailyHabits.filter((h) => h.completed && !habitTemplates.find(t => t._id === h.templateId)?.isExtra).length;
+  const completedCore = dailyHabits.filter((h) => h.completed && habitTemplates.find(t => t._id === h.templateId)?.isCore).length;
   const todayProgress = totalHabits > 0 ? Math.round((completedHabits / totalHabits) * 100) : 0;
   const todayXP = dailyHabits.reduce((sum, h) => sum + (h.completed ? h.xpEarned : 0), 0);
   const coreComplete = completedCore === coreHabits.length && coreHabits.length > 0;
@@ -158,7 +157,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
               : coreComplete
                 ? 'dark:border-[rgba(0,230,118,0.25)] border-[rgba(76,175,80,0.3)] dark:hover:border-[rgba(0,230,118,0.35)] hover:border-[rgba(76,175,80,0.4)] dark:hover:shadow-[0_0_35px_rgba(0,230,118,0.25)] hover:shadow-[0_8_35px_rgba(76,175,80,0.3)]'
                 : 'dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)] dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.25)]'
-            }`"
+            }`}
             style={{
               background: todayComplete
                 ? 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(0, 230, 118, 0.06) 100%), rgba(26, 26, 26, 0.5)'
