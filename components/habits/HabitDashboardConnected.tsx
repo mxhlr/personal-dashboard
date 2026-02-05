@@ -322,9 +322,9 @@ export function HabitDashboardConnected() {
           <Button
             onClick={handleFinishDay}
             size="lg"
-            className="px-12 py-6 bg-gradient-to-r from-[#00E676] to-[#00C853] text-white font-bold font-orbitron uppercase tracking-wider text-sm
-              border border-[#00E676]/30 shadow-[0_0_20px_rgba(0,230,118,0.3)]
-              hover:shadow-[0_0_30px_rgba(0,230,118,0.5)] hover:scale-105
+            className="px-12 py-6 bg-[#00E676] dark:text-black text-black font-bold font-orbitron uppercase tracking-wider text-sm
+              border border-[#00E676]/50 shadow-sm
+              hover:bg-[#00C853] hover:shadow-md hover:scale-[1.02]
               transition-all duration-300"
           >
             🎊 Finish Day
