@@ -119,32 +119,24 @@ export default function DashboardPage() {
 
           {/* Tab 2: Review & Planning */}
           {activeTab === "planning" && (
-            <div className="min-h-[calc(100vh-64px)]">
+            <>
               {/* Review Forms */}
               {selectedReview === "weekly" && (
-                <div className="container mx-auto px-4 py-8">
-                  <WeeklyReviewForm year={currentYear} weekNumber={currentWeek} />
-                </div>
+                <WeeklyReviewForm year={currentYear} weekNumber={currentWeek} />
               )}
 
               {selectedReview === "monthly" && (
-                <div className="container mx-auto px-4 py-8">
-                  <MonthlyReviewForm year={currentYear} month={currentMonth} />
-                </div>
+                <MonthlyReviewForm year={currentYear} month={currentMonth} />
               )}
 
               {selectedReview === "quarterly" && (
-                <div className="container mx-auto px-4 py-8">
-                  <QuarterlyReviewForm year={currentYear} quarter={currentQuarter} />
-                </div>
+                <QuarterlyReviewForm year={currentYear} quarter={currentQuarter} />
               )}
 
               {selectedReview === "annual" && (
-                <div className="container mx-auto px-4 py-8">
-                  <AnnualReviewForm year={currentYear} />
-                </div>
+                <AnnualReviewForm year={currentYear} />
               )}
-            </div>
+            </>
           )}
 
           {/* Tab 3: Data View */}

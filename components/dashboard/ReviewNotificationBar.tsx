@@ -67,8 +67,9 @@ export function ReviewNotificationBar() {
         timeString: daysUntilAnnual === 0 ? "heute" : daysUntilAnnual === 1 ? "morgen" : `in ${daysUntilAnnual} Tagen`,
       });
 
-      // Show all reviews
-      setNotifications(notifs);
+      // Only show reviews that are in the next 3 days
+      const upcomingNotifs = notifs.filter(n => n.daysUntil <= 3);
+      setNotifications(upcomingNotifs);
     };
 
     calculateNotifications();
@@ -94,8 +95,7 @@ export function ReviewNotificationBar() {
             <div className={`w-2 h-2 rounded-full ${
               notif.daysUntil === 0 ? 'bg-red-500 animate-pulse' :
               notif.daysUntil === 1 ? 'bg-orange-500' :
-              notif.daysUntil <= 3 ? 'bg-yellow-500' :
-              'dark:bg-white/20 bg-black/20'
+              'bg-yellow-500'
             }`} />
             <span
               className="text-[12px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666]"
