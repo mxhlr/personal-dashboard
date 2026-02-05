@@ -245,18 +245,26 @@ export function HabitDashboardConnected() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0a0a0a] p-6">
+    <div
+      className="min-h-screen p-6"
+      style={{
+        background: 'radial-gradient(ellipse at center, #12121F 0%, #0A0A0F 100%)'
+      }}
+    >
       <MilestonePopup progress={progress} />
       <div className="mx-auto max-w-4xl space-y-6">
         {/* Header */}
         <header className="space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex-1" />
-            <div className="flex-1 text-center">
-              <p className="font-mono text-4xl font-bold text-foreground">
+            <div className="flex-1 text-center space-y-1">
+              <p
+                className="font-[family-name:var(--font-orbitron)] text-[56px] font-bold text-[#0077B6] dark:text-[#00E5FF]"
+                style={{ letterSpacing: '2px' }}
+              >
                 {currentTime}
               </p>
-              <p className="text-lg font-semibold text-[#1A1A1A] dark:text-[#E0E0E0]">Execute.</p>
+              <p className="text-lg font-normal text-[#1A1A1A] dark:text-[#E0E0E0]">Execute.</p>
             </div>
             <div className="flex-1" />
           </div>

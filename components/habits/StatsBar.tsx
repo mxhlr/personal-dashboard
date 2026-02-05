@@ -11,23 +11,23 @@ export function StatsBar({ streak, level, weekCompleted, totalXP }: StatsBarProp
   return (
     <div className="grid grid-cols-4 gap-6">
       <StatCard
-        label="Streak"
+        label="🔥 STREAK"
         value={streak}
-        accentColor="text-orange-500"
+        accentColor="text-[#FF9800]"
       />
       <StatCard
-        label="Level"
+        label="LEVEL"
         value={level}
-        accentColor="text-cyan-400"
+        accentColor="text-[#00E5FF]"
       />
       <StatCard
-        label="Week"
-        value={`${weekCompleted}/7`}
-        accentColor="text-green-500"
+        label="WEEK"
+        value={`${weekCompleted}/5`}
+        accentColor="text-[#00E676]"
       />
       <StatCard
-        label="Total XP"
-        value={totalXP}
+        label="XP"
+        value={totalXP.toLocaleString()}
         accentColor="text-[#FFD700]"
       />
     </div>
@@ -45,10 +45,15 @@ function StatCard({
 }) {
   return (
     <div className="text-center">
-      <p className={`text-3xl font-bold ${accentColor}`}>
+      <p className={`text-[48px] font-bold ${accentColor}`}>
         {value}
       </p>
-      <p className="text-xs mt-1 text-[#666666] dark:text-[#888888]">{label}</p>
+      <p
+        className="text-[11px] mt-1 text-[#666] uppercase"
+        style={{ letterSpacing: '2px' }}
+      >
+        {label}
+      </p>
     </div>
   );
 }
