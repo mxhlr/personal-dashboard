@@ -7,7 +7,7 @@ import { WinConditionBanner } from "./WinConditionBanner";
 import { StatsBar } from "./StatsBar";
 import { ProgressRing } from "./ProgressRing";
 import { HabitCategory } from "./HabitCategory";
-import { PatternIntelligence } from "./PatternIntelligence";
+// import { PatternIntelligence } from "./PatternIntelligence";
 import { SprintTimer } from "./SprintTimer";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -38,15 +38,14 @@ export function HabitDashboardConnected() {
 
   // Fetch data from Convex
   const userStats = useQuery(api.gamification.getUserStats);
-  const categories = useQuery(api.habitCategories.list);
-  const habitTemplates = useQuery(api.habitTemplates.list);
-  const dailyHabits = useQuery(api.dailyHabits.getByDate, { date: today });
-  const patternData = useQuery(api.analytics.getPatternIntelligence);
+  const categories = useQuery(api.habitCategories.listCategories);
+  const habitTemplates = useQuery(api.habitTemplates.listTemplates, {});
+  const dailyHabits = useQuery(api.dailyHabits.getHabitsForDate, { date: today });
+  // const patternData = useQuery(api.analytics.getPatternIntelligence);
 
   // Mutations
-  const completeHabit = useMutation(api.dailyHabits.complete);
-  const skipHabit = useMutation(api.dailyHabits.skip);
-  const finishDay = useMutation(api.dailyHabits.finishDay);
+  const completeHabit = useMutation(api.gamification.completeHabit);
+  const skipHabit = useMutation(api.gamification.skipHabit);
 
   const [currentTime, setCurrentTime] = useState("");
   const [localCategories, setLocalCategories] = useState<Category[]>([]);
@@ -113,7 +112,7 @@ export function HabitDashboardConnected() {
     const category = localCategories.find((c) => c.name === categoryName);
     const habit = category?.habits.find((h) => h.id === habitId);
 
-    if (!habit) return;
+    if (!habit || !category) return;
 
     try {
       if (!habit.completed) {
@@ -189,25 +188,23 @@ export function HabitDashboardConnected() {
     }
   };
 
-  const handleFinishDay = async () => {
-    try {
-      const result = await finishDay({ date: today });
+  const handleFinishDay = () => {
+    // Calculate today's XP
+    const todayXP = localCategories.reduce(
+      (sum, cat) =>
+        sum + cat.habits.reduce((s, h) => s + (h.completed ? h.xp : 0), 0),
+      0
+    );
 
-      toast({
-        title: "🎊 Day Complete!",
-        description: `You earned ${result.totalXP} XP today! ${
-          result.streakIncreased ? `🔥 ${result.newStreak} day streak!` : ""
-        }`,
-        duration: 5000,
-      });
-    } catch (error) {
-      console.error("Failed to finish day:", error);
-      toast({
-        title: "Error",
-        description: "Failed to finish day. Please try again.",
-        variant: "destructive",
-      });
-    }
+    toast({
+      title: "🎊 Day Complete!",
+      description: `You earned ${todayXP} XP today! ${
+        userStats && userStats.currentStreak > 0
+          ? `🔥 ${userStats.currentStreak} day streak!`
+          : ""
+      }`,
+      duration: 5000,
+    });
   };
 
   // Show loading state
@@ -265,7 +262,8 @@ export function HabitDashboardConnected() {
         </ScrollArea>
 
         {/* Pattern Intelligence */}
-        {patternData && <PatternIntelligence data={patternData} />}
+        {/* TODO: Re-enable after aligning data format */}
+        {/* {patternData && <PatternIntelligence data={patternData} />} */}
 
         {/* Finish Day Button */}
         <Button
