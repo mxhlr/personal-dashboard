@@ -236,6 +236,69 @@ export function OKROverview() {
           )}
         </Card>
 
+        {/* Quarterly Milestones */}
+        <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
+          shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <Flag className="w-6 h-6 dark:text-[#00E5FF] text-[#0097A7]" />
+              <h2 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0097A7]">
+                Q{currentQuarter} {currentYear} MILESTONES
+              </h2>
+            </div>
+            <span className="text-sm dark:text-[#888888] text-[#666666] font-bold"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+              {quarterlyMilestones.length} {quarterlyMilestones.length === 1 ? "Milestone" : "Milestones"}
+            </span>
+          </div>
+
+          {quarterlyMilestones.length === 0 ? (
+            <div className="text-center py-12">
+              <Flag className="w-16 h-16 dark:text-[#444444] text-[#CCCCCC] mx-auto mb-4 opacity-30" />
+              <p className="text-sm dark:text-[#666666] text-[#888888]"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                No milestones set for this quarter.<br />
+                Complete last quarter&apos;s review to plan ahead.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {quarterlyMilestones.map((milestone, index) => {
+                const config = areaConfig[milestone.area] || {
+                  icon: "🎯",
+                  color: "text-gray-400",
+                  gradient: "from-gray-500/20 to-gray-600/10",
+                };
+
+                return (
+                  <div
+                    key={index}
+                    className={`p-6 rounded-xl bg-gradient-to-br ${config.gradient}
+                      dark:border dark:border-white/[0.08] border border-black/[0.05]
+                      transition-all duration-200 hover:scale-[1.02]`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl mt-1">{config.icon}</span>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className={`text-xs font-bold uppercase tracking-wider ${config.color}`}
+                            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                            {milestone.area}
+                          </span>
+                        </div>
+                        <p className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
+                          style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                          {milestone.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </Card>
+
         {/* Weekly Goals */}
         <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
           shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
