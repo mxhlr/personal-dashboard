@@ -267,8 +267,8 @@ export function HabitDashboardConnected() {
           <SprintTimer endOfDayHour={18} />
         </header>
 
-        {/* Progress Ring */}
-        <ProgressRing current={totalXP} total={maxXP} />
+        {/* Win Condition */}
+        <WinConditionBanner isAchieved={progress === 100} />
 
         {/* Stats Bar */}
         <StatsBar
@@ -278,14 +278,14 @@ export function HabitDashboardConnected() {
           totalXP={userStats.totalXP}
         />
 
+        {/* Progress Ring */}
+        <ProgressRing current={totalXP} total={maxXP} />
+
         {/* Level Progress Bar */}
         <LevelProgressBar
           level={userStats.level}
           currentXP={userStats.totalXP}
         />
-
-        {/* Win Condition */}
-        <WinConditionBanner isAchieved={progress === 100} />
 
         {/* Habit Categories */}
         <div className="space-y-6">
