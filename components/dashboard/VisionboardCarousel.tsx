@@ -29,10 +29,18 @@ export function VisionboardCarousel() {
     );
   }
 
-  const totalPages = Math.ceil(visionboardImages.length / CARDS_PER_PAGE);
+  // If less than 5 images, duplicate them to fill 5 slots
+  let displayImages = [...visionboardImages];
+  if (displayImages.length < CARDS_PER_PAGE) {
+    while (displayImages.length < CARDS_PER_PAGE) {
+      displayImages = [...displayImages, ...visionboardImages];
+    }
+  }
+
+  const totalPages = Math.ceil(displayImages.length / CARDS_PER_PAGE);
   const startIndex = currentPage * CARDS_PER_PAGE;
   const endIndex = startIndex + CARDS_PER_PAGE;
-  const currentImages = visionboardImages.slice(startIndex, endIndex);
+  const currentImages = displayImages.slice(startIndex, endIndex).slice(0, CARDS_PER_PAGE);
 
   const handlePrevious = () => {
     setCurrentPage((prev) => (prev > 0 ? prev - 1 : totalPages - 1));
@@ -104,11 +112,11 @@ export function VisionboardCarousel() {
           </button>
         )}
 
-        {/* Cards Grid - Fixed 5 cards per page */}
+        {/* Cards Grid - Always 5 cards per page */}
         <div className="grid grid-cols-5 gap-4">
-          {currentImages.map((image) => (
+          {currentImages.map((image, index) => (
             <div
-              key={image._id}
+              key={`${image._id}-${index}`}
               className="rounded-lg overflow-hidden shadow-sm
                 hover:shadow-lg transition-all duration-200 hover:scale-[1.02]"
             >
@@ -143,22 +151,6 @@ export function VisionboardCarousel() {
               )}
             </div>
           ))}
-
-          {/* Fill empty slots if less than 5 images on last page */}
-          {currentImages.length < CARDS_PER_PAGE &&
-            Array.from({ length: CARDS_PER_PAGE - currentImages.length }).map(
-              (_, index) => (
-                <div
-                  key={`empty-${index}`}
-                  className="rounded-lg border-2 border-dashed dark:border-white/10 border-black/10
-                    aspect-square flex items-center justify-center"
-                >
-                  <span className="text-[11px] dark:text-[#666666] text-[#999999]">
-                    {/* Empty slot */}
-                  </span>
-                </div>
-              )
-            )}
         </div>
       </div>
 

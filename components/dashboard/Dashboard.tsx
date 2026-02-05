@@ -20,6 +20,7 @@ import { WeeklyProgressTracker } from "./WeeklyProgressTracker";
 import { QuickStatsBadge } from "./QuickStatsBadge";
 import { VisionboardCarousel } from "./VisionboardCarousel";
 import { WeeklyGoalsWidget } from "./WeeklyGoalsWidget";
+import { MonthlyOKRProgress } from "./MonthlyOKRProgress";
 
 interface DashboardProps {
   onNavigate: (tab: "daily-log" | "visionboard" | "planning" | "data" | "coach") => void;
@@ -221,6 +222,9 @@ export function Dashboard({ onNavigate }: DashboardProps) {
 
       {/* Weekly Goals Widget */}
       <WeeklyGoalsWidget />
+
+      {/* Monthly OKR Progress Widget */}
+      <MonthlyOKRProgress />
 
         {/* North Stars - Gaming HUD Style */}
         <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80

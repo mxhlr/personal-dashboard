@@ -70,10 +70,16 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
 
     setIsSubmitting(true);
     try {
+      // Filter out empty OKRs
+      const validOKRs = nextMonthOKRs.filter(
+        okr => okr.objective.trim() !== "" && okr.keyResults.some(kr => kr.description.trim() !== "")
+      );
+
       await submitReview({
         year,
         month,
         responses: formData,
+        nextMonthOKRs: validOKRs.length > 0 ? validOKRs : undefined,
       });
       setIsReadOnly(true);
       toast.success("Monthly Review erfolgreich gespeichert!");
@@ -87,6 +93,55 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
 
   const handleEdit = () => {
     setIsReadOnly(false);
+  };
+
+  // OKR Helper Functions
+  const addOKR = () => {
+    if (nextMonthOKRs.length < 3) {
+      setNextMonthOKRs([
+        ...nextMonthOKRs,
+        {
+          objective: "",
+          area: "Wealth",
+          keyResults: [{ description: "", target: 0, unit: "" }],
+        },
+      ]);
+    }
+  };
+
+  const removeOKR = (index: number) => {
+    setNextMonthOKRs(nextMonthOKRs.filter((_, i) => i !== index));
+  };
+
+  const updateOKR = (index: number, field: "objective" | "area", value: string) => {
+    const updated = [...nextMonthOKRs];
+    updated[index][field] = value;
+    setNextMonthOKRs(updated);
+  };
+
+  const addKeyResult = (okrIndex: number) => {
+    const updated = [...nextMonthOKRs];
+    if (updated[okrIndex].keyResults.length < 3) {
+      updated[okrIndex].keyResults.push({ description: "", target: 0, unit: "" });
+      setNextMonthOKRs(updated);
+    }
+  };
+
+  const removeKeyResult = (okrIndex: number, krIndex: number) => {
+    const updated = [...nextMonthOKRs];
+    updated[okrIndex].keyResults = updated[okrIndex].keyResults.filter((_, i) => i !== krIndex);
+    setNextMonthOKRs(updated);
+  };
+
+  const updateKeyResult = (
+    okrIndex: number,
+    krIndex: number,
+    field: "description" | "target" | "unit",
+    value: string | number
+  ) => {
+    const updated = [...nextMonthOKRs];
+    updated[okrIndex].keyResults[krIndex][field] = value as any;
+    setNextMonthOKRs(updated);
   };
 
   return (
@@ -337,6 +392,228 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Dein Fokus für nächsten Monat..."
             />
+          </div>
+
+          {/* Next Month OKRs Section */}
+          <div className="space-y-6 pt-8">
+            <div className="text-center pb-2">
+              <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7]"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                Next Month OKRs (Plan Ahead)
+              </h3>
+              <p className="text-[11px] dark:text-[#888888] text-[#666666] mt-1"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                Set 1-3 Objectives with Key Results for next month
+              </p>
+            </div>
+
+            {nextMonthOKRs.map((okr, okrIndex) => (
+              <div
+                key={okrIndex}
+                className="dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,151,167,0.2)] border-2
+                  dark:bg-[rgba(0,229,255,0.02)] bg-[rgba(0,151,167,0.03)]
+                  backdrop-blur-sm rounded-xl p-6 space-y-4"
+              >
+                {/* OKR Header */}
+                <div className="flex items-start justify-between gap-4">
+                  <label className="text-[11px] font-bold uppercase tracking-wider
+                    dark:text-[#00E5FF] text-[#0097A7] flex-shrink-0"
+                    style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                    OKR {okrIndex + 1}
+                  </label>
+                  {!isReadOnly && nextMonthOKRs.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeOKR(okrIndex)}
+                      className="text-[10px] dark:text-[#888888] text-[#666666]
+                        dark:hover:text-red-400 hover:text-red-600
+                        uppercase tracking-wider transition-colors"
+                      style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                    >
+                      Remove OKR
+                    </button>
+                  )}
+                </div>
+
+                {/* Objective */}
+                <div>
+                  <label className="text-[10px] font-bold uppercase tracking-wider
+                    dark:text-[#888888] text-[#666666] block mb-2"
+                    style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                    Objective
+                  </label>
+                  <textarea
+                    value={okr.objective}
+                    onChange={(e) => updateOKR(okrIndex, "objective", e.target.value)}
+                    disabled={isReadOnly}
+                    className="w-full min-h-[80px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
+                      focus:outline-none focus:ring-0
+                      disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                      dark:text-[#E0E0E0] text-[#1A1A1A]"
+                    style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
+                    placeholder="E.g., Launch side project MVP..."
+                  />
+                </div>
+
+                {/* Area Selection */}
+                <div>
+                  <label className="text-[10px] font-bold uppercase tracking-wider
+                    dark:text-[#888888] text-[#666666] block mb-2"
+                    style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                    North Star Area
+                  </label>
+                  <select
+                    value={okr.area}
+                    onChange={(e) => updateOKR(okrIndex, "area", e.target.value)}
+                    disabled={isReadOnly}
+                    className="w-full px-3 py-2 dark:bg-white/[0.03] bg-black/[0.02]
+                      dark:border-white/[0.1] border-black/[0.08] border rounded-lg
+                      dark:text-[#E0E0E0] text-[#1A1A1A]
+                      focus:outline-none focus:ring-2 focus:ring-[#00E5FF]/50
+                      disabled:cursor-not-allowed text-[13px]"
+                    style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                  >
+                    <option value="Wealth">💰 Wealth</option>
+                    <option value="Health">🏃 Health</option>
+                    <option value="Love">❤️ Love</option>
+                    <option value="Happiness">😊 Happiness</option>
+                  </select>
+                </div>
+
+                {/* Key Results */}
+                <div className="pt-4 border-t dark:border-[rgba(0,229,255,0.1)] border-[rgba(0,151,167,0.15)]">
+                  <label className="text-[10px] font-bold uppercase tracking-wider
+                    dark:text-[#888888] text-[#666666] block mb-3"
+                    style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                    Key Results
+                  </label>
+
+                  <div className="space-y-3">
+                    {okr.keyResults.map((kr, krIndex) => (
+                      <div
+                        key={krIndex}
+                        className="pl-4 border-l-2 dark:border-[#00E5FF]/30 border-[#0097A7]/30 space-y-2"
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <span className="text-[10px] font-bold uppercase tracking-wider
+                            dark:text-[#666666] text-[#888888]"
+                            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                            KR {krIndex + 1}
+                          </span>
+                          {!isReadOnly && okr.keyResults.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => removeKeyResult(okrIndex, krIndex)}
+                              className="text-[9px] dark:text-[#666666] text-[#888888]
+                                dark:hover:text-red-400 hover:text-red-600
+                                uppercase tracking-wider transition-colors"
+                              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                            >
+                              Remove
+                            </button>
+                          )}
+                        </div>
+
+                        <textarea
+                          value={kr.description}
+                          onChange={(e) =>
+                            updateKeyResult(okrIndex, krIndex, "description", e.target.value)
+                          }
+                          disabled={isReadOnly}
+                          className="w-full min-h-[60px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
+                            focus:outline-none focus:ring-0
+                            disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                            dark:text-[#E0E0E0] text-[#1A1A1A]"
+                          style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '13px', lineHeight: '1.6' }}
+                          placeholder="E.g., Run 3x per week..."
+                        />
+
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="text-[9px] font-bold uppercase tracking-wider
+                              dark:text-[#666666] text-[#888888] block mb-1"
+                              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                              Target
+                            </label>
+                            <input
+                              type="number"
+                              value={kr.target}
+                              onChange={(e) =>
+                                updateKeyResult(okrIndex, krIndex, "target", Number(e.target.value))
+                              }
+                              disabled={isReadOnly}
+                              className="w-full px-3 py-2 dark:bg-white/[0.03] bg-black/[0.02]
+                                dark:border-white/[0.1] border-black/[0.08] border rounded-lg
+                                dark:text-[#E0E0E0] text-[#1A1A1A]
+                                focus:outline-none focus:ring-2 focus:ring-[#00E5FF]/50
+                                disabled:cursor-not-allowed text-[12px]"
+                              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                              placeholder="12"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-[9px] font-bold uppercase tracking-wider
+                              dark:text-[#666666] text-[#888888] block mb-1"
+                              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                              Unit
+                            </label>
+                            <input
+                              type="text"
+                              value={kr.unit}
+                              onChange={(e) =>
+                                updateKeyResult(okrIndex, krIndex, "unit", e.target.value)
+                              }
+                              disabled={isReadOnly}
+                              className="w-full px-3 py-2 dark:bg-white/[0.03] bg-black/[0.02]
+                                dark:border-white/[0.1] border-black/[0.08] border rounded-lg
+                                dark:text-[#E0E0E0] text-[#1A1A1A]
+                                focus:outline-none focus:ring-2 focus:ring-[#00E5FF]/50
+                                disabled:cursor-not-allowed text-[12px]"
+                              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                              placeholder="runs"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {!isReadOnly && okr.keyResults.length < 3 && (
+                      <button
+                        type="button"
+                        onClick={() => addKeyResult(okrIndex)}
+                        className="w-full px-4 py-2 dark:bg-white/[0.02] bg-black/[0.01]
+                          dark:border dark:border-dashed dark:border-white/[0.1] border border-dashed border-black/[0.08]
+                          dark:text-[#666666] text-[#888888]
+                          dark:hover:bg-white/[0.04] hover:bg-black/[0.02]
+                          dark:hover:border-[#00E5FF]/20 hover:border-[#0097A7]/20
+                          dark:hover:text-[#888888] hover:text-[#666666]
+                          uppercase tracking-wider text-[10px] font-bold transition-all duration-200 rounded-lg"
+                        style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                      >
+                        + Add Key Result ({okr.keyResults.length}/3)
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {!isReadOnly && nextMonthOKRs.length < 3 && (
+              <button
+                type="button"
+                onClick={addOKR}
+                className="w-full px-6 py-3 dark:bg-white/[0.03] bg-black/[0.02]
+                  dark:border dark:border-dashed dark:border-white/[0.15] border border-dashed border-black/[0.1]
+                  dark:text-[#888888] text-[#666666]
+                  dark:hover:bg-white/[0.06] hover:bg-black/[0.04]
+                  dark:hover:border-[#00E5FF]/30 hover:border-[#0097A7]/30
+                  dark:hover:text-[#00E5FF] hover:text-[#0097A7]
+                  uppercase tracking-wider text-[11px] font-bold transition-all duration-200 rounded-lg"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+              >
+                + Add OKR ({nextMonthOKRs.length}/3)
+              </button>
+            )}
           </div>
 
           {/* Buttons */}
