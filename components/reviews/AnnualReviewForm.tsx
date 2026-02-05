@@ -255,7 +255,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Part 1: North Star Check */}
-          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+          <div className="group dark:border-border/50 border-border/30
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50
@@ -366,7 +366,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
 
           {/* Part 2: Reflection Questions */}
           {/* Question 1 */}
-          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+          <div className="group dark:border-border/50 border-border/30
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50
@@ -395,7 +395,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
           </div>
 
           {/* Question 2 */}
-          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+          <div className="group dark:border-border/50 border-border/30
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50
@@ -421,7 +421,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
           </div>
 
           {/* Question 3 */}
-          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+          <div className="group dark:border-border/50 border-border/30
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50
@@ -447,7 +447,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
           </div>
 
           {/* Question 4 */}
-          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+          <div className="group dark:border-border/50 border-border/30
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50
@@ -476,7 +476,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
           </div>
 
           {/* Question 5 */}
-          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+          <div className="group dark:border-border/50 border-border/30
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50
@@ -505,7 +505,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
           </div>
 
           {/* Part 3: Next Year North Stars */}
-          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+          <div className="group dark:border-border/50 border-border/30
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50

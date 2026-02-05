@@ -144,7 +144,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Question 1 */}
-          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+          <div className="group dark:border-border/50 border-border/30
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50
@@ -170,7 +170,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
           </div>
 
           {/* Question 2 */}
-          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+          <div className="group dark:border-border/50 border-border/30
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50
@@ -196,7 +196,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
           </div>
 
           {/* Question 3 */}
-          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+          <div className="group dark:border-border/50 border-border/30
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50
@@ -222,7 +222,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
           </div>
 
           {/* Question 4 */}
-          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+          <div className="group dark:border-border/50 border-border/30
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50
@@ -248,7 +248,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
           </div>
 
           {/* Question 5 */}
-          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+          <div className="group dark:border-border/50 border-border/30
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50
@@ -274,7 +274,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
           </div>
 
           {/* Question 6 */}
-          <div className="group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+          <div className="group dark:border-border/50 border-border/30
             transition-all duration-300 ease-out
             hover:shadow-xl hover:-translate-y-1 shadow-sm
             dark:hover:border-border hover:border-border/50
