@@ -53,7 +53,9 @@ export function WinConditionBanner({ isAchieved = false }: WinConditionBannerPro
     >
       <div className="relative space-y-4 text-center">
         <h3
-          className="text-[13px] font-semibold text-[#1A1A1A] uppercase flex items-center justify-center gap-2"
+          className={`text-[13px] font-semibold uppercase flex items-center justify-center gap-2 ${
+            isAchieved ? 'text-[#FFD700]' : 'text-[#1A1A1A] dark:text-[#E0E0E0]'
+          }`}
           style={{ letterSpacing: '1px' }}
         >
           {isAchieved ? '🏆' : '⚡'} TODAY&apos;S WIN CONDITION {isAchieved && <span className="text-[#FFD700]">ACHIEVED</span>}
@@ -63,26 +65,11 @@ export function WinConditionBanner({ isAchieved = false }: WinConditionBannerPro
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onBlur={handleBlur}
-          className="border-0 bg-transparent text-center placeholder:text-[#888888] focus-visible:ring-0 focus-visible:ring-offset-0 px-0 text-[#1A1A1A]"
+          className="border-0 bg-transparent text-center placeholder:text-[#888888] dark:placeholder:text-[#666666] focus-visible:ring-0 focus-visible:ring-offset-0 px-0 text-[#1A1A1A] dark:text-[#E0E0E0]"
           style={{ fontSize: '16px' }}
         />
       </div>
 
-      {/* Dark mode override */}
-      <style jsx>{`
-        :global(.dark) div {
-          background: ${isAchieved ? 'rgba(255, 215, 0, 0.15)' : 'rgba(15, 15, 30, 0.8)'} !important;
-          background-image: ${isAchieved
-            ? 'linear-gradient(rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.15)), linear-gradient(135deg, rgba(255, 215, 0, 0.3) 0%, transparent 100%)'
-            : 'linear-gradient(rgba(15, 15, 30, 0.8), rgba(15, 15, 30, 0.8)), linear-gradient(135deg, rgba(107, 33, 168, 0.4) 0%, transparent 100%)'} !important;
-        }
-        :global(.dark) div h3 {
-          color: ${isAchieved ? '#FFD700' : 'white'} !important;
-        }
-        :global(.dark) div input {
-          color: white !important;
-        }
-      `}</style>
     </div>
   );
 }
