@@ -53,7 +53,7 @@ export function WinConditionBanner({ isAchieved = false }: WinConditionBannerPro
     >
       <div className="relative space-y-4 text-center">
         <h3
-          className="text-[13px] font-semibold uppercase flex items-center justify-center gap-2 text-white"
+          className="text-[13px] font-semibold font-orbitron uppercase flex items-center justify-center gap-2 text-white"
           style={{ letterSpacing: '1px' }}
         >
           {isAchieved ? '🏆' : '⚡'} TODAY&apos;S WIN CONDITION {isAchieved && <span className="text-[#FFD700]">ACHIEVED</span>}
