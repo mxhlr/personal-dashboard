@@ -133,45 +133,52 @@ export function HabitDashboard() {
   };
 
   return (
-    <div
-      className="min-h-screen p-6"
-      style={{
-        background: 'var(--page-background)',
-      }}
-    >
+    <div className="min-h-screen">
       <MilestonePopup progress={progress} />
-      <div className="mx-auto max-w-4xl space-y-6">
-        {/* Header */}
-        <header className="space-y-2 text-center">
-          <p
-            className="font-bold dark:text-[#00E5FF] text-[#0077B6]"
-            style={{
-              fontFamily: 'var(--font-orbitron), "Courier New", monospace',
-              fontSize: '56px',
-              fontWeight: 700,
-              letterSpacing: '2px',
-            }}
-          >
-            {currentTime}
-          </p>
-          <p className="font-normal dark:text-[#E0E0E0] text-[#1A1A1A]" style={{ fontSize: '18px' }}>
-            Execute.
-          </p>
-          <p style={{ fontSize: '14px' }}>
-            <span className="text-[#999] font-normal">Sprint: </span>
-            <span className="font-bold dark:text-[#E0E0E0] text-[#1A1A1A]">6h 14m</span>
-          </p>
-        </header>
 
-        {/* Win Condition */}
-        <WinConditionBanner />
+      {/* Hero Section with edge-to-edge gradient background */}
+      <div
+        className="w-full"
+        style={{
+          background: 'var(--page-background)',
+        }}
+      >
+        <div className="mx-auto max-w-4xl px-6 py-6 space-y-6">
+          {/* Header */}
+          <header className="space-y-2 text-center">
+            <p
+              className="font-bold dark:text-[#00E5FF] text-[#0077B6]"
+              style={{
+                fontFamily: 'var(--font-orbitron), "Courier New", monospace',
+                fontSize: '56px',
+                fontWeight: 700,
+                letterSpacing: '2px',
+              }}
+            >
+              {currentTime}
+            </p>
+            <p className="font-normal dark:text-[#E0E0E0] text-[#1A1A1A]" style={{ fontSize: '18px' }}>
+              Execute.
+            </p>
+            <p style={{ fontSize: '14px' }}>
+              <span className="text-[#999] font-normal">Sprint: </span>
+              <span className="font-bold dark:text-[#E0E0E0] text-[#1A1A1A]">6h 14m</span>
+            </p>
+          </header>
 
-        {/* Stats Bar */}
-        <StatsBar streak={7} level={12} weekCompleted={5} totalXP={totalXP} />
+          {/* Win Condition */}
+          <WinConditionBanner />
 
-        {/* Progress Ring */}
-        <ProgressRing current={totalXP} total={maxXP} />
+          {/* Stats Bar */}
+          <StatsBar streak={7} level={12} weekCompleted={5} totalXP={totalXP} />
 
+          {/* Progress Ring */}
+          <ProgressRing current={totalXP} total={maxXP} />
+        </div>
+      </div>
+
+      {/* Content Section with default background */}
+      <div className="mx-auto max-w-4xl px-6 space-y-6 pb-6">
         {/* Habit Categories */}
         <ScrollArea className="h-[600px] pr-4">
           <div className="space-y-4">
