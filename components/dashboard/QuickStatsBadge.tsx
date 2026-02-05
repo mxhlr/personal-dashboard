@@ -10,8 +10,8 @@ export function QuickStatsBadge() {
     return null;
   }
 
-  const { level, xp, xpForNextLevel, currentStreak } = userStats;
-  const xpProgress = xpForNextLevel > 0 ? Math.round((xp / xpForNextLevel) * 100) : 0;
+  const { level, totalXP, xpForNextLevel, currentStreak } = userStats;
+  const xpProgress = xpForNextLevel > 0 ? Math.round((totalXP / xpForNextLevel) * 100) : 0;
 
   return (
     <div className="flex flex-col gap-3">
@@ -54,7 +54,7 @@ export function QuickStatsBadge() {
             className="text-sm font-bold dark:text-[#E0E0E0] text-[#1A1A1A]"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
           >
-            {xp}/{xpForNextLevel}
+            {totalXP}/{xpForNextLevel}
           </p>
         </div>
       </div>

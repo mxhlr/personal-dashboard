@@ -21,7 +21,7 @@ export function WeeklyProgressTracker() {
   });
 
   // Calculate completed days
-  const completedDays = dailyLogs.filter((log) => log?.isComplete).length;
+  const completedDays = dailyLogs.filter((log) => log?.completed).length;
   const currentStreak = userStats?.currentStreak ?? 0;
 
   return (
@@ -41,7 +41,7 @@ export function WeeklyProgressTracker() {
             const isPast = date < today && !isToday;
             const isFuture = date > today;
             const log = dailyLogs[index];
-            const isComplete = log?.isComplete ?? false;
+            const isComplete = log?.completed ?? false;
 
             return (
               <div key={index} className="flex flex-col items-center gap-1">

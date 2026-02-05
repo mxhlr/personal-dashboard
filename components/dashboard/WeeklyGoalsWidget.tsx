@@ -3,7 +3,7 @@
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Card } from "@/components/ui/card";
-import { CheckCircle2, Circle, Target } from "lucide-react";
+import { Circle, Target } from "lucide-react";
 import { getWeek, getYear } from "date-fns";
 
 export function WeeklyGoalsWidget() {
@@ -45,13 +45,13 @@ export function WeeklyGoalsWidget() {
           </div>
           <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666]"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-            This Week's Goals
+            This Week&apos;s Goals
           </h3>
           <p className="text-[12px] dark:text-[#666666] text-[#888888]"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
             No goals set for this week.
             <br />
-            Complete last week's review to plan ahead.
+            Complete last week&apos;s review to plan ahead.
           </p>
         </div>
       </Card>
@@ -87,7 +87,7 @@ export function WeeklyGoalsWidget() {
             <Target className="w-5 h-5 dark:text-[#00E5FF] text-[#0097A7]" />
             <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-              This Week's Goals
+              This Week&apos;s Goals
             </h3>
           </div>
           <span className="text-[11px] dark:text-[#888888] text-[#666666] font-bold"

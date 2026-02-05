@@ -3,7 +3,7 @@
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Card } from "@/components/ui/card";
-import { Target, TrendingUp } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { getMonth, getYear } from "date-fns";
 
 export function MonthlyOKRProgress() {
@@ -45,13 +45,13 @@ export function MonthlyOKRProgress() {
           </div>
           <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666]"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-            This Month's OKRs
+            This Month&apos;s OKRs
           </h3>
           <p className="text-[12px] dark:text-[#666666] text-[#888888]"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
             No OKRs set for this month.
             <br />
-            Complete last month's review to plan ahead.
+            Complete last month&apos;s review to plan ahead.
           </p>
         </div>
       </Card>
@@ -182,7 +182,7 @@ export function MonthlyOKRProgress() {
         <div className="pt-4 border-t dark:border-white/[0.08] border-black/[0.05] text-center">
           <p className="text-[10px] dark:text-[#888888] text-[#666666] uppercase tracking-wider"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-            Complete this month's review to reflect & plan next month
+            Complete this month&apos;s review to reflect &amp; plan next month
           </p>
         </div>
       </div>

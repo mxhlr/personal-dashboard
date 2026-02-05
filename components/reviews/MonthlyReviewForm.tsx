@@ -140,7 +140,11 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
     value: string | number
   ) => {
     const updated = [...nextMonthOKRs];
-    updated[okrIndex].keyResults[krIndex][field] = value as any;
+    if (field === "target") {
+      updated[okrIndex].keyResults[krIndex][field] = value as number;
+    } else {
+      updated[okrIndex].keyResults[krIndex][field] = value as string;
+    }
     setNextMonthOKRs(updated);
   };
 
