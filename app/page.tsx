@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Header from "@/components/layout/Header";
 import { Dashboard } from "@/components/dashboard/Dashboard";
@@ -37,10 +37,19 @@ function getQuarter(date: Date): number {
 
 export default function DashboardPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const hasCompletedSetup = useQuery(api.userProfile.hasCompletedSetup);
   const [activeTab, setActiveTab] = useState<TabType>("dashboard");
   const [selectedReview, setSelectedReview] = useState<ReviewType>("weekly");
   const [settingsOpen, setSettingsOpen] = useState(false);
+
+  // Handle URL tab parameter
+  useEffect(() => {
+    const tab = searchParams.get("tab") as TabType | null;
+    if (tab && tab !== "daily-log") {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
 
   // Get current date info for reviews
   const now = new Date();
