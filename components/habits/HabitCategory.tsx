@@ -27,6 +27,7 @@ interface HabitCategoryProps {
 }
 
 export function HabitCategory({
+  icon,
   name,
   habits,
   categoryNumber,
@@ -46,6 +47,10 @@ export function HabitCategory({
   const isComplete = completedTotal === habits.length;
   const coreComplete = completedCore === coreHabits.length && coreHabits.length > 0;
   const allHabitsComplete = habits.every((h) => h.completed);
+
+  // Check if icon is a hex color (starts with #) or an emoji
+  const isColor = icon?.startsWith("#");
+  const circleColor = isColor ? icon : "#88CCDD";
 
   const handleToggle = (habitId: string) => {
     onHabitToggle(name, habitId);
@@ -75,7 +80,10 @@ export function HabitCategory({
                 <span className="text-sm">✓</span>
               </div>
             ) : (
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2A2A3E] text-xs font-medium text-[#88CCDD]">
+              <div
+                className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium text-white"
+                style={{ backgroundColor: circleColor }}
+              >
                 {categoryNumber}
               </div>
             )}

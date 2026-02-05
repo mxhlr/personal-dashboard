@@ -28,6 +28,17 @@ interface CategoryEditDialogProps {
   mode: "create" | "edit";
 }
 
+const PREDEFINED_COLORS = [
+  { name: "Cyan", value: "#00BCD4" },
+  { name: "Green", value: "#4CAF50" },
+  { name: "Orange", value: "#FF9800" },
+  { name: "Red", value: "#F44336" },
+  { name: "Purple", value: "#9C27B0" },
+  { name: "Blue", value: "#2196F3" },
+  { name: "Yellow", value: "#FFEB3B" },
+  { name: "Pink", value: "#E91E63" },
+];
+
 export function CategoryEditDialog({
   open,
   onOpenChange,
@@ -35,7 +46,7 @@ export function CategoryEditDialog({
   mode,
 }: CategoryEditDialogProps) {
   const [name, setName] = useState(category?.name || "");
-  const [icon, setIcon] = useState(category?.icon || "");
+  const [color, setColor] = useState(category?.icon || PREDEFINED_COLORS[0].value);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const createCategory = useMutation(api.habitCategories.createCategory);
@@ -44,7 +55,7 @@ export function CategoryEditDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!name.trim() || !icon.trim()) {
+    if (!name.trim() || !color.trim()) {
       toast.error("Please fill in all fields");
       return;
     }
@@ -55,7 +66,7 @@ export function CategoryEditDialog({
       if (mode === "create") {
         await createCategory({
           name: name.trim(),
-          icon: icon.trim(),
+          icon: color.trim(),
           requiresCoreCompletion: false,
         });
         toast.success("Category created successfully");
@@ -63,14 +74,14 @@ export function CategoryEditDialog({
         await updateCategory({
           categoryId: category.id as Id<"habitCategories">,
           name: name.trim(),
-          icon: icon.trim(),
+          icon: color.trim(),
         });
         toast.success("Category updated successfully");
       }
 
       onOpenChange(false);
       setName("");
-      setIcon("");
+      setColor(PREDEFINED_COLORS[0].value);
     } catch (error) {
       console.error("Failed to save category:", error);
       toast.error("Failed to save category");
@@ -83,10 +94,10 @@ export function CategoryEditDialog({
   const handleOpenChange = (newOpen: boolean) => {
     if (newOpen) {
       setName(category?.name || "");
-      setIcon(category?.icon || "");
+      setColor(category?.icon || PREDEFINED_COLORS[0].value);
     } else {
       setName("");
-      setIcon("");
+      setColor(PREDEFINED_COLORS[0].value);
     }
     onOpenChange(newOpen);
   };
@@ -108,21 +119,6 @@ export function CategoryEditDialog({
         <form onSubmit={handleSubmit}>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="icon">Icon (Emoji)</Label>
-              <Input
-                id="icon"
-                value={icon}
-                onChange={(e) => setIcon(e.target.value)}
-                placeholder="🏃"
-                className="text-2xl"
-                maxLength={4}
-              />
-              <p className="text-xs text-muted-foreground">
-                Enter a single emoji to represent this category
-              </p>
-            </div>
-
-            <div className="space-y-2">
               <Label htmlFor="name">Category Name</Label>
               <Input
                 id="name"
@@ -130,6 +126,29 @@ export function CategoryEditDialog({
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Morning Routine"
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Circle Color</Label>
+              <div className="flex gap-2 flex-wrap">
+                {PREDEFINED_COLORS.map((colorOption) => (
+                  <button
+                    key={colorOption.value}
+                    type="button"
+                    onClick={() => setColor(colorOption.value)}
+                    className={`w-10 h-10 rounded-full transition-all ${
+                      color === colorOption.value
+                        ? "ring-2 ring-offset-2 ring-offset-background ring-foreground scale-110"
+                        : "hover:scale-105"
+                    }`}
+                    style={{ backgroundColor: colorOption.value }}
+                    title={colorOption.name}
+                  />
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Select a color for the category number circle
+              </p>
             </div>
           </div>
 
