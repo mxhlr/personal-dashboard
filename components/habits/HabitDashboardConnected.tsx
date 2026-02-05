@@ -265,7 +265,7 @@ export function HabitDashboardConnected() {
             </div>
             <div className="flex-1" />
           </div>
-          <SprintTimer endOfDayHour={18} />
+          <SprintTimer />
           <div className="mt-4">
             <BlockTimerButton />
           </div>
