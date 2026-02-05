@@ -16,13 +16,6 @@ import { QuarterlyReviewForm } from "@/components/reviews/QuarterlyReviewForm";
 import { AnnualReviewForm } from "@/components/reviews/AnnualReviewForm";
 import { SettingsModal } from "@/components/settings/SettingsModal";
 import { AnalyticsDashboard } from "@/components/analytics/AnalyticsDashboard";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 type ReviewType = "daily" | "weekly" | "monthly" | "quarterly" | "annual";
 type TabType = "dashboard" | "visionboard" | "planning" | "data" | "coach";
@@ -93,6 +86,8 @@ export default function DashboardPage() {
           onTabChange={setActiveTab}
           onSettingsClick={() => setSettingsOpen(true)}
           onDateNavigation={handleDateNavigation}
+          selectedReview={selectedReview}
+          onReviewChange={setSelectedReview}
         />
 
         <main>
@@ -116,30 +111,7 @@ export default function DashboardPage() {
                   : undefined
               }}
             >
-              {/* Dropdown for Review Selection */}
-              <div className="max-w-4xl mx-auto px-6 pt-6">
-                <Select
-                  value={selectedReview}
-                  onValueChange={(value) => setSelectedReview(value as ReviewType)}
-                >
-                  <SelectTrigger className={`w-[240px] shadow-sm ${
-                    selectedReview === "daily"
-                      ? "bg-white/80 dark:bg-[#1a1a2e]/80 backdrop-blur-sm border-black/10 dark:border-white/10"
-                      : "bg-card"
-                  }`}>
-                    <SelectValue placeholder="Select review type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="daily">Daily Log</SelectItem>
-                    <SelectItem value="weekly">Weekly Review</SelectItem>
-                    <SelectItem value="monthly">Monthly Review</SelectItem>
-                    <SelectItem value="quarterly">Quarterly Review</SelectItem>
-                    <SelectItem value="annual">Annual Review</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Review Forms */}
+              {/* Review Forms - Clean without dropdown */}
               {selectedReview === "daily" && <HabitDashboardConnected />}
 
               {selectedReview === "weekly" && (

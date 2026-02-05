@@ -1,21 +1,41 @@
 "use client";
 
-import { Settings, ChevronLeft, ChevronRight } from "lucide-react";
+import { Settings, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+type ReviewType = "daily" | "weekly" | "monthly" | "quarterly" | "annual";
 
 interface HeaderProps {
   activeTab: "dashboard" | "visionboard" | "planning" | "data" | "coach";
   onTabChange: (tab: "dashboard" | "visionboard" | "planning" | "data" | "coach") => void;
   onSettingsClick: () => void;
   onDateNavigation?: (direction: "prev" | "next" | "today") => void;
+  selectedReview?: ReviewType;
+  onReviewChange?: (review: ReviewType) => void;
 }
+
+const reviewLabels: Record<ReviewType, string> = {
+  daily: "Daily Log",
+  weekly: "Weekly Review",
+  monthly: "Monthly Review",
+  quarterly: "Quarterly Review",
+  annual: "Annual Review",
+};
 
 export default function Header({
   activeTab,
   onTabChange,
   onSettingsClick,
   onDateNavigation,
+  selectedReview = "daily",
+  onReviewChange,
 }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card backdrop-blur-sm shadow-sm transition-shadow duration-200">
@@ -30,13 +50,34 @@ export default function Header({
             >
               Dashboard
             </Button>
-            <Button
-              variant={activeTab === "planning" ? "default" : "ghost"}
-              onClick={() => onTabChange("planning")}
-              className="font-medium"
-            >
-              Planning & Review
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant={activeTab === "planning" ? "default" : "ghost"}
+                  className="font-medium gap-1"
+                >
+                  {activeTab === "planning" ? reviewLabels[selectedReview] : "Planning & Review"}
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem onClick={() => { onTabChange("planning"); onReviewChange?.("daily"); }}>
+                  Daily Log
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { onTabChange("planning"); onReviewChange?.("weekly"); }}>
+                  Weekly Review
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { onTabChange("planning"); onReviewChange?.("monthly"); }}>
+                  Monthly Review
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { onTabChange("planning"); onReviewChange?.("quarterly"); }}>
+                  Quarterly Review
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { onTabChange("planning"); onReviewChange?.("annual"); }}>
+                  Annual Review
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button
               variant={activeTab === "data" ? "default" : "ghost"}
               onClick={() => onTabChange("data")}
