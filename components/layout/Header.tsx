@@ -1,6 +1,6 @@
 "use client";
 
-import { Settings, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
+import { Settings, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import {
@@ -32,7 +32,6 @@ export default function Header({
   activeTab,
   onTabChange,
   onSettingsClick,
-  onDateNavigation,
   selectedReview = "weekly",
   onReviewChange,
 }: HeaderProps) {
