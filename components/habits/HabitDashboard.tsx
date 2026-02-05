@@ -136,7 +136,7 @@ export function HabitDashboard() {
     <div
       className="min-h-screen p-6"
       style={{
-        background: 'radial-gradient(circle at center, #12121F 0%, #0A0A0F 100%)',
+        background: 'var(--page-background)',
       }}
     >
       <MilestonePopup progress={progress} />
@@ -154,8 +154,10 @@ export function HabitDashboard() {
           >
             {currentTime}
           </p>
-          <p className="text-lg font-normal dark:text-[#E0E0E0] text-[#1A1A1A]">Execute.</p>
-          <p className="text-sm">
+          <p className="font-normal dark:text-[#E0E0E0] text-[#1A1A1A]" style={{ fontSize: '18px' }}>
+            Execute.
+          </p>
+          <p style={{ fontSize: '14px' }}>
             <span className="text-[#999] font-normal">Sprint: </span>
             <span className="font-bold dark:text-[#E0E0E0] text-[#1A1A1A]">6h 14m</span>
           </p>
