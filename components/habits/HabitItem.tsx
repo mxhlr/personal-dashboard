@@ -131,14 +131,14 @@ export function HabitItem({
         <div className={`text-sm ${completed ? "text-muted-foreground line-through" : "text-foreground"}`}>
           {name}
         </div>
+        {subtitle && (
+          <div className={`text-xs text-muted-foreground/70 mt-0.5 ${completed ? "line-through" : ""}`}>
+            {subtitle}
+          </div>
+        )}
         {completed && completedAt && (
           <div className="text-xs text-[#00FF88] mt-0.5">
             {formatTimestamp(completedAt)}
-          </div>
-        )}
-        {subtitle && (
-          <div className="text-xs text-muted-foreground/70 mt-0.5">
-            {subtitle}
           </div>
         )}
       </div>
