@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 export function WinConditionBanner() {
   const today = new Date().toISOString().split("T")[0];
@@ -52,13 +52,14 @@ export function WinConditionBanner() {
         >
           {isFilled ? '✓' : '⚡'} TODAY&apos;S WIN CONDITION
         </h3>
-        <Input
+        <Textarea
           placeholder="If I do nothing else, I will..."
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onBlur={handleBlur}
-          className="border-0 bg-transparent text-center placeholder:text-white/40 focus-visible:ring-0 focus-visible:ring-offset-0 px-0 text-white"
-          style={{ fontSize: '16px' }}
+          className="border-0 bg-transparent text-center placeholder:text-white/40 focus-visible:ring-0 focus-visible:ring-offset-0 px-0 text-white resize-none min-h-[60px]"
+          style={{ fontSize: '16px', lineHeight: '1.6' }}
+          rows={3}
         />
       </div>
 
