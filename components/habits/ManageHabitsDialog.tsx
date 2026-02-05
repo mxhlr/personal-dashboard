@@ -287,15 +287,14 @@ export function ManageHabitsDialog({
                     {/* Category Header */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        {category.icon?.startsWith("#") ? (
+                        <span className="text-lg font-bold text-[#E0E0E0] dark:text-[#E0E0E0] text-[#333333]">
+                          {catIndex + 1}
+                        </span>
+                        {category.icon?.startsWith("#") && (
                           <div
-                            className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium"
+                            className="w-3 h-3 rounded-full flex-shrink-0"
                             style={{ backgroundColor: category.icon }}
-                          >
-                            {catIndex + 1}
-                          </div>
-                        ) : (
-                          <span className="text-2xl">{category.icon}</span>
+                          />
                         )}
                         <div>
                           <h3 className="font-semibold">{category.name}</h3>

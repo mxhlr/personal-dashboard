@@ -25,7 +25,7 @@ function Checkbox({
     >
       <CheckboxPrimitive.Indicator
         data-slot="checkbox-indicator"
-        className="flex items-center justify-center text-current transition-none [&_svg]:!text-white [&_svg]:!fill-white [&_svg]:!stroke-white"
+        className="flex items-center justify-center text-current transition-none [&_svg]:!text-black [&_svg]:!fill-black [&_svg]:!stroke-black"
       >
         <Check className="h-4 w-4 stroke-[3]" />
       </CheckboxPrimitive.Indicator>
