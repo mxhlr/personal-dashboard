@@ -73,7 +73,7 @@ export function AnalyticsDashboard() {
         <AllTimeStats stats={analytics.allTimeStats} />
 
         {/* Average Block Times & Skip Patterns - Side by Side */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <AverageBlockTimes blockTimes={analytics.avgBlockTimes} />
           <SkipPatterns patterns={analytics.skipPatterns} />
         </div>
