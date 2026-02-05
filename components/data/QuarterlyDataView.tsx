@@ -226,16 +226,6 @@ export function QuarterlyDataView() {
 }
 
 // Helper functions
-function getQuarterStartDate(year: number, quarter: number): string {
-  const month = (quarter - 1) * 3;
-  return new Date(year, month, 1).toISOString().split("T")[0];
-}
-
-function getQuarterEndDate(year: number, quarter: number): string {
-  const month = quarter * 3;
-  return new Date(year, month, 0).toISOString().split("T")[0];
-}
-
 function getQuarterMonths(quarter: number): string {
   const monthNames = [
     "Januar",
