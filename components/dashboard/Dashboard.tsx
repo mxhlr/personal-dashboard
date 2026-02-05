@@ -99,11 +99,14 @@ export function Dashboard({ onNavigate }: DashboardProps) {
           </p>
         </div>
 
-      {/* Today's Win Condition */}
-      <TodaysWinCondition />
+      {/* Win Condition & Stoic Quote - Side by Side */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Daily Stoic Quote - Left */}
+        <StoicQuote />
 
-      {/* Daily Stoic Quote */}
-      <StoicQuote />
+        {/* Today's Win Condition - Right */}
+        <TodaysWinCondition />
+      </div>
 
         {/* North Stars - Gaming HUD Style */}
         <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
