@@ -105,9 +105,15 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
       <div className="relative max-w-4xl mx-auto px-6 py-8 space-y-8">
         {/* Header */}
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0077B6]">Monthly Review</h1>
-          <p className="text-sm dark:text-[#888888] text-[#666666]">
-            {format(new Date(), "EEEE, MMMM d, yyyy")}
+          <h1 className="text-3xl font-bold font-orbitron text-white"
+            style={{
+              textShadow: '0 0 30px rgba(255, 255, 255, 0.2)'
+            }}
+          >
+            Monthly Review
+          </h1>
+          <p className="text-sm dark:text-[#AAAAAA] text-[#888888]">
+            {format(new Date(year, month - 1), "MMMM yyyy")}
           </p>
         </div>
 

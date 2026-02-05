@@ -181,8 +181,14 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
         <div className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
           shadow-sm rounded-2xl border">
           <div className="mb-8 text-center">
-            <h2 className="text-3xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0077B6] mb-2">Annual Review</h2>
-            <p className="dark:text-[#888888] text-[#666666]">{year}</p>
+            <h2 className="text-3xl font-bold font-orbitron text-white mb-2"
+              style={{
+                textShadow: '0 0 30px rgba(255, 255, 255, 0.2)'
+              }}
+            >
+              Annual Review
+            </h2>
+            <p className="dark:text-[#AAAAAA] text-[#888888]">{year}</p>
           </div>
 
           {existingReview && isReadOnly ? (
