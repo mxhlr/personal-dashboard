@@ -113,28 +113,39 @@ export function HabitCategory({
 
       {isExpanded && (
         <CardContent className="space-y-4 pt-0">
-          <div className="space-y-2">
-            {coreHabits.map((habit) => (
-              <HabitItem
-                key={habit.id}
-                {...habit}
-                onToggle={handleToggle}
-                onSkip={(id, reason) => onHabitSkip(name, id, reason)}
-              />
-            ))}
-          </div>
+          {/* Core Habits Section */}
+          {coreHabits.length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
+                <span>Core Habits</span>
+                <div className="h-px flex-1 bg-border/50" />
+              </div>
+              <div className="space-y-2">
+                {coreHabits.map((habit) => (
+                  <HabitItem
+                    key={habit.id}
+                    {...habit}
+                    onToggle={handleToggle}
+                    onSkip={(id, reason) => onHabitSkip(name, id, reason)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
 
+          {/* Extra Habits Section */}
           {extraHabits.length > 0 && (
             <div className="space-y-2">
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                {!coreComplete && (
-                  <>
-                    <div className="h-px flex-1 bg-border/50" />
-                    <span>Complete core to unlock extras</span>
-                    <div className="h-px flex-1 bg-border/50" />
-                  </>
-                )}
+              <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
+                <div className="h-px flex-1 bg-border/50" />
+                <span>Extra Habits</span>
+                <div className="h-px flex-1 bg-border/50" />
               </div>
+              {!coreComplete && (
+                <p className="text-xs text-muted-foreground/60 text-center">
+                  Complete core to unlock extras
+                </p>
+              )}
               <div className={`space-y-2 ${!coreComplete ? "opacity-40" : ""}`}>
                 {extraHabits.map((habit) => (
                   <HabitItem

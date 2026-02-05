@@ -75,6 +75,7 @@ export const initializeUserStats = mutation({
 });
 
 // Complete a habit (called when user marks habit as done)
+// This now works as a toggle - if already completed, it will uncomplete
 export const completeHabit = mutation({
   args: {
     templateId: v.id("habitTemplates"),
@@ -102,14 +103,33 @@ export const completeHabit = mutation({
       .first();
 
     if (existingHabit) {
-      // Update existing habit
+      // Toggle: if already completed, uncomplete it
+      const newCompletedState = !existingHabit.completed;
       await ctx.db.patch(existingHabit._id, {
-        completed: true,
+        completed: newCompletedState,
         skipped: false,
         skipReason: undefined,
-        completedAt: now,
-        xpEarned: template.xpValue,
+        completedAt: newCompletedState ? now : undefined,
+        xpEarned: newCompletedState ? template.xpValue : 0,
       });
+
+      // Update user stats (add or subtract XP)
+      if (newCompletedState) {
+        await ctx.scheduler.runAfter(0, internal.gamification.updateUserStats, {
+          userId: identity.subject,
+          xpToAdd: template.xpValue,
+          date: args.date,
+        });
+      } else {
+        // Subtract XP when uncompleting
+        await ctx.scheduler.runAfter(0, internal.gamification.updateUserStats, {
+          userId: identity.subject,
+          xpToAdd: -template.xpValue,
+          date: args.date,
+        });
+      }
+
+      return { xpEarned: newCompletedState ? template.xpValue : -template.xpValue };
     } else {
       // Create new habit completion
       await ctx.db.insert("dailyHabits", {
@@ -122,16 +142,16 @@ export const completeHabit = mutation({
         xpEarned: template.xpValue,
         createdAt: now,
       });
+
+      // Update user stats
+      await ctx.scheduler.runAfter(0, internal.gamification.updateUserStats, {
+        userId: identity.subject,
+        xpToAdd: template.xpValue,
+        date: args.date,
+      });
+
+      return { xpEarned: template.xpValue };
     }
-
-    // Update user stats
-    await ctx.scheduler.runAfter(0, internal.gamification.updateUserStats, {
-      userId: identity.subject,
-      xpToAdd: template.xpValue,
-      date: args.date,
-    });
-
-    return { xpEarned: template.xpValue };
   },
 });
 

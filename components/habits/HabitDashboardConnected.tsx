@@ -118,14 +118,14 @@ export function HabitDashboardConnected() {
     if (!habit || !category) return;
 
     try {
-      if (!habit.completed) {
-        // Complete the habit
-        await completeHabit({
-          templateId: habitId as Id<"habitTemplates">,
-          date: today,
-        });
+      // Toggle habit (completeHabit now works as a toggle)
+      await completeHabit({
+        templateId: habitId as Id<"habitTemplates">,
+        date: today,
+      });
 
-        // Show XP gain toast
+      if (!habit.completed) {
+        // Completing the habit
         toast({
           title: `+${habit.xp} XP`,
           description: `${habit.name} completed!`,
@@ -148,10 +148,11 @@ export function HabitDashboardConnected() {
           });
         }
       } else {
-        // Uncomplete the habit (toggle off)
-        await completeHabit({
-          templateId: habitId as Id<"habitTemplates">,
-          date: today,
+        // Uncompleting the habit
+        toast({
+          title: `−${habit.xp} XP`,
+          description: `${habit.name} uncompleted`,
+          duration: 2000,
         });
       }
     } catch (error) {
