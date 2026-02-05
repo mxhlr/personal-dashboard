@@ -313,5 +313,44 @@ async function calculateStreakAndWeekScore(
   return { currentStreak, weekScore };
 }
 
+// Reset all user data (stats, daily habits)
+export const resetAllData = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    // Reset user stats to initial values
+    const stats = await ctx.db
+      .query("userStats")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .first();
+
+    if (stats) {
+      await ctx.db.patch(stats._id, {
+        totalXP: 0,
+        level: 0,
+        currentStreak: 0,
+        longestStreak: 0,
+        weekScore: 0,
+        updatedAt: new Date().toISOString(),
+      });
+    }
+
+    // Delete all daily habits
+    const dailyHabits = await ctx.db
+      .query("dailyHabits")
+      .collect();
+
+    const userDailyHabits = dailyHabits.filter((h) => h.userId === identity.subject);
+
+    for (const habit of userDailyHabits) {
+      await ctx.db.delete(habit._id);
+    }
+
+    return { success: true };
+  },
+});
+
 // Import internal API for scheduler
 import { internal } from "./_generated/api";

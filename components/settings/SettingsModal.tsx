@@ -32,6 +32,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const updateCoachTone = useMutation(api.settings.updateCoachTone);
   const seedHabitSystem = useMutation(api.migrations.migrateUser.migrateToHabitSystem);
   const resetHabitSystem = useMutation(api.migrations.migrateUser.resetHabitSystem);
+  const resetAllData = useMutation(api.gamification.resetAllData);
 
   const [isSaving, setIsSaving] = useState(false);
   const [manageHabitsOpen, setManageHabitsOpen] = useState(false);
@@ -346,6 +347,33 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     <li>• <strong>115 XP pro Tag</strong> wenn alle Habits completed</li>
                     <li>• Du kannst alles nach der Initialisierung anpassen (XP, Namen, etc.)</li>
                   </ul>
+                </div>
+
+                <div className="rounded-lg border border-destructive/50 bg-destructive/5 p-4">
+                  <h3 className="font-semibold mb-2 text-destructive">Alle Daten zurücksetzen</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Setzt alle Gamification-Daten zurück: Total XP auf 0, Level auf 0, Streak auf 0, und löscht alle abgehakten Habits.
+                    <br /><br />
+                    <strong className="text-destructive">Achtung:</strong> Diese Aktion kann nicht rückgängig gemacht werden!
+                  </p>
+                  <Button
+                    variant="destructive"
+                    onClick={async () => {
+                      if (!confirm("Bist du sicher? Alle Fortschritte werden gelöscht.")) {
+                        return;
+                      }
+                      try {
+                        await resetAllData();
+                        toast.success("Alle Daten wurden zurückgesetzt!");
+                        window.location.reload();
+                      } catch (error) {
+                        console.error("Failed to reset data:", error);
+                        toast.error("Fehler beim Zurücksetzen");
+                      }
+                    }}
+                  >
+                    Alle Daten zurücksetzen
+                  </Button>
                 </div>
               </div>
             </TabsContent>
