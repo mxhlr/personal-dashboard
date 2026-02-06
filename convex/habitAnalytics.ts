@@ -213,15 +213,14 @@ export const getComprehensiveAnalytics = query({
       dateGroups[habit.date].push(habit);
     });
 
-    // Get total number of all templates (Core + Extra)
-    const totalActiveTemplates = templates.length;
+    // Calculate total possible XP from all templates (XP-weighted like Daily Log)
+    const totalPossibleXP = templates.reduce((sum, t) => sum + t.xpValue, 0);
 
     Object.entries(dateGroups).forEach(([date, habits]) => {
-      const completed = habits.filter((h) => h.completed).length;
-      // Use total active templates, not just habits that exist in dailyHabits
-      const total = totalActiveTemplates;
-      const score = total > 0 ? Math.round((completed / total) * 100) : 0;
-      const xp = habits.reduce((sum, h) => sum + (h.completed ? h.xpEarned : 0), 0);
+      // XP-weighted calculation: completed XP / total possible XP
+      const completedXP = habits.reduce((sum, h) => sum + (h.completed ? h.xpEarned : 0), 0);
+      const score = totalPossibleXP > 0 ? Math.round((completedXP / totalPossibleXP) * 100) : 0;
+      const xp = completedXP;
       dailyScores[date] = { score, xp };
     });
 
@@ -245,10 +244,9 @@ export const getComprehensiveAnalytics = query({
       });
 
       const dailyScoresForMonth = Object.values(monthlyDateGroups).map((habits) => {
-        const completed = habits.filter((h) => h.completed).length;
-        // Use total active templates, not just habits that exist in dailyHabits
-        const total = totalActiveTemplates;
-        return total > 0 ? (completed / total) * 100 : 0;
+        // XP-weighted calculation: completed XP / total possible XP
+        const completedXP = habits.reduce((sum, h) => sum + (h.completed ? h.xpEarned : 0), 0);
+        return totalPossibleXP > 0 ? (completedXP / totalPossibleXP) * 100 : 0;
       });
 
       const avgScore =
