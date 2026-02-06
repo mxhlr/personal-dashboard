@@ -54,6 +54,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [isInstalled, setIsInstalled] = useState(false);
   const [updateAvailable, setUpdateAvailable] = useState(false);
   const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
+  const isDevelopment = process.env.NODE_ENV === 'development';
 
   // Listen for PWA install prompt
   useEffect(() => {
@@ -482,31 +483,50 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                         Funktioniert offline und erscheint in deiner App-Liste.
                       </p>
 
-                      {isInstalled ? (
+                      {isDevelopment ? (
+                        <div className="space-y-3">
+                          <div className="p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                            <p className="text-sm font-medium text-yellow-600 dark:text-yellow-500 mb-2">
+                              Development Mode
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              PWA Installation ist im Development Mode deaktiviert.
+                              Nutze die Browser-Installation direkt:
+                            </p>
+                          </div>
+                          <ul className="list-disc list-inside space-y-2 text-sm">
+                            <li><strong>Chrome/Edge (Desktop):</strong> Klick auf das ⊕ Icon in der URL-Leiste</li>
+                            <li><strong>iOS Safari:</strong> Teilen → &quot;Zum Home-Bildschirm&quot;</li>
+                            <li><strong>Android Chrome:</strong> Menü → &quot;App installieren&quot;</li>
+                          </ul>
+                        </div>
+                      ) : isInstalled ? (
                         <div className="flex items-center gap-2 text-green-500">
                           <CheckCircle2 className="h-5 w-5" />
                           <span className="font-medium">App ist installiert!</span>
                         </div>
                       ) : (
-                        <Button
-                          onClick={handleInstallPWA}
-                          disabled={!deferredPrompt}
-                          className="gap-2"
-                        >
-                          <Download className="h-4 w-4" />
-                          {deferredPrompt ? "Jetzt installieren" : "Installation verfügbar im Browser"}
-                        </Button>
-                      )}
+                        <>
+                          <Button
+                            onClick={handleInstallPWA}
+                            disabled={!deferredPrompt}
+                            className="gap-2"
+                          >
+                            <Download className="h-4 w-4" />
+                            {deferredPrompt ? "Jetzt installieren" : "Installation verfügbar im Browser"}
+                          </Button>
 
-                      {!deferredPrompt && !isInstalled && (
-                        <div className="mt-4 text-sm text-muted-foreground space-y-2">
-                          <p className="font-medium">Alternative Installation:</p>
-                          <ul className="list-disc list-inside space-y-1 text-xs">
-                            <li><strong>Chrome/Edge:</strong> Klick auf das ⊕ Icon in der URL-Leiste</li>
-                            <li><strong>iOS Safari:</strong> Teilen → &quot;Zum Home-Bildschirm&quot;</li>
-                            <li><strong>Android Chrome:</strong> Menü → &quot;App installieren&quot;</li>
-                          </ul>
-                        </div>
+                          {!deferredPrompt && (
+                            <div className="mt-4 text-sm text-muted-foreground space-y-2">
+                              <p className="font-medium">Alternative Installation:</p>
+                              <ul className="list-disc list-inside space-y-1 text-xs">
+                                <li><strong>Chrome/Edge:</strong> Klick auf das ⊕ Icon in der URL-Leiste</li>
+                                <li><strong>iOS Safari:</strong> Teilen → &quot;Zum Home-Bildschirm&quot;</li>
+                                <li><strong>Android Chrome:</strong> Menü → &quot;App installieren&quot;</li>
+                              </ul>
+                            </div>
+                          )}
+                        </>
                       )}
                     </div>
                   </div>
