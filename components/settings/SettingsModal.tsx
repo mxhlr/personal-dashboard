@@ -30,6 +30,7 @@ import { X, Settings, Download, Smartphone, CheckCircle2, RefreshCw } from "luci
 import { toast } from "sonner";
 import { ManageHabitsDialog } from "@/components/habits/ManageHabitsDialog";
 import { VisionBoardSettings } from "@/components/settings/VisionBoardSettings";
+import { usePWAInstallPrompt } from "@/lib/pwa-install-handler";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -56,19 +57,26 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
   const isDevelopment = process.env.NODE_ENV === 'development';
 
+  // Get PWA handler at component level
+  const pwaHandler = usePWAInstallPrompt();
+
   // Listen for PWA install prompt
   useEffect(() => {
-    const handler = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-    };
-
-    window.addEventListener("beforeinstallprompt", handler);
-
     // Check if already installed
     if (window.matchMedia("(display-mode: standalone)").matches) {
       setIsInstalled(true);
     }
+
+    // Get current prompt if already available
+    const currentPrompt = pwaHandler.getDeferredPrompt();
+    if (currentPrompt) {
+      setDeferredPrompt(currentPrompt);
+    }
+
+    // Subscribe to future changes
+    const unsubscribe = pwaHandler.subscribe((prompt: BeforeInstallPromptEvent | null) => {
+      setDeferredPrompt(prompt);
+    });
 
     // Listen for Service Worker updates
     if ('serviceWorker' in navigator) {
@@ -90,8 +98,10 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       });
     }
 
-    return () => window.removeEventListener("beforeinstallprompt", handler);
-  }, []);
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [pwaHandler]);
 
   const handleInstallPWA = async () => {
     if (!deferredPrompt) {
@@ -99,15 +109,22 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       return;
     }
 
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
+    try {
+      await deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
 
-    if (outcome === "accepted") {
-      toast.success("App wird installiert!");
-      setIsInstalled(true);
+      if (outcome === "accepted") {
+        toast.success("App wird installiert!");
+        setIsInstalled(true);
+      }
+
+      // Clear global prompt
+      pwaHandler.clearPrompt();
+      setDeferredPrompt(null);
+    } catch (error) {
+      logger.error("PWA installation error:", error);
+      toast.error("Installation fehlgeschlagen");
     }
-
-    setDeferredPrompt(null);
   };
 
   const handleCheckForUpdate = async () => {
