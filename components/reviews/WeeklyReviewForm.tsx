@@ -16,6 +16,13 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
     year,
     weekNumber,
   });
+
+  // Get goals from LAST week's review (these were set for THIS week)
+  const previousGoals = useQuery(api.weeklyReview.getWeeklyGoals, {
+    year,
+    weekNumber,
+  });
+
   const submitReview = useMutation(api.weeklyReview.submitWeeklyReview);
 
   const [formData, setFormData] = useState({
@@ -30,8 +37,21 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
     { goal: "", category: "Wealth" },
   ]);
 
+  const [goalCompletionStatus, setGoalCompletionStatus] = useState<Record<number, boolean>>({});
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isReadOnly, setIsReadOnly] = useState(false);
+
+  // Initialize goal completion status when previous goals are loaded
+  useEffect(() => {
+    if (previousGoals && previousGoals.length > 0) {
+      const initialStatus: Record<number, boolean> = {};
+      previousGoals.forEach((_, index) => {
+        initialStatus[index] = false;
+      });
+      setGoalCompletionStatus(initialStatus);
+    }
+  }, [previousGoals]);
 
   // Load existing review data
   useEffect(() => {
@@ -168,6 +188,96 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Part 1: Previous Week Goals Review */}
+          {previousGoals && previousGoals.length > 0 && !isReadOnly && (
+            <div className="space-y-4 pb-8">
+              <div className="text-center pb-2">
+                <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7]"
+                  style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                  Teil 1: Goal Check
+                </h3>
+                <p className="text-[11px] dark:text-[#888888] text-[#666666] mt-1"
+                  style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                  Markiere welche Goals du erreicht hast
+                </p>
+              </div>
+
+              {previousGoals.map((goal, index) => {
+                const categoryConfig: Record<string, { icon: string; color: string }> = {
+                  Wealth: { icon: "💰", color: "text-yellow-400" },
+                  Health: { icon: "🏃", color: "text-green-400" },
+                  Love: { icon: "❤️", color: "text-pink-400" },
+                  Happiness: { icon: "😊", color: "text-purple-400" },
+                };
+
+                const config = categoryConfig[goal.category] || { icon: "🎯", color: "text-blue-400" };
+
+                return (
+                  <div
+                    key={index}
+                    className="group dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,151,167,0.2)] border-2
+                      dark:bg-[rgba(0,229,255,0.02)] bg-[rgba(0,151,167,0.03)]
+                      backdrop-blur-sm rounded-xl p-6 transition-all duration-200
+                      hover:dark:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,151,167,0.3)]"
+                  >
+                    <div className="flex items-start gap-4">
+                      <input
+                        type="checkbox"
+                        checked={goalCompletionStatus[index] || false}
+                        onChange={(e) => {
+                          setGoalCompletionStatus({
+                            ...goalCompletionStatus,
+                            [index]: e.target.checked
+                          });
+                        }}
+                        className="mt-1 w-5 h-5 rounded border-2 dark:border-[#00E5FF]/30 border-[#0097A7]/30
+                          dark:bg-white/[0.03] bg-black/[0.02]
+                          checked:dark:bg-[#00E5FF] checked:bg-[#0097A7]
+                          checked:dark:border-[#00E5FF] checked:border-[#0097A7]
+                          focus:ring-2 focus:ring-[#00E5FF]/50
+                          cursor-pointer transition-all"
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-lg">{config.icon}</span>
+                          <span className={`text-xs font-bold uppercase tracking-wider ${config.color}`}
+                            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                            {goal.category}
+                          </span>
+                        </div>
+                        <p className="dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
+                          style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px' }}>
+                          {goal.goal}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+
+              <div className="text-center pt-2">
+                <p className="text-xs dark:text-[#888888] text-[#666666]"
+                  style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                  {Object.values(goalCompletionStatus).filter(Boolean).length} / {previousGoals.length} erreicht
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Part 2: Reflection Questions */}
+          {!isReadOnly && (
+            <div className="text-center pb-4 pt-8">
+              <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7]"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                Teil 2: Reflexion
+              </h3>
+              <p className="text-[11px] dark:text-[#888888] text-[#666666] mt-1"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                Reflektiere über deine Woche
+              </p>
+            </div>
+          )}
+
           {/* Question 1 */}
           <div className="group dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
             transition-all duration-300 ease-out
@@ -326,11 +436,11 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
             <div className="text-center pb-2">
               <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7]"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                Next Week Goals (Plan Ahead)
+                Teil 3: Next Week Goals
               </h3>
               <p className="text-[11px] dark:text-[#888888] text-[#666666] mt-1"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                Set 3-5 goals for the upcoming week
+                Setze 3-5 Goals für nächste Woche
               </p>
             </div>
 

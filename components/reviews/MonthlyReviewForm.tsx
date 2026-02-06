@@ -17,6 +17,13 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
     year,
     month,
   });
+
+  // Get OKRs from LAST month's review (these were set for THIS month)
+  const previousOKRs = useQuery(api.monthlyReview.getMonthlyOKRs, {
+    year,
+    month,
+  });
+
   const submitReview = useMutation(api.monthlyReview.submitMonthlyReview);
 
   const [formData, setFormData] = useState({
@@ -31,6 +38,9 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isReadOnly, setIsReadOnly] = useState(false);
 
+  // Track Key Result progress
+  const [keyResultProgress, setKeyResultProgress] = useState<Record<string, number>>({});
+
   // OKR State
   const [nextMonthOKRs, setNextMonthOKRs] = useState<Array<{
     objective: string;
@@ -43,6 +53,19 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
       keyResults: [{ description: "", target: 0, unit: "" }],
     },
   ]);
+
+  // Initialize key result progress tracking
+  useEffect(() => {
+    if (previousOKRs && previousOKRs.length > 0) {
+      const initialProgress: Record<string, number> = {};
+      previousOKRs.forEach((okr, okrIdx) => {
+        okr.keyResults.forEach((_, krIdx) => {
+          initialProgress[`${okrIdx}-${krIdx}`] = 0;
+        });
+      });
+      setKeyResultProgress(initialProgress);
+    }
+  }, [previousOKRs]);
 
   // Load existing review data
   useEffect(() => {
@@ -218,6 +241,113 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Part 1: Previous Month OKRs Review */}
+          {previousOKRs && previousOKRs.length > 0 && !isReadOnly && (
+            <div className="space-y-6 pb-8">
+              <div className="text-center pb-2">
+                <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7]"
+                  style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                  Teil 1: OKR Check
+                </h3>
+                <p className="text-[11px] dark:text-[#888888] text-[#666666] mt-1"
+                  style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                  Trage deinen Fortschritt ein
+                </p>
+              </div>
+
+              {previousOKRs.map((okr, okrIdx) => {
+                const areaConfig: Record<string, { icon: string; color: string; gradient: string }> = {
+                  Wealth: { icon: "💰", color: "text-yellow-400", gradient: "from-yellow-500/20 to-yellow-600/10" },
+                  Health: { icon: "🏃", color: "text-green-400", gradient: "from-green-500/20 to-green-600/10" },
+                  Love: { icon: "❤️", color: "text-pink-400", gradient: "from-pink-500/20 to-pink-600/10" },
+                  Happiness: { icon: "😊", color: "text-purple-400", gradient: "from-purple-500/20 to-purple-600/10" },
+                };
+
+                const config = areaConfig[okr.area] || { icon: "🎯", color: "text-blue-400", gradient: "from-blue-500/20 to-blue-600/10" };
+
+                return (
+                  <div
+                    key={okrIdx}
+                    className={`p-6 rounded-xl bg-gradient-to-br ${config.gradient}
+                      dark:border dark:border-white/[0.08] border border-black/[0.05]`}
+                  >
+                    <div className="flex items-start gap-3 mb-4">
+                      <span className="text-2xl">{config.icon}</span>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className={`text-xs font-bold uppercase tracking-wider ${config.color}`}
+                            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                            {okr.area}
+                          </span>
+                        </div>
+                        <h4 className="text-lg font-bold dark:text-[#E0E0E0] text-[#1A1A1A]"
+                          style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                          {okr.objective}
+                        </h4>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3 ml-11">
+                      {okr.keyResults.map((kr, krIdx) => {
+                        const progressKey = `${okrIdx}-${krIdx}`;
+                        const currentProgress = keyResultProgress[progressKey] || 0;
+                        const progressPercentage = kr.target > 0 ? Math.min(Math.round((currentProgress / kr.target) * 100), 100) : 0;
+
+                        return (
+                          <div key={krIdx} className="p-4 rounded-lg dark:bg-white/[0.03] bg-black/[0.02]">
+                            <p className="text-sm dark:text-[#E0E0E0] text-[#1A1A1A] mb-2"
+                              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                              {kr.description}
+                            </p>
+                            <div className="flex items-center gap-3">
+                              <input
+                                type="number"
+                                value={currentProgress}
+                                onChange={(e) => {
+                                  setKeyResultProgress({
+                                    ...keyResultProgress,
+                                    [progressKey]: Number(e.target.value)
+                                  });
+                                }}
+                                className="w-20 px-2 py-1 rounded dark:bg-white/[0.05] bg-black/[0.03]
+                                  dark:border-white/[0.1] border-black/[0.08] border
+                                  dark:text-[#E0E0E0] text-[#1A1A1A] text-sm
+                                  focus:outline-none focus:ring-2 focus:ring-[#00E5FF]/50"
+                                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                              />
+                              <span className="text-sm dark:text-[#888888] text-[#666666]"
+                                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                                / {kr.target} {kr.unit}
+                              </span>
+                              <span className={`text-sm font-bold ml-auto ${progressPercentage >= 100 ? 'text-green-400' : progressPercentage >= 50 ? 'text-yellow-400' : 'text-red-400'}`}
+                                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                                {progressPercentage}%
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Part 2: Reflection Questions */}
+          {!isReadOnly && (
+            <div className="text-center pb-4 pt-8">
+              <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7]"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                Teil 2: Reflexion
+              </h3>
+              <p className="text-[11px] dark:text-[#888888] text-[#666666] mt-1"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                Reflektiere über deinen Monat
+              </p>
+            </div>
+          )}
+
           {/* Question 1 */}
           <div className="group dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
             transition-all duration-300 ease-out
@@ -403,11 +533,11 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
             <div className="text-center pb-2">
               <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7]"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                Next Month OKRs (Plan Ahead)
+                Teil 3: Next Month OKRs
               </h3>
               <p className="text-[11px] dark:text-[#888888] text-[#666666] mt-1"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                Set 1-3 Objectives with Key Results for next month
+                Setze 1-3 Objectives mit Key Results für nächsten Monat
               </p>
             </div>
 
