@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'Personal Dashboard für Habits, Goals, OKRs und persönliche Entwicklung',
     start_url: '/',
     display: 'standalone',
-    background_color: '#000000',
-    theme_color: '#000000',
+    background_color: '#0A0A0F',
+    theme_color: '#0A0A0F',
     orientation: 'portrait-primary',
     icons: [
       {
