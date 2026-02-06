@@ -30,7 +30,7 @@ export function PatternIntelligence({ data }: PatternIntelligenceProps) {
               {habit.rate}%
             </span>
             {" "}
-            <span className="dark:text-[#999999] text-[#666666]">
+            <span className="dark:text-[#999999] text-[#3d3d3d]">
               of days. Consider restructuring.
             </span>
           </p>
@@ -38,14 +38,14 @@ export function PatternIntelligence({ data }: PatternIntelligenceProps) {
 
         {topSkipReason && topSkipReason.count > 0 && (
           <p className="text-sm leading-relaxed font-orbitron">
-            <span className="dark:text-[#999999] text-[#666666]">
+            <span className="dark:text-[#999999] text-[#3d3d3d]">
               Top skip reason:{" "}
             </span>
             <span className="font-bold text-[#FF4444]">
               &quot;{topSkipReason.reason}&quot;
             </span>
             {" "}
-            <span className="dark:text-[#999999] text-[#666666]">
+            <span className="dark:text-[#999999] text-[#3d3d3d]">
               ({topSkipReason.count} times). Address this blocker.
             </span>
           </p>

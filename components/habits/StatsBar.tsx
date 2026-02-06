@@ -95,12 +95,12 @@ function StatItem({
         >
           {value}
         </p>
-        <p className="text-[9px] dark:text-[#888888] text-[#666666] uppercase font-semibold font-orbitron tracking-widest">
+        <p className="text-[9px] dark:text-[#888888] text-[#3d3d3d] uppercase font-semibold font-orbitron tracking-widest">
           {label}
         </p>
         {/* Mini progress bar */}
         {progressPercent !== undefined && (
-          <div className="w-full h-[3px] dark:bg-white/5 bg-black/5 rounded-full overflow-hidden">
+          <div className="w-full h-[3px] dark:bg-white/5 bg-black/8 rounded-full overflow-hidden">
             <div
               className="h-full rounded-full transition-all duration-500"
               style={{

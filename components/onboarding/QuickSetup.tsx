@@ -66,7 +66,7 @@ export function QuickSetup() {
       <div className="flex min-h-screen items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center space-y-3">
-            <div className="mx-auto h-16 w-16 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+            <div className="mx-auto h-16 w-16 rounded-full bg-gradient-to-br from-cyan-600 to-blue-700 dark:from-cyan-500 dark:to-blue-600 flex items-center justify-center">
               <Sparkles className="h-8 w-8 text-white" />
             </div>
             <CardTitle className="text-3xl">Willkommen!</CardTitle>
@@ -150,7 +150,7 @@ export function QuickSetup() {
     <div className="flex min-h-screen items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-3">
-          <div className="mx-auto h-16 w-16 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center animate-pulse">
+          <div className="mx-auto h-16 w-16 rounded-full bg-gradient-to-br from-green-600 to-emerald-700 dark:from-green-500 dark:to-emerald-600 flex items-center justify-center animate-pulse">
             <Sparkles className="h-8 w-8 text-white" />
           </div>
           <CardTitle className="text-3xl">Alles bereit! 🎉</CardTitle>
@@ -161,7 +161,7 @@ export function QuickSetup() {
         <CardContent>
           <div className="flex justify-center">
             <div className="h-2 w-48 bg-muted rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-cyan-500 to-blue-600 animate-[progress_1.5s_ease-in-out]" />
+              <div className="h-full bg-gradient-to-r from-cyan-600 to-blue-700 dark:from-cyan-500 dark:to-blue-600 animate-[progress_1.5s_ease-in-out]" />
             </div>
           </div>
         </CardContent>

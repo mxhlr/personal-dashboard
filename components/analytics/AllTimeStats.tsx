@@ -12,9 +12,9 @@ interface AllTimeStatsProps {
 
 export function AllTimeStats({ stats }: AllTimeStatsProps) {
   return (
-    <Card className="p-6 dark:border-[rgba(139,92,246,0.15)] border-[rgba(139,92,246,0.2)] dark:bg-card/50 bg-white/80
+    <Card className="p-6 dark:border-[rgba(139,92,246,0.15)] border-[rgba(139,92,246,0.35)] dark:bg-card/50 bg-white/80
       shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
-      dark:hover:border-[rgba(139,92,246,0.25)] hover:border-[rgba(139,92,246,0.3)]">
+      dark:hover:border-[rgba(139,92,246,0.25)] hover:border-[rgba(139,92,246,0.5)]">
       <h3 className="text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#8B5CF6] text-[#7C3AED] mb-6">
         📈 ALL-TIME STATS
       </h3>
@@ -28,7 +28,7 @@ export function AllTimeStats({ stats }: AllTimeStatsProps) {
           >
             {stats.totalWins}
           </div>
-          <div className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666]">
+          <div className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#555555]">
             WINS
           </div>
         </div>
@@ -41,7 +41,7 @@ export function AllTimeStats({ stats }: AllTimeStatsProps) {
           >
             {stats.perfect}
           </div>
-          <div className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666]">
+          <div className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#555555]">
             PERFECT
           </div>
         </div>
@@ -54,7 +54,7 @@ export function AllTimeStats({ stats }: AllTimeStatsProps) {
           >
             {stats.bestStreak}
           </div>
-          <div className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666]">
+          <div className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#555555]">
             BEST STREAK
           </div>
         </div>

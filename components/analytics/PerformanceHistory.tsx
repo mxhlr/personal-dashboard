@@ -42,12 +42,12 @@ export function PerformanceHistory({
   const getScoreColor = (score: number, isWeekendFlag: boolean, hasData: boolean) => {
     // Weekends without data: completely light/dark, no border
     if (isWeekendFlag && !hasData) {
-      return "dark:bg-[#0a0a0a] bg-[#f1f3f5] border-0";
+      return "dark:bg-[#0a0a0a] bg-[#dee2e6] border-0";
     }
 
     // Days with no data: subtle gray in both modes
     if (!hasData || score === 0) {
-      return "dark:bg-[#1A1A2E] bg-[#e9ecef] dark:border-[rgba(0,229,255,0.1)] border-[rgba(0,180,220,0.15)] border";
+      return "dark:bg-[#1A1A2E] bg-[#ced4da] dark:border-[rgba(0,229,255,0.1)] border-[rgba(0,180,220,0.6)] border";
     }
 
     // Completion-based color scheme
@@ -55,7 +55,7 @@ export function PerformanceHistory({
     if (score >= 85) return "dark:bg-[#FFD700] bg-[#FFC107]"; // Gold
     if (score < 85) return "dark:bg-[#FF9800] bg-[#F57C00]"; // Orange
 
-    return "dark:bg-[#1A1A2E] bg-[#e9ecef] dark:border-[rgba(0,229,255,0.1)] border-[rgba(0,180,220,0.15)] border"; // Default fallback
+    return "dark:bg-[#1A1A2E] bg-[#ced4da] dark:border-[rgba(0,229,255,0.1)] border-[rgba(0,180,220,0.6)] border"; // Default fallback
   };
 
   const isToday = (day: number) => {
@@ -94,9 +94,9 @@ export function PerformanceHistory({
   ];
 
   return (
-    <Card className="p-6 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
+    <Card className="p-6 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.6)] dark:bg-card/50 bg-white/80
       shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
-      dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]">
+      dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.8)]">
       {/* Header */}
       <div className="mb-6">
         <h3 className="text-sm font-bold font-orbitron uppercase tracking-wider dark:text-[#00E5FF] text-[#0077B6] mb-4">
@@ -141,7 +141,7 @@ export function PerformanceHistory({
           {["M", "T", "W", "T", "F", "S", "S"].map((day, idx) => (
             <div
               key={idx}
-              className="text-center text-xs font-bold font-orbitron dark:text-[#888888] text-[#666666] uppercase tracking-wider"
+              className="text-center text-xs font-bold font-orbitron dark:text-[#888888] text-[#495057] uppercase tracking-wider"
             >
               {day}
             </div>

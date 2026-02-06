@@ -27,7 +27,7 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
     if (percentage === 100) return { color: '#FFD700', glow: 'rgba(255, 215, 0, 0.6)' }; // Gold
     if (percentage >= 80) return { color: '#00E676', glow: 'rgba(0, 230, 118, 0.5)' }; // Green
     if (percentage >= 50) return { color: '#00E5FF', glow: 'rgba(0, 229, 255, 0.4)' }; // Cyan
-    return { color: '#888888', glow: 'rgba(136, 136, 136, 0.3)' }; // Gray
+    return { color: '#4a4a4a', glow: 'rgba(74, 74, 74, 0.3)' }; // Gray
   };
 
   const { color: ringColor, glow: glowColor } = getRingColor();
@@ -48,7 +48,7 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
     if (percentage >= 50) return { label: 'MOMENTUM', color: '#00E5FF' };
     if (percentage >= 25) return { label: 'WARMING UP', color: '#00E5FF' };
     if (percentage > 0) return { label: 'IN PROGRESS', color: '#00E5FF' };
-    return { label: 'NOT STARTED', color: '#888888' };
+    return { label: 'NOT STARTED', color: '#4a4a4a' };
   };
 
   const stage = getProgressStage();

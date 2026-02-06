@@ -20,7 +20,7 @@ export function AnalyticsDashboard() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <p
-          className="dark:text-[#888888] text-[#666666]"
+          className="dark:text-[#888888] text-[#3d3d3d]"
           style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
         >
           Loading analytics...

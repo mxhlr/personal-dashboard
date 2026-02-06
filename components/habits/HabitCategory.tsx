@@ -101,7 +101,7 @@ export const HabitCategory = React.memo(function HabitCategory({
               transition-all duration-300
               ${isComplete
                 ? 'bg-[#00E676]/20 text-[#00E676] shadow-[0_0_10px_rgba(0,230,118,0.3)]'
-                : 'dark:bg-white/5 bg-black/5 dark:text-[#E0E0E0] text-[#333333]'
+                : 'dark:bg-white/5 bg-black/8 dark:text-[#E0E0E0] text-[#333333]'
               }`}
               aria-hidden="true"
             >
@@ -120,7 +120,7 @@ export const HabitCategory = React.memo(function HabitCategory({
               className={`px-2.5 py-1 rounded-full text-xs font-bold font-orbitron transition-all duration-300
                 ${isComplete
                   ? 'bg-[#00E676]/20 text-[#00E676]'
-                  : 'dark:bg-white/5 bg-black/5 dark:text-[#888888] text-[#666666]'
+                  : 'dark:bg-white/5 bg-black/8 dark:text-[#888888] text-[#3d3d3d]'
                 }`}
               aria-label={`${completedTotal} of ${habits.length} habits completed`}
             >
@@ -130,7 +130,7 @@ export const HabitCategory = React.memo(function HabitCategory({
             <button
               onClick={() => setIsExpanded(!isExpanded)}
               className={`p-1 rounded transition-all duration-300
-                dark:text-[#666666] text-[#999999]
+                dark:text-[#666666] text-[#525252]
                 hover:dark:text-[#00E5FF] hover:text-[#00B8D4]
                 ${isExpanded ? 'rotate-0' : '-rotate-90'}`}
               aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${name} category`}
@@ -144,7 +144,7 @@ export const HabitCategory = React.memo(function HabitCategory({
         <div className="relative mt-3">
           <Progress
             value={progress}
-            className="h-2 dark:bg-[#2A2A2E] bg-[#E5E5E5] overflow-hidden"
+            className="h-2 dark:bg-[#2A2A2E] bg-[#d1d2d4] overflow-hidden"
             indicatorClassName={`transition-all duration-500 ${isComplete ? "bg-[#00FF88] shadow-[0_0_8px_rgba(0,255,136,0.5)]" : "bg-[#00E5FF]"}`}
           />
         </div>
@@ -184,7 +184,7 @@ export const HabitCategory = React.memo(function HabitCategory({
                     Complete core to unlock
                   </span>
                   <div className="flex-1" />
-                  <span className="text-[13px] font-bold font-orbitron dark:text-[#555555] text-[#999999]">
+                  <span className="text-[13px] font-bold font-orbitron dark:text-[#555555] text-[#525252]">
                     {completedExtra}/{extraHabits.length}
                   </span>
                 </div>
@@ -200,7 +200,7 @@ export const HabitCategory = React.memo(function HabitCategory({
                       Extras unlocked
                     </span>
                     <div className="flex-1" />
-                    <span className="text-[13px] font-bold font-orbitron dark:text-[#555555] text-[#999999]">
+                    <span className="text-[13px] font-bold font-orbitron dark:text-[#555555] text-[#525252]">
                       {completedExtra}/{extraHabits.length}
                     </span>
                   </div>

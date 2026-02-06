@@ -303,16 +303,16 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         {/* Review Notifications - Left */}
         <Card className="p-4 md:p-6 dark:bg-card/50 bg-white/80
           shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
-          dark:border-border/50 border-border/30
-          dark:hover:border-border hover:border-border/50">
+          dark:border-border/50 border-border/60
+          dark:hover:border-border hover:border-border/80">
           <ReviewNotificationBar />
         </Card>
 
         {/* Weekly Progress - Right */}
         <Card className="p-4 md:p-6 dark:bg-card/50 bg-white/80
           shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
-          dark:border-border/50 border-border/30
-          dark:hover:border-border hover:border-border/50">
+          dark:border-border/50 border-border/60
+          dark:hover:border-border hover:border-border/80">
           <WeeklyProgressTracker />
         </Card>
       </div>

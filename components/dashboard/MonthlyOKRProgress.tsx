@@ -21,8 +21,8 @@ export function MonthlyOKRProgress() {
     return (
       <Card className="p-6 dark:bg-card/50 bg-white/80
         shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
-        dark:border-border/50 border-border/30
-        dark:hover:border-border hover:border-border/50 animate-pulse">
+        dark:border-border/50 border-border/60
+        dark:hover:border-border hover:border-border/80 animate-pulse">
         <div className="space-y-4">
           <div className="h-6 dark:bg-white/10 bg-black/5 rounded w-1/2" />
           <div className="h-20 dark:bg-white/10 bg-black/5 rounded" />
@@ -37,8 +37,8 @@ export function MonthlyOKRProgress() {
     return (
       <Card className="p-6 dark:bg-card/50 bg-white/80
         shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
-        dark:border-border/50 border-border/30
-        dark:hover:border-border hover:border-border/50">
+        dark:border-border/50 border-border/60
+        dark:hover:border-border hover:border-border/80">
         <div className="text-center space-y-3">
           <div className="flex justify-center">
             <TrendingUp className="w-10 h-10 dark:text-[#888888] text-[#666666] opacity-50" />

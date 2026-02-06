@@ -59,7 +59,7 @@ export default function Step6Coach({
             {coachTones.map((tone) => (
               <div
                 key={tone.value}
-                className="flex items-start space-x-3 border border-border rounded-lg p-4 hover:bg-accent/50 transition-colors cursor-pointer"
+                className="flex items-start space-x-3 border border-border/60 rounded-lg p-4 hover:bg-accent/50 transition-colors cursor-pointer"
               >
                 <RadioGroupItem value={tone.value} id={tone.value} className="mt-1" />
                 <Label

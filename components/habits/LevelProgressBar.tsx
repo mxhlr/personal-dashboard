@@ -13,14 +13,14 @@ export function LevelProgressBar({ level, currentXP }: LevelProgressBarProps) {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between text-xs">
-        <span className="font-medium dark:text-[#888888] text-[#666666] uppercase tracking-wider">
+        <span className="font-medium dark:text-[#888888] text-[#3d3d3d] uppercase tracking-wider">
           Level {level} → {level + 1}
         </span>
         <span className="font-bold font-orbitron text-[#00E5FF]" style={{ textShadow: '0 0 8px rgba(0, 229, 255, 0.5)' }}>
           {xpInCurrentLevel}/{1000} XP
         </span>
       </div>
-      <div className="relative h-2 w-full rounded-full dark:bg-[#2A2A2E] bg-[#E5E5E5] overflow-hidden border border-[#00E5FF]/20">
+      <div className="relative h-2 w-full rounded-full dark:bg-[#2A2A2E] bg-[#d1d2d4] overflow-hidden border border-[#00E5FF]/20">
         <div
           className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-[#00E5FF] to-[#00B8D4] transition-all duration-500"
           style={{

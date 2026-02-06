@@ -118,7 +118,7 @@ export default function Step5Tracking({
           const selectedField = data.trackingFields.find((f) => f.name === field.name);
 
           return (
-            <div key={field.name} className="border border-border rounded-lg p-4">
+            <div key={field.name} className="border border-border/60 rounded-lg p-4">
               <div className="flex items-start gap-3">
                 <Checkbox
                   checked={isSelected}
@@ -129,7 +129,7 @@ export default function Step5Tracking({
                   <div className="flex items-center gap-2">
                     <Label className="font-medium">{field.name}</Label>
                     {field.hasStreak && (
-                      <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">
+                      <span className="text-xs bg-primary/10 dark:bg-primary/10 text-primary px-2 py-0.5 rounded">
                         Streak
                       </span>
                     )}
@@ -172,7 +172,7 @@ export default function Step5Tracking({
           {data.trackingFields
             .filter((f) => !defaultFields.some((df) => df.name === f.name))
             .map((field, index) => (
-              <div key={`custom-${index}`} className="border border-border rounded-lg p-4">
+              <div key={`custom-${index}`} className="border border-border/60 rounded-lg p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="font-medium">{field.name}</Label>
@@ -198,7 +198,7 @@ export default function Step5Tracking({
         </div>
       )}
 
-      <div className="border border-dashed border-border rounded-lg p-4 mb-6">
+      <div className="border border-dashed border-border/60 rounded-lg p-4 mb-6">
         <Label className="mb-2 block">Eigenes Feld hinzufügen</Label>
         <div className="flex gap-2">
           <Input
