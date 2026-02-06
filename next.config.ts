@@ -9,7 +9,7 @@ const withPWA = require("next-pwa")({
   register: true,
   skipWaiting: true,
   disable: process.env.NODE_ENV === "development",
-  buildId: "v5-icons-update",
+  cacheId: "v5-icons-update",
   runtimeCaching: [
     {
       urlPattern: /^https:\/\/.*\.convex\.cloud\/.*/i,
