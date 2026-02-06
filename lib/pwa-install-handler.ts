@@ -13,9 +13,13 @@ interface BeforeInstallPromptEvent extends Event {
 // Global state for PWA install prompt
 let deferredPrompt: BeforeInstallPromptEvent | null = null;
 const listeners = new Set<(prompt: BeforeInstallPromptEvent | null) => void>();
+let initialized = false;
 
-// Initialize listener once on client side
-if (typeof window !== 'undefined') {
+// Initialize listener only once on client side
+function initializePWAHandler() {
+  if (initialized || typeof window === 'undefined') return;
+  initialized = true;
+
   window.addEventListener('beforeinstallprompt', (e: Event) => {
     e.preventDefault();
     deferredPrompt = e as BeforeInstallPromptEvent;
@@ -26,6 +30,9 @@ if (typeof window !== 'undefined') {
 }
 
 export function usePWAInstallPrompt() {
+  // Initialize on first use
+  initializePWAHandler();
+
   return {
     getDeferredPrompt: () => deferredPrompt,
     subscribe: (callback: (prompt: BeforeInstallPromptEvent | null) => void) => {
