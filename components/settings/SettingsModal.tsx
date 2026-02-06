@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { X, Settings, Download, Smartphone, CheckCircle2 } from "lucide-react";
+import { X, Settings, Download, Smartphone, CheckCircle2, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { ManageHabitsDialog } from "@/components/habits/ManageHabitsDialog";
 import { VisionBoardSettings } from "@/components/settings/VisionBoardSettings";
@@ -42,6 +42,8 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   // PWA Installation state
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isInstalled, setIsInstalled] = useState(false);
+  const [updateAvailable, setUpdateAvailable] = useState(false);
+  const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
 
   // Listen for PWA install prompt
   useEffect(() => {
@@ -55,6 +57,26 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     // Check if already installed
     if (window.matchMedia("(display-mode: standalone)").matches) {
       setIsInstalled(true);
+    }
+
+    // Listen for Service Worker updates
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.ready.then((registration) => {
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                setUpdateAvailable(true);
+                toast.info('Update verfügbar! Klick auf "Update installieren" in Settings → App');
+              }
+            });
+          }
+        });
+
+        // Check for updates on mount
+        registration.update();
+      });
     }
 
     return () => window.removeEventListener("beforeinstallprompt", handler);
@@ -75,6 +97,41 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     }
 
     setDeferredPrompt(null);
+  };
+
+  const handleCheckForUpdate = async () => {
+    if (!('serviceWorker' in navigator)) {
+      toast.error("Service Worker nicht verfügbar");
+      return;
+    }
+
+    setIsCheckingUpdate(true);
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      await registration.update();
+
+      // Check if update is available
+      setTimeout(() => {
+        if (!updateAvailable) {
+          toast.success("App ist aktuell! ✓");
+        }
+        setIsCheckingUpdate(false);
+      }, 1000);
+    } catch (error) {
+      logger.error("Failed to check for update:", error);
+      toast.error("Fehler beim Prüfen");
+      setIsCheckingUpdate(false);
+    }
+  };
+
+  const handleInstallUpdate = () => {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
+      toast.success("Update wird installiert...");
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
   };
 
   // Profile form state
@@ -441,6 +498,54 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                           </ul>
                         </div>
                       )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* App Updates */}
+                <div className="rounded-lg border border-border bg-card p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 rounded-lg bg-primary/10">
+                      <RefreshCw className="h-6 w-6 text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg mb-2">
+                        App Updates
+                      </h3>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        Prüfe nach neuen Updates und installiere sie sofort.
+                      </p>
+
+                      {updateAvailable ? (
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2 text-primary">
+                            <CheckCircle2 className="h-5 w-5" />
+                            <span className="font-medium">Neues Update verfügbar!</span>
+                          </div>
+                          <Button
+                            onClick={handleInstallUpdate}
+                            variant="default"
+                            className="gap-2"
+                          >
+                            <Download className="h-4 w-4" />
+                            Update jetzt installieren
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          onClick={handleCheckForUpdate}
+                          disabled={isCheckingUpdate}
+                          variant="outline"
+                          className="gap-2"
+                        >
+                          <RefreshCw className={`h-4 w-4 ${isCheckingUpdate ? 'animate-spin' : ''}`} />
+                          {isCheckingUpdate ? "Prüfe..." : "Nach Updates suchen"}
+                        </Button>
+                      )}
+
+                      <p className="text-xs text-muted-foreground mt-3">
+                        Aktuelle Version wird automatisch bei jedem App-Start geprüft.
+                      </p>
                     </div>
                   </div>
                 </div>

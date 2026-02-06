@@ -7,8 +7,9 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 const withPWA = require("next-pwa")({
   dest: "public",
   register: true,
-  skipWaiting: true,
+  skipWaiting: true, // Auto-activate new service worker
   disable: process.env.NODE_ENV === "development",
+  buildExcludes: [/middleware-manifest\.json$/],
   runtimeCaching: [
     {
       urlPattern: /^https:\/\/.*\.convex\.cloud\/.*/i,
