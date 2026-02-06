@@ -208,12 +208,10 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <Label>💰 WEALTH (Geld, Karriere, Business)</Label>
                 <Textarea
                   value={northStarsForm.wealth}
-                  onChange={(e) =>
-                    setNorthStarsForm({
-                      ...northStarsForm,
-                      wealth: e.target.value,
-                    })
-                  }
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setNorthStarsForm((prev) => ({ ...prev, wealth: value }));
+                  }}
                   placeholder="z.B. SaaS auf 10k MRR"
                   rows={2}
                 />
@@ -223,12 +221,10 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <Label>🏃 HEALTH (Körper, Fitness, Ernährung)</Label>
                 <Textarea
                   value={northStarsForm.health}
-                  onChange={(e) =>
-                    setNorthStarsForm({
-                      ...northStarsForm,
-                      health: e.target.value,
-                    })
-                  }
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setNorthStarsForm((prev) => ({ ...prev, health: value }));
+                  }}
                   placeholder="z.B. Halbmarathon laufen"
                   rows={2}
                 />
@@ -238,12 +234,10 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <Label>❤️ LOVE (Beziehungen, Familie, Freunde)</Label>
                 <Textarea
                   value={northStarsForm.love}
-                  onChange={(e) =>
-                    setNorthStarsForm({
-                      ...northStarsForm,
-                      love: e.target.value,
-                    })
-                  }
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setNorthStarsForm((prev) => ({ ...prev, love: value }));
+                  }}
                   placeholder="z.B. Weekly Date Night etablieren"
                   rows={2}
                 />
@@ -253,12 +247,10 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <Label>😊 HAPPINESS (Erfüllung, Hobbies, Sinn)</Label>
                 <Textarea
                   value={northStarsForm.happiness}
-                  onChange={(e) =>
-                    setNorthStarsForm({
-                      ...northStarsForm,
-                      happiness: e.target.value,
-                    })
-                  }
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setNorthStarsForm((prev) => ({ ...prev, happiness: value }));
+                  }}
                   placeholder="z.B. Meditation täglich"
                   rows={2}
                 />

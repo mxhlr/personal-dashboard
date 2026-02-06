@@ -1,0 +1,329 @@
+import { z } from "zod";
+
+/**
+ * Validation schema for wellbeing metrics
+ *
+ * Validation rules:
+ * - All metrics are 1-10 scale
+ * - energy: How energetic you feel
+ * - satisfaction: How satisfied you are
+ * - stress: Your stress level
+ */
+export const wellbeingSchema = z.object({
+  energy: z
+    .number()
+    .int()
+    .min(1, "Energy must be at least 1")
+    .max(10, "Energy cannot exceed 10"),
+  satisfaction: z
+    .number()
+    .int()
+    .min(1, "Satisfaction must be at least 1")
+    .max(10, "Satisfaction cannot exceed 10"),
+  stress: z
+    .number()
+    .int()
+    .min(1, "Stress must be at least 1")
+    .max(10, "Stress cannot exceed 10"),
+});
+
+/**
+ * Type inference for Wellbeing
+ */
+export type Wellbeing = z.infer<typeof wellbeingSchema>;
+
+/**
+ * Validation schema for custom toggle fields
+ *
+ * Used for boolean tracking fields in daily logs
+ */
+export const customToggleSchema = z.object({
+  fieldId: z.string().min(1, "Field ID is required"),
+  value: z.boolean(),
+});
+
+/**
+ * Type inference for CustomToggle
+ */
+export type CustomToggle = z.infer<typeof customToggleSchema>;
+
+/**
+ * Validation schema for custom text fields
+ *
+ * Used for text-based tracking fields in daily logs
+ */
+export const customTextSchema = z.object({
+  fieldId: z.string().min(1, "Field ID is required"),
+  value: z
+    .string()
+    .max(1000, "Text value must be less than 1000 characters"),
+});
+
+/**
+ * Type inference for CustomText
+ */
+export type CustomText = z.infer<typeof customTextSchema>;
+
+/**
+ * Validation schema for daily tracking data
+ *
+ * Validation rules:
+ * - All fields are optional
+ * - Text fields have max length constraints
+ * - workHours must be between 0 and 24
+ */
+export const trackingDataSchema = z.object({
+  movement: z
+    .string()
+    .max(500, "Movement notes must be less than 500 characters")
+    .optional(),
+  phoneJail: z.boolean().optional(),
+  phoneJailNotes: z
+    .string()
+    .max(500, "Phone jail notes must be less than 500 characters")
+    .optional(),
+  vibes: z
+    .string()
+    .max(500, "Vibes notes must be less than 500 characters")
+    .optional(),
+  breakfast: z
+    .string()
+    .max(200, "Breakfast description must be less than 200 characters")
+    .optional(),
+  lunch: z
+    .string()
+    .max(200, "Lunch description must be less than 200 characters")
+    .optional(),
+  dinner: z
+    .string()
+    .max(200, "Dinner description must be less than 200 characters")
+    .optional(),
+  workHours: z
+    .number()
+    .min(0, "Work hours cannot be negative")
+    .max(24, "Work hours cannot exceed 24")
+    .optional(),
+  workNotes: z
+    .string()
+    .max(1000, "Work notes must be less than 1000 characters")
+    .optional(),
+  customToggles: z.array(customToggleSchema).optional(),
+  customTexts: z.array(customTextSchema).optional(),
+});
+
+/**
+ * Type inference for TrackingData
+ */
+export type TrackingData = z.infer<typeof trackingDataSchema>;
+
+/**
+ * Validation schema for daily log entry
+ *
+ * Combines all daily tracking components
+ */
+export const dailyLogSchema = z.object({
+  userId: z.string().min(1, "User ID is required"),
+  date: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format"),
+  weekNumber: z.number().int().min(1).max(53),
+  year: z.number().int().min(2020).max(2100),
+  dayOfWeek: z.enum([
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ]),
+  tracking: trackingDataSchema,
+  wellbeing: wellbeingSchema.optional(),
+  completed: z.boolean().default(false),
+  completedAt: z.string().datetime().optional(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+});
+
+/**
+ * Type inference for DailyLog
+ */
+export type DailyLog = z.infer<typeof dailyLogSchema>;
+
+/**
+ * Validation schema for tracking field configuration
+ *
+ * Used to define custom tracking fields
+ */
+export const trackingFieldSchema = z.object({
+  userId: z.string().min(1, "User ID is required"),
+  name: z
+    .string()
+    .min(1, "Field name is required")
+    .max(50, "Field name must be less than 50 characters"),
+  type: z.enum(["text", "toggle", "meals", "work"], {
+    errorMap: () => ({ message: "Invalid field type" }),
+  }),
+  hasStreak: z.boolean().default(false),
+  isDefault: z.boolean().default(false),
+  isActive: z.boolean().default(true),
+  order: z.number().int().min(0),
+  currentStreak: z.number().int().min(0).optional(),
+  longestStreak: z.number().int().min(0).optional(),
+  weeklyTarget: z.number().int().min(0).max(7).optional(),
+  createdAt: z.string().datetime(),
+});
+
+/**
+ * Type inference for TrackingField
+ */
+export type TrackingField = z.infer<typeof trackingFieldSchema>;
+
+/**
+ * Validation schema for tracking field creation
+ *
+ * Used in field management forms
+ */
+export const trackingFieldFormSchema = z.object({
+  name: z.string().min(1).max(50),
+  type: z.enum(["text", "toggle", "meals", "work"]),
+  hasStreak: z.boolean().default(false),
+  weeklyTarget: z.number().int().min(0).max(7).optional(),
+});
+
+/**
+ * Type inference for TrackingFieldForm
+ */
+export type TrackingFieldForm = z.infer<typeof trackingFieldFormSchema>;
+
+/**
+ * Validation schema for updating daily log
+ *
+ * All fields are optional to allow partial updates
+ */
+export const dailyLogUpdateSchema = z.object({
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  tracking: trackingDataSchema.partial().optional(),
+  wellbeing: wellbeingSchema.optional(),
+  completed: z.boolean().optional(),
+});
+
+/**
+ * Type inference for DailyLogUpdate
+ */
+export type DailyLogUpdate = z.infer<typeof dailyLogUpdateSchema>;
+
+/**
+ * Validation schema for meal tracking
+ *
+ * Validates individual meal entries
+ */
+export const mealSchema = z.object({
+  breakfast: z.string().max(200).optional(),
+  lunch: z.string().max(200).optional(),
+  dinner: z.string().max(200).optional(),
+});
+
+/**
+ * Type inference for Meal
+ */
+export type Meal = z.infer<typeof mealSchema>;
+
+/**
+ * Validation schema for work tracking
+ *
+ * Validates work hours and notes
+ */
+export const workTrackingSchema = z.object({
+  workHours: z.number().min(0).max(24),
+  workNotes: z.string().max(1000).optional(),
+});
+
+/**
+ * Type inference for WorkTracking
+ */
+export type WorkTracking = z.infer<typeof workTrackingSchema>;
+
+/**
+ * Validation schema for phone jail tracking
+ *
+ * Validates phone usage restriction tracking
+ */
+export const phoneJailSchema = z.object({
+  phoneJail: z.boolean(),
+  phoneJailNotes: z.string().max(500).optional(),
+});
+
+/**
+ * Type inference for PhoneJail
+ */
+export type PhoneJail = z.infer<typeof phoneJailSchema>;
+
+/**
+ * Validation schema for streak data
+ *
+ * Used to track and validate streaks for tracking fields
+ */
+export const streakSchema = z.object({
+  fieldId: z.string().min(1, "Field ID is required"),
+  currentStreak: z.number().int().min(0),
+  longestStreak: z.number().int().min(0),
+  lastCompletedDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+});
+
+/**
+ * Type inference for Streak
+ */
+export type Streak = z.infer<typeof streakSchema>;
+
+/**
+ * Validation schema for tracking summary
+ *
+ * Used to display aggregate tracking statistics
+ */
+export const trackingSummarySchema = z.object({
+  totalDays: z.number().int().min(0),
+  completedDays: z.number().int().min(0),
+  completionRate: z.number().min(0).max(100),
+  currentStreak: z.number().int().min(0),
+  longestStreak: z.number().int().min(0),
+  averageWellbeing: wellbeingSchema.optional(),
+});
+
+/**
+ * Type inference for TrackingSummary
+ */
+export type TrackingSummary = z.infer<typeof trackingSummarySchema>;
+
+/**
+ * Validation schema for date range queries
+ *
+ * Used to validate date ranges for tracking data queries
+ */
+export const dateRangeSchema = z.object({
+  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+});
+
+/**
+ * Type inference for DateRange
+ */
+export type DateRange = z.infer<typeof dateRangeSchema>;
+
+/**
+ * Validation schema for day of week enum
+ */
+export const dayOfWeekSchema = z.enum([
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+]);
+
+/**
+ * Type inference for DayOfWeek
+ */
+export type DayOfWeek = z.infer<typeof dayOfWeekSchema>;

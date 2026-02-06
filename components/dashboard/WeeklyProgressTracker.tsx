@@ -4,14 +4,15 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { format, startOfWeek, addDays } from "date-fns";
 import { de } from "date-fns/locale";
+import { WEEK, SIZE, ANIMATION_DURATION } from "@/lib/constants";
 
 export function WeeklyProgressTracker() {
   const userStats = useQuery(api.gamification.getUserStats);
 
   // Get the current week (Monday to Sunday)
   const today = new Date();
-  const weekStart = startOfWeek(today, { weekStartsOn: 1 }); // Monday
-  const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
+  const weekStart = startOfWeek(today, { weekStartsOn: WEEK.STARTS_ON }); // Monday
+  const weekDays = Array.from({ length: WEEK.DAYS }, (_, i) => addDays(weekStart, i));
 
   // Query daily logs for each day of the week
   const dailyLogs = weekDays.map((date) => {
@@ -54,7 +55,7 @@ export function WeeklyProgressTracker() {
                   {format(date, "EEE", { locale: de }).slice(0, 2)}
                 </span>
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
+                  className={`w-${SIZE.AVATAR / 4} h-${SIZE.AVATAR / 4} rounded-full flex items-center justify-center transition-all duration-${ANIMATION_DURATION.FAST} ${
                     isComplete
                       ? "bg-[#00E676] dark:bg-[#00E676] shadow-[0_0_10px_rgba(0,230,118,0.4)]"
                       : isPast

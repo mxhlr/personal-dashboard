@@ -151,6 +151,27 @@ npm start
 - `npm run build` - Build for production
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
+- `npm run analyze` - Analyze bundle size with interactive visualizations
+
+### Bundle Analysis
+
+To analyze and optimize your application's bundle size:
+
+```bash
+npm run analyze
+```
+
+This will:
+1. Create a production build
+2. Generate interactive HTML reports showing bundle composition
+3. Open visualizations in your browser
+
+The reports are saved in `.next/analyze/`:
+- `client.html` - Client-side JavaScript bundles
+- `nodejs.html` - Server-side bundles
+- `edge.html` - Edge runtime bundles
+
+For detailed findings and optimization recommendations, see [BUNDLE_ANALYSIS.md](./BUNDLE_ANALYSIS.md).
 
 ## 📁 Project Structure
 

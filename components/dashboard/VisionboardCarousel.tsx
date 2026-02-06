@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 const CARDS_PER_PAGE = 5;
 
@@ -122,19 +123,26 @@ export function VisionboardCarousel() {
             >
               {/* Image */}
               <div
-                className="relative"
-                style={{ borderRadius: image.subtitle ? "8px 8px 0 0" : "8px" }}
+                className="relative w-full"
+                style={{
+                  borderRadius: image.subtitle ? "8px 8px 0 0" : "8px",
+                  aspectRatio: `${image.width} / ${image.height}`,
+                  maxHeight: "400px"
+                }}
               >
-                <img
+                <Image
                   src={image.url}
                   alt={image.subtitle || "Vision board image"}
+                  width={image.width}
+                  height={image.height}
+                  className="object-cover rounded-t-lg"
                   style={{
                     width: "100%",
                     height: "auto",
-                    display: "block",
                     maxHeight: "400px",
-                    objectFit: "cover",
                   }}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 20vw"
+                  loading="lazy"
                 />
               </div>
 

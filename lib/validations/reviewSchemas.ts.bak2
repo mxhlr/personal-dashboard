@@ -1,0 +1,268 @@
+import { z } from "zod";
+
+/**
+ * Validation schema for weekly review responses
+ *
+ * Validation rules:
+ * - All fields are required strings
+ * - Each field should have meaningful content (min 1 character)
+ * - Max 2000 characters per field for reasonable storage
+ */
+export const weeklyReviewResponsesSchema = z.object({
+  biggestSuccess: z
+    .string()
+    .min(1, "Please describe your biggest success")
+    .max(2000, "Response must be less than 2000 characters"),
+  mostFrustrating: z
+    .string()
+    .min(1, "Please describe what was most frustrating")
+    .max(2000, "Response must be less than 2000 characters"),
+  differentlyNextTime: z
+    .string()
+    .min(1, "Please describe what you would do differently")
+    .max(2000, "Response must be less than 2000 characters"),
+  learned: z
+    .string()
+    .min(1, "Please describe what you learned")
+    .max(2000, "Response must be less than 2000 characters"),
+  nextWeekFocus: z
+    .string()
+    .min(1, "Please describe your focus for next week")
+    .max(2000, "Response must be less than 2000 characters"),
+});
+
+/**
+ * Type inference for WeeklyReviewResponses
+ */
+export type WeeklyReviewResponses = z.infer<
+  typeof weeklyReviewResponsesSchema
+>;
+
+/**
+ * Validation schema for weekly goals
+ *
+ * Validation rules:
+ * - goal: Required non-empty string, max 500 characters
+ * - category: Must be one of the four life areas
+ */
+export const weeklyGoalSchema = z.object({
+  goal: z
+    .string()
+    .min(1, "Goal cannot be empty")
+    .max(500, "Goal must be less than 500 characters"),
+  category: z.enum(["Wealth", "Health", "Love", "Happiness"], {
+    errorMap: () => ({ message: "Category must be a valid life area" }),
+  }),
+});
+
+/**
+ * Type inference for WeeklyGoal
+ */
+export type WeeklyGoal = z.infer<typeof weeklyGoalSchema>;
+
+/**
+ * Validation schema for complete weekly review submission
+ *
+ * Combines responses and optional next week goals
+ */
+export const weeklyReviewSubmissionSchema = z.object({
+  year: z.number().int().min(2020).max(2100),
+  weekNumber: z.number().int().min(1).max(53),
+  responses: weeklyReviewResponsesSchema,
+  nextWeekGoals: z.array(weeklyGoalSchema).optional(),
+});
+
+/**
+ * Type inference for WeeklyReviewSubmission
+ */
+export type WeeklyReviewSubmission = z.infer<
+  typeof weeklyReviewSubmissionSchema
+>;
+
+/**
+ * Validation schema for monthly review responses
+ *
+ * Validation rules:
+ * - All fields are required strings with meaningful content
+ * - Max 3000 characters per field (monthly reviews can be longer)
+ */
+export const monthlyReviewResponsesSchema = z.object({
+  achievements: z
+    .string()
+    .min(1, "Please describe your achievements")
+    .max(3000, "Response must be less than 3000 characters"),
+  challenges: z
+    .string()
+    .min(1, "Please describe your challenges")
+    .max(3000, "Response must be less than 3000 characters"),
+  lessons: z
+    .string()
+    .min(1, "Please describe lessons learned")
+    .max(3000, "Response must be less than 3000 characters"),
+  nextMonthFocus: z
+    .string()
+    .min(1, "Please describe your focus for next month")
+    .max(3000, "Response must be less than 3000 characters"),
+  habitsReflection: z
+    .string()
+    .min(1, "Please reflect on your habits")
+    .max(3000, "Response must be less than 3000 characters"),
+});
+
+/**
+ * Type inference for MonthlyReviewResponses
+ */
+export type MonthlyReviewResponses = z.infer<
+  typeof monthlyReviewResponsesSchema
+>;
+
+/**
+ * Validation schema for complete monthly review submission
+ */
+export const monthlyReviewSubmissionSchema = z.object({
+  year: z.number().int().min(2020).max(2100),
+  month: z.number().int().min(1).max(12),
+  responses: monthlyReviewResponsesSchema,
+});
+
+/**
+ * Type inference for MonthlyReviewSubmission
+ */
+export type MonthlyReviewSubmission = z.infer<
+  typeof monthlyReviewSubmissionSchema
+>;
+
+/**
+ * Validation schema for quarterly review responses
+ *
+ * Validation rules:
+ * - All fields are required strings with meaningful content
+ * - Max 5000 characters per field (quarterly reviews are comprehensive)
+ */
+export const quarterlyReviewResponsesSchema = z.object({
+  majorWins: z
+    .string()
+    .min(1, "Please describe your major wins")
+    .max(5000, "Response must be less than 5000 characters"),
+  significantChallenges: z
+    .string()
+    .min(1, "Please describe significant challenges")
+    .max(5000, "Response must be less than 5000 characters"),
+  keyLearnings: z
+    .string()
+    .min(1, "Please describe key learnings")
+    .max(5000, "Response must be less than 5000 characters"),
+  nextQuarterGoals: z
+    .string()
+    .min(1, "Please describe your goals for next quarter")
+    .max(5000, "Response must be less than 5000 characters"),
+  areasForImprovement: z
+    .string()
+    .min(1, "Please describe areas for improvement")
+    .max(5000, "Response must be less than 5000 characters"),
+});
+
+/**
+ * Type inference for QuarterlyReviewResponses
+ */
+export type QuarterlyReviewResponses = z.infer<
+  typeof quarterlyReviewResponsesSchema
+>;
+
+/**
+ * Validation schema for complete quarterly review submission
+ */
+export const quarterlyReviewSubmissionSchema = z.object({
+  year: z.number().int().min(2020).max(2100),
+  quarter: z.number().int().min(1).max(4),
+  responses: quarterlyReviewResponsesSchema,
+});
+
+/**
+ * Type inference for QuarterlyReviewSubmission
+ */
+export type QuarterlyReviewSubmission = z.infer<
+  typeof quarterlyReviewSubmissionSchema
+>;
+
+/**
+ * Validation schema for annual review responses
+ *
+ * Validation rules:
+ * - All fields are required strings with meaningful content
+ * - Max 10000 characters per field (annual reviews are extensive)
+ */
+export const annualReviewResponsesSchema = z.object({
+  yearOverview: z
+    .string()
+    .min(1, "Please provide a year overview")
+    .max(10000, "Response must be less than 10000 characters"),
+  biggestAchievements: z
+    .string()
+    .min(1, "Please describe your biggest achievements")
+    .max(10000, "Response must be less than 10000 characters"),
+  lessonsLearned: z
+    .string()
+    .min(1, "Please describe lessons learned")
+    .max(10000, "Response must be less than 10000 characters"),
+  nextYearVision: z
+    .string()
+    .min(1, "Please describe your vision for next year")
+    .max(10000, "Response must be less than 10000 characters"),
+  gratitude: z
+    .string()
+    .min(1, "Please share what you're grateful for")
+    .max(10000, "Response must be less than 10000 characters"),
+});
+
+/**
+ * Type inference for AnnualReviewResponses
+ */
+export type AnnualReviewResponses = z.infer<typeof annualReviewResponsesSchema>;
+
+/**
+ * Validation schema for complete annual review submission
+ */
+export const annualReviewSubmissionSchema = z.object({
+  year: z.number().int().min(2020).max(2100),
+  responses: annualReviewResponsesSchema,
+});
+
+/**
+ * Type inference for AnnualReviewSubmission
+ */
+export type AnnualReviewSubmission = z.infer<
+  typeof annualReviewSubmissionSchema
+>;
+
+/**
+ * Validation schema for goal completion status
+ *
+ * Used to track completion of goals from previous reviews
+ */
+export const goalCompletionSchema = z.object({
+  goalIndex: z.number().int().min(0),
+  completed: z.boolean(),
+});
+
+/**
+ * Type inference for GoalCompletion
+ */
+export type GoalCompletion = z.infer<typeof goalCompletionSchema>;
+
+/**
+ * Validation schema for review form props
+ *
+ * Common props shared across all review forms
+ */
+export const reviewFormPropsSchema = z.object({
+  year: z.number().int().min(2020).max(2100),
+  weekNumber: z.number().int().min(1).max(53).optional(),
+  month: z.number().int().min(1).max(12).optional(),
+  quarter: z.number().int().min(1).max(4).optional(),
+});
+
+/**
+ * Type inference for ReviewFormProps
+ */
+export type ReviewFormProps = z.infer<typeof reviewFormPropsSchema>;

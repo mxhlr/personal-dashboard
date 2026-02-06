@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { logger } from "@/lib/logger";
+import { TIMEOUT, ANIMATION_DURATION, TIME_MS } from "@/lib/constants";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
@@ -31,13 +32,13 @@ export function SprintTimer() {
       const now = new Date();
       const startTime = new Date(currentTimer.startedAt);
       const diffMs = now.getTime() - startTime.getTime();
-      const minutes = Math.floor(diffMs / (1000 * 60));
-      const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+      const minutes = Math.floor(diffMs / TIME_MS.MINUTE);
+      const seconds = Math.floor((diffMs % TIME_MS.MINUTE) / TIME_MS.SECOND);
       setBlockTime(`${minutes}m ${seconds}s`);
     };
 
     updateBlockTime();
-    const interval = setInterval(updateBlockTime, 1000);
+    const interval = setInterval(updateBlockTime, TIMEOUT.TIMER_UPDATE);
     return () => clearInterval(interval);
   }, [currentTimer]);
 
@@ -72,10 +73,10 @@ export function SprintTimer() {
         </div>
         <Button
           onClick={handleStopBlock}
-          className="px-6 py-2 bg-[#EF5350] dark:bg-[#EF5350] text-white font-bold font-orbitron uppercase tracking-wider text-xs
+          className={`px-6 py-2 bg-[#EF5350] dark:bg-[#EF5350] text-white font-bold font-orbitron uppercase tracking-wider text-xs
             border border-[#EF5350]/50 shadow-sm
             hover:bg-[#E53935] hover:shadow-md hover:scale-[1.02]
-            transition-all duration-300"
+            transition-all duration-${ANIMATION_DURATION.NORMAL}`}
         >
           STOP BLOCK
         </Button>
@@ -89,10 +90,10 @@ export function SprintTimer() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            className="px-6 py-2 bg-[#424242] dark:bg-[#424242] text-white font-bold font-orbitron uppercase tracking-wider text-xs
+            className={`px-6 py-2 bg-[#424242] dark:bg-[#424242] text-white font-bold font-orbitron uppercase tracking-wider text-xs
               border border-[#616161] shadow-sm
               hover:bg-[#616161] hover:shadow-md hover:scale-[1.02]
-              transition-all duration-300"
+              transition-all duration-${ANIMATION_DURATION.NORMAL}`}
           >
             START BLOCK
           </Button>
@@ -105,9 +106,9 @@ export function SprintTimer() {
             <DropdownMenuItem
               key={category._id}
               onClick={() => handleStartBlock(category._id)}
-              className="font-orbitron text-sm dark:text-[#E0E0E0] text-[#1A1A1A] cursor-pointer
+              className={`font-orbitron text-sm dark:text-[#E0E0E0] text-[#1A1A1A] cursor-pointer
                 dark:hover:bg-[#00E5FF]/10 hover:bg-[#0077B6]/10
-                transition-colors duration-200"
+                transition-colors duration-${ANIMATION_DURATION.FAST}`}
             >
               {category.icon} {category.name}
             </DropdownMenuItem>

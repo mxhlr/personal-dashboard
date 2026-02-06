@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -8,17 +8,49 @@ import { logger } from "@/lib/logger";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Header from "@/components/layout/Header";
 import { Dashboard } from "@/components/dashboard/Dashboard";
-import { Visionboard } from "@/components/visionboard/Visionboard";
-import { CoachPanel } from "@/components/coach/CoachPanel";
 import { CoachToggle } from "@/components/coach/CoachToggle";
-import { WeeklyReviewForm } from "@/components/reviews/WeeklyReviewForm";
-import { MonthlyReviewForm } from "@/components/reviews/MonthlyReviewForm";
-import { QuarterlyReviewForm } from "@/components/reviews/QuarterlyReviewForm";
-import { AnnualReviewForm } from "@/components/reviews/AnnualReviewForm";
 import { ReviewErrorBoundary } from "@/components/reviews/ReviewErrorBoundary";
 import { SettingsModal } from "@/components/settings/SettingsModal";
 import { AnalyticsDashboard } from "@/components/analytics/AnalyticsDashboard";
 import { OKROverview } from "@/components/okr/OKROverview";
+import { LoadingFallback, FullPageLoadingFallback } from "@/components/ui/LoadingFallback";
+
+// Lazy load large components for better performance
+const Visionboard = lazy(() =>
+  import("@/components/visionboard/Visionboard").then((mod) => ({
+    default: mod.Visionboard,
+  }))
+);
+
+const CoachPanel = lazy(() =>
+  import("@/components/coach/CoachPanel").then((mod) => ({
+    default: mod.CoachPanel,
+  }))
+);
+
+const WeeklyReviewForm = lazy(() =>
+  import("@/components/reviews/WeeklyReviewForm").then((mod) => ({
+    default: mod.WeeklyReviewForm,
+  }))
+);
+
+const MonthlyReviewForm = lazy(() =>
+  import("@/components/reviews/MonthlyReviewForm").then((mod) => ({
+    default: mod.MonthlyReviewForm,
+  }))
+);
+
+const QuarterlyReviewForm = lazy(() =>
+  import("@/components/reviews/QuarterlyReviewForm").then((mod) => ({
+    default: mod.QuarterlyReviewForm,
+  }))
+);
+
+const AnnualReviewForm = lazy(() =>
+  import("@/components/reviews/AnnualReviewForm").then((mod) => ({
+    default: mod.AnnualReviewForm,
+  }))
+);
 
 type ReviewType = "weekly" | "monthly" | "quarterly" | "annual";
 type TabType = "dashboard" | "daily-log" | "visionboard" | "planning" | "data" | "okr";
@@ -120,7 +152,9 @@ export default function DashboardPage() {
           {/* Tab 1: Visionboard */}
           {activeTab === "visionboard" && (
             <ErrorBoundary>
-              <Visionboard />
+              <Suspense fallback={<FullPageLoadingFallback message="Visionboard wird geladen..." />}>
+                <Visionboard />
+              </Suspense>
             </ErrorBoundary>
           )}
 
@@ -130,25 +164,33 @@ export default function DashboardPage() {
               {/* Review Forms */}
               {selectedReview === "weekly" && (
                 <ReviewErrorBoundary reviewType="weekly">
-                  <WeeklyReviewForm year={currentYear} weekNumber={currentWeek} />
+                  <Suspense fallback={<LoadingFallback message="Wöchentliche Reflexion wird geladen..." />}>
+                    <WeeklyReviewForm year={currentYear} weekNumber={currentWeek} />
+                  </Suspense>
                 </ReviewErrorBoundary>
               )}
 
               {selectedReview === "monthly" && (
                 <ReviewErrorBoundary reviewType="monthly">
-                  <MonthlyReviewForm year={currentYear} month={currentMonth} />
+                  <Suspense fallback={<LoadingFallback message="Monatliche Reflexion wird geladen..." />}>
+                    <MonthlyReviewForm year={currentYear} month={currentMonth} />
+                  </Suspense>
                 </ReviewErrorBoundary>
               )}
 
               {selectedReview === "quarterly" && (
                 <ReviewErrorBoundary reviewType="quarterly">
-                  <QuarterlyReviewForm year={currentYear} quarter={currentQuarter} />
+                  <Suspense fallback={<LoadingFallback message="Quartalsreflexion wird geladen..." />}>
+                    <QuarterlyReviewForm year={currentYear} quarter={currentQuarter} />
+                  </Suspense>
                 </ReviewErrorBoundary>
               )}
 
               {selectedReview === "annual" && (
                 <ReviewErrorBoundary reviewType="annual">
-                  <AnnualReviewForm year={currentYear} />
+                  <Suspense fallback={<LoadingFallback message="Jahresreflexion wird geladen..." />}>
+                    <AnnualReviewForm year={currentYear} />
+                  </Suspense>
                 </ReviewErrorBoundary>
               )}
             </>
@@ -169,7 +211,9 @@ export default function DashboardPage() {
         <CoachToggle onClick={() => setCoachOpen(true)} />
 
         {/* Coach Panel */}
-        <CoachPanel isOpen={coachOpen} onClose={() => setCoachOpen(false)} />
+        <Suspense fallback={null}>
+          <CoachPanel isOpen={coachOpen} onClose={() => setCoachOpen(false)} />
+        </Suspense>
 
         {/* Settings Modal */}
         <SettingsModal

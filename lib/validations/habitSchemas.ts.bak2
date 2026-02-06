@@ -1,0 +1,204 @@
+import { z } from "zod";
+
+/**
+ * Validation schema for individual Habit items
+ *
+ * Validation rules:
+ * - id: Required non-empty string identifier
+ * - name: Required string, 1-100 characters
+ * - subtitle: Optional string, max 200 characters
+ * - xp: Required number between 1 and 10,000
+ * - completed: Required boolean indicating completion status
+ * - completedAt: Optional ISO 8601 datetime string
+ * - isExtra: Optional boolean for extra/bonus habits
+ */
+export const habitItemSchema = z.object({
+  id: z.string().min(1, "Habit ID is required"),
+  name: z
+    .string()
+    .min(1, "Habit name is required")
+    .max(100, "Habit name must be less than 100 characters"),
+  subtitle: z
+    .string()
+    .max(200, "Subtitle must be less than 200 characters")
+    .optional(),
+  xp: z
+    .number()
+    .int("XP must be a whole number")
+    .min(1, "XP must be at least 1")
+    .max(10000, "XP cannot exceed 10,000"),
+  completed: z.boolean(),
+  completedAt: z.string().datetime().optional(),
+  isExtra: z.boolean().optional(),
+});
+
+/**
+ * Type inference for HabitItem
+ */
+export type HabitItem = z.infer<typeof habitItemSchema>;
+
+/**
+ * Type for HabitItem component props
+ *
+ * Extends the base habit item with callback handlers.
+ * Note: Function validation is not supported at runtime with Zod,
+ * so this uses a plain TypeScript type instead of a schema.
+ */
+export type HabitItemProps = HabitItem & {
+  onToggle: (id: string) => void;
+  onSkip: (id: string, reason: string) => void;
+};
+
+/**
+ * Validation schema for Habit Categories
+ *
+ * Validation rules:
+ * - icon: Required string (emoji or hex color starting with #)
+ * - name: Required string, 1-50 characters
+ * - habits: Array of habit items
+ * - categoryNumber: Number representing the category order
+ */
+export const habitCategorySchema = z.object({
+  icon: z
+    .string()
+    .min(1, "Category icon is required")
+    .refine(
+      (val) => {
+        // Check if it's a hex color or non-empty string (emoji)
+        return val.startsWith("#") || val.length > 0;
+      },
+      { message: "Icon must be a hex color code or emoji" }
+    ),
+  name: z
+    .string()
+    .min(1, "Category name is required")
+    .max(50, "Category name must be less than 50 characters"),
+  habits: z.array(habitItemSchema),
+  categoryNumber: z.number().int().min(1),
+});
+
+/**
+ * Type inference for HabitCategory
+ */
+export type HabitCategory = z.infer<typeof habitCategorySchema>;
+
+/**
+ * Type for HabitCategory component props
+ *
+ * Extends the base category with callback handlers.
+ */
+export type HabitCategoryProps = HabitCategory & {
+  onHabitToggle: (categoryId: string, habitId: string) => void;
+  onHabitSkip: (categoryId: string, habitId: string, reason: string) => void;
+};
+
+/**
+ * Validation schema for creating/updating a habit template
+ *
+ * Used in habit management dialogs and forms
+ */
+export const habitTemplateSchema = z.object({
+  name: z
+    .string()
+    .min(1, "Habit name is required")
+    .max(100, "Habit name must be less than 100 characters"),
+  subtitle: z
+    .string()
+    .max(200, "Subtitle must be less than 200 characters")
+    .optional()
+    .or(z.literal("")),
+  categoryId: z.string().min(1, "Category is required"),
+  xpValue: z
+    .number()
+    .int("XP must be a whole number")
+    .min(1, "XP must be at least 1")
+    .max(10000, "XP cannot exceed 10,000"),
+  isExtra: z.boolean().default(false),
+});
+
+/**
+ * Type inference for HabitTemplate
+ */
+export type HabitTemplate = z.infer<typeof habitTemplateSchema>;
+
+/**
+ * Validation schema for habit category creation/update
+ *
+ * Used in category management dialogs
+ */
+export const habitCategoryFormSchema = z.object({
+  name: z
+    .string()
+    .min(1, "Category name is required")
+    .max(50, "Category name must be less than 50 characters"),
+  icon: z
+    .string()
+    .min(1, "Icon is required")
+    .refine(
+      (val) => {
+        // Check if it's a hex color
+        const hexPattern = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+        return hexPattern.test(val) || val.length > 0;
+      },
+      { message: "Icon must be a valid hex color code or emoji" }
+    ),
+  order: z.number().int().min(0).default(0),
+});
+
+/**
+ * Type inference for HabitCategoryForm
+ */
+export type HabitCategoryForm = z.infer<typeof habitCategoryFormSchema>;
+
+/**
+ * Validation schema for XP value updates
+ *
+ * Used when editing XP values inline in habit items
+ */
+export const xpUpdateSchema = z.object({
+  templateId: z.string().min(1, "Template ID is required"),
+  xpValue: z
+    .number()
+    .int("XP must be a whole number")
+    .min(1, "XP must be at least 1")
+    .max(10000, "XP cannot exceed 10,000"),
+});
+
+/**
+ * Type inference for XPUpdate
+ */
+export type XPUpdate = z.infer<typeof xpUpdateSchema>;
+
+/**
+ * Validation schema for skip reasons
+ *
+ * Ensures skip reasons are one of the predefined options
+ */
+export const skipReasonSchema = z.enum([
+  "Not enough time",
+  "Didn't feel like it",
+  "Forgot",
+  "Circumstances prevented it",
+  "Chose something else",
+]);
+
+/**
+ * Type inference for SkipReason
+ */
+export type SkipReason = z.infer<typeof skipReasonSchema>;
+
+/**
+ * Validation schema for habit skip action
+ *
+ * Used when skipping a habit with a reason
+ */
+export const habitSkipSchema = z.object({
+  habitId: z.string().min(1, "Habit ID is required"),
+  reason: skipReasonSchema,
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format"),
+});
+
+/**
+ * Type inference for HabitSkip
+ */
+export type HabitSkip = z.infer<typeof habitSkipSchema>;

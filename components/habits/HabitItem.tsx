@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { logger } from "@/lib/logger";
+import { debounce } from "@/lib/performance";
+import { ANIMATION_DURATION, TIMEOUT, NUMERIC_RANGE } from "@/lib/constants";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import {
@@ -57,8 +59,8 @@ export const HabitItem = React.memo(function HabitItem({
       // Trigger animations
       setIsAnimating(true);
       setShowRowHighlight(true);
-      setTimeout(() => setIsAnimating(false), 1000);
-      setTimeout(() => setShowRowHighlight(false), 800);
+      setTimeout(() => setIsAnimating(false), ANIMATION_DURATION.XP_FLOAT);
+      setTimeout(() => setShowRowHighlight(false), ANIMATION_DURATION.ROW_HIGHLIGHT);
     }
     onToggle(id);
   };
@@ -70,12 +72,11 @@ export const HabitItem = React.memo(function HabitItem({
     }
   };
 
-  const handleXPSave = async () => {
-    const newXP = parseInt(xpValue, 10);
-    if (isNaN(newXP) || newXP <= 0 || newXP > 10000) {
-      toast.error("XP must be between 1 and 10,000");
+  const performXPUpdate = async (value: string) => {
+    const newXP = parseInt(value, 10);
+    if (isNaN(newXP) || newXP < NUMERIC_RANGE.XP_MIN || newXP > NUMERIC_RANGE.XP_MAX) {
+      toast.error(`XP must be between ${NUMERIC_RANGE.XP_MIN} and ${NUMERIC_RANGE.XP_MAX}`);
       setXpValue(xp.toString());
-      setIsEditingXP(false);
       return;
     }
 
@@ -92,7 +93,26 @@ export const HabitItem = React.memo(function HabitItem({
         setXpValue(xp.toString());
       }
     }
+  };
 
+  // Debounced XP update - waits for user to stop typing
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedXPUpdate = useCallback(
+    debounce((value: string) => {
+      performXPUpdate(value);
+    }, TIMEOUT.INPUT_DEBOUNCE),
+    [xp, id]
+  );
+
+  const handleXPChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setXpValue(newValue);
+    // Trigger debounced update
+    debouncedXPUpdate(newValue);
+  };
+
+  const handleXPSave = async () => {
+    await performXPUpdate(xpValue);
     setIsEditingXP(false);
   };
 
@@ -126,7 +146,7 @@ export const HabitItem = React.memo(function HabitItem({
 
   return (
     <div
-      className={`group relative flex items-center gap-3 py-3 px-2 -mx-2 rounded-lg transition-all duration-300 ${
+      className={`group relative flex items-center gap-3 py-3 px-2 -mx-2 rounded-lg transition-all duration-${ANIMATION_DURATION.NORMAL} ${
         showRowHighlight ? 'animate-[row-highlight_0.8s_ease-out]' : ''
       } hover:bg-foreground/[0.02]`}
       role="listitem"
@@ -135,7 +155,7 @@ export const HabitItem = React.memo(function HabitItem({
       <Checkbox
         checked={completed}
         onCheckedChange={handleToggle}
-        className={`h-6 w-6 rounded-md border-2 border-border transition-all duration-200
+        className={`h-6 w-6 rounded-md border-2 border-border transition-all duration-${ANIMATION_DURATION.FAST}
           hover:scale-105 hover:border-[#4CAF50]/50
           data-[state=checked]:!border-0 data-[state=checked]:!bg-[#4CAF50]
           data-[state=checked]:!text-[#FFFFFF] data-[state=checked]:!rounded-[6px]
@@ -145,7 +165,7 @@ export const HabitItem = React.memo(function HabitItem({
       />
 
       <div className="flex-1 min-w-0">
-        <div className={`text-sm font-semibold font-orbitron transition-all duration-300 ${
+        <div className={`text-sm font-semibold font-orbitron transition-all duration-${ANIMATION_DURATION.NORMAL} ${
           completed
             ? "text-muted-foreground line-through"
             : "text-foreground"
@@ -178,10 +198,10 @@ export const HabitItem = React.memo(function HabitItem({
               <Input
                 ref={inputRef}
                 type="number"
-                min="1"
-                max="10000"
+                min={NUMERIC_RANGE.XP_MIN}
+                max={NUMERIC_RANGE.XP_MAX}
                 value={xpValue}
-                onChange={(e) => setXpValue(e.target.value)}
+                onChange={handleXPChange}
                 onBlur={handleXPSave}
                 onKeyDown={handleXPKeyDown}
                 className="h-7 w-16 text-center text-sm font-semibold font-orbitron"
@@ -190,7 +210,7 @@ export const HabitItem = React.memo(function HabitItem({
             ) : (
               <button
                 onClick={handleXPClick}
-                className="cursor-pointer rounded-md px-2 py-1 text-sm font-bold font-orbitron text-[#FF9800] transition-all duration-200 hover:bg-orange-500/15 hover:scale-105"
+                className={`cursor-pointer rounded-md px-2 py-1 text-sm font-bold font-orbitron text-[#FF9800] transition-all duration-${ANIMATION_DURATION.FAST} hover:bg-orange-500/15 hover:scale-105`}
                 style={{
                   textShadow: '0 0 8px rgba(255, 152, 0, 0.5)'
                 }}
@@ -202,7 +222,7 @@ export const HabitItem = React.memo(function HabitItem({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="text-[11px] font-medium font-orbitron dark:text-[#666666] text-[#999999] bg-transparent border-0 px-2 py-1 rounded-md transition-all duration-200 hover:bg-foreground/5 hover:text-foreground/60"
+                  className={`text-[11px] font-medium font-orbitron dark:text-[#666666] text-[#999999] bg-transparent border-0 px-2 py-1 rounded-md transition-all duration-${ANIMATION_DURATION.FAST} hover:bg-foreground/5 hover:text-foreground/60`}
                   aria-label={`Skip ${name} with reason`}
                 >
                   Skip
@@ -227,7 +247,7 @@ export const HabitItem = React.memo(function HabitItem({
       {/* Enhanced XP Float Animation with Gaming Style */}
       {isAnimating && (
         <div
-          className="pointer-events-none absolute right-12 top-1/2 -translate-y-1/2 animate-[xp-float_1s_ease-out] text-xl font-bold font-orbitron text-[#FF9800]"
+          className={`pointer-events-none absolute right-12 top-1/2 -translate-y-1/2 animate-[xp-float_${ANIMATION_DURATION.XP_FLOAT}ms_ease-out] text-xl font-bold font-orbitron text-[#FF9800]`}
           style={{
             textShadow: '0 0 10px rgba(255, 152, 0, 0.8), 0 0 20px rgba(255, 152, 0, 0.5), 0 0 30px rgba(255, 152, 0, 0.3)'
           }}

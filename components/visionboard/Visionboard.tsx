@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Plus, X, Edit2, Check } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { logger } from "@/lib/logger";
+import Image from "next/image";
 import {
   DndContext,
   closestCorners,
@@ -87,23 +88,29 @@ function SortableImage({
       className="group relative w-[256px] min-h-[20px] mb-2 rounded-lg overflow-hidden shadow-sm"
     >
       <div
-        className="relative cursor-move"
+        className="relative cursor-move w-full"
         style={{
           borderRadius: image.subtitle ? "8px 8px 0 0" : "8px",
+          aspectRatio: `${image.width} / ${image.height}`,
+          maxHeight: "400px"
         }}
         {...listeners}
       >
-        {/* Image - simple img tag with width 100% and height auto */}
-        <img
+        {/* Image - using next/image for optimization */}
+        <Image
           src={image.url}
           alt={image.subtitle || "Vision board image"}
+          width={image.width}
+          height={image.height}
+          className="object-cover rounded-t-lg"
           style={{
             width: "100%",
             height: "auto",
-            display: "block",
             maxHeight: "400px",
-            objectFit: "cover",
           }}
+          sizes="256px"
+          loading="lazy"
+          draggable={false}
         />
       </div>
 

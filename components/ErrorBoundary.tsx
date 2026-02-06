@@ -2,6 +2,7 @@
 
 import React from "react";
 import { logger } from "@/lib/logger";
+import { reportError } from "@/lib/errors/errorReporting";
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -27,6 +28,12 @@ export class ErrorBoundary extends React.Component<
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     logger.error("ErrorBoundary caught an error:", error, errorInfo);
+
+    // Report error with context
+    reportError(error, {
+      componentStack: errorInfo.componentStack,
+      errorBoundary: 'ErrorBoundary',
+    });
   }
 
   render() {

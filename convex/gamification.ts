@@ -7,15 +7,20 @@ import { Id } from "./_generated/dataModel";
  * Handles XP, levels, streaks, and habit completion
  */
 
-// Helper: Calculate level from total XP (1000 XP = 1 level)
+// Import constants from lib/constants
+// Note: In Convex, we need to define constants locally since imports from /lib may not work
+const XP_PER_LEVEL = 1000;
+const WEEK_DAYS = 7;
+
+// Helper: Calculate level from total XP
 function calculateLevel(totalXP: number): number {
-  return Math.floor(totalXP / 1000);
+  return Math.floor(totalXP / XP_PER_LEVEL);
 }
 
 // Helper: Calculate XP needed for next level
 function xpForNextLevel(currentXP: number): number {
   const currentLevel = calculateLevel(currentXP);
-  const nextLevelXP = (currentLevel + 1) * 1000;
+  const nextLevelXP = (currentLevel + 1) * XP_PER_LEVEL;
   return nextLevelXP - currentXP;
 }
 
@@ -38,7 +43,7 @@ export const getUserStats = query({
     return {
       ...stats,
       xpForNextLevel: xpForNextLevel(stats.totalXP),
-      currentLevelProgress: stats.totalXP % 1000,
+      currentLevelProgress: stats.totalXP % XP_PER_LEVEL,
     };
   },
 });
@@ -301,7 +306,7 @@ async function calculateStreakAndWeekScore(
   startOfWeek.setDate(today.getDate() - today.getDay()); // Sunday
 
   let weekScore = 0;
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < WEEK_DAYS; i++) {
     const checkWeekDate = new Date(startOfWeek);
     checkWeekDate.setDate(startOfWeek.getDate() + i);
     const dateStr = checkWeekDate.toISOString().split('T')[0];

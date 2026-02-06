@@ -2,6 +2,7 @@
 
 import React from "react";
 import { logger } from "@/lib/logger";
+import { reportError } from "@/lib/errors/errorReporting";
 
 interface ReviewErrorBoundaryProps {
   children: React.ReactNode;
@@ -28,6 +29,13 @@ export class ReviewErrorBoundary extends React.Component<
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     logger.error("ReviewErrorBoundary caught an error:", error, errorInfo);
+
+    // Report error with context
+    reportError(error, {
+      componentStack: errorInfo.componentStack,
+      errorBoundary: 'ReviewErrorBoundary',
+      reviewType: this.props.reviewType,
+    });
   }
 
   render() {

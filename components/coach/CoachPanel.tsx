@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useQuery, useAction } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { logger } from "@/lib/logger";
+import { ANIMATION_DURATION, TIMEOUT, PANEL_WIDTH, Z_INDEX, OPACITY, SIZE } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -77,7 +78,7 @@ export function CoachPanel({ isOpen, onClose }: CoachPanelProps) {
       ) as HTMLElement;
 
       if (firstElement) {
-        setTimeout(() => firstElement.focus(), 100);
+        setTimeout(() => firstElement.focus(), TIMEOUT.FOCUS_DELAY);
       }
     }
   }, [isOpen]);
@@ -88,21 +89,23 @@ export function CoachPanel({ isOpen, onClose }: CoachPanelProps) {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity"
+        className={`fixed inset-0 bg-black/${OPACITY.BACKDROP * 100} backdrop-blur-sm transition-opacity`}
+        style={{ zIndex: Z_INDEX.BACKDROP }}
         onClick={onClose}
         aria-hidden="true"
       />
 
       {/* Slide-in Panel */}
       <div
-        className={`fixed top-0 right-0 h-full w-full md:w-[500px] z-50
-          transform transition-transform duration-300 ease-out
+        className={`fixed top-0 right-0 h-full w-full md:w-[${PANEL_WIDTH.DESKTOP}px]
+          transform transition-transform duration-${ANIMATION_DURATION.NORMAL} ease-out
           ${isOpen ? 'translate-x-0' : 'translate-x-full'}
           flex flex-col
           dark:bg-[#0A0A0A] bg-[#FAFAFA]
           border-l dark:border-[rgba(255,152,0,0.2)] border-[rgba(245,124,0,0.3)]
           shadow-2xl`}
         style={{
+          zIndex: Z_INDEX.MODAL,
           background: 'radial-gradient(ellipse at top right, rgba(255, 152, 0, 0.08) 0%, rgba(26, 26, 26, 1) 50%)'
         }}
         role="dialog"
@@ -185,9 +188,9 @@ export function CoachPanel({ isOpen, onClose }: CoachPanelProps) {
                     className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                   >
                     {msg.role === "assistant" && (
-                      <Avatar className="w-8 h-8 mt-1 flex-shrink-0">
-                        <AvatarFallback className="dark:bg-[rgba(255,152,0,0.2)] bg-[rgba(245,124,0,0.2)]
-                          dark:text-[#FF9800] text-[#F57C00] text-xs font-bold">
+                      <Avatar className={`w-${SIZE.AVATAR / 4} h-${SIZE.AVATAR / 4} mt-1 flex-shrink-0`}>
+                        <AvatarFallback className={`dark:bg-[rgba(255,152,0,${OPACITY.OVERLAY_STRONG})] bg-[rgba(245,124,0,${OPACITY.OVERLAY_STRONG})]
+                          dark:text-[#FF9800] text-[#F57C00] text-xs font-bold`}>
                           AI
                         </AvatarFallback>
                       </Avatar>
@@ -195,8 +198,8 @@ export function CoachPanel({ isOpen, onClose }: CoachPanelProps) {
                     <div
                       className={`max-w-[85%] px-4 py-3 rounded-2xl ${
                         msg.role === "user"
-                          ? "dark:bg-[rgba(255,152,0,0.15)] bg-[rgba(245,124,0,0.15)] dark:text-[#E0E0E0] text-[#1A1A1A]"
-                          : "dark:bg-white/[0.05] bg-black/[0.05] dark:text-[#E0E0E0] text-[#1A1A1A]"
+                          ? `dark:bg-[rgba(255,152,0,${OPACITY.OVERLAY_MEDIUM})] bg-[rgba(245,124,0,${OPACITY.OVERLAY_MEDIUM})] dark:text-[#E0E0E0] text-[#1A1A1A]`
+                          : `dark:bg-white/[${OPACITY.OVERLAY_LIGHT}] bg-black/[${OPACITY.OVERLAY_LIGHT}] dark:text-[#E0E0E0] text-[#1A1A1A]`
                       }`}
                     >
                       <p

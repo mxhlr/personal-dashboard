@@ -1,0 +1,288 @@
+import { z } from "zod";
+
+/**
+ * Validation schema for North Stars (life area goals)
+ *
+ * Validation rules:
+ * - Each life area requires a goal
+ * - Goals must be meaningful (min 1 character)
+ * - Max 500 characters per goal
+ */
+export const northStarsSchema = z.object({
+  wealth: z
+    .string()
+    .min(1, "Wealth goal is required")
+    .max(500, "Goal must be less than 500 characters"),
+  health: z
+    .string()
+    .min(1, "Health goal is required")
+    .max(500, "Goal must be less than 500 characters"),
+  love: z
+    .string()
+    .min(1, "Love goal is required")
+    .max(500, "Goal must be less than 500 characters"),
+  happiness: z
+    .string()
+    .min(1, "Happiness goal is required")
+    .max(500, "Goal must be less than 500 characters"),
+});
+
+/**
+ * Type inference for NorthStars
+ */
+export type NorthStars = z.infer<typeof northStarsSchema>;
+
+/**
+ * Validation schema for life areas
+ *
+ * Ensures the area is one of the four defined categories
+ */
+export const lifeAreaSchema = z.enum(["wealth", "health", "love", "happiness"], {
+  
+});
+
+/**
+ * Type inference for LifeArea
+ */
+export type LifeArea = z.infer<typeof lifeAreaSchema>;
+
+/**
+ * Validation schema for quarterly milestones
+ *
+ * Validation rules:
+ * - quarter: 1-4
+ * - year: Valid year
+ * - area: Must be one of the four life areas
+ * - milestone: Required non-empty string
+ * - completed: Boolean completion status
+ */
+export const quarterlyMilestoneSchema = z.object({
+  quarter: z
+    .number()
+    .int()
+    .min(1, "Quarter must be between 1 and 4")
+    .max(4, "Quarter must be between 1 and 4"),
+  year: z.number().int().min(2020).max(2100),
+  area: lifeAreaSchema,
+  milestone: z
+    .string()
+    .min(1, "Milestone is required")
+    .max(500, "Milestone must be less than 500 characters"),
+  completed: z.boolean().default(false),
+});
+
+/**
+ * Type inference for QuarterlyMilestone
+ */
+export type QuarterlyMilestone = z.infer<typeof quarterlyMilestoneSchema>;
+
+/**
+ * Validation schema for coach tone settings
+ *
+ * Ensures the tone is one of the predefined options
+ */
+export const coachToneSchema = z.enum(
+  ["Motivierend", "Sachlich", "Empathisch", "Direkt"],
+  {
+    
+  }
+);
+
+/**
+ * Type inference for CoachTone
+ */
+export type CoachTone = z.infer<typeof coachToneSchema>;
+
+/**
+ * Validation schema for user profile basics
+ *
+ * Validation rules:
+ * - name: Required, 1-100 characters
+ * - role: Required from predefined list
+ * - mainProject: Required, 1-200 characters
+ */
+export const profileBasicsSchema = z.object({
+  name: z
+    .string()
+    .min(1, "Name is required")
+    .max(100, "Name must be less than 100 characters"),
+  role: z.enum(
+    [
+      "Gründer",
+      "Executive",
+      "Freelancer",
+      "Student",
+      "Angestellt",
+      "Selbstständig",
+      "Andere",
+    ],
+    {
+      
+    }
+  ),
+  mainProject: z
+    .string()
+    .min(1, "Main project is required")
+    .max(200, "Project description must be less than 200 characters"),
+});
+
+/**
+ * Type inference for ProfileBasics
+ */
+export type ProfileBasics = z.infer<typeof profileBasicsSchema>;
+
+/**
+ * Validation schema for complete user profile
+ *
+ * Combines all profile-related schemas
+ */
+export const userProfileSchema = z.object({
+  // Basics
+  userId: z.string().min(1, "User ID is required"),
+  name: z.string().min(1).max(100),
+  role: z.enum([
+    "Gründer",
+    "Executive",
+    "Freelancer",
+    "Student",
+    "Angestellt",
+    "Selbstständig",
+    "Andere",
+  ]),
+  mainProject: z.string().min(1).max(200),
+
+  // North Stars
+  northStars: northStarsSchema,
+
+  // Quarterly Milestones
+  quarterlyMilestones: z.array(quarterlyMilestoneSchema),
+
+  // Coach Settings
+  coachTone: coachToneSchema,
+
+  // Setup metadata
+  setupCompleted: z.boolean().default(false),
+  setupDate: z.string().datetime().optional(),
+
+  // Timestamps
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+});
+
+/**
+ * Type inference for UserProfile
+ */
+export type UserProfile = z.infer<typeof userProfileSchema>;
+
+/**
+ * Validation schema for profile update
+ *
+ * All fields are optional to allow partial updates
+ */
+export const profileUpdateSchema = z.object({
+  name: z.string().min(1).max(100).optional(),
+  role: z
+    .enum([
+      "Gründer",
+      "Executive",
+      "Freelancer",
+      "Student",
+      "Angestellt",
+      "Selbstständig",
+      "Andere",
+    ])
+    .optional(),
+  mainProject: z.string().min(1).max(200).optional(),
+  northStars: northStarsSchema.partial().optional(),
+  coachTone: coachToneSchema.optional(),
+});
+
+/**
+ * Type inference for ProfileUpdate
+ */
+export type ProfileUpdate = z.infer<typeof profileUpdateSchema>;
+
+/**
+ * Validation schema for onboarding data
+ *
+ * Used during the initial setup wizard
+ */
+export const onboardingDataSchema = z.object({
+  // Step 2: About You
+  name: z.string().min(1).max(100),
+  role: z.enum([
+    "Gründer",
+    "Executive",
+    "Freelancer",
+    "Student",
+    "Angestellt",
+    "Selbstständig",
+    "Andere",
+  ]),
+  mainProject: z.string().min(1).max(200),
+
+  // Step 3: North Stars
+  northStars: northStarsSchema.optional(),
+
+  // Step 4: Milestones
+  quarterlyMilestones: z.array(quarterlyMilestoneSchema).optional(),
+
+  // Step 6: Coach Settings
+  coachTone: coachToneSchema.optional(),
+});
+
+/**
+ * Type inference for OnboardingData
+ */
+export type OnboardingData = z.infer<typeof onboardingDataSchema>;
+
+/**
+ * Validation schema for milestone creation/update
+ *
+ * Used in milestone management forms
+ */
+export const milestoneFormSchema = z.object({
+  quarter: z.number().int().min(1).max(4),
+  year: z.number().int().min(2020).max(2100),
+  area: lifeAreaSchema,
+  milestone: z.string().min(1).max(500),
+});
+
+/**
+ * Type inference for MilestoneForm
+ */
+export type MilestoneForm = z.infer<typeof milestoneFormSchema>;
+
+/**
+ * Validation schema for marking a milestone as complete
+ */
+export const milestoneCompletionSchema = z.object({
+  milestoneId: z.string().min(1, "Milestone ID is required"),
+  completed: z.boolean(),
+  completedAt: z.string().datetime().optional(),
+});
+
+/**
+ * Type inference for MilestoneCompletion
+ */
+export type MilestoneCompletion = z.infer<typeof milestoneCompletionSchema>;
+
+/**
+ * Validation schema for user role enum
+ *
+ * Can be used for type-safe role selection
+ */
+export const userRoleSchema = z.enum([
+  "Gründer",
+  "Executive",
+  "Freelancer",
+  "Student",
+  "Angestellt",
+  "Selbstständig",
+  "Andere",
+]);
+
+/**
+ * Type inference for UserRole
+ */
+export type UserRole = z.infer<typeof userRoleSchema>;
