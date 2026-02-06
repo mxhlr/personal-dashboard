@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { Settings, ChevronDown, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Logo } from "@/components/layout/Logo";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -80,9 +79,6 @@ export default function Header({
       transition-all duration-300">
       <div className="container mx-auto px-4 md:px-6 py-3">
         <div className="flex items-center justify-between gap-4 md:gap-8">
-          {/* Logo - Centered and Clean */}
-          <Logo className="flex-shrink-0" />
-
           {/* Mobile Menu Button - Always rendered, CSS controls visibility */}
           <Drawer open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <DrawerTrigger asChild>
