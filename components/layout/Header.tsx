@@ -18,7 +18,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 type ReviewType = "weekly" | "monthly" | "quarterly" | "annual";
 
@@ -47,7 +46,6 @@ export default function Header({
 }: HeaderProps) {
   const [currentTime, setCurrentTime] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const isMobile = useIsMobile();
 
   useEffect(() => {
     const updateTime = () => {
@@ -82,19 +80,18 @@ export default function Header({
       transition-all duration-300">
       <div className="container mx-auto px-4 md:px-6 py-3">
         <div className="flex items-center justify-between gap-4 md:gap-8">
-          {/* Mobile Menu Button */}
-          {isMobile && (
-            <Drawer open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-              <DrawerTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="md:hidden dark:hover:bg-white/5 hover:bg-black/5 dark:hover:text-[#00E5FF] hover:text-[#0077B6]"
-                  aria-label="Open menu"
-                >
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </DrawerTrigger>
+          {/* Mobile Menu Button - Always rendered, CSS controls visibility */}
+          <Drawer open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <DrawerTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden dark:hover:bg-white/5 hover:bg-black/5 dark:hover:text-[#00E5FF] hover:text-[#0077B6]"
+                aria-label="Open menu"
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+            </DrawerTrigger>
               <DrawerContent>
                 <DrawerHeader>
                   <DrawerTitle className="font-orbitron text-lg dark:text-[#00E5FF] text-[#0077B6]">
@@ -188,7 +185,6 @@ export default function Header({
                 </nav>
               </DrawerContent>
             </Drawer>
-          )}
 
           {/* Desktop Navigation - Hidden on Mobile */}
           <nav className="hidden md:flex items-center gap-1">
