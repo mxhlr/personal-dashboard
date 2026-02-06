@@ -213,9 +213,13 @@ export const getComprehensiveAnalytics = query({
       dateGroups[habit.date].push(habit);
     });
 
+    // Get total number of all templates (Core + Extra)
+    const totalActiveTemplates = templates.length;
+
     Object.entries(dateGroups).forEach(([date, habits]) => {
       const completed = habits.filter((h) => h.completed).length;
-      const total = habits.length;
+      // Use total active templates, not just habits that exist in dailyHabits
+      const total = totalActiveTemplates;
       const score = total > 0 ? Math.round((completed / total) * 100) : 0;
       const xp = habits.reduce((sum, h) => sum + (h.completed ? h.xpEarned : 0), 0);
       dailyScores[date] = { score, xp };
@@ -242,7 +246,8 @@ export const getComprehensiveAnalytics = query({
 
       const dailyScoresForMonth = Object.values(monthlyDateGroups).map((habits) => {
         const completed = habits.filter((h) => h.completed).length;
-        const total = habits.length;
+        // Use total active templates, not just habits that exist in dailyHabits
+        const total = totalActiveTemplates;
         return total > 0 ? (completed / total) * 100 : 0;
       });
 
