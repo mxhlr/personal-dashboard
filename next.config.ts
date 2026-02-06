@@ -7,9 +7,8 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 const withPWA = require("next-pwa")({
   dest: "public",
   register: true,
-  skipWaiting: false, // Don't auto-activate - wait for user confirmation
+  skipWaiting: true,
   disable: process.env.NODE_ENV === "development",
-  buildExcludes: [/middleware-manifest\.json$/],
   runtimeCaching: [
     {
       urlPattern: /^https:\/\/.*\.convex\.cloud\/.*/i,
@@ -18,27 +17,19 @@ const withPWA = require("next-pwa")({
         cacheName: "convex-api-cache",
         expiration: {
           maxEntries: 100,
-          maxAgeSeconds: 24 * 60 * 60, // 24 hours
+          maxAgeSeconds: 60 * 60, // 1 hour
         },
       },
     },
     {
-      urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/i,
-      handler: "NetworkFirst", // Changed to NetworkFirst for icon updates
+      urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|ico)$/i,
+      handler: "CacheFirst",
       options: {
-        cacheName: "image-cache",
+        cacheName: "static-image-cache",
         expiration: {
           maxEntries: 100,
-          maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
+          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
         },
-      },
-    },
-    {
-      urlPattern: /\/icon-.*\.png$/i,
-      handler: "NetworkFirst", // Always check network for app icons
-      options: {
-        cacheName: "app-icon-cache",
-        networkTimeoutSeconds: 3,
       },
     },
   ],

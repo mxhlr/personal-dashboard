@@ -5,11 +5,11 @@ export default function manifest(): MetadataRoute.Manifest {
     name: 'Real Rise',
     short_name: 'Real Rise',
     description: 'Personal Dashboard für Habits, Goals, OKRs und persönliche Entwicklung',
-    start_url: '/?source=pwa',
+    start_url: '/',
+    scope: '/',
     display: 'standalone',
     background_color: '#000000',
     theme_color: '#000000',
-    orientation: 'portrait-primary',
     icons: [
       {
         src: '/icon-192-v2.png',
@@ -36,6 +36,5 @@ export default function manifest(): MetadataRoute.Manifest {
         purpose: 'maskable',
       },
     ],
-    categories: ['productivity', 'lifestyle', 'health-fitness'],
   };
 }
