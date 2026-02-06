@@ -249,9 +249,11 @@ export const getComprehensiveAnalytics = query({
         (sum, h) => sum + (h.completed ? h.xpEarned : 0),
         0
       );
-      const totalScheduledXP = monthHabits.length > 0
-        ? totalPossibleXP * Object.keys(monthlyDateGroups).length
-        : 0;
+      // Sum the actual scheduled XP per day (xpEarned represents the XP value of each habit)
+      const totalScheduledXP = monthHabits.reduce(
+        (sum, h) => sum + h.xpEarned,
+        0
+      );
 
       const avgScore =
         totalScheduledXP > 0
