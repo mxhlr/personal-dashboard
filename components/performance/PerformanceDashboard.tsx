@@ -111,11 +111,11 @@ const getStatusIcon = (status: 'pass' | 'warn' | 'fail') => {
 };
 
 const getMetricIcon = (name: string) => {
-  if (name.includes('Paint')) return <Image className="h-5 w-5" />;
-  if (name.includes('Blocking')) return <Clock className="h-5 w-5" />;
-  if (name.includes('Layout')) return <Layout className="h-5 w-5" />;
-  if (name.includes('Speed')) return <Zap className="h-5 w-5" />;
-  return <Activity className="h-5 w-5" />;
+  if (name.includes('Paint')) return <Image className="h-5 w-5" aria-label="Paint metric" />;
+  if (name.includes('Blocking')) return <Clock className="h-5 w-5" aria-label="Blocking metric" />;
+  if (name.includes('Layout')) return <Layout className="h-5 w-5" aria-label="Layout metric" />;
+  if (name.includes('Speed')) return <Zap className="h-5 w-5" aria-label="Speed metric" />;
+  return <Activity className="h-5 w-5" aria-label="Performance metric" />;
 };
 
 export function PerformanceDashboard({
@@ -128,7 +128,7 @@ export function PerformanceDashboard({
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Performance Dashboard</h1>
-          <p className="text-muted-foreground">Monitor your application's performance metrics</p>
+          <p className="text-muted-foreground">Monitor your application&apos;s performance metrics</p>
         </div>
         <div className="text-right">
           <p className="text-sm text-muted-foreground">Last Run</p>

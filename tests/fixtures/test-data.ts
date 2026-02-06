@@ -62,9 +62,9 @@ export function generateUniqueTestData<T extends Record<string, any>>(
   base: T,
   suffix: string = Date.now().toString()
 ): T {
-  const result = { ...base };
+  const result = { ...base } as T & { name?: string };
   if ('name' in result && typeof result.name === 'string') {
     result.name = `${result.name} ${suffix}`;
   }
-  return result;
+  return result as T;
 }

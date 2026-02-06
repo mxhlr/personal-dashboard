@@ -6,7 +6,9 @@
  */
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react/jsx-key */
 
+import React from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import {
@@ -47,15 +49,18 @@ function Example1_ConvexQueries() {
   // Query with parameters
   const categories = useQuery(api.habitCategories.listCategories);
 
-  return (
-    <div>
-      {habits?.map((habit) => (
-        <div key={habit._id}>
-          {habit.template?.name}: {habit.completed ? "✓" : "○"}
-        </div>
-      ))}
-    </div>
-  );
+  // Example JSX (commented out to avoid build errors):
+  // return (
+  //   <div>
+  //     {habits?.map((habit) => (
+  //       <div key={habit._id}>
+  //         {habit.template?.name}: {habit.completed ? "✓" : "○"}
+  //       </div>
+  //     ))}
+  //   </div>
+  // );
+
+  return null;
 }
 
 // ============================================
@@ -78,7 +83,9 @@ function Example2_ConvexMutations() {
     console.log("Created category:", categoryId);
   };
 
-  return <button onClick={handleCreate}>Create Category</button>;
+  // Example JSX (commented out):
+  // return <button onClick={handleCreate}>Create Category</button>;
+  return null;
 }
 
 // ============================================

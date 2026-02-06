@@ -428,7 +428,7 @@ export interface TimeTrackingStats {
 // ============================================
 
 export interface UserSettings {
-  _id: Id<"settings">;
+  _id: string;
   _creationTime: number;
   userId: string;
   theme?: "light" | "dark" | "system";
@@ -447,4 +447,4 @@ export interface UserSettings {
 }
 
 export type GetSettingsResponse = UserSettings | null;
-export type UpdateSettingsResponse = Id<"settings">;
+export type UpdateSettingsResponse = string;

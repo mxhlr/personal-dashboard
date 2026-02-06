@@ -1,6 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
+
+// PWA BeforeInstallPromptEvent type
+interface BeforeInstallPromptEvent extends Event {
+  readonly platforms: string[];
+  readonly userChoice: Promise<{
+    outcome: 'accepted' | 'dismissed';
+    platform: string;
+  }>;
+  prompt(): Promise<void>;
+}
 import { logger } from "@/lib/logger";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -40,7 +50,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [manageHabitsOpen, setManageHabitsOpen] = useState(false);
 
   // PWA Installation state
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
   const [updateAvailable, setUpdateAvailable] = useState(false);
   const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
@@ -49,7 +59,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   useEffect(() => {
     const handler = (e: Event) => {
       e.preventDefault();
-      setDeferredPrompt(e);
+      setDeferredPrompt(e as BeforeInstallPromptEvent);
     };
 
     window.addEventListener("beforeinstallprompt", handler);
@@ -68,7 +78,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             newWorker.addEventListener('statechange', () => {
               if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                 setUpdateAvailable(true);
-                toast.info('Update verfügbar! Klick auf "Update installieren" in Settings → App');
+                toast.info('Update verfügbar! Klick auf &quot;Update installieren&quot; in Settings → App');
               }
             });
           }
@@ -493,8 +503,8 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                           <p className="font-medium">Alternative Installation:</p>
                           <ul className="list-disc list-inside space-y-1 text-xs">
                             <li><strong>Chrome/Edge:</strong> Klick auf das ⊕ Icon in der URL-Leiste</li>
-                            <li><strong>iOS Safari:</strong> Teilen → "Zum Home-Bildschirm"</li>
-                            <li><strong>Android Chrome:</strong> Menü → "App installieren"</li>
+                            <li><strong>iOS Safari:</strong> Teilen → &quot;Zum Home-Bildschirm&quot;</li>
+                            <li><strong>Android Chrome:</strong> Menü → &quot;App installieren&quot;</li>
                           </ul>
                         </div>
                       )}
@@ -579,7 +589,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                       <div>
                         <span className="font-medium">Schnell starten</span>
-                        <p className="text-muted-foreground">Cmd+Space → "Dashboard" → Enter</p>
+                        <p className="text-muted-foreground">Cmd+Space → &quot;Dashboard&quot; → Enter</p>
                       </div>
                     </li>
                   </ul>

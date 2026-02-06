@@ -9,11 +9,11 @@ import { toast } from "sonner";
 
 export function StreakProtection() {
   const freezeStatus = useQuery(api.gamification.isStreakFreezeActive);
-  const useFreeze = useMutation(api.gamification.useStreakFreeze);
+  const activateFreeze = useMutation(api.gamification.useStreakFreeze);
 
   const handleUseFreeze = async () => {
     try {
-      const result = await useFreeze({});
+      const result = await activateFreeze({});
       toast.success("Streak Freeze aktiviert! 🛡️", {
         description: `Dein Streak ist jetzt für 24 Stunden geschützt. Verbleibende Freezes: ${result.freezesRemaining}`,
       });
@@ -87,7 +87,7 @@ export function StreakProtection() {
               <Shield
                 key={i}
                 className={`h-5 w-5 ${
-                  i < freezeStatus.freezesAvailable
+                  i < (freezeStatus.freezesAvailable ?? 0)
                     ? "text-cyan-500 fill-cyan-500/20"
                     : "text-muted-foreground/20"
                 }`}
@@ -100,11 +100,11 @@ export function StreakProtection() {
         {!freezeStatus.active && (
           <Button
             onClick={handleUseFreeze}
-            disabled={freezeStatus.freezesAvailable === 0}
+            disabled={(freezeStatus.freezesAvailable ?? 0) === 0}
             className="w-full"
-            variant={freezeStatus.freezesAvailable > 0 ? "default" : "secondary"}
+            variant={(freezeStatus.freezesAvailable ?? 0) > 0 ? "default" : "secondary"}
           >
-            {freezeStatus.freezesAvailable > 0 ? (
+            {(freezeStatus.freezesAvailable ?? 0) > 0 ? (
               <>
                 <Shield className="mr-2 h-4 w-4" />
                 Freeze aktivieren

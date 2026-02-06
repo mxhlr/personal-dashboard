@@ -285,7 +285,8 @@ export class CoachPanel extends BasePage {
     const messages = this.page.locator(`${this.messagesContainer} > *`);
     const count = await messages.count();
     if (count === 0) return '';
-    return messages.nth(count - 1).textContent() || '';
+    const text = await messages.nth(count - 1).textContent();
+    return text ?? '';
   }
 
   async isOpen(): Promise<boolean> {

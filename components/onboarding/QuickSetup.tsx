@@ -76,7 +76,7 @@ export function QuickSetup() {
           </CardHeader>
           <CardContent className="space-y-4">
             <Button onClick={handleStart} className="w-full" size="lg">
-              Los geht's
+              Los geht&apos;s
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             <Button
