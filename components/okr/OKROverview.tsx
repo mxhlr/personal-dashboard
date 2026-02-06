@@ -132,7 +132,7 @@ export function OKROverview() {
               const config = areaConfig[area];
               return (
                 <div key={area} className={`p-6 rounded-xl bg-gradient-to-br ${config.gradient}
-                  dark:border dark:border-white/[0.08] border border-black/[0.05]`}>
+                  dark:border dark:border-white/[0.08] border border-black/[0.08]`}>
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-2xl">{config.icon}</span>
                     <h3 className={`text-sm font-bold uppercase tracking-wider ${config.color}`}
@@ -151,7 +151,7 @@ export function OKROverview() {
         </Card>
 
         {/* Monthly OKRs */}
-        <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
+        <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.25)] dark:bg-card/50 bg-white/80
           shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
