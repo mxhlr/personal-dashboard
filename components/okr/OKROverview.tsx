@@ -160,7 +160,7 @@ export function OKROverview() {
                 {monthNames[currentMonth - 1].toUpperCase()} {currentYear} OKRs
               </h2>
             </div>
-            <span className="text-sm dark:text-[#888888] text-[#666666] font-bold"
+            <span className="text-sm dark:text-[#888888] text-[#555555] font-bold"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
               {monthlyOKRs?.length || 0} Objectives
             </span>
@@ -168,8 +168,8 @@ export function OKROverview() {
 
           {!monthlyOKRs || monthlyOKRs.length === 0 ? (
             <div className="text-center py-12">
-              <TrendingUp className="w-16 h-16 dark:text-[#444444] text-[#CCCCCC] mx-auto mb-4 opacity-30" />
-              <p className="text-sm dark:text-[#666666] text-[#888888]"
+              <TrendingUp className="w-16 h-16 dark:text-[#444444] text-[#BBBBBB] mx-auto mb-4 opacity-40" />
+              <p className="text-sm dark:text-[#666666] text-[#777777]"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                 No OKRs set for this month.<br />
                 Complete last month&apos;s review to plan ahead.
@@ -188,7 +188,7 @@ export function OKROverview() {
                   <div
                     key={index}
                     className={`rounded-xl p-6 bg-gradient-to-br ${config.gradient}
-                      dark:border dark:border-white/[0.08] border border-black/[0.05]`}
+                      dark:border dark:border-white/[0.08] border border-black/[0.08]`}
                   >
                     <div className="flex items-start gap-3 mb-4">
                       <span className="text-xl mt-1">{config.icon}</span>
@@ -205,20 +205,20 @@ export function OKROverview() {
                         </p>
 
                         {/* Key Results */}
-                        <div className="space-y-3 pl-6 border-l-2 dark:border-white/[0.15] border-black/[0.08]">
+                        <div className="space-y-3 pl-6 border-l-2 dark:border-white/[0.15] border-black/[0.12]">
                           {okr.keyResults.map((kr, krIndex) => (
                             <div key={krIndex} className="space-y-1">
                               <div className="flex items-baseline justify-between gap-2">
-                                <p className="text-sm dark:text-[#CCCCCC] text-[#444444]"
+                                <p className="text-sm dark:text-[#CCCCCC] text-[#333333]"
                                   style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                                   {kr.description}
                                 </p>
-                                <span className="text-xs dark:text-[#888888] text-[#666666] font-bold whitespace-nowrap"
+                                <span className="text-xs dark:text-[#888888] text-[#555555] font-bold whitespace-nowrap"
                                   style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                                   0/{kr.target} {kr.unit}
                                 </span>
                               </div>
-                              <div className="h-2 dark:bg-white/[0.05] bg-black/[0.05] rounded-full overflow-hidden">
+                              <div className="h-2 dark:bg-white/[0.05] bg-black/[0.08] rounded-full overflow-hidden">
                                 <div
                                   className={`h-full bg-gradient-to-r ${config.gradient} transition-all duration-500`}
                                   style={{ width: "0%" }}
@@ -237,7 +237,7 @@ export function OKROverview() {
         </Card>
 
         {/* Quarterly Milestones */}
-        <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
+        <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.25)] dark:bg-card/50 bg-white/80
           shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
@@ -246,7 +246,7 @@ export function OKROverview() {
                 Q{currentQuarter} {currentYear} MILESTONES
               </h2>
             </div>
-            <span className="text-sm dark:text-[#888888] text-[#666666] font-bold"
+            <span className="text-sm dark:text-[#888888] text-[#555555] font-bold"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
               {quarterlyMilestones.length} {quarterlyMilestones.length === 1 ? "Milestone" : "Milestones"}
             </span>
@@ -254,8 +254,8 @@ export function OKROverview() {
 
           {quarterlyMilestones.length === 0 ? (
             <div className="text-center py-12">
-              <Flag className="w-16 h-16 dark:text-[#444444] text-[#CCCCCC] mx-auto mb-4 opacity-30" />
-              <p className="text-sm dark:text-[#666666] text-[#888888]"
+              <Flag className="w-16 h-16 dark:text-[#444444] text-[#BBBBBB] mx-auto mb-4 opacity-40" />
+              <p className="text-sm dark:text-[#666666] text-[#777777]"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                 No milestones set for this quarter.<br />
                 Complete last quarter&apos;s review to plan ahead.
@@ -274,7 +274,7 @@ export function OKROverview() {
                   <div
                     key={index}
                     className={`p-6 rounded-xl bg-gradient-to-br ${config.gradient}
-                      dark:border dark:border-white/[0.08] border border-black/[0.05]
+                      dark:border dark:border-white/[0.08] border border-black/[0.08]
                       transition-all duration-200 hover:scale-[1.02]`}
                   >
                     <div className="flex items-start gap-3">
@@ -300,7 +300,7 @@ export function OKROverview() {
         </Card>
 
         {/* Weekly Goals */}
-        <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
+        <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.25)] dark:bg-card/50 bg-white/80
           shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
@@ -309,7 +309,7 @@ export function OKROverview() {
                 WEEK {currentWeekNumber} GOALS
               </h2>
             </div>
-            <span className="text-sm dark:text-[#888888] text-[#666666] font-bold"
+            <span className="text-sm dark:text-[#888888] text-[#555555] font-bold"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
               {weeklyGoals?.length || 0} Goals
             </span>
@@ -317,8 +317,8 @@ export function OKROverview() {
 
           {!weeklyGoals || weeklyGoals.length === 0 ? (
             <div className="text-center py-12">
-              <Target className="w-16 h-16 dark:text-[#444444] text-[#CCCCCC] mx-auto mb-4 opacity-30" />
-              <p className="text-sm dark:text-[#666666] text-[#888888]"
+              <Target className="w-16 h-16 dark:text-[#444444] text-[#BBBBBB] mx-auto mb-4 opacity-40" />
+              <p className="text-sm dark:text-[#666666] text-[#777777]"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                 No goals set for this week.<br />
                 Complete last week&apos;s review to plan ahead.
@@ -338,8 +338,8 @@ export function OKROverview() {
                 return (
                   <div
                     key={category}
-                    className="p-6 rounded-xl dark:bg-white/[0.02] bg-black/[0.02]
-                      dark:border dark:border-white/[0.08] border border-black/[0.05]"
+                    className="p-6 rounded-xl dark:bg-white/[0.02] bg-black/[0.03]
+                      dark:border dark:border-white/[0.08] border border-black/[0.08]"
                   >
                     <div className="flex items-center gap-2 mb-4">
                       <span className="text-lg">{config.icon}</span>
@@ -351,7 +351,7 @@ export function OKROverview() {
                     <div className="space-y-3">
                       {goals.map((goal, index) => (
                         <div key={index} className="flex items-start gap-3 group">
-                          <CheckCircle2 className="w-5 h-5 mt-0.5 dark:text-[#666666] text-[#888888] flex-shrink-0
+                          <CheckCircle2 className="w-5 h-5 mt-0.5 dark:text-[#666666] text-[#999999] flex-shrink-0
                             group-hover:dark:text-[#00E5FF] group-hover:text-[#0097A7] transition-colors" />
                           <p className="text-sm dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
                             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
@@ -369,7 +369,7 @@ export function OKROverview() {
 
         {/* Info Footer */}
         <div className="text-center py-6">
-          <p className="text-xs dark:text-[#666666] text-[#888888] uppercase tracking-wider"
+          <p className="text-xs dark:text-[#666666] text-[#777777] uppercase tracking-wider"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
             Complete your reviews to keep your OKRs up to date
           </p>

@@ -134,12 +134,12 @@ export function VisionBoardSettings() {
   };
 
   if (!lists) {
-    return <div className="text-sm text-muted-foreground">Lädt...</div>;
+    return <div className="text-sm text-gray-600 dark:text-muted-foreground">Lädt...</div>;
   }
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-muted-foreground mb-4">
+      <p className="text-sm text-gray-600 dark:text-muted-foreground mb-4">
         Verwalte deine Vision Board Listen und Spalten
       </p>
 
@@ -148,7 +148,7 @@ export function VisionBoardSettings() {
         {lists.map((list, index) => (
           <div
             key={list._id}
-            className="flex items-center gap-3 p-3 rounded-lg border border-border bg-card"
+            className="flex items-center gap-3 p-3 rounded-lg border-2 border-gray-300 dark:border-border bg-card"
           >
             {editingListId === list._id ? (
               <>
@@ -232,7 +232,7 @@ export function VisionBoardSettings() {
 
       {/* Create New List */}
       {isCreating ? (
-        <div className="p-4 rounded-lg border border-border bg-card space-y-3">
+        <div className="p-4 rounded-lg border-2 border-gray-300 dark:border-border bg-card space-y-3">
           <div className="space-y-2">
             <Label>Icon/Emoji</Label>
             <Input

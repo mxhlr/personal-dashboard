@@ -234,7 +234,7 @@ export default function Header({
                   className={`font-medium font-orbitron text-[13px] uppercase tracking-wider gap-1.5 transition-all duration-200
                     ${activeTab === "planning"
                       ? 'dark:bg-[rgba(0,229,255,0.15)] bg-[rgba(0,180,220,0.15)] dark:text-[#00E5FF] text-[#0077B6] dark:shadow-[0_0_12px_rgba(0,229,255,0.25)] shadow-sm border-0'
-                      : 'dark:text-[#888888] text-[#666666] dark:hover:text-[#00E5FF] hover:text-[#0077B6] dark:hover:bg-white/5 hover:bg-black/5'}`}
+                      : 'dark:text-[#888888] text-[#444444] dark:hover:text-[#00E5FF] hover:text-[#0077B6] dark:hover:bg-white/5 hover:bg-black/5'}`}
                 >
                   {activeTab === "planning" ? reviewLabels[selectedReview] : "Reviews"}
                   <ChevronDown className="h-3.5 w-3.5" />
@@ -267,7 +267,7 @@ export default function Header({
               className={`font-medium font-orbitron text-[13px] uppercase tracking-wider transition-all duration-200
                 ${activeTab === "visionboard"
                   ? 'dark:bg-[rgba(0,229,255,0.15)] bg-[rgba(0,180,220,0.15)] dark:text-[#00E5FF] text-[#0077B6] dark:shadow-[0_0_12px_rgba(0,229,255,0.25)] shadow-sm border-0'
-                  : 'dark:text-[#888888] text-[#666666] dark:hover:text-[#00E5FF] hover:text-[#0077B6] dark:hover:bg-white/5 hover:bg-black/5'}`}
+                  : 'dark:text-[#888888] text-[#444444] dark:hover:text-[#00E5FF] hover:text-[#0077B6] dark:hover:bg-white/5 hover:bg-black/5'}`}
             >
               Visionboard
             </Button>
@@ -276,7 +276,7 @@ export default function Header({
           {/* Right: Time, Theme Toggle, Settings */}
           <div className="flex items-center gap-2 md:gap-3 ml-auto">
             {/* Current Time - Hidden on very small screens */}
-            <div className="hidden sm:block text-xs md:text-sm font-orbitron dark:text-[#888888] text-[#666666] tabular-nums">
+            <div className="hidden sm:block text-xs md:text-sm font-orbitron dark:text-[#888888] text-[#555555] tabular-nums">
               {currentTime}
             </div>
 

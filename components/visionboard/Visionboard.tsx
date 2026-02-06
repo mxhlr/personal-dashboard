@@ -138,14 +138,14 @@ function SortableImage({
 
       {/* Subtitle section - only show if subtitle exists or editing */}
       {(image.subtitle || isEditingSubtitle) && (
-        <div className="p-2 bg-white rounded-b-lg">
+        <div className="p-2 bg-white dark:bg-gray-800 rounded-b-lg">
           {isEditingSubtitle ? (
             <div className="flex items-center gap-1">
               <Input
                 value={subtitleText}
                 onChange={(e) => setSubtitleText(e.target.value)}
                 placeholder="Untertitel..."
-                className="h-7 text-xs bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                className="h-7 text-xs bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
                 autoFocus
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleSaveSubtitle();
@@ -157,13 +157,13 @@ function SortableImage({
               />
               <button
                 onClick={handleSaveSubtitle}
-                className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100"
+                className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100"
               >
                 <Check className="h-3 w-3" />
               </button>
             </div>
           ) : (
-            <p className="text-xs text-center text-black">{image.subtitle}</p>
+            <p className="text-xs text-center text-gray-900 dark:text-gray-100">{image.subtitle}</p>
           )}
         </div>
       )}
@@ -241,7 +241,7 @@ function DroppableList({
             <Input
               value={listName}
               onChange={(e) => setListName(e.target.value)}
-              className="h-7 text-sm font-semibold bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              className="h-7 text-sm font-semibold bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
               autoFocus
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleSaveListName();
@@ -258,7 +258,7 @@ function DroppableList({
           </div>
         ) : (
           <h2
-            className="text-sm font-semibold flex-1 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded px-2 py-1 text-gray-900 dark:text-gray-100"
+            className="text-sm font-semibold flex-1 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 rounded px-2 py-1 text-gray-900 dark:text-gray-100"
             onClick={() => setIsEditingName(true)}
           >
             {listName}
@@ -288,7 +288,7 @@ function DroppableList({
       <div className="mt-2">
         <label
           htmlFor={`image-upload-${listId}`}
-          className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer text-sm text-gray-600 dark:text-gray-400"
+          className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 cursor-pointer text-sm text-gray-700 dark:text-gray-400"
         >
           <Plus className="h-4 w-4" />
           <span>Karte hinzufügen</span>
@@ -539,8 +539,8 @@ export function Visionboard() {
         <DragOverlay>
           {activeId ? (
             <div className="w-[256px] opacity-90 rotate-3">
-              <div className="bg-white rounded-lg shadow-xl">
-                <div className="text-sm p-4 text-center">Verschieben...</div>
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl border-2 border-gray-300 dark:border-gray-600">
+                <div className="text-sm p-4 text-center text-gray-900 dark:text-gray-100">Verschieben...</div>
               </div>
             </div>
           ) : null}

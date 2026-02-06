@@ -246,9 +246,9 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-card border border-border rounded-lg max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-card border-2 border-gray-300 dark:border-border rounded-lg max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border">
+        <div className="flex items-center justify-between p-6 border-b-2 border-gray-300 dark:border-border">
           <h2 className="text-2xl font-bold">Einstellungen</h2>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="h-5 w-5" />
@@ -324,7 +324,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
             {/* North Stars Tab */}
             <TabsContent value="northstars" className="space-y-4 mt-6">
-              <p className="text-sm text-muted-foreground mb-4">
+              <p className="text-sm text-gray-600 dark:text-muted-foreground mb-4">
                 Deine Jahresziele für die 4 Lebensbereiche
               </p>
 
@@ -393,14 +393,14 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             {/* Tracking Fields Tab */}
             {/* Habits Tab */}
             <TabsContent value="habits" className="space-y-4 mt-6">
-              <p className="text-sm text-muted-foreground mb-4">
+              <p className="text-sm text-gray-600 dark:text-muted-foreground mb-4">
                 Verwalte dein gamifiziertes Habit-Tracking System
               </p>
 
               <div className="space-y-4">
-                <div className="rounded-lg border border-border bg-card p-4">
+                <div className="rounded-lg border-2 border-gray-300 dark:border-border bg-card p-4">
                   <h3 className="font-semibold mb-2">Habits verwalten</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
+                  <p className="text-sm text-gray-600 dark:text-muted-foreground mb-4">
                     Erstelle, bearbeite und organisiere deine Habit-Kategorien und einzelne Habits.
                   </p>
                   <Button
@@ -411,9 +411,9 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     Manage Habits
                   </Button>
                 </div>
-                <div className="rounded-lg border border-border bg-card p-4">
+                <div className="rounded-lg border-2 border-gray-300 dark:border-border bg-card p-4">
                   <h3 className="font-semibold mb-2">Habit System zurücksetzen & neu initialisieren</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
+                  <p className="text-sm text-gray-600 dark:text-muted-foreground mb-4">
                     Setzt dein Habit-System komplett zurück und erstellt die neuen Standard-Kategorien:
                     <br />• 🏃 Physical Foundation (Movement, Breakfast, Lunch, Dinner)
                     <br />• 🧠 Mental Clarity (Phone Jail, Vibes/Energy)
@@ -444,18 +444,18 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   </div>
                 </div>
 
-                <div className="rounded-lg border border-border bg-card p-4">
+                <div className="rounded-lg border-2 border-gray-300 dark:border-border bg-card p-4">
                   <h3 className="font-semibold mb-2">Info: Neue Standard-Kategorien</h3>
-                  <ul className="text-sm text-muted-foreground space-y-1">
+                  <ul className="text-sm text-gray-600 dark:text-muted-foreground space-y-1">
                     <li>• <strong>Keine Wellbeing-Sliders mehr</strong> - Evening Routine wurde entfernt</li>
                     <li>• <strong>115 XP pro Tag</strong> wenn alle Habits completed</li>
                     <li>• Du kannst alles nach der Initialisierung anpassen (XP, Namen, etc.)</li>
                   </ul>
                 </div>
 
-                <div className="rounded-lg border border-destructive/50 bg-destructive/5 p-4">
+                <div className="rounded-lg border-2 border-red-400 dark:border-destructive/50 bg-red-50 dark:bg-destructive/5 p-4">
                   <h3 className="font-semibold mb-2 text-destructive">Alle Daten zurücksetzen</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
+                  <p className="text-sm text-gray-600 dark:text-muted-foreground mb-4">
                     Setzt alle Gamification-Daten zurück: Total XP auf 0, Level auf 0, Streak auf 0, und löscht alle abgehakten Habits.
                     <br /><br />
                     <strong className="text-destructive">Achtung:</strong> Diese Aktion kann nicht rückgängig gemacht werden!
@@ -486,7 +486,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <TabsContent value="app" className="space-y-4 mt-6">
               <div className="space-y-4">
                 {/* PWA Installation */}
-                <div className="rounded-lg border border-border bg-card p-6">
+                <div className="rounded-lg border-2 border-gray-300 dark:border-border bg-card p-6">
                   <div className="flex items-start gap-4">
                     <div className="p-3 rounded-lg bg-primary/10">
                       <Smartphone className="h-6 w-6 text-primary" />
@@ -495,18 +495,18 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       <h3 className="font-semibold text-lg mb-2">
                         App installieren
                       </h3>
-                      <p className="text-sm text-muted-foreground mb-4">
+                      <p className="text-sm text-gray-600 dark:text-muted-foreground mb-4">
                         Installiere das Dashboard als eigenständige App auf deinem Gerät.
                         Funktioniert offline und erscheint in deiner App-Liste.
                       </p>
 
                       {isDevelopment ? (
                         <div className="space-y-3">
-                          <div className="p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
-                            <p className="text-sm font-medium text-yellow-600 dark:text-yellow-500 mb-2">
+                          <div className="p-3 rounded-lg bg-yellow-100 dark:bg-yellow-500/10 border-2 border-yellow-400 dark:border-yellow-500/20">
+                            <p className="text-sm font-medium text-yellow-700 dark:text-yellow-500 mb-2">
                               Development Mode
                             </p>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-xs text-gray-600 dark:text-muted-foreground">
                               PWA Installation ist im Development Mode deaktiviert.
                               Nutze die Browser-Installation direkt:
                             </p>
@@ -534,7 +534,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                           </Button>
 
                           {!deferredPrompt && (
-                            <div className="mt-4 text-sm text-muted-foreground space-y-2">
+                            <div className="mt-4 text-sm text-gray-600 dark:text-muted-foreground space-y-2">
                               <p className="font-medium">Alternative Installation:</p>
                               <ul className="list-disc list-inside space-y-1 text-xs">
                                 <li><strong>Chrome/Edge:</strong> Klick auf das ⊕ Icon in der URL-Leiste</li>
@@ -550,7 +550,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 </div>
 
                 {/* App Updates */}
-                <div className="rounded-lg border border-border bg-card p-6">
+                <div className="rounded-lg border-2 border-gray-300 dark:border-border bg-card p-6">
                   <div className="flex items-start gap-4">
                     <div className="p-3 rounded-lg bg-primary/10">
                       <RefreshCw className="h-6 w-6 text-primary" />
@@ -559,7 +559,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       <h3 className="font-semibold text-lg mb-2">
                         App Updates
                       </h3>
-                      <p className="text-sm text-muted-foreground mb-4">
+                      <p className="text-sm text-gray-600 dark:text-muted-foreground mb-4">
                         Prüfe nach neuen Updates und installiere sie sofort.
                       </p>
 
@@ -590,7 +590,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                         </Button>
                       )}
 
-                      <p className="text-xs text-muted-foreground mt-3">
+                      <p className="text-xs text-gray-600 dark:text-muted-foreground mt-3">
                         Aktuelle Version wird automatisch bei jedem App-Start geprüft.
                       </p>
                     </div>
@@ -598,35 +598,35 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 </div>
 
                 {/* App Info */}
-                <div className="rounded-lg border border-border bg-card p-6">
+                <div className="rounded-lg border-2 border-gray-300 dark:border-border bg-card p-6">
                   <h3 className="font-semibold mb-4">App Features</h3>
                   <ul className="space-y-3 text-sm">
                     <li className="flex items-start gap-3">
                       <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                       <div>
                         <span className="font-medium">Eigene App</span>
-                        <p className="text-muted-foreground">Erscheint in App-Liste & Launchpad</p>
+                        <p className="text-gray-600 dark:text-muted-foreground">Erscheint in App-Liste & Launchpad</p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                       <div>
                         <span className="font-medium">Offline-fähig</span>
-                        <p className="text-muted-foreground">Funktioniert auch ohne Internet</p>
+                        <p className="text-gray-600 dark:text-muted-foreground">Funktioniert auch ohne Internet</p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                       <div>
                         <span className="font-medium">Native Feel</span>
-                        <p className="text-muted-foreground">Kein Browser-Chrome, eigenes Fenster</p>
+                        <p className="text-gray-600 dark:text-muted-foreground">Kein Browser-Chrome, eigenes Fenster</p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                       <div>
                         <span className="font-medium">Schnell starten</span>
-                        <p className="text-muted-foreground">Cmd+Space → &quot;Dashboard&quot; → Enter</p>
+                        <p className="text-gray-600 dark:text-muted-foreground">Cmd+Space → &quot;Dashboard&quot; → Enter</p>
                       </div>
                     </li>
                   </ul>
@@ -636,7 +636,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
             {/* Coach Tab */}
             <TabsContent value="coach" className="space-y-4 mt-6">
-              <p className="text-sm text-muted-foreground mb-4">
+              <p className="text-sm text-gray-600 dark:text-muted-foreground mb-4">
                 Wähle den Ton deines Personal Coaches
               </p>
 
@@ -650,7 +650,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     <SelectItem value="Motivierend">
                       <div>
                         <div className="font-medium">Motivierend</div>
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-xs text-gray-600 dark:text-muted-foreground">
                           Ermutigend und enthusiastisch
                         </div>
                       </div>
@@ -658,7 +658,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     <SelectItem value="Sachlich">
                       <div>
                         <div className="font-medium">Sachlich</div>
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-xs text-gray-600 dark:text-muted-foreground">
                           Datengetrieben und analytisch
                         </div>
                       </div>
@@ -666,7 +666,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     <SelectItem value="Empathisch">
                       <div>
                         <div className="font-medium">Empathisch</div>
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-xs text-gray-600 dark:text-muted-foreground">
                           Verständnisvoll und supportive
                         </div>
                       </div>
@@ -674,7 +674,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     <SelectItem value="Direkt">
                       <div>
                         <div className="font-medium">Direkt</div>
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-xs text-gray-600 dark:text-muted-foreground">
                           Ehrlich ohne Umschweife
                         </div>
                       </div>
