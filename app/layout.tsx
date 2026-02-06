@@ -68,7 +68,7 @@ export default function RootLayout({
         <ClientBody className={`${geistMono.variable} ${orbitron.variable} antialiased font-mona-regular`}>
           <ThemeProvider
             attribute="class"
-            defaultTheme="dark"
+            defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
