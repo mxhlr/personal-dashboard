@@ -72,6 +72,7 @@ export const initializeUserStats = mutation({
       currentStreak: 0,
       longestStreak: 0,
       weekScore: 0,
+      totalWins: 0,
       updatedAt: now,
     });
 
@@ -238,6 +239,7 @@ export const updateUserStats = internalMutation({
         currentStreak: 0,
         longestStreak: 0,
         weekScore: 0,
+        totalWins: args.xpToAdd > 0 ? 1 : 0, // Initialize with 1 if completing a habit
         updatedAt: now,
       });
       return;
@@ -246,6 +248,11 @@ export const updateUserStats = internalMutation({
     // Update XP and level
     const newTotalXP = stats.totalXP + args.xpToAdd;
     const newLevel = calculateLevel(newTotalXP);
+
+    // Update totalWins: +1 when completing (xpToAdd > 0), -1 when uncompleting (xpToAdd < 0)
+    const currentTotalWins = stats.totalWins || 0;
+    const totalWinsDelta = args.xpToAdd > 0 ? 1 : args.xpToAdd < 0 ? -1 : 0;
+    const newTotalWins = Math.max(0, currentTotalWins + totalWinsDelta); // Never go below 0
 
     // Update streak and week score
     const streakData = await calculateStreakAndWeekScore(ctx, args.userId, args.date);
@@ -256,6 +263,7 @@ export const updateUserStats = internalMutation({
       currentStreak: streakData.currentStreak,
       longestStreak: Math.max(stats.longestStreak, streakData.currentStreak),
       weekScore: streakData.weekScore,
+      totalWins: newTotalWins,
       updatedAt: now,
     });
   },

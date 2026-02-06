@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 
 interface AllTimeStatsProps {
   stats: {
-    wins: number;
+    totalWins: number;
     perfect: number;
     bestStreak: number;
   };
@@ -20,13 +20,13 @@ export function AllTimeStats({ stats }: AllTimeStatsProps) {
       </h3>
 
       <div className="grid grid-cols-3 gap-8">
-        {/* Wins */}
+        {/* Total Wins */}
         <div className="text-center">
           <div
             className="text-4xl font-bold dark:text-[#00E676] text-[#4CAF50] mb-2"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
           >
-            {stats.wins}
+            {stats.totalWins}
           </div>
           <div className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#666666]">
             WINS

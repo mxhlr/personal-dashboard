@@ -262,37 +262,20 @@ export const getComprehensiveAnalytics = query({
       });
     }
 
-    // All-time stats
+    // All-time stats - Get from userStats
+    const userStats = await ctx.db
+      .query("userStats")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .first();
+
     const allDailyScores = Object.values(dailyScores).map((d) => d.score);
-    const wins = allDailyScores.filter((s) => s >= 80).length;
     const perfect = allDailyScores.filter((s) => s === 100).length;
 
-    // Calculate best streak
-    const sortedDates = Object.keys(dailyScores).sort();
-    let bestStreak = 0;
-    let currentStreak = 0;
-    let previousDate: Date | null = null;
+    // Use totalWins from userStats, or fallback to 0
+    const totalWins = userStats?.totalWins || 0;
 
-    sortedDates.forEach((dateStr) => {
-      const score = dailyScores[dateStr].score;
-      const currentDate = new Date(dateStr);
-
-      if (score >= 80) {
-        if (
-          previousDate &&
-          (currentDate.getTime() - previousDate.getTime()) / (1000 * 60 * 60 * 24) === 1
-        ) {
-          currentStreak++;
-        } else {
-          currentStreak = 1;
-        }
-        bestStreak = Math.max(bestStreak, currentStreak);
-      } else {
-        currentStreak = 0;
-      }
-
-      previousDate = currentDate;
-    });
+    // Use longestStreak from userStats instead of calculating
+    const bestStreak = userStats?.longestStreak || 0;
 
     // Skip patterns - Initialize all categories with 0
     const skipReasons: Record<string, number> = {};
@@ -351,7 +334,7 @@ export const getComprehensiveAnalytics = query({
       dailyScores,
       monthlyStats,
       allTimeStats: {
-        wins,
+        totalWins,
         perfect,
         bestStreak,
       },

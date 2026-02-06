@@ -368,6 +368,7 @@ export default defineSchema({
     currentStreak: v.number(), // days in a row completing habits
     longestStreak: v.number(),
     weekScore: v.number(), // days completed this week (0-7)
+    totalWins: v.optional(v.number()), // total number of habits ever completed (adjustable +1/-1)
 
     // Streak Protection (NEW)
     streakFreezesAvailable: v.optional(v.number()), // 2 per month, defaults to 2

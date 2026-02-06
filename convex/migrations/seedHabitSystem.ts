@@ -46,6 +46,7 @@ export const seedHabitSystemForUser = internalMutation({
         currentStreak: 0,
         longestStreak: 0,
         weekScore: 0,
+        totalWins: 0,
         updatedAt: now,
       });
     }
