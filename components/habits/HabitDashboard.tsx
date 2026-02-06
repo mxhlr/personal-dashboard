@@ -144,14 +144,13 @@ export function HabitDashboard() {
           background: 'var(--page-background)',
         }}
       >
-        <div className="mx-auto max-w-4xl px-6 py-6 space-y-6">
+        <div className="mx-auto max-w-4xl px-4 md:px-6 py-4 md:py-6 space-y-4 md:space-y-6">
           {/* Header */}
           <header className="space-y-2 text-center">
             <p
-              className="font-bold dark:text-[#00E5FF] text-[#0077B6]"
+              className="font-bold dark:text-[#00E5FF] text-[#0077B6] text-4xl md:text-5xl lg:text-[56px]"
               style={{
                 fontFamily: '"Courier New", "Monaco", monospace',
-                fontSize: '56px',
                 fontWeight: 700,
                 letterSpacing: '2px',
                 fontVariantNumeric: 'tabular-nums'
@@ -159,7 +158,7 @@ export function HabitDashboard() {
             >
               {currentTime}
             </p>
-            <p className="font-normal dark:text-[#E0E0E0] text-[#1A1A1A]" style={{ fontSize: '18px', fontFamily: '"Courier New", "Monaco", monospace' }}>
+            <p className="font-normal dark:text-[#E0E0E0] text-[#1A1A1A] text-base md:text-lg" style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
               Execute.<span className="animate-pulse">|</span>
             </p>
             <p style={{ fontSize: '14px' }}>
@@ -189,9 +188,9 @@ export function HabitDashboard() {
       </div>
 
       {/* Content Section with default background */}
-      <div className="mx-auto max-w-4xl px-6 space-y-6 pb-6">
+      <div className="mx-auto max-w-4xl px-4 md:px-6 space-y-4 md:space-y-6 pb-6">
         {/* Habit Categories */}
-        <ScrollArea className="h-[600px] pr-4">
+        <ScrollArea className="h-[calc(100vh-400px)] md:h-[600px] pr-4">
           <div className="space-y-4">
             {categories.map((category, index) => (
               <HabitCategory
@@ -214,7 +213,7 @@ export function HabitDashboard() {
         <Button
           onClick={handleFinishDay}
           size="lg"
-          className="w-full bg-green-600 text-lg font-semibold text-white transition-colors hover:bg-green-700"
+          className="w-full bg-green-600 text-base md:text-lg font-semibold text-white transition-colors hover:bg-green-700 h-12 md:h-14"
         >
           <span className="mr-2">🎊</span>
           Finish Day

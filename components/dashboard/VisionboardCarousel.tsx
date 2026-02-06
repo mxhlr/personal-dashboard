@@ -113,8 +113,8 @@ export function VisionboardCarousel() {
           </button>
         )}
 
-        {/* Cards Grid - Always 5 cards per page */}
-        <div className="grid grid-cols-5 gap-4">
+        {/* Cards Grid - Responsive: 2 cols mobile → 3 tablet → 5 desktop */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
           {currentImages.map((image, index) => (
             <div
               key={`${image._id}-${index}`}

@@ -277,10 +277,10 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         }}
       />
 
-      <div className="relative max-w-7xl mx-auto px-6 py-8 space-y-6">
+      <div className="relative max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8 space-y-4 md:space-y-6">
         {/* Welcome Header */}
-        <div className="text-center space-y-3 mb-2">
-          <h1 className="text-5xl font-bold font-orbitron text-white"
+        <div className="text-center space-y-2 md:space-y-3 mb-2">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold font-orbitron text-white"
             style={{
               textShadow: '0 0 30px rgba(255, 255, 255, 0.2)'
             }}
@@ -288,7 +288,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             {greeting.message} {greeting.emoji}
           </h1>
           <p
-            className="text-lg dark:text-[#AAAAAA] text-[#888888]"
+            className="text-sm md:text-base lg:text-lg dark:text-[#AAAAAA] text-[#888888]"
             style={{
               fontFamily: '"Courier New", "Monaco", monospace',
               fontVariantNumeric: 'tabular-nums'
@@ -299,9 +299,9 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         </div>
 
       {/* Review Notifications + Weekly Progress - Side by Side */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         {/* Review Notifications - Left */}
-        <Card className="p-6 dark:bg-card/50 bg-white/80
+        <Card className="p-4 md:p-6 dark:bg-card/50 bg-white/80
           shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
           dark:border-border/50 border-border/30
           dark:hover:border-border hover:border-border/50">
@@ -309,7 +309,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         </Card>
 
         {/* Weekly Progress - Right */}
-        <Card className="p-6 dark:bg-card/50 bg-white/80
+        <Card className="p-4 md:p-6 dark:bg-card/50 bg-white/80
           shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
           dark:border-border/50 border-border/30
           dark:hover:border-border hover:border-border/50">
@@ -333,7 +333,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
       <MonthlyOKRProgress />
 
         {/* North Stars - Gaming HUD Style */}
-        <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
+        <Card className="p-4 md:p-6 lg:p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
           shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
           dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]
           dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.2)]
@@ -342,39 +342,39 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
           }}
         >
-          <div className="flex items-center justify-center gap-16 flex-wrap">
+          <div className="grid grid-cols-2 md:flex md:items-center md:justify-center gap-4 md:gap-8 lg:gap-16">
             <div className="text-center group cursor-default">
-              <p className="text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#888888] text-[#666666] mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
+              <p className="text-[10px] md:text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#888888] text-[#666666] mb-2 md:mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
                 💰 WEALTH
               </p>
-              <p className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.wealth}</p>
+              <p className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.wealth}</p>
             </div>
-            <div className="h-12 w-[1px] bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent opacity-30" />
+            <div className="hidden md:block h-12 w-[1px] bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent opacity-30" />
             <div className="text-center group cursor-default">
-              <p className="text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#888888] text-[#666666] mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
+              <p className="text-[10px] md:text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#888888] text-[#666666] mb-2 md:mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
                 🏃 HEALTH
               </p>
-              <p className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.health}</p>
+              <p className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.health}</p>
             </div>
-            <div className="h-12 w-[1px] bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent opacity-30" />
+            <div className="hidden md:block h-12 w-[1px] bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent opacity-30" />
             <div className="text-center group cursor-default">
-              <p className="text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#888888] text-[#666666] mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
+              <p className="text-[10px] md:text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#888888] text-[#666666] mb-2 md:mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
                 ❤️ LOVE
               </p>
-              <p className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.love}</p>
+              <p className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.love}</p>
             </div>
-            <div className="h-12 w-[1px] bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent opacity-30" />
+            <div className="hidden md:block h-12 w-[1px] bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent opacity-30" />
             <div className="text-center group cursor-default">
-              <p className="text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#888888] text-[#666666] mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
+              <p className="text-[10px] md:text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#888888] text-[#666666] mb-2 md:mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
                 😊 HAPPINESS
               </p>
-              <p className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.happiness}</p>
+              <p className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.happiness}</p>
             </div>
           </div>
         </Card>
 
         {/* Today's Log (compact) + Quick Stats */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
           {/* Today's Log - Compact Version */}
           <Card
             className={`p-6 dark:bg-card/50 bg-white/80
