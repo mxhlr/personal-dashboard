@@ -30,7 +30,7 @@ export const getHabitsForDate = query({
     const templates = await Promise.all(templateIds.map(id => ctx.db.get(id)));
 
     // Create a map for O(1) lookup
-    const templateMap = new Map(templates.map(t => t && [t._id, t]).filter(Boolean));
+    const templateMap = new Map(templates.filter((t): t is NonNullable<typeof t> => t !== null).map(t => [t._id, t]));
 
     // Enrich habits with templates
     const enrichedHabits = habits.map(habit => ({
@@ -66,7 +66,7 @@ export const getTodayHabits = query({
     const templates = await Promise.all(templateIds.map(id => ctx.db.get(id)));
 
     // Create a map for O(1) lookup
-    const templateMap = new Map(templates.map(t => t && [t._id, t]).filter(Boolean));
+    const templateMap = new Map(templates.filter((t): t is NonNullable<typeof t> => t !== null).map(t => [t._id, t]));
 
     // Enrich habits with templates
     const enrichedHabits = habits.map(habit => ({
@@ -141,7 +141,7 @@ export const getPatternIntelligence = query({
     // Fetch all templates in batch to avoid N+1 queries
     const templateIds = [...new Set(habitsInRange.map(h => h.templateId))];
     const templates = await Promise.all(templateIds.map(id => ctx.db.get(id)));
-    const templateMap = new Map(templates.map(t => t && [t._id, t]).filter(Boolean));
+    const templateMap = new Map(templates.filter((t): t is NonNullable<typeof t> => t !== null).map(t => [t._id, t]));
 
     for (const habit of habitsInRange) {
       const template = templateMap.get(habit.templateId);

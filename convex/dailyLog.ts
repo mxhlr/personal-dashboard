@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { Id } from "./_generated/dataModel";
 
 // Get daily log for a specific date
 export const getDailyLog = query({
@@ -216,32 +217,8 @@ function getWeekNumber(date: Date): number {
 
 // Helper: Update streaks for custom toggle fields
 async function updateStreaksForToggles(
-  ctx: {
-    db: {
-      get: (id: Id<"trackingFields">) => Promise<{
-        _id: Id<"trackingFields">;
-        hasStreak: boolean;
-        currentStreak?: number;
-        longestStreak?: number;
-        [key: string]: unknown;
-      } | null>;
-      query: (table: string) => {
-        withIndex: (
-          indexName: string,
-          query: (q: { eq: (field: string, value: string) => unknown }) => unknown
-        ) => {
-          first: () => Promise<{
-            tracking: {
-              customToggles?: Array<{ fieldId: Id<"trackingFields">; value: boolean }>;
-              [key: string]: unknown;
-            };
-            [key: string]: unknown;
-          } | null>;
-        };
-      };
-      patch: (id: Id<"trackingFields">, updates: { currentStreak?: number; longestStreak?: number }) => Promise<void>;
-    };
-  },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ctx: any,
   userId: string,
   currentDate: string,
   toggles: Array<{ fieldId: Id<"trackingFields">; value: boolean }>
@@ -267,7 +244,7 @@ async function updateStreaksForToggles(
       let wasYesterdayTrue = false;
       if (yesterdayLog?.tracking.customToggles) {
         const yesterdayToggle = yesterdayLog.tracking.customToggles.find(
-          (t) => t.fieldId === toggle.fieldId
+          (t: { fieldId: Id<"trackingFields">; value: boolean }) => t.fieldId === toggle.fieldId
         );
         wasYesterdayTrue = yesterdayToggle?.value === true;
       }
@@ -295,25 +272,8 @@ async function updateStreaksForToggles(
 
 // Helper: Update Phone Jail streak (default field)
 async function updatePhoneJailStreak(
-  ctx: {
-    db: {
-      query: (table: string) => {
-        withIndex: (
-          indexName: string,
-          query: (q: { eq: (field: string, value: string | boolean) => unknown }) => unknown
-        ) => {
-          first: () => Promise<{
-            _id: Id<"trackingFields">;
-            hasStreak: boolean;
-            currentStreak?: number;
-            longestStreak?: number;
-            [key: string]: unknown;
-          } | null>;
-        };
-      };
-      patch: (id: Id<"trackingFields">, updates: { currentStreak?: number; longestStreak?: number }) => Promise<void>;
-    };
-  },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ctx: any,
   userId: string,
   currentDate: string,
   phoneJail: boolean

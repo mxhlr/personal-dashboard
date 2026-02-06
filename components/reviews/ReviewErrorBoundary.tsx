@@ -1,12 +1,11 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
 import { logger } from "@/lib/logger";
 
 interface ReviewErrorBoundaryProps {
   children: React.ReactNode;
-  reviewType?: "weekly" | "monthly" | "quarterly";
+  reviewType?: "weekly" | "monthly" | "quarterly" | "annual";
 }
 
 interface ReviewErrorBoundaryState {

@@ -1,7 +1,5 @@
 import { v } from "convex/values";
-import { logger } from "@/lib/logger";
 import { mutation, query } from "../_generated/server";
-import { logger } from "@/lib/logger";
 import { internal } from "../_generated/api";
 
 /**
@@ -99,7 +97,7 @@ export const migrateToHabitSystem = mutation({
         alreadyMigrated: false,
       };
     } catch (error) {
-      logger.error("Migration error:", error);
+      console.error("Migration error:", error);
       return {
         success: false,
         message: error instanceof Error ? error.message : "Migration failed",

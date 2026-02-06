@@ -166,22 +166,27 @@ export function Dashboard({ onNavigate }: DashboardProps) {
   const habitTemplates = useQuery(api.habitTemplates.listTemplates, {});
   const visionboardImages = useQuery(api.visionboard.getAllImages);
 
-  if (!profile || !userStats || !dailyHabits || !habitTemplates) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-muted-foreground">Loading...</p>
-      </div>
-    );
-  }
-
   // Memoize dynamic greeting to prevent recalculation on every render
   const greeting = useMemo(
-    () => getDynamicGreeting(profile.name, userStats.currentStreak),
-    [profile.name, userStats.currentStreak]
+    () => profile && userStats ? getDynamicGreeting(profile.name, userStats.currentStreak) : { message: "", emoji: "" },
+    [profile, userStats]
   );
 
   // Memoize expensive habit calculations to avoid recomputing on every render
   const habitStats = useMemo(() => {
+    if (!dailyHabits || !habitTemplates) {
+      return {
+        coreHabits: [],
+        totalHabits: 0,
+        completedHabits: 0,
+        completedCore: 0,
+        todayProgress: 0,
+        todayXP: 0,
+        coreComplete: false,
+        todayComplete: false,
+      };
+    }
+
     const coreHabits = habitTemplates.filter((h) => h.isCore);
     const totalHabits = habitTemplates.length;
     const completedHabits = dailyHabits.filter((h) => h.completed).length;
@@ -212,6 +217,17 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     return { visionboardPreview, hasVisionboardImages };
   }, [visionboardImages]);
 
+  // Memoize SVG circle calculations for progress ring
+  const progressRingProps = useMemo(() => {
+    const radius = 28;
+    const circumference = 2 * Math.PI * radius;
+    const strokeDashoffset = circumference * (1 - habitStats.todayProgress / 100);
+    return {
+      circumference,
+      strokeDashoffset,
+    };
+  }, [habitStats.todayProgress]);
+
   // Destructure for cleaner code
   const {
     totalHabits,
@@ -224,16 +240,13 @@ export function Dashboard({ onNavigate }: DashboardProps) {
 
   const { visionboardPreview, hasVisionboardImages } = visionboardData;
 
-  // Memoize SVG circle calculations for progress ring
-  const progressRingProps = useMemo(() => {
-    const radius = 28;
-    const circumference = 2 * Math.PI * radius;
-    const strokeDashoffset = circumference * (1 - todayProgress / 100);
-    return {
-      circumference,
-      strokeDashoffset,
-    };
-  }, [todayProgress]);
+  if (!profile || !userStats || !dailyHabits || !habitTemplates) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div

@@ -1,7 +1,5 @@
 import { v } from "convex/values";
-import { logger } from "@/lib/logger";
 import { mutation, query, internalMutation } from "./_generated/server";
-import { logger } from "@/lib/logger";
 
 /**
  * Habit Categories CRUD
@@ -175,7 +173,7 @@ export const fixCategoryNames = internalMutation({
           name: cleanName,
           updatedAt: new Date().toISOString(),
         });
-        logger.log(`Updated: "${category.name}" -> "${cleanName}"`);
+        console.log(`Updated: "${category.name}" -> "${cleanName}"`);
         updated++;
       }
     }
