@@ -9,7 +9,7 @@ const withPWA = require("next-pwa")({
   register: true,
   skipWaiting: true,
   disable: process.env.NODE_ENV === "development",
-  cacheId: "real-rise-logoappicon-final",
+  cacheId: "real-rise-v8-FORCE-LIGHT-MODE-UPDATE",
   runtimeCaching: [
     {
       urlPattern: /^https:\/\/.*\.convex\.cloud\/.*/i,
