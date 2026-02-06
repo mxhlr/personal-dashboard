@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { X, Settings } from "lucide-react";
+import { X, Settings, Download, Smartphone, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { ManageHabitsDialog } from "@/components/habits/ManageHabitsDialog";
 import { VisionBoardSettings } from "@/components/settings/VisionBoardSettings";
@@ -38,6 +38,44 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
   const [isSaving, setIsSaving] = useState(false);
   const [manageHabitsOpen, setManageHabitsOpen] = useState(false);
+
+  // PWA Installation state
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+
+  // Listen for PWA install prompt
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener("beforeinstallprompt", handler);
+
+    // Check if already installed
+    if (window.matchMedia("(display-mode: standalone)").matches) {
+      setIsInstalled(true);
+    }
+
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
+
+  const handleInstallPWA = async () => {
+    if (!deferredPrompt) {
+      toast.error("Installation nicht verfügbar. Nutze den Browser-Button in der URL-Leiste.");
+      return;
+    }
+
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+
+    if (outcome === "accepted") {
+      toast.success("App wird installiert!");
+      setIsInstalled(true);
+    }
+
+    setDeferredPrompt(null);
+  };
 
   // Profile form state
   const [profileForm, setProfileForm] = useState({
@@ -135,12 +173,13 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">
           <Tabs defaultValue="profile" className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-6">
               <TabsTrigger value="profile">Profil</TabsTrigger>
               <TabsTrigger value="northstars">North Stars</TabsTrigger>
               <TabsTrigger value="habits">Habits</TabsTrigger>
               <TabsTrigger value="visionboard">Vision Board</TabsTrigger>
               <TabsTrigger value="coach">Coach</TabsTrigger>
+              <TabsTrigger value="app">App</TabsTrigger>
             </TabsList>
 
             {/* Profile Tab */}
@@ -354,6 +393,91 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   >
                     Alle Daten zurücksetzen
                   </Button>
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* App Tab */}
+            <TabsContent value="app" className="space-y-4 mt-6">
+              <div className="space-y-4">
+                {/* PWA Installation */}
+                <div className="rounded-lg border border-border bg-card p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 rounded-lg bg-primary/10">
+                      <Smartphone className="h-6 w-6 text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg mb-2">
+                        App installieren
+                      </h3>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        Installiere das Dashboard als eigenständige App auf deinem Gerät.
+                        Funktioniert offline und erscheint in deiner App-Liste.
+                      </p>
+
+                      {isInstalled ? (
+                        <div className="flex items-center gap-2 text-green-500">
+                          <CheckCircle2 className="h-5 w-5" />
+                          <span className="font-medium">App ist installiert!</span>
+                        </div>
+                      ) : (
+                        <Button
+                          onClick={handleInstallPWA}
+                          disabled={!deferredPrompt}
+                          className="gap-2"
+                        >
+                          <Download className="h-4 w-4" />
+                          {deferredPrompt ? "Jetzt installieren" : "Installation verfügbar im Browser"}
+                        </Button>
+                      )}
+
+                      {!deferredPrompt && !isInstalled && (
+                        <div className="mt-4 text-sm text-muted-foreground space-y-2">
+                          <p className="font-medium">Alternative Installation:</p>
+                          <ul className="list-disc list-inside space-y-1 text-xs">
+                            <li><strong>Chrome/Edge:</strong> Klick auf das ⊕ Icon in der URL-Leiste</li>
+                            <li><strong>iOS Safari:</strong> Teilen → "Zum Home-Bildschirm"</li>
+                            <li><strong>Android Chrome:</strong> Menü → "App installieren"</li>
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* App Info */}
+                <div className="rounded-lg border border-border bg-card p-6">
+                  <h3 className="font-semibold mb-4">App Features</h3>
+                  <ul className="space-y-3 text-sm">
+                    <li className="flex items-start gap-3">
+                      <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <span className="font-medium">Eigene App</span>
+                        <p className="text-muted-foreground">Erscheint in App-Liste & Launchpad</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <span className="font-medium">Offline-fähig</span>
+                        <p className="text-muted-foreground">Funktioniert auch ohne Internet</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <span className="font-medium">Native Feel</span>
+                        <p className="text-muted-foreground">Kein Browser-Chrome, eigenes Fenster</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <span className="font-medium">Schnell starten</span>
+                        <p className="text-muted-foreground">Cmd+Space → "Dashboard" → Enter</p>
+                      </div>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </TabsContent>
