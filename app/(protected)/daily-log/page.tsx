@@ -5,15 +5,18 @@ import { useRouter } from "next/navigation";
 import Header from "@/components/layout/Header";
 import { HabitDashboardConnected } from "@/components/habits/HabitDashboardConnected";
 import { SettingsModal } from "@/components/settings/SettingsModal";
+import { CoachPanel } from "@/components/coach/CoachPanel";
+import { CoachToggle } from "@/components/coach/CoachToggle";
 
 type ReviewType = "weekly" | "monthly" | "quarterly" | "annual";
 
 export default function DailyLogPage() {
   const router = useRouter();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [coachOpen, setCoachOpen] = useState(false);
   const [selectedReview] = useState<ReviewType>("weekly");
 
-  const handleTabChange = (tab: "dashboard" | "daily-log" | "visionboard" | "planning" | "data" | "coach" | "okr") => {
+  const handleTabChange = (tab: "dashboard" | "daily-log" | "visionboard" | "planning" | "data" | "okr") => {
     if (tab === "daily-log") {
       // Already on daily-log page
       return;
@@ -63,6 +66,12 @@ export default function DailyLogPage() {
 
         <HabitDashboardConnected />
       </div>
+
+      {/* Coach Toggle Button */}
+      <CoachToggle onClick={() => setCoachOpen(true)} />
+
+      {/* Coach Panel */}
+      <CoachPanel isOpen={coachOpen} onClose={() => setCoachOpen(false)} />
 
       <SettingsModal
         isOpen={settingsOpen}

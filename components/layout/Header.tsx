@@ -14,8 +14,8 @@ import {
 type ReviewType = "weekly" | "monthly" | "quarterly" | "annual";
 
 interface HeaderProps {
-  activeTab: "dashboard" | "daily-log" | "visionboard" | "planning" | "data" | "coach" | "okr";
-  onTabChange: (tab: "dashboard" | "daily-log" | "visionboard" | "planning" | "data" | "coach" | "okr") => void;
+  activeTab: "dashboard" | "daily-log" | "visionboard" | "planning" | "data" | "okr";
+  onTabChange: (tab: "dashboard" | "daily-log" | "visionboard" | "planning" | "data" | "okr") => void;
   onSettingsClick: () => void;
   onDateNavigation?: (direction: "prev" | "next" | "today") => void;
   selectedReview?: ReviewType;
@@ -146,16 +146,6 @@ export default function Header({
                   : 'dark:text-[#888888] text-[#666666] dark:hover:text-[#00E5FF] hover:text-[#0077B6] dark:hover:bg-white/5 hover:bg-black/5'}`}
             >
               Visionboard
-            </Button>
-            <Button
-              variant={activeTab === "coach" ? "default" : "ghost"}
-              onClick={() => onTabChange("coach")}
-              className={`font-medium font-orbitron text-[13px] uppercase tracking-wider transition-all duration-200
-                ${activeTab === "coach"
-                  ? 'dark:bg-[rgba(0,229,255,0.15)] bg-[rgba(0,180,220,0.15)] dark:text-[#00E5FF] text-[#0077B6] dark:shadow-[0_0_12px_rgba(0,229,255,0.25)] shadow-sm border-0'
-                  : 'dark:text-[#888888] text-[#666666] dark:hover:text-[#00E5FF] hover:text-[#0077B6] dark:hover:bg-white/5 hover:bg-black/5'}`}
-            >
-              Coach
             </Button>
           </nav>
 

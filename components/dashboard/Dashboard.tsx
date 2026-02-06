@@ -7,7 +7,6 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Calendar,
-  MessageSquare,
   Image as ImageIcon,
   CheckCircle2
 } from "lucide-react";
@@ -22,7 +21,7 @@ import { WeeklyGoalsWidget } from "./WeeklyGoalsWidget";
 import { MonthlyOKRProgress } from "./MonthlyOKRProgress";
 
 interface DashboardProps {
-  onNavigate: (tab: "daily-log" | "visionboard" | "planning" | "data" | "coach") => void;
+  onNavigate: (tab: "daily-log" | "visionboard" | "planning" | "data" | "okr") => void;
 }
 
 // Dynamic greeting based on time of day and day of week
@@ -527,35 +526,6 @@ export function Dashboard({ onNavigate }: DashboardProps) {
 
         {/* Quick Actions Grid - Keep existing structure */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Coach Quick Access - Gaming HUD Style */}
-          <Card
-            className="p-6 dark:border-[rgba(255,152,0,0.15)] border-[rgba(255,152,0,0.2)] dark:bg-card/50 bg-white/80
-            shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl
-            dark:hover:border-[rgba(255,152,0,0.25)] hover:border-[rgba(255,152,0,0.3)]
-            dark:hover:shadow-[0_0_30px_rgba(255,152,0,0.2)] hover:shadow-[0_8px_30px_rgba(255,152,0,0.25)]"
-            style={{
-              background: 'linear-gradient(135deg, rgba(255, 152, 0, 0.05) 0%, rgba(26, 26, 26, 0.5) 100%)'
-            }}
-          >
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <MessageSquare className="h-5 w-5 dark:text-[#FF9800] text-[#F57C00]" />
-                <h3 className="font-bold font-orbitron dark:text-[#FF9800] text-[#F57C00]">AI Coach</h3>
-              </div>
-            <p className="text-sm dark:text-[#888888] text-[#666666]">
-              Get personalized guidance and support
-            </p>
-              <Button
-                onClick={() => onNavigate("coach")}
-                variant="outline"
-                className="w-full dark:border-[#FF9800]/30 border-[#F57C00]/30 dark:text-[#FF9800] text-[#F57C00]
-                  dark:hover:bg-[rgba(255,152,0,0.1)] hover:bg-[rgba(245,124,0,0.1)]
-                  font-orbitron uppercase tracking-wider text-xs transition-all duration-200"
-              >
-                Start Chat
-              </Button>
-            </div>
-          </Card>
         </div>
       </div>
     </div>

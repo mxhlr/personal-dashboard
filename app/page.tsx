@@ -8,7 +8,8 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Header from "@/components/layout/Header";
 import { Dashboard } from "@/components/dashboard/Dashboard";
 import { Visionboard } from "@/components/visionboard/Visionboard";
-import { CoachChat } from "@/components/coach/CoachChat";
+import { CoachPanel } from "@/components/coach/CoachPanel";
+import { CoachToggle } from "@/components/coach/CoachToggle";
 import { WeeklyReviewForm } from "@/components/reviews/WeeklyReviewForm";
 import { MonthlyReviewForm } from "@/components/reviews/MonthlyReviewForm";
 import { QuarterlyReviewForm } from "@/components/reviews/QuarterlyReviewForm";
@@ -18,7 +19,7 @@ import { AnalyticsDashboard } from "@/components/analytics/AnalyticsDashboard";
 import { OKROverview } from "@/components/okr/OKROverview";
 
 type ReviewType = "weekly" | "monthly" | "quarterly" | "annual";
-type TabType = "dashboard" | "daily-log" | "visionboard" | "planning" | "data" | "coach" | "okr";
+type TabType = "dashboard" | "daily-log" | "visionboard" | "planning" | "data" | "okr";
 
 // Helper function to get current week number (ISO 8601)
 function getWeekNumber(date: Date): number {
@@ -43,6 +44,7 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<TabType>("dashboard");
   const [selectedReview, setSelectedReview] = useState<ReviewType>("weekly");
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [coachOpen, setCoachOpen] = useState(false);
 
   // Handle URL tab parameter
   useEffect(() => {
@@ -149,14 +151,13 @@ export default function DashboardPage() {
           {activeTab === "okr" && (
             <OKROverview />
           )}
-
-          {/* Tab 5: Coach */}
-          {activeTab === "coach" && (
-            <div className="container mx-auto px-4 py-8">
-              <CoachChat />
-            </div>
-          )}
         </main>
+
+        {/* Coach Toggle Button */}
+        <CoachToggle onClick={() => setCoachOpen(true)} />
+
+        {/* Coach Panel */}
+        <CoachPanel isOpen={coachOpen} onClose={() => setCoachOpen(false)} />
 
         {/* Settings Modal */}
         <SettingsModal
