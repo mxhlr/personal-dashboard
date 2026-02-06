@@ -24,9 +24,9 @@ export function MonthlyOKRProgress() {
         dark:border-border/50 border-border/60
         dark:hover:border-border hover:border-border/80 animate-pulse">
         <div className="space-y-4">
-          <div className="h-6 dark:bg-white/10 bg-black/5 rounded w-1/2" />
-          <div className="h-20 dark:bg-white/10 bg-black/5 rounded" />
-          <div className="h-20 dark:bg-white/10 bg-black/5 rounded" />
+          <div className="h-6 dark:bg-white/10 bg-black/8 rounded w-1/2" />
+          <div className="h-20 dark:bg-white/10 bg-black/8 rounded" />
+          <div className="h-20 dark:bg-white/10 bg-black/8 rounded" />
         </div>
       </Card>
     );
@@ -41,13 +41,13 @@ export function MonthlyOKRProgress() {
         dark:hover:border-border hover:border-border/80">
         <div className="text-center space-y-3">
           <div className="flex justify-center">
-            <TrendingUp className="w-10 h-10 dark:text-[#888888] text-[#666666] opacity-50" />
+            <TrendingUp className="w-10 h-10 dark:text-[#525252] text-[#3d3d3d] opacity-50" />
           </div>
-          <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666]"
+          <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d]"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
             This Month&apos;s OKRs
           </h3>
-          <p className="text-[12px] dark:text-[#666666] text-[#888888]"
+          <p className="text-[12px] dark:text-[#3d3d3d] text-[#525252]"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
             No OKRs set for this month.
             <br />
@@ -90,8 +90,8 @@ export function MonthlyOKRProgress() {
   return (
     <Card className="p-6 dark:bg-card/50 bg-white/80
       shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
-      dark:border-border/50 border-border/30
-      dark:hover:border-border hover:border-border/50">
+      dark:border-border/50 border-border/60
+      dark:hover:border-border hover:border-border/80">
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -102,7 +102,7 @@ export function MonthlyOKRProgress() {
               {monthNames[currentMonth - 1]} {currentYear} OKRs
             </h3>
           </div>
-          <span className="text-[11px] dark:text-[#888888] text-[#666666] font-bold"
+          <span className="text-[11px] dark:text-[#525252] text-[#3d3d3d] font-bold"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
             {monthlyOKRs.length} {monthlyOKRs.length === 1 ? "Objective" : "Objectives"}
           </span>
@@ -150,7 +150,7 @@ export function MonthlyOKRProgress() {
                           style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                           {kr.description}
                         </p>
-                        <span className="text-[10px] dark:text-[#888888] text-[#666666] font-bold whitespace-nowrap"
+                        <span className="text-[10px] dark:text-[#525252] text-[#3d3d3d] font-bold whitespace-nowrap"
                           style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                           0/{kr.target} {kr.unit}
                         </span>
@@ -168,7 +168,7 @@ export function MonthlyOKRProgress() {
 
                 {/* Overall Progress Note */}
                 <div className="mt-3 pt-3 border-t dark:border-white/[0.05] border-black/[0.03]">
-                  <p className="text-[10px] dark:text-[#666666] text-[#888888] text-center italic"
+                  <p className="text-[10px] dark:text-[#3d3d3d] text-[#525252] text-center italic"
                     style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                     Track progress manually • Update in monthly review
                   </p>
@@ -180,7 +180,7 @@ export function MonthlyOKRProgress() {
 
         {/* Summary Info */}
         <div className="pt-4 border-t dark:border-white/[0.08] border-black/[0.05] text-center">
-          <p className="text-[10px] dark:text-[#888888] text-[#666666] uppercase tracking-wider"
+          <p className="text-[10px] dark:text-[#525252] text-[#3d3d3d] uppercase tracking-wider"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
             Complete this month&apos;s review to reflect &amp; plan next month
           </p>

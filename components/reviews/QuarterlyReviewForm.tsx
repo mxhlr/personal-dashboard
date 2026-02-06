@@ -257,7 +257,7 @@ export function QuarterlyReviewForm({
           >
             Quarterly Review
           </h1>
-          <p className="text-[13px] dark:text-[#888888] text-[#666666] font-medium"
+          <p className="text-[13px] dark:text-[#525252] text-[#3d3d3d] font-medium"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
           >
             Q{quarter} {year}
@@ -295,19 +295,19 @@ export function QuarterlyReviewForm({
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <h3 className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-4"
+            <h3 className="text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-4"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Teil 1: Milestone Check
             </h3>
-            <p className="text-[13px] dark:text-[#888888] text-[#666666] mb-4"
+            <p className="text-[13px] dark:text-[#525252] text-[#3d3d3d] mb-4"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Markiere welche Milestones du erreicht hast.
             </p>
 
             {milestoneReview.length === 0 ? (
-              <p className="dark:text-[#888888] text-[#666666]"
+              <p className="dark:text-[#525252] text-[#3d3d3d]"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px' }}
               >
                 Keine Milestones für dieses Quartal definiert.
@@ -317,7 +317,7 @@ export function QuarterlyReviewForm({
                 {milestoneReview.map((milestone, index) => (
                   <div
                     key={index}
-                    className="p-4 dark:border-border/30 border-border/25 border rounded-lg
+                    className="p-4 dark:border-border/60 border-border/25 border rounded-lg
                       dark:bg-[rgba(26,26,26,0.3)] bg-white/50"
                   >
                     <div className="flex items-start gap-3 mb-2">
@@ -330,7 +330,7 @@ export function QuarterlyReviewForm({
                           dark:checked:bg-[#00E676] checked:bg-[#00E676] transition-colors"
                       />
                       <div className="flex-1">
-                        <div className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-1"
+                        <div className="text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-1"
                           style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                         >
                           {AREA_LABELS[milestone.area]}
@@ -350,7 +350,7 @@ export function QuarterlyReviewForm({
                       disabled={isReadOnly}
                       placeholder="Optionale Notizen..."
                       className="w-full mt-2 px-0 py-0 border-0 dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A] resize-none
-                        disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                        disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                         focus:outline-none focus:ring-0"
                       style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
                     />
@@ -371,7 +371,7 @@ export function QuarterlyReviewForm({
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Welcher Milestone macht dich am stolzesten?
@@ -387,7 +387,7 @@ export function QuarterlyReviewForm({
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Welcher Milestone..."
@@ -404,7 +404,7 @@ export function QuarterlyReviewForm({
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Welches Ziel hättest du anders angehen sollen?
@@ -420,7 +420,7 @@ export function QuarterlyReviewForm({
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Was würdest du anders machen?"
@@ -437,7 +437,7 @@ export function QuarterlyReviewForm({
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Was hast du über deine Zielsetzung gelernt?
@@ -453,7 +453,7 @@ export function QuarterlyReviewForm({
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Deine Learnings..."
@@ -470,7 +470,7 @@ export function QuarterlyReviewForm({
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Welche Entscheidung würdest du anders treffen?
@@ -486,7 +486,7 @@ export function QuarterlyReviewForm({
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Welche Entscheidung..."
@@ -503,7 +503,7 @@ export function QuarterlyReviewForm({
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Was brauchst du, um nächstes Quartal erfolgreicher zu sein?
@@ -519,7 +519,7 @@ export function QuarterlyReviewForm({
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Was brauchst du..."
@@ -536,12 +536,12 @@ export function QuarterlyReviewForm({
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <h3 className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-4"
+            <h3 className="text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-4"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Teil 3: Milestones für nächstes Quartal
             </h3>
-            <p className="text-[13px] dark:text-[#888888] text-[#666666] mb-4"
+            <p className="text-[13px] dark:text-[#525252] text-[#3d3d3d] mb-4"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Definiere mindestens einen Milestone pro Lebensbereich.
@@ -550,7 +550,7 @@ export function QuarterlyReviewForm({
             <div className="space-y-5">
               {Object.entries(AREA_LABELS).map(([area, label]) => (
                 <div key={area}>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#555555] mb-2"
+                  <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#555555] mb-2"
                     style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                   >
                     {label}
@@ -572,7 +572,7 @@ export function QuarterlyReviewForm({
                           placeholder="Milestone..."
                           className="flex-1 px-3 py-2 dark:border-border/50 border-border/40
                             border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
-                            disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                            disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                             focus:outline-none focus:ring-0"
                           style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px' }}
                         />
@@ -594,7 +594,7 @@ export function QuarterlyReviewForm({
                       <button
                         type="button"
                         onClick={() => addNextMilestone(area)}
-                        className="text-[11px] dark:text-[#888888] text-[#666666] hover:underline font-medium"
+                        className="text-[11px] dark:text-[#525252] text-[#3d3d3d] hover:underline font-medium"
                         style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                       >
                         + Weiterer Milestone

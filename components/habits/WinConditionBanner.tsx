@@ -36,7 +36,7 @@ export function WinConditionBanner() {
       className={`relative overflow-hidden p-6 border transition-all duration-300 ease-out ${
         isFilled
           ? 'ring-2 ring-[#00E676]/30 shadow-[0_0_20px_rgba(0,230,118,0.15)] dark:border-[#00E676]/50 border-[#00E676]/30'
-          : 'shadow-sm dark:border-border/50 border-border/30 hover:shadow-xl hover:-translate-y-1 dark:hover:border-border hover:border-border/50'
+          : 'shadow-sm dark:border-border/50 border-border/60 hover:shadow-xl hover:-translate-y-1 dark:hover:border-border hover:border-border/80'
       }`}
       style={{
         borderRadius: '16px',

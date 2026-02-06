@@ -20,7 +20,7 @@ export function AverageBlockTimes({ blockTimes }: AverageBlockTimesProps) {
 
       {sortedTimes.length === 0 ? (
         <p
-          className="text-sm dark:text-[#888888] text-[#424242]"
+          className="text-sm dark:text-[#525252] text-[#424242]"
           style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
         >
           Time tracking data will appear here once you complete categories in the Daily Log.
@@ -36,7 +36,7 @@ export function AverageBlockTimes({ blockTimes }: AverageBlockTimesProps) {
                 {time.categoryName}
               </span>
               <span
-                className="dark:text-[#888888] text-[#424242]"
+                className="dark:text-[#525252] text-[#424242]"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
               >
                 :{" "}
@@ -48,7 +48,7 @@ export function AverageBlockTimes({ blockTimes }: AverageBlockTimesProps) {
                 {time.avgMinutes}min
               </span>
               <span
-                className="dark:text-[#888888] text-[#424242]"
+                className="dark:text-[#525252] text-[#424242]"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
               >
                 {" "}avg ({time.logs} logs)

@@ -141,7 +141,7 @@ export function PerformanceHistory({
           {["M", "T", "W", "T", "F", "S", "S"].map((day, idx) => (
             <div
               key={idx}
-              className="text-center text-xs font-bold font-orbitron dark:text-[#888888] text-[#495057] uppercase tracking-wider"
+              className="text-center text-xs font-bold font-orbitron dark:text-[#525252] text-[#495057] uppercase tracking-wider"
             >
               {day}
             </div>

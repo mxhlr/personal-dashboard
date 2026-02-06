@@ -30,7 +30,7 @@ export function QuickStatsBadge() {
           <div className="text-2xl">⚡</div>
           <div>
             <p
-              className="text-[10px] uppercase tracking-wider dark:text-[#888888] text-[#666666]"
+              className="text-[10px] uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Level
@@ -45,7 +45,7 @@ export function QuickStatsBadge() {
         </div>
         <div className="text-right">
           <p
-            className="text-[10px] uppercase tracking-wider dark:text-[#888888] text-[#666666]"
+            className="text-[10px] uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d]"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
           >
             XP
@@ -102,7 +102,7 @@ export function QuickStatsBadge() {
           </div>
           <div>
             <p
-              className="text-[10px] uppercase tracking-wider dark:text-[#888888] text-[#666666]"
+              className="text-[10px] uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Progress to Level {level + 1}
@@ -129,7 +129,7 @@ export function QuickStatsBadge() {
           <div className="text-2xl">{currentStreak >= 7 ? '🔥' : '📊'}</div>
           <div>
             <p
-              className="text-[10px] uppercase tracking-wider dark:text-[#888888] text-[#666666]"
+              className="text-[10px] uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Current Streak
@@ -145,7 +145,7 @@ export function QuickStatsBadge() {
           </div>
         </div>
         <p
-          className="text-[10px] uppercase tracking-wider dark:text-[#888888] text-[#666666]"
+          className="text-[10px] uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d]"
           style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
         >
           Tage

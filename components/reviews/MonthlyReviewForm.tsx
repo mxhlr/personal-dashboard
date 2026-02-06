@@ -214,7 +214,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
           >
             Monthly Review
           </h1>
-          <p className="text-[13px] dark:text-[#888888] text-[#666666] font-medium"
+          <p className="text-[13px] dark:text-[#525252] text-[#3d3d3d] font-medium"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
           >
             {format(new Date(year, month - 1), "MMMM yyyy")}
@@ -250,7 +250,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                   style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                   Teil 1: OKR Check
                 </h3>
-                <p className="text-[11px] dark:text-[#888888] text-[#666666] mt-1"
+                <p className="text-[11px] dark:text-[#525252] text-[#3d3d3d] mt-1"
                   style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                   Trage deinen Fortschritt ein
                 </p>
@@ -323,7 +323,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                                   focus:outline-none focus:ring-2 focus:ring-[#00E5FF]/50"
                                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                               />
-                              <span className="text-sm dark:text-[#888888] text-[#666666]"
+                              <span className="text-sm dark:text-[#525252] text-[#3d3d3d]"
                                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                                 / {kr.target} {kr.unit}
                               </span>
@@ -349,7 +349,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                 Teil 2: Reflexion
               </h3>
-              <p className="text-[11px] dark:text-[#888888] text-[#666666] mt-1"
+              <p className="text-[11px] dark:text-[#525252] text-[#3d3d3d] mt-1"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                 Reflektiere über deinen Monat
               </p>
@@ -366,7 +366,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Was war dein größter Erfolg diesen Monat?
@@ -379,7 +379,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Beschreibe deinen größten Erfolg..."
@@ -396,7 +396,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Welches Muster möchtest du ändern?
@@ -409,7 +409,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Welches Verhaltensmuster möchtest du ändern?"
@@ -426,7 +426,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Was hast du über dich selbst gelernt?
@@ -439,7 +439,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Was hast du über dich gelernt?"
@@ -456,7 +456,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Was war die größte Überraschung?
@@ -469,7 +469,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Was hat dich überrascht?"
@@ -486,7 +486,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Worauf bist du stolz?
@@ -499,7 +499,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Worauf bist du stolz?"
@@ -516,7 +516,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Was ist dein Fokus für nächsten Monat?
@@ -529,7 +529,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Dein Fokus für nächsten Monat..."
@@ -543,7 +543,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                 Teil 3: Next Month OKRs
               </h3>
-              <p className="text-[11px] dark:text-[#888888] text-[#666666] mt-1"
+              <p className="text-[11px] dark:text-[#525252] text-[#3d3d3d] mt-1"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                 Setze 1-3 Objectives mit Key Results für nächsten Monat
               </p>
@@ -567,7 +567,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                     <button
                       type="button"
                       onClick={() => removeOKR(okrIndex)}
-                      className="text-[10px] dark:text-[#888888] text-[#666666]
+                      className="text-[10px] dark:text-[#525252] text-[#3d3d3d]
                         dark:hover:text-red-400 hover:text-red-600
                         uppercase tracking-wider transition-colors"
                       style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
@@ -580,7 +580,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                 {/* Objective */}
                 <div>
                   <label className="text-[10px] font-bold uppercase tracking-wider
-                    dark:text-[#888888] text-[#666666] block mb-2"
+                    dark:text-[#525252] text-[#3d3d3d] block mb-2"
                     style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                     Objective
                   </label>
@@ -590,7 +590,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                     disabled={isReadOnly}
                     className="w-full min-h-[80px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                       focus:outline-none focus:ring-0
-                      disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                      disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                       dark:text-[#E0E0E0] text-[#1A1A1A]"
                     style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
                     placeholder="E.g., Launch side project MVP..."
@@ -600,7 +600,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                 {/* Area Selection */}
                 <div>
                   <label className="text-[10px] font-bold uppercase tracking-wider
-                    dark:text-[#888888] text-[#666666] block mb-2"
+                    dark:text-[#525252] text-[#3d3d3d] block mb-2"
                     style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                     North Star Area
                   </label>
@@ -625,7 +625,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                 {/* Key Results */}
                 <div className="pt-4 border-t dark:border-[rgba(0,229,255,0.1)] border-[rgba(0,151,167,0.2)]">
                   <label className="text-[10px] font-bold uppercase tracking-wider
-                    dark:text-[#888888] text-[#555555] block mb-3"
+                    dark:text-[#525252] text-[#555555] block mb-3"
                     style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                     Key Results
                   </label>
@@ -638,7 +638,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                       >
                         <div className="flex items-start justify-between gap-4">
                           <span className="text-[10px] font-bold uppercase tracking-wider
-                            dark:text-[#666666] text-[#777777]"
+                            dark:text-[#3d3d3d] text-[#777777]"
                             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                             KR {krIndex + 1}
                           </span>
@@ -646,7 +646,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                             <button
                               type="button"
                               onClick={() => removeKeyResult(okrIndex, krIndex)}
-                              className="text-[9px] dark:text-[#666666] text-[#888888]
+                              className="text-[9px] dark:text-[#3d3d3d] text-[#525252]
                                 dark:hover:text-red-400 hover:text-red-600
                                 uppercase tracking-wider transition-colors"
                               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
@@ -664,7 +664,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                           disabled={isReadOnly}
                           className="w-full min-h-[60px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                             focus:outline-none focus:ring-0
-                            disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                            disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                             dark:text-[#E0E0E0] text-[#1A1A1A]"
                           style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '13px', lineHeight: '1.6' }}
                           placeholder="E.g., Run 3x per week..."
@@ -673,7 +673,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                         <div className="grid grid-cols-2 gap-3">
                           <div>
                             <label className="text-[9px] font-bold uppercase tracking-wider
-                              dark:text-[#666666] text-[#777777] block mb-1"
+                              dark:text-[#3d3d3d] text-[#777777] block mb-1"
                               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                               Target
                             </label>
@@ -697,7 +697,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                           </div>
                           <div>
                             <label className="text-[9px] font-bold uppercase tracking-wider
-                              dark:text-[#666666] text-[#777777] block mb-1"
+                              dark:text-[#3d3d3d] text-[#777777] block mb-1"
                               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                               Unit
                             </label>
@@ -727,10 +727,10 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                         onClick={() => addKeyResult(okrIndex)}
                         className="w-full px-4 py-2 dark:bg-white/[0.02] bg-black/[0.02]
                           dark:border dark:border-dashed dark:border-white/[0.1] border border-dashed border-black/[0.12]
-                          dark:text-[#666666] text-[#777777]
+                          dark:text-[#3d3d3d] text-[#777777]
                           dark:hover:bg-white/[0.04] hover:bg-black/[0.03]
                           dark:hover:border-[#00E5FF]/20 hover:border-[#0097A7]/30
-                          dark:hover:text-[#888888] hover:text-[#555555]
+                          dark:hover:text-[#525252] hover:text-[#555555]
                           uppercase tracking-wider text-[10px] font-bold transition-all duration-200 rounded-lg"
                         style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                       >
@@ -748,7 +748,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                 onClick={addOKR}
                 className="w-full px-6 py-3 dark:bg-white/[0.03] bg-black/[0.03]
                   dark:border dark:border-dashed dark:border-white/[0.15] border border-dashed border-black/[0.15]
-                  dark:text-[#888888] text-[#555555]
+                  dark:text-[#525252] text-[#555555]
                   dark:hover:bg-white/[0.06] hover:bg-black/[0.05]
                   dark:hover:border-[#00E5FF]/30 hover:border-[#0097A7]/40
                   dark:hover:text-[#00E5FF] hover:text-[#0097A7]

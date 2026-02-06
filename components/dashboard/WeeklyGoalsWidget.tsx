@@ -24,9 +24,9 @@ export function WeeklyGoalsWidget() {
         dark:border-border/50 border-border/60
         dark:hover:border-border hover:border-border/80 animate-pulse">
         <div className="space-y-4">
-          <div className="h-6 dark:bg-white/10 bg-black/5 rounded w-1/2" />
-          <div className="h-4 dark:bg-white/10 bg-black/5 rounded w-3/4" />
-          <div className="h-4 dark:bg-white/10 bg-black/5 rounded w-2/3" />
+          <div className="h-6 dark:bg-white/10 bg-black/8 rounded w-1/2" />
+          <div className="h-4 dark:bg-white/10 bg-black/8 rounded w-3/4" />
+          <div className="h-4 dark:bg-white/10 bg-black/8 rounded w-2/3" />
         </div>
       </Card>
     );
@@ -41,13 +41,13 @@ export function WeeklyGoalsWidget() {
         dark:hover:border-border hover:border-border/80">
         <div className="text-center space-y-3">
           <div className="flex justify-center">
-            <Target className="w-10 h-10 dark:text-[#888888] text-[#666666] opacity-50" />
+            <Target className="w-10 h-10 dark:text-[#525252] text-[#3d3d3d] opacity-50" />
           </div>
-          <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666]"
+          <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d]"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
             This Week&apos;s Goals
           </h3>
-          <p className="text-[12px] dark:text-[#666666] text-[#888888]"
+          <p className="text-[12px] dark:text-[#3d3d3d] text-[#525252]"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
             No goals set for this week.
             <br />
@@ -90,7 +90,7 @@ export function WeeklyGoalsWidget() {
               This Week&apos;s Goals
             </h3>
           </div>
-          <span className="text-[11px] dark:text-[#888888] text-[#666666] font-bold"
+          <span className="text-[11px] dark:text-[#525252] text-[#3d3d3d] font-bold"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
             Week {currentWeekNumber}
           </span>
@@ -119,7 +119,7 @@ export function WeeklyGoalsWidget() {
                       key={index}
                       className="flex items-start gap-3 group"
                     >
-                      <Circle className="w-4 h-4 mt-0.5 dark:text-[#666666] text-[#888888] flex-shrink-0
+                      <Circle className="w-4 h-4 mt-0.5 dark:text-[#3d3d3d] text-[#525252] flex-shrink-0
                         group-hover:dark:text-[#00E5FF] group-hover:text-[#0097A7] transition-colors" />
                       <p className="text-[13px] dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
                         style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
@@ -137,7 +137,7 @@ export function WeeklyGoalsWidget() {
         <div className="pt-4 border-t dark:border-white/[0.08] border-black/[0.05]">
           <div className="flex items-center justify-between text-[11px]"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-            <span className="dark:text-[#888888] text-[#666666] uppercase tracking-wider font-bold">
+            <span className="dark:text-[#525252] text-[#3d3d3d] uppercase tracking-wider font-bold">
               Total Goals
             </span>
             <span className="dark:text-[#00E5FF] text-[#0097A7] font-bold">

@@ -21,7 +21,7 @@ export function VisionboardCarousel() {
           flex items-center justify-center"
       >
         <p
-          className="text-[13px] dark:text-[#666666] text-[#999999]"
+          className="text-[13px] dark:text-[#3d3d3d] text-[#525252]"
           style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
         >
           Keine Visionboard Bilder
@@ -59,13 +59,13 @@ export function VisionboardCarousel() {
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h3
-          className="text-[13px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666]"
+          className="text-[13px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d]"
           style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
         >
           Visionboard
         </h3>
         <span
-          className="text-[11px] dark:text-[#666666] text-[#999999]"
+          className="text-[11px] dark:text-[#3d3d3d] text-[#525252]"
           style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
         >
           {visionboardImages.length} {visionboardImages.length === 1 ? "Bild" : "Bilder"}
@@ -172,7 +172,7 @@ export function VisionboardCarousel() {
               className={`h-2 rounded-full transition-all duration-200 ${
                 index === currentPage
                   ? "w-8 dark:bg-white bg-black"
-                  : "w-2 dark:bg-white/30 bg-black/30 hover:dark:bg-white/50 hover:bg-black/50"
+                  : "w-2 dark:bg-white/30 bg-black/30 hover:dark:bg-white/50 hover:bg-black/80"
               }`}
               aria-label={`Go to page ${index + 1}`}
             />

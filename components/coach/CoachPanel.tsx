@@ -123,7 +123,7 @@ export function CoachPanel({ isOpen, onClose }: CoachPanelProps) {
               <h2 className="text-lg font-bold font-orbitron dark:text-[#FF9800] text-[#F57C00]">
                 AI COACH
               </h2>
-              <p className="text-xs dark:text-[#888888] text-[#555555]"
+              <p className="text-xs dark:text-[#525252] text-[#555555]"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                 {userContext?.profile?.coachTone || "Personalized"} Mode
               </p>
@@ -133,8 +133,8 @@ export function CoachPanel({ isOpen, onClose }: CoachPanelProps) {
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="dark:text-[#888888] text-[#555555] dark:hover:text-[#FF9800] hover:text-[#F57C00]
-              dark:hover:bg-white/5 hover:bg-black/5"
+            className="dark:text-[#525252] text-[#555555] dark:hover:text-[#FF9800] hover:text-[#F57C00]
+              dark:hover:bg-white/5 hover:bg-black/8"
             aria-label="Close AI Coach panel"
           >
             <X className="w-5 h-5" />
@@ -148,7 +148,7 @@ export function CoachPanel({ isOpen, onClose }: CoachPanelProps) {
           </div>
         ) : !userContext ? (
           <div className="flex-1 flex items-center justify-center p-6">
-            <p className="dark:text-[#888888] text-[#555555] text-center"
+            <p className="dark:text-[#525252] text-[#555555] text-center"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
               Bitte vervollständige dein Profil, um den Coach zu nutzen.
             </p>
@@ -176,7 +176,7 @@ export function CoachPanel({ isOpen, onClose }: CoachPanelProps) {
                     style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                     Start a conversation
                   </h3>
-                  <p className="text-sm dark:text-[#888888] text-[#555555]"
+                  <p className="text-sm dark:text-[#525252] text-[#555555]"
                     style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                     Ask me anything about your goals, habits, or progress.
                   </p>
@@ -229,7 +229,7 @@ export function CoachPanel({ isOpen, onClose }: CoachPanelProps) {
                     </AvatarFallback>
                   </Avatar>
                   <div className="dark:bg-white/[0.05] bg-black/[0.08] px-4 py-3 rounded-2xl">
-                    <Loader2 className="w-4 h-4 animate-spin dark:text-[#888888] text-[#555555]" />
+                    <Loader2 className="w-4 h-4 animate-spin dark:text-[#525252] text-[#555555]" />
                   </div>
                 </div>
               )}
@@ -248,7 +248,7 @@ export function CoachPanel({ isOpen, onClose }: CoachPanelProps) {
                     dark:bg-white/[0.03] bg-black/[0.03]
                     dark:border-[rgba(255,152,0,0.2)] border-[rgba(245,124,0,0.3)]
                     dark:text-[#E0E0E0] text-[#1A1A1A]
-                    placeholder:dark:text-[#888888]/50 placeholder:text-[#555555]/60
+                    placeholder:dark:text-[#525252]/50 placeholder:text-[#555555]/60
                     focus:dark:border-[#FF9800] focus:border-[#F57C00]
                     focus:ring-2 focus:dark:ring-[#FF9800]/20 focus:ring-[#F57C00]/20"
                   style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px' }}

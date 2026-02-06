@@ -227,7 +227,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
           >
             Annual Review
           </h1>
-          <p className="text-[13px] dark:text-[#888888] text-[#666666] font-medium"
+          <p className="text-[13px] dark:text-[#525252] text-[#3d3d3d] font-medium"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
           >
             {year}
@@ -265,12 +265,12 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <h3 className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-4"
+            <h3 className="text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-4"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Teil 1: North Star Check
             </h3>
-            <p className="text-[13px] dark:text-[#888888] text-[#666666] mb-4"
+            <p className="text-[13px] dark:text-[#525252] text-[#3d3d3d] mb-4"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Bewerte für jeden Lebensbereich, wie gut du dein Jahresziel erreicht hast.
@@ -281,10 +281,10 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
                 {Object.entries(AREA_LABELS).map(([area, label]) => (
                   <div
                     key={area}
-                    className="p-4 dark:border-border/30 border-border/25 border rounded-lg
+                    className="p-4 dark:border-border/60 border-border/25 border rounded-lg
                       dark:bg-[rgba(26,26,26,0.3)] bg-white/50"
                   >
-                    <div className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#555555] mb-2"
+                    <div className="text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#555555] mb-2"
                       style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                     >
                       {label}
@@ -297,7 +297,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
 
                     <div className="space-y-3">
                       <div>
-                        <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#555555] mb-2"
+                        <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#555555] mb-2"
                           style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                         >
                           Erreicht?
@@ -335,7 +335,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
                       </div>
 
                       <div>
-                        <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#555555] mb-2"
+                        <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#555555] mb-2"
                           style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                         >
                           Notizen
@@ -357,7 +357,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
                           placeholder="Notizen..."
                           className="w-full min-h-[80px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                             dark:text-[#E0E0E0] text-[#1A1A1A]
-                            disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                            disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                             focus:outline-none focus:ring-0"
                           style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
                         />
@@ -380,7 +380,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Das Jahr in einem Satz?
@@ -396,7 +396,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Beschreibe das Jahr in einem Satz..."
@@ -413,7 +413,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Was war der Wendepunkt?
@@ -426,7 +426,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Der entscheidende Wendepunkt..."
@@ -443,7 +443,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Worauf bist du am meisten stolz?
@@ -456,7 +456,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Worauf bist du stolz..."
@@ -473,7 +473,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Top 3 Learnings?
@@ -489,7 +489,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Deine Top 3 Learnings..."
@@ -506,7 +506,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Was stoppen/starten/weitermachen?
@@ -522,7 +522,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Was möchtest du stoppen, starten, weitermachen..."
@@ -539,12 +539,12 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <h3 className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-4"
+            <h3 className="text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-4"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Teil 3: North Stars für {year + 1}
             </h3>
-            <p className="text-[13px] dark:text-[#888888] text-[#666666] mb-4"
+            <p className="text-[13px] dark:text-[#525252] text-[#3d3d3d] mb-4"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Definiere deine North Stars für das kommende Jahr.
@@ -553,7 +553,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
             <div className="space-y-4">
               {Object.entries(AREA_LABELS).map(([area, label]) => (
                 <div key={area}>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#555555] mb-2"
+                  <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#555555] mb-2"
                     style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                   >
                     {label}
@@ -573,7 +573,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
                     placeholder="North Star..."
                     className="w-full px-3 py-2 dark:border-border/50 border-border/40
                       border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
-                      disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                      disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                       focus:outline-none focus:ring-0"
                     style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px' }}
                   />

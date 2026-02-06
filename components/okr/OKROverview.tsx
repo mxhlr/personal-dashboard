@@ -107,7 +107,7 @@ export function OKROverview() {
             style={{ textShadow: '0 0 20px rgba(0, 229, 255, 0.2)' }}>
             OKR OVERVIEW
           </h1>
-          <p className="text-sm dark:text-[#888888] text-[#555555]"
+          <p className="text-sm dark:text-[#525252] text-[#555555]"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
             Your complete goal hierarchy at a glance
           </p>
@@ -160,7 +160,7 @@ export function OKROverview() {
                 {monthNames[currentMonth - 1].toUpperCase()} {currentYear} OKRs
               </h2>
             </div>
-            <span className="text-sm dark:text-[#888888] text-[#555555] font-bold"
+            <span className="text-sm dark:text-[#525252] text-[#555555] font-bold"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
               {monthlyOKRs?.length || 0} Objectives
             </span>
@@ -169,7 +169,7 @@ export function OKROverview() {
           {!monthlyOKRs || monthlyOKRs.length === 0 ? (
             <div className="text-center py-12">
               <TrendingUp className="w-16 h-16 dark:text-[#444444] text-[#BBBBBB] mx-auto mb-4 opacity-40" />
-              <p className="text-sm dark:text-[#666666] text-[#777777]"
+              <p className="text-sm dark:text-[#3d3d3d] text-[#777777]"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                 No OKRs set for this month.<br />
                 Complete last month&apos;s review to plan ahead.
@@ -213,7 +213,7 @@ export function OKROverview() {
                                   style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                                   {kr.description}
                                 </p>
-                                <span className="text-xs dark:text-[#888888] text-[#555555] font-bold whitespace-nowrap"
+                                <span className="text-xs dark:text-[#525252] text-[#555555] font-bold whitespace-nowrap"
                                   style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                                   0/{kr.target} {kr.unit}
                                 </span>
@@ -246,7 +246,7 @@ export function OKROverview() {
                 Q{currentQuarter} {currentYear} MILESTONES
               </h2>
             </div>
-            <span className="text-sm dark:text-[#888888] text-[#555555] font-bold"
+            <span className="text-sm dark:text-[#525252] text-[#555555] font-bold"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
               {quarterlyMilestones.length} {quarterlyMilestones.length === 1 ? "Milestone" : "Milestones"}
             </span>
@@ -255,7 +255,7 @@ export function OKROverview() {
           {quarterlyMilestones.length === 0 ? (
             <div className="text-center py-12">
               <Flag className="w-16 h-16 dark:text-[#444444] text-[#BBBBBB] mx-auto mb-4 opacity-40" />
-              <p className="text-sm dark:text-[#666666] text-[#777777]"
+              <p className="text-sm dark:text-[#3d3d3d] text-[#777777]"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                 No milestones set for this quarter.<br />
                 Complete last quarter&apos;s review to plan ahead.
@@ -309,7 +309,7 @@ export function OKROverview() {
                 WEEK {currentWeekNumber} GOALS
               </h2>
             </div>
-            <span className="text-sm dark:text-[#888888] text-[#555555] font-bold"
+            <span className="text-sm dark:text-[#525252] text-[#555555] font-bold"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
               {weeklyGoals?.length || 0} Goals
             </span>
@@ -318,7 +318,7 @@ export function OKROverview() {
           {!weeklyGoals || weeklyGoals.length === 0 ? (
             <div className="text-center py-12">
               <Target className="w-16 h-16 dark:text-[#444444] text-[#BBBBBB] mx-auto mb-4 opacity-40" />
-              <p className="text-sm dark:text-[#666666] text-[#777777]"
+              <p className="text-sm dark:text-[#3d3d3d] text-[#777777]"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                 No goals set for this week.<br />
                 Complete last week&apos;s review to plan ahead.
@@ -351,7 +351,7 @@ export function OKROverview() {
                     <div className="space-y-3">
                       {goals.map((goal, index) => (
                         <div key={index} className="flex items-start gap-3 group">
-                          <CheckCircle2 className="w-5 h-5 mt-0.5 dark:text-[#666666] text-[#999999] flex-shrink-0
+                          <CheckCircle2 className="w-5 h-5 mt-0.5 dark:text-[#3d3d3d] text-[#525252] flex-shrink-0
                             group-hover:dark:text-[#00E5FF] group-hover:text-[#0097A7] transition-colors" />
                           <p className="text-sm dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
                             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
@@ -369,7 +369,7 @@ export function OKROverview() {
 
         {/* Info Footer */}
         <div className="text-center py-6">
-          <p className="text-xs dark:text-[#666666] text-[#777777] uppercase tracking-wider"
+          <p className="text-xs dark:text-[#3d3d3d] text-[#777777] uppercase tracking-wider"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
             Complete your reviews to keep your OKRs up to date
           </p>

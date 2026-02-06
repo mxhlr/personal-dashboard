@@ -88,7 +88,7 @@ export function ReviewNotificationBar() {
     return (
       <div className="h-full flex items-center justify-center">
         <p
-          className="text-[11px] dark:text-[#666666] text-[#999999]"
+          className="text-[11px] dark:text-[#3d3d3d] text-[#525252]"
           style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
         >
           Keine anstehenden Reviews
@@ -101,7 +101,7 @@ export function ReviewNotificationBar() {
     <div className="h-full flex flex-col justify-between">
       <div>
         <h3
-          className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-4"
+          className="text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-4"
           style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
         >
           Upcoming Reviews
@@ -124,7 +124,7 @@ export function ReviewNotificationBar() {
                   'bg-yellow-500'
                 }`} />
                 <span
-                  className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666]"
+                  className="text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d]"
                   style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                 >
                   {notif.label}

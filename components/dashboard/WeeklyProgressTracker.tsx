@@ -29,7 +29,7 @@ export function WeeklyProgressTracker() {
     <div className="h-full flex flex-col justify-between">
       <div>
         <h3
-          className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-4"
+          className="text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-4"
           style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
         >
           Weekly Progress
@@ -48,7 +48,7 @@ export function WeeklyProgressTracker() {
               <div key={index} className="flex flex-col items-center gap-1">
                 <span
                   className={`text-[10px] uppercase ${
-                    isToday ? "dark:text-white text-black font-bold" : "dark:text-[#666666] text-[#999999]"
+                    isToday ? "dark:text-white text-black font-bold" : "dark:text-[#3d3d3d] text-[#525252]"
                   }`}
                   style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                 >
@@ -61,10 +61,10 @@ export function WeeklyProgressTracker() {
                       : isPast
                       ? "dark:bg-red-500/20 bg-red-500/10 border dark:border-red-500/50 border-red-500/30"
                       : isFuture
-                      ? "dark:bg-white/5 bg-black/5 border dark:border-white/10 border-black/10"
+                      ? "dark:bg-white/5 bg-black/8 border dark:border-white/10 border-black/10"
                       : isToday
                       ? "dark:bg-white/10 bg-black/10 border-2 dark:border-white/30 border-black/30 animate-pulse"
-                      : "dark:bg-white/5 bg-black/5 border dark:border-white/10 border-black/10"
+                      : "dark:bg-white/5 bg-black/8 border dark:border-white/10 border-black/10"
                   }`}
                 >
                   {isComplete && (
@@ -84,7 +84,7 @@ export function WeeklyProgressTracker() {
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <span
-            className="text-[11px] dark:text-[#888888] text-[#666666]"
+            className="text-[11px] dark:text-[#525252] text-[#3d3d3d]"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
           >
             Diese Woche
@@ -99,7 +99,7 @@ export function WeeklyProgressTracker() {
 
         <div className="flex items-center justify-between">
           <span
-            className="text-[11px] dark:text-[#888888] text-[#666666]"
+            className="text-[11px] dark:text-[#525252] text-[#3d3d3d]"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
           >
             Current Streak

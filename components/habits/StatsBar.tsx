@@ -95,7 +95,7 @@ function StatItem({
         >
           {value}
         </p>
-        <p className="text-[9px] dark:text-[#888888] text-[#3d3d3d] uppercase font-semibold font-orbitron tracking-widest">
+        <p className="text-[9px] dark:text-[#525252] text-[#3d3d3d] uppercase font-semibold font-orbitron tracking-widest">
           {label}
         </p>
         {/* Mini progress bar */}

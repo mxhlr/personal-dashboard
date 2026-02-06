@@ -374,7 +374,7 @@ export function ManageHabitsDialog({
                         {categoryHabits.map((habit, habitIndex) => (
                           <div
                             key={habit._id}
-                            className="flex items-center justify-between rounded-md border border-border/30 bg-card/20 p-2 text-sm"
+                            className="flex items-center justify-between rounded-md border border-border/60 bg-card/20 p-2 text-sm"
                           >
                             <div className="flex items-center gap-2">
                               <span

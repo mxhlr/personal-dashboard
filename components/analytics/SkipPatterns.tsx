@@ -25,7 +25,7 @@ export function SkipPatterns({ patterns }: SkipPatternsProps) {
               {pattern.reason}
             </span>
             <span
-              className="dark:text-[#888888] text-[#4D4D4D]"
+              className="dark:text-[#525252] text-[#4D4D4D]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               : {pattern.count} times

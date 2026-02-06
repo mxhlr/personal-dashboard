@@ -115,7 +115,7 @@ export class ReviewErrorBoundary extends React.Component<
                     Oops! Etwas ist schiefgelaufen
                   </h2>
                   <p
-                    className="text-[13px] dark:text-[#888888] text-[#666666]"
+                    className="text-[13px] dark:text-[#525252] text-[#3d3d3d]"
                     style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                   >
                     Beim Laden des {reviewTypeLabel} ist ein Fehler aufgetreten
@@ -126,7 +126,7 @@ export class ReviewErrorBoundary extends React.Component<
                 {this.state.error && (
                   <div className="dark:bg-white/[0.03] bg-black/[0.02] rounded-lg p-4 border dark:border-white/[0.08] border-black/[0.05]">
                     <p
-                      className="text-xs dark:text-[#888888] text-[#666666] font-mono break-all"
+                      className="text-xs dark:text-[#525252] text-[#3d3d3d] font-mono break-all"
                       style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                     >
                       {this.state.error.message}
@@ -166,7 +166,7 @@ export class ReviewErrorBoundary extends React.Component<
                 {/* Help Text */}
                 <div className="pt-4 border-t dark:border-white/[0.08] border-black/[0.05]">
                   <p
-                    className="text-[11px] dark:text-[#666666] text-[#888888] text-center"
+                    className="text-[11px] dark:text-[#3d3d3d] text-[#525252] text-center"
                     style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                   >
                     Wenn das Problem weiterhin besteht, versuche die Seite neu zu laden

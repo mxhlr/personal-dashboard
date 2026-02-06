@@ -222,7 +222,7 @@ export const HabitItem = React.memo(function HabitItem({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className={`text-[11px] font-medium font-orbitron dark:text-[#666666] text-[#525252] bg-transparent border-0 px-2 py-1 rounded-md transition-all duration-${ANIMATION_DURATION.FAST} hover:bg-foreground/5 hover:text-foreground/60`}
+                  className={`text-[11px] font-medium font-orbitron dark:text-[#3d3d3d] text-[#525252] bg-transparent border-0 px-2 py-1 rounded-md transition-all duration-${ANIMATION_DURATION.FAST} hover:bg-foreground/5 hover:text-foreground/60`}
                   aria-label={`Skip ${name} with reason`}
                 >
                   Skip

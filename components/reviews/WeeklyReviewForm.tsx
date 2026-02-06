@@ -161,7 +161,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
           >
             Weekly Review
           </h1>
-          <p className="text-[13px] dark:text-[#888888] text-[#666666] font-medium"
+          <p className="text-[13px] dark:text-[#525252] text-[#3d3d3d] font-medium"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
           >
             Week {weekNumber}, {year}
@@ -197,7 +197,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
                   style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                   Teil 1: Goal Check
                 </h3>
-                <p className="text-[11px] dark:text-[#888888] text-[#666666] mt-1"
+                <p className="text-[11px] dark:text-[#525252] text-[#3d3d3d] mt-1"
                   style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                   Markiere welche Goals du erreicht hast
                 </p>
@@ -257,7 +257,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
               })}
 
               <div className="text-center pt-2">
-                <p className="text-xs dark:text-[#888888] text-[#666666]"
+                <p className="text-xs dark:text-[#525252] text-[#3d3d3d]"
                   style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                   {Object.values(goalCompletionStatus).filter(Boolean).length} / {previousGoals.length} erreicht
                 </p>
@@ -272,7 +272,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                 Teil 2: Reflexion
               </h3>
-              <p className="text-[11px] dark:text-[#888888] text-[#666666] mt-1"
+              <p className="text-[11px] dark:text-[#525252] text-[#3d3d3d] mt-1"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                 Reflektiere über deine Woche
               </p>
@@ -289,7 +289,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Was war dein größter Erfolg diese Woche?
@@ -302,7 +302,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Beschreibe deinen größten Erfolg..."
@@ -319,7 +319,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Was hat dich am meisten frustriert?
@@ -332,7 +332,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Was war frustrierend?"
@@ -349,7 +349,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Was hättest du anders gemacht?
@@ -365,7 +365,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Was würdest du beim nächsten Mal anders machen?"
@@ -382,7 +382,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Was hast du diese Woche gelernt?
@@ -395,7 +395,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Deine wichtigsten Learnings..."
@@ -412,7 +412,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
             style={{
               background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-3"
+            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
               Worauf fokussierst du dich nächste Woche?
@@ -425,7 +425,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
               disabled={isReadOnly}
               className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                 focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                 dark:text-[#E0E0E0] text-[#1A1A1A]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
               placeholder="Dein Fokus für nächste Woche..."
@@ -439,7 +439,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                 Teil 3: Next Week Goals
               </h3>
-              <p className="text-[11px] dark:text-[#888888] text-[#666666] mt-1"
+              <p className="text-[11px] dark:text-[#525252] text-[#3d3d3d] mt-1"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                 Setze 3-5 Goals für nächste Woche
               </p>
@@ -463,7 +463,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
                     <button
                       type="button"
                       onClick={() => removeGoal(index)}
-                      className="text-[10px] dark:text-[#888888] text-[#666666]
+                      className="text-[10px] dark:text-[#525252] text-[#3d3d3d]
                         dark:hover:text-red-400 hover:text-red-600
                         uppercase tracking-wider transition-colors"
                       style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
@@ -479,7 +479,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
                   disabled={isReadOnly}
                   className="w-full min-h-[80px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
                     focus:outline-none focus:ring-0 mb-3
-                    disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
+                    disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
                     dark:text-[#E0E0E0] text-[#1A1A1A]"
                   style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
                   placeholder="Describe your goal for next week..."
@@ -487,7 +487,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
 
                 <div className="pt-2 border-t dark:border-[rgba(0,229,255,0.1)] border-[rgba(0,151,167,0.2)]">
                   <label className="text-[10px] font-bold uppercase tracking-wider
-                    dark:text-[#888888] text-[#555555] block mb-2"
+                    dark:text-[#525252] text-[#555555] block mb-2"
                     style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                     Category
                   </label>
@@ -517,7 +517,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
                 onClick={addGoal}
                 className="w-full px-6 py-3 dark:bg-white/[0.03] bg-black/[0.03]
                   dark:border dark:border-dashed dark:border-white/[0.15] border border-dashed border-black/[0.15]
-                  dark:text-[#888888] text-[#555555]
+                  dark:text-[#525252] text-[#555555]
                   dark:hover:bg-white/[0.06] hover:bg-black/[0.05]
                   dark:hover:border-[#00E5FF]/30 hover:border-[#0097A7]/40
                   dark:hover:text-[#00E5FF] hover:text-[#0097A7]

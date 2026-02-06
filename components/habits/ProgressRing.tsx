@@ -143,7 +143,7 @@ export function ProgressRing({ current, total }: ProgressRingProps) {
               >
                 {percentage}%
               </p>
-              <p className="text-[13px] dark:text-[#888888] text-[#666666] font-medium" style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+              <p className="text-[13px] dark:text-[#525252] text-[#3d3d3d] font-medium" style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                 {current}/{total} XP
               </p>
             </>

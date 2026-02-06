@@ -75,11 +75,11 @@ export const HabitCategory = React.memo(function HabitCategory({
 
   return (
     <Card
-      className={`group dark:border-border/50 border-border/30 dark:bg-card/50 bg-white/80
+      className={`group dark:border-border/50 border-border/60 dark:bg-card/50 bg-white/80
         transition-all duration-300 ease-out
         hover:shadow-xl hover:-translate-y-1
         ${isComplete ? 'ring-2 ring-[#00E676]/30 shadow-[0_0_20px_rgba(0,230,118,0.15)]' : 'shadow-sm'}
-        dark:hover:border-border hover:border-border/50`}
+        dark:hover:border-border hover:border-border/80`}
       style={{
         backgroundColor: bgColor,
         borderColor: isComplete ? 'rgba(0, 230, 118, 0.3)' : borderColor,
@@ -120,7 +120,7 @@ export const HabitCategory = React.memo(function HabitCategory({
               className={`px-2.5 py-1 rounded-full text-xs font-bold font-orbitron transition-all duration-300
                 ${isComplete
                   ? 'bg-[#00E676]/20 text-[#00E676]'
-                  : 'dark:bg-white/5 bg-black/8 dark:text-[#888888] text-[#3d3d3d]'
+                  : 'dark:bg-white/5 bg-black/8 dark:text-[#525252] text-[#3d3d3d]'
                 }`}
               aria-label={`${completedTotal} of ${habits.length} habits completed`}
             >
@@ -130,7 +130,7 @@ export const HabitCategory = React.memo(function HabitCategory({
             <button
               onClick={() => setIsExpanded(!isExpanded)}
               className={`p-1 rounded transition-all duration-300
-                dark:text-[#666666] text-[#525252]
+                dark:text-[#3d3d3d] text-[#525252]
                 hover:dark:text-[#00E5FF] hover:text-[#00B8D4]
                 ${isExpanded ? 'rotate-0' : '-rotate-90'}`}
               aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${name} category`}

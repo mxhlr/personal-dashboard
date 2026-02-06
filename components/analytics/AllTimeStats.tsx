@@ -28,7 +28,7 @@ export function AllTimeStats({ stats }: AllTimeStatsProps) {
           >
             {stats.totalWins}
           </div>
-          <div className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#555555]">
+          <div className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#525252] text-[#555555]">
             WINS
           </div>
         </div>
@@ -41,7 +41,7 @@ export function AllTimeStats({ stats }: AllTimeStatsProps) {
           >
             {stats.perfect}
           </div>
-          <div className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#555555]">
+          <div className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#525252] text-[#555555]">
             PERFECT
           </div>
         </div>
@@ -54,7 +54,7 @@ export function AllTimeStats({ stats }: AllTimeStatsProps) {
           >
             {stats.bestStreak}
           </div>
-          <div className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#888888] text-[#555555]">
+          <div className="text-xs font-bold font-orbitron uppercase tracking-wider dark:text-[#525252] text-[#555555]">
             BEST STREAK
           </div>
         </div>

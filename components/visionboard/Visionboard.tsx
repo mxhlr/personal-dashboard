@@ -121,7 +121,7 @@ function SortableImage({
             e.stopPropagation();
             setIsEditingSubtitle(true);
           }}
-          className="p-1.5 rounded-md bg-black/50 hover:bg-black/70 text-white backdrop-blur-sm cursor-pointer"
+          className="p-1.5 rounded-md bg-black/80 hover:bg-black/70 text-white backdrop-blur-sm cursor-pointer"
         >
           <Edit2 className="h-3 w-3" />
         </button>
@@ -130,7 +130,7 @@ function SortableImage({
             e.stopPropagation();
             onDelete(image._id);
           }}
-          className="p-1.5 rounded-md bg-black/50 hover:bg-black/70 text-white backdrop-blur-sm cursor-pointer"
+          className="p-1.5 rounded-md bg-black/80 hover:bg-black/70 text-white backdrop-blur-sm cursor-pointer"
         >
           <X className="h-3 w-3" />
         </button>
