@@ -1,7 +1,7 @@
 {
-  "name": "Personal Dashboard - Life Management & OKR Tracking",
-  "short_name": "Dashboard",
-  "description": "Verwalte deine Habits, Goals, OKRs und persönliche Entwicklung",
+  "name": "Real Rise",
+  "short_name": "Real Rise",
+  "description": "Personal Dashboard für Habits, Goals, OKRs und persönliche Entwicklung",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",

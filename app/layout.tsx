@@ -21,8 +21,8 @@ const orbitron = Orbitron({
 });
 
 export const metadata: Metadata = {
-  title: "Personal Dashboard",
-  description: "Track your goals, review your progress, and get AI coaching",
+  title: "Real Rise",
+  description: "Personal Dashboard für Habits, Goals, OKRs und persönliche Entwicklung",
   manifest: "/manifest.json",
   icons: {
     icon: "/icon.svg",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Dashboard",
+    title: "Real Rise",
   },
   formatDetection: {
     telephone: false,
