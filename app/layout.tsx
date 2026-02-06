@@ -25,8 +25,8 @@ export const metadata: Metadata = {
   description: "Personal Dashboard für Habits, Goals, OKRs und persönliche Entwicklung",
   manifest: "/manifest.webmanifest",
   icons: {
-    icon: "/icon-v2.svg",
-    apple: "/apple-touch-icon-v5.png",
+    icon: "/logoappicon.png",
+    apple: "/logoappicon.png",
   },
   appleWebApp: {
     capable: true,
