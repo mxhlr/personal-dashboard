@@ -12,11 +12,6 @@ import { Id } from "./_generated/dataModel";
 const XP_PER_LEVEL = 1000;
 const WEEK_DAYS = 7;
 
-// Streak Protection Constants
-const STREAK_FREEZES_PER_MONTH = 2;
-const STREAK_FREEZE_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
-const STREAK_REPAIR_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
-
 // Helper: Calculate level from total XP
 function calculateLevel(totalXP: number): number {
   return Math.floor(totalXP / XP_PER_LEVEL);
@@ -77,8 +72,6 @@ export const initializeUserStats = mutation({
       currentStreak: 0,
       longestStreak: 0,
       weekScore: 0,
-      streakFreezesAvailable: STREAK_FREEZES_PER_MONTH,
-      streakFreezeActive: false,
       updatedAt: now,
     });
 
@@ -245,8 +238,6 @@ export const updateUserStats = internalMutation({
         currentStreak: 0,
         longestStreak: 0,
         weekScore: 0,
-        streakFreezesAvailable: STREAK_FREEZES_PER_MONTH,
-        streakFreezeActive: false,
         updatedAt: now,
       });
       return;
@@ -352,135 +343,6 @@ async function calculateStreakAndWeekScore(
 // ============================================
 // STREAK PROTECTION SYSTEM
 // ============================================
-
-// Use a Streak Freeze to protect your streak for 24 hours
-export const useStreakFreeze = mutation({
-  args: {},
-  handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
-
-    const stats = await ctx.db
-      .query("userStats")
-      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
-      .first();
-
-    if (!stats) throw new Error("User stats not found");
-
-    // Initialize freezes if undefined (for existing users)
-    const freezesAvailable = stats.streakFreezesAvailable ?? STREAK_FREEZES_PER_MONTH;
-
-    // Check if user has freezes available
-    if (freezesAvailable === 0) {
-      throw new Error("No streak freezes available this month");
-    }
-
-    // Check if a freeze is already active
-    if (stats.streakFreezeActive && stats.streakFreezeExpiresAt && stats.streakFreezeExpiresAt > Date.now()) {
-      throw new Error("A streak freeze is already active");
-    }
-
-    const now = Date.now();
-    await ctx.db.patch(stats._id, {
-      streakFreezesAvailable: freezesAvailable - 1,
-      streakFreezeActive: true,
-      streakFreezeExpiresAt: now + STREAK_FREEZE_DURATION_MS,
-      lastFreezeUsedAt: now,
-      updatedAt: new Date().toISOString(),
-    });
-
-    return {
-      success: true,
-      freezesRemaining: freezesAvailable - 1,
-      expiresAt: now + STREAK_FREEZE_DURATION_MS,
-    };
-  },
-});
-
-// Check if streak freeze is active
-export const isStreakFreezeActive = query({
-  args: {},
-  handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return {
-        active: false,
-        expiresAt: undefined,
-        freezesAvailable: STREAK_FREEZES_PER_MONTH,
-      };
-    }
-
-    const stats = await ctx.db
-      .query("userStats")
-      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
-      .first();
-
-    if (!stats) {
-      return {
-        active: false,
-        expiresAt: undefined,
-        freezesAvailable: STREAK_FREEZES_PER_MONTH,
-      };
-    }
-
-    const now = Date.now();
-    const isActive = !!(
-      stats.streakFreezeActive &&
-      stats.streakFreezeExpiresAt &&
-      stats.streakFreezeExpiresAt > now
-    );
-
-    return {
-      active: isActive,
-      expiresAt: stats.streakFreezeExpiresAt ?? undefined,
-      freezesAvailable: stats.streakFreezesAvailable ?? STREAK_FREEZES_PER_MONTH,
-    };
-  },
-});
-
-// Refill streak freezes (should be called monthly via cron job or manual trigger)
-export const refillStreakFreezes = mutation({
-  args: {
-    userId: v.optional(v.string()), // Optional: if not provided, refills for current user
-  },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
-
-    const targetUserId = args.userId || identity.subject;
-
-    const stats = await ctx.db
-      .query("userStats")
-      .withIndex("by_user", (q) => q.eq("userId", targetUserId))
-      .first();
-
-    if (!stats) throw new Error("User stats not found");
-
-    await ctx.db.patch(stats._id, {
-      streakFreezesAvailable: STREAK_FREEZES_PER_MONTH,
-      updatedAt: new Date().toISOString(),
-    });
-
-    return { success: true, freezesAvailable: STREAK_FREEZES_PER_MONTH };
-  },
-});
-
-// Cron job to refill all users' streak freezes on the 1st of each month
-export const refillAllStreakFreezes = internalMutation({
-  args: {},
-  handler: async (ctx) => {
-    const allStats = await ctx.db.query("userStats").collect();
-
-    for (const stats of allStats) {
-      await ctx.db.patch(stats._id, {
-        streakFreezesAvailable: STREAK_FREEZES_PER_MONTH,
-        updatedAt: new Date().toISOString(),
-      });
-    }
-
-    return { success: true, usersUpdated: allStats.length };
-  },
-});
 
 // Reset all user data (stats, daily habits)
 export const resetAllData = mutation({
