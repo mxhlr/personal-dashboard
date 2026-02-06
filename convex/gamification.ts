@@ -402,14 +402,26 @@ export const isStreakFreezeActive = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
+    if (!identity) {
+      return {
+        active: false,
+        expiresAt: undefined,
+        freezesAvailable: STREAK_FREEZES_PER_MONTH,
+      };
+    }
 
     const stats = await ctx.db
       .query("userStats")
       .withIndex("by_user", (q) => q.eq("userId", identity.subject))
       .first();
 
-    if (!stats) return { active: false };
+    if (!stats) {
+      return {
+        active: false,
+        expiresAt: undefined,
+        freezesAvailable: STREAK_FREEZES_PER_MONTH,
+      };
+    }
 
     const now = Date.now();
     const isActive = !!(
@@ -420,7 +432,7 @@ export const isStreakFreezeActive = query({
 
     return {
       active: isActive,
-      expiresAt: stats.streakFreezeExpiresAt,
+      expiresAt: stats.streakFreezeExpiresAt ?? undefined,
       freezesAvailable: stats.streakFreezesAvailable ?? STREAK_FREEZES_PER_MONTH,
     };
   },

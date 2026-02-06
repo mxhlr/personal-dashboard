@@ -24,7 +24,8 @@ export function StreakProtection() {
     }
   };
 
-  if (!freezeStatus) {
+  // Don't render anything while loading or if there's an error
+  if (freezeStatus === undefined) {
     return null;
   }
 
