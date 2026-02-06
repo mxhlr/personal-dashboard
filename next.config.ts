@@ -8,31 +8,8 @@ const withPWA = require("next-pwa")({
   dest: "public",
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === "development",
-  runtimeCaching: [
-    {
-      urlPattern: /^https:\/\/.*\.convex\.cloud\/.*/i,
-      handler: "NetworkFirst",
-      options: {
-        cacheName: "convex-api-cache",
-        expiration: {
-          maxEntries: 100,
-          maxAgeSeconds: 60 * 60, // 1 hour
-        },
-      },
-    },
-    {
-      urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|ico)$/i,
-      handler: "CacheFirst",
-      options: {
-        cacheName: "static-image-cache",
-        expiration: {
-          maxEntries: 100,
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
-        },
-      },
-    },
-  ],
+  disable: true, // PWA komplett deaktiviert
+  runtimeCaching: [],
 });
 
 const nextConfig: NextConfig = {
