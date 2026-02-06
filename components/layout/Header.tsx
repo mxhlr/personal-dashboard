@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Settings, ChevronDown, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { PWAInstallButton } from "@/components/PWAInstallButton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -273,12 +274,15 @@ export default function Header({
             </Button>
           </nav>
 
-          {/* Right: Time, Theme Toggle, Settings */}
+          {/* Right: Time, PWA Install, Theme Toggle, Settings */}
           <div className="flex items-center gap-2 md:gap-3 ml-auto">
             {/* Current Time - Hidden on very small screens */}
             <div className="hidden sm:block text-xs md:text-sm font-orbitron dark:text-[#888888] text-[#666666] tabular-nums">
               {currentTime}
             </div>
+
+            {/* PWA Install Button - Only shows if installable and not installed */}
+            <PWAInstallButton />
 
             {/* Theme Toggle */}
             <div className="dark:hover:bg-white/5 hover:bg-black/5 rounded-lg transition-colors duration-200">
