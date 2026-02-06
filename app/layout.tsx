@@ -60,7 +60,7 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="Dashboard" />
+        <meta name="apple-mobile-web-app-title" content="Real Rise" />
       </head>
       <body suppressHydrationWarning>
         <ClientBody className={`${geistMono.variable} ${orbitron.variable} antialiased font-mona-regular`}>
