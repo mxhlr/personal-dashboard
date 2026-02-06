@@ -23,7 +23,7 @@ const orbitron = Orbitron({
 export const metadata: Metadata = {
   title: "Real Rise",
   description: "Personal Dashboard für Habits, Goals, OKRs und persönliche Entwicklung",
-  manifest: "/manifest.json",
+  manifest: "/manifest.webmanifest",
   icons: {
     icon: "/icon.svg",
     apple: "/icon-192.png",
@@ -56,7 +56,7 @@ export default function RootLayout({
   return (
     <html lang="de" suppressHydrationWarning>
       <head>
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href="/manifest.webmanifest" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
