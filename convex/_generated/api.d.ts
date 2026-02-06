@@ -16,7 +16,6 @@ import type * as categoryTimer from "../categoryTimer.js";
 import type * as coachMessages from "../coachMessages.js";
 import type * as dailyHabits from "../dailyHabits.js";
 import type * as dailyLog from "../dailyLog.js";
-import type * as fixCategoryNames from "../fixCategoryNames.js";
 import type * as gamification from "../gamification.js";
 import type * as habitAnalytics from "../habitAnalytics.js";
 import type * as habitCategories from "../habitCategories.js";
@@ -50,7 +49,6 @@ declare const fullApi: ApiFromModules<{
   coachMessages: typeof coachMessages;
   dailyHabits: typeof dailyHabits;
   dailyLog: typeof dailyLog;
-  fixCategoryNames: typeof fixCategoryNames;
   gamification: typeof gamification;
   habitAnalytics: typeof habitAnalytics;
   habitCategories: typeof habitCategories;
