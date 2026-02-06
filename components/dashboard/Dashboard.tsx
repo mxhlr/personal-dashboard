@@ -374,7 +374,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         </Card>
 
         {/* Today's Log (compact) + Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-[60%_40%] gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Today's Log - Compact Version */}
           <Card
             className={`p-6 dark:bg-card/50 bg-white/80
