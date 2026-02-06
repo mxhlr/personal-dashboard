@@ -7,6 +7,7 @@ import { dark } from "@clerk/themes";
 import ClientBody from "@/components/ClientBody";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -22,8 +23,28 @@ const orbitron = Orbitron({
 export const metadata: Metadata = {
   title: "Personal Dashboard",
   description: "Track your goals, review your progress, and get AI coaching",
+  manifest: "/manifest.json",
   icons: {
-    icon: "/convex.svg",
+    icon: "/icon.svg",
+    apple: "/icon-192.png",
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Dashboard",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
   },
 };
 
@@ -33,7 +54,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="de" suppressHydrationWarning>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Dashboard" />
+      </head>
       <body suppressHydrationWarning>
         <ClientBody className={`${geistMono.variable} ${orbitron.variable} antialiased font-mona-regular`}>
           <ThemeProvider
@@ -71,6 +99,7 @@ export default function RootLayout({
               }}
             >
               <ConvexClientProvider>{children}</ConvexClientProvider>
+              <PWAInstallPrompt />
               <Toaster richColors position="bottom-right" />
             </ClerkProvider>
           </ThemeProvider>

@@ -450,3 +450,270 @@ When adding new features:
 - [Testing Library](https://testing-library.com/docs/)
 - [Zod Documentation](https://zod.dev/)
 - [Next.js Testing](https://nextjs.org/docs/testing)
+
+---
+
+# Playwright Integration Tests
+
+## Overview
+
+In addition to Jest unit tests, this project uses **Playwright** for end-to-end integration testing of critical user flows.
+
+## Quick Links
+
+- [Quick Start Guide](./tests/QUICKSTART.md) - Get started in 5 minutes
+- [Best Practices](./tests/BEST_PRACTICES.md) - Guidelines for writing effective tests
+- [Full Playwright Documentation](./tests/README.md) - Detailed testing documentation
+
+## Test Coverage
+
+Integration tests are located in `tests/integration/` and cover:
+
+1. **Habit Completion Flow** - Completing, skipping, and tracking habits
+2. **Daily Log Submission** - Form validation and submission
+3. **Review Forms** - Weekly, Monthly, Quarterly, Annual reviews
+4. **AI Coach Panel** - Chat interactions and context awareness
+5. **Settings Management** - User preferences and configuration
+6. **Smoke Tests** - Critical application functionality
+
+## Running Playwright Tests
+
+```bash
+# All integration tests
+npm run test:integration
+
+# With UI mode (recommended for development)
+npm run test:integration:ui
+
+# Headed mode (see browser actions)
+npm run test:integration:headed
+
+# Debug mode
+npm run test:e2e:debug
+
+# Specific browser
+npm run test:e2e:chromium
+npm run test:visual:firefox
+npm run test:visual:webkit
+
+# Mobile tests
+npm run test:visual:mobile
+
+# View HTML report
+npm run test:e2e:report
+
+# Generate tests from browser interactions
+npm run test:codegen
+```
+
+## Setup
+
+### 1. Install Playwright Browsers
+
+```bash
+npx playwright install
+```
+
+### 2. Configure Test Credentials
+
+Create or update `.env.local`:
+
+```env
+CLERK_TEST_EMAIL=your-test-user@example.com
+CLERK_TEST_PASSWORD=your-secure-password
+```
+
+### 3. Run Tests
+
+```bash
+npm run test:integration
+```
+
+## Test Infrastructure
+
+### Directory Structure
+
+```
+tests/
+├── fixtures/           # Test fixtures and shared setup
+│   ├── auth.ts        # Authentication fixture
+│   ├── test-data.ts   # Test data generators
+│   └── index.ts       # Fixture exports
+├── utils/             # Utility functions
+│   ├── helpers.ts     # Common test helpers
+│   ├── page-objects.ts # Page Object Models
+│   └── setup.ts       # Test environment setup
+├── integration/       # Integration test specs
+│   ├── habit-completion.spec.ts
+│   ├── daily-log.spec.ts
+│   ├── reviews.spec.ts
+│   ├── coach-panel.spec.ts
+│   ├── settings.spec.ts
+│   └── smoke.spec.ts
+├── README.md          # Full documentation
+├── QUICKSTART.md      # Quick start guide
+└── BEST_PRACTICES.md  # Best practices guide
+```
+
+### Key Components
+
+**Fixtures** (`tests/fixtures/`)
+- `auth.ts` - Handles authentication for tests
+- `test-data.ts` - Provides test data generators
+- `index.ts` - Exports all fixtures
+
+**Utilities** (`tests/utils/`)
+- `helpers.ts` - Common helper functions (waitForElement, fillAndVerify, etc.)
+- `page-objects.ts` - Page Object Models for consistent interactions
+- `setup.ts` - Test environment setup utilities
+
+**Integration Tests** (`tests/integration/`)
+- Comprehensive test suites for each major feature
+- Tests use Page Objects for maintainability
+- Tests are independent and can run in any order
+
+## Writing Playwright Tests
+
+### Basic Test Structure
+
+```typescript
+import { test, expect } from '../fixtures';
+
+test.describe('Feature Name', () => {
+  test('should do something', async ({ authenticatedPage }) => {
+    // Navigate to page
+    await authenticatedPage.goto('/page');
+
+    // Interact with elements
+    await authenticatedPage.click('[data-testid="button"]');
+
+    // Assert expected outcome
+    await expect(authenticatedPage.locator('[data-testid="result"]')).toBeVisible();
+  });
+});
+```
+
+### Using Page Objects
+
+```typescript
+import { HabitsPage } from '../utils/page-objects';
+
+test('should complete habit', async ({ authenticatedPage }) => {
+  const habitsPage = new HabitsPage(authenticatedPage);
+  await habitsPage.goto();
+  await habitsPage.completeHabit('Morning Meditation');
+
+  expect(await habitsPage.isHabitCompleted('Morning Meditation')).toBe(true);
+});
+```
+
+### Using Test Data
+
+```typescript
+import { testHabit, generateUniqueTestData } from '../fixtures/test-data';
+
+const uniqueHabit = generateUniqueTestData(testHabit);
+await habitsPage.addHabit(uniqueHabit);
+```
+
+## CI/CD Integration
+
+### GitHub Actions
+
+Workflow defined in `.github/workflows/playwright.yml`:
+
+- Runs on push to main/develop
+- Runs on pull requests
+- Uses Chromium only for speed
+- Uploads test reports as artifacts
+
+### Required Secrets
+
+Set these in GitHub repository settings:
+- `CLERK_TEST_EMAIL`
+- `CLERK_TEST_PASSWORD`
+
+## Configuration
+
+Playwright config in `playwright.config.ts`:
+
+- **Test Directory**: `./tests`
+- **Timeout**: 60 seconds
+- **Browsers**: Chromium, Firefox, WebKit, Mobile Chrome, Mobile Safari
+- **Retries on CI**: 2
+- **Screenshots**: On failure
+- **Videos**: On failure
+- **Web Server**: Auto-starts dev server
+
+## Best Practices Summary
+
+1. **Use data-testid attributes** for stable selectors
+2. **Write independent tests** that don't rely on each other
+3. **Use Page Objects** for complex interactions
+4. **Test user behavior**, not implementation details
+5. **Handle errors gracefully** with try-catch or .catch()
+6. **Use meaningful test names** that describe the test
+7. **Wait for elements properly** (avoid hard-coded waits)
+8. **Clean up test data** after tests complete
+
+## Debugging
+
+### UI Mode (Recommended)
+
+```bash
+npm run test:integration:ui
+```
+
+Features:
+- Interactive test runner
+- Watch mode
+- Time travel debugging
+- Visual step-through
+
+### Debug Mode
+
+```bash
+npm run test:e2e:debug
+```
+
+Features:
+- Playwright Inspector
+- Step-through execution
+- Element picker
+- Console access
+
+### Screenshots & Videos
+
+- Screenshots automatically captured on failure
+- Videos recorded on failure (configurable)
+- Located in `test-results/`
+
+## Common Issues
+
+**Authentication Fails**
+- Verify credentials in `.env.local`
+- Check test user exists in Clerk dashboard
+- Update selectors if Clerk UI changed
+
+**Tests Timeout**
+- Increase timeout in `playwright.config.ts`
+- Check dev server performance
+- Verify network connectivity to Convex
+
+**Element Not Found**
+- Add `data-testid` attributes to components
+- Use codegen: `npm run test:codegen`
+- Check selector accuracy
+
+**Flaky Tests**
+- Add explicit waits: `await page.waitForSelector()`
+- Wait for network: `await page.waitForLoadState('networkidle')`
+- Use retry helpers from `tests/utils/helpers.ts`
+
+## Additional Resources
+
+- [Playwright Documentation](https://playwright.dev/)
+- [Playwright Best Practices](https://playwright.dev/docs/best-practices)
+- [Page Object Model](https://playwright.dev/docs/pom)
+- [Selectors Guide](https://playwright.dev/docs/selectors)
+- [Assertions Guide](https://playwright.dev/docs/test-assertions)
