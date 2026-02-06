@@ -1,0 +1,99 @@
+name: Lighthouse CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+        env:
+          # Add environment variables needed for build
+          NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+
+      - name: Run Lighthouse CI
+        run: npm run perf:ci
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Upload Lighthouse reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-reports
+          path: lighthouse-reports/
+          retention-days: 30
+
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // Find the latest report
+            const reportsDir = './lighthouse-reports';
+            if (fs.existsSync(reportsDir)) {
+              const files = fs.readdirSync(reportsDir)
+                .filter(f => f.endsWith('.json'))
+                .sort()
+                .reverse();
+
+              if (files.length > 0) {
+                const report = JSON.parse(fs.readFileSync(path.join(reportsDir, files[0]), 'utf8'));
+
+                // Extract key metrics
+                const categories = report.categories;
+                const audits = report.audits;
+
+                const comment = `## Lighthouse CI Results
+
+| Category | Score |
+|----------|-------|
+| Performance | ${Math.round(categories.performance.score * 100)} |
+| Accessibility | ${Math.round(categories.accessibility.score * 100)} |
+| Best Practices | ${Math.round(categories['best-practices'].score * 100)} |
+| SEO | ${Math.round(categories.seo.score * 100)} |
+
+### Core Web Vitals
+| Metric | Value | Target |
+|--------|-------|--------|
+| First Contentful Paint | ${audits['first-contentful-paint'].displayValue} | < 1.5s |
+| Largest Contentful Paint | ${audits['largest-contentful-paint'].displayValue} | < 2.5s |
+| Total Blocking Time | ${audits['total-blocking-time'].displayValue} | < 200ms |
+| Cumulative Layout Shift | ${audits['cumulative-layout-shift'].displayValue} | < 0.1 |
+| Speed Index | ${audits['speed-index'].displayValue} | < 3.0s |
+
+[View full report in artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+`;
+
+                github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: comment
+                });
+              }
+            }

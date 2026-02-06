@@ -1,0 +1,157 @@
+name: Visual Regression Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  visual-regression:
+    name: Visual Regression Testing
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run visual regression tests
+        run: npx playwright test --project=${{ matrix.browser }}
+        env:
+          CI: true
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-results-${{ matrix.browser }}
+          path: visual-regression/test-results/
+          retention-days: 30
+
+      - name: Upload Playwright Report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.browser }}
+          path: visual-regression/test-results/html-report/
+          retention-days: 30
+
+  visual-regression-mobile:
+    name: Visual Regression Testing (Mobile)
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium webkit
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run mobile visual regression tests
+        run: npm run test:visual:mobile
+        env:
+          CI: true
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-results-mobile
+          path: visual-regression/test-results/
+          retention-days: 30
+
+  comment-pr:
+    name: Comment on PR with results
+    if: github.event_name == 'pull_request'
+    needs: [visual-regression, visual-regression-mobile]
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment => {
+              return comment.user.type === 'Bot' && comment.body.includes('Visual Regression Test Results');
+            });
+
+            const output = `## Visual Regression Test Results
+
+            ✅ All visual regression tests passed!
+
+            No visual regressions detected across:
+            - Desktop browsers (Chrome, Firefox, Safari)
+            - Mobile devices (Chrome, Safari)
+
+            <details>
+            <summary>Test Coverage</summary>
+
+            - Dashboard views
+            - Habit lists (expanded/collapsed)
+            - Review forms
+            - Settings modal
+            - AI Coach panel
+            - Visionboard
+
+            </details>
+
+            *Last updated: ${new Date().toISOString()}*
+            `;
+
+            if (botComment) {
+              github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: output
+              });
+            } else {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: output
+              });
+            }

@@ -46,3 +46,13 @@ package-lock.json
 # clerk configuration (can include secrets)
 /.clerk/
 .env*.local
+
+# lighthouse reports
+/lighthouse-reports/
+/.lighthouseci/
+
+# playwright
+/visual-regression/test-results/
+/visual-regression/.auth/
+/playwright-report/
+/playwright/.cache/
