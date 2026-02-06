@@ -20,6 +20,7 @@ import type * as gamification from "../gamification.js";
 import type * as habitAnalytics from "../habitAnalytics.js";
 import type * as habitCategories from "../habitCategories.js";
 import type * as habitTemplates from "../habitTemplates.js";
+import type * as migrations_addTotalWins from "../migrations/addTotalWins.js";
 import type * as migrations_adminCommands from "../migrations/adminCommands.js";
 import type * as migrations_fixCategoryNames from "../migrations/fixCategoryNames.js";
 import type * as migrations_migrateUser from "../migrations/migrateUser.js";
@@ -53,6 +54,7 @@ declare const fullApi: ApiFromModules<{
   habitAnalytics: typeof habitAnalytics;
   habitCategories: typeof habitCategories;
   habitTemplates: typeof habitTemplates;
+  "migrations/addTotalWins": typeof migrations_addTotalWins;
   "migrations/adminCommands": typeof migrations_adminCommands;
   "migrations/fixCategoryNames": typeof migrations_fixCategoryNames;
   "migrations/migrateUser": typeof migrations_migrateUser;
