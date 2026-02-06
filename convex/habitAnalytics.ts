@@ -243,17 +243,19 @@ export const getComprehensiveAnalytics = query({
         monthlyDateGroups[habit.date].push(habit);
       });
 
-      const dailyScoresForMonth = Object.values(monthlyDateGroups).map((habits) => {
-        // XP-weighted calculation: completed XP / total possible XP
-        const completedXP = habits.reduce((sum, h) => sum + (h.completed ? h.xpEarned : 0), 0);
-        return totalPossibleXP > 0 ? (completedXP / totalPossibleXP) * 100 : 0;
-      });
+      // Option A: XP-weighted average over all days in the month
+      // Sum all completed XP and all scheduled XP for the month
+      const totalCompletedXP = monthHabits.reduce(
+        (sum, h) => sum + (h.completed ? h.xpEarned : 0),
+        0
+      );
+      const totalScheduledXP = monthHabits.length > 0
+        ? totalPossibleXP * Object.keys(monthlyDateGroups).length
+        : 0;
 
       const avgScore =
-        dailyScoresForMonth.length > 0
-          ? Math.round(
-              dailyScoresForMonth.reduce((sum, s) => sum + s, 0) / dailyScoresForMonth.length
-            )
+        totalScheduledXP > 0
+          ? Math.round((totalCompletedXP / totalScheduledXP) * 100)
           : 0;
 
       // Generate month label
