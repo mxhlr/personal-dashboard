@@ -7,7 +7,6 @@ import { dark } from "@clerk/themes";
 import ClientBody from "@/components/ClientBody";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import PWAUpdatePrompt from "@/components/PWAUpdatePrompt";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -102,7 +101,6 @@ export default function RootLayout({
             >
               <ConvexClientProvider>{children}</ConvexClientProvider>
               <Toaster richColors position="bottom-right" />
-              <PWAUpdatePrompt />
             </ClerkProvider>
           </ThemeProvider>
         </ClientBody>
