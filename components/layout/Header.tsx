@@ -104,7 +104,7 @@ export default function Header({
                     className={`justify-start font-medium font-orbitron text-sm uppercase tracking-wider h-12
                       ${activeTab === "dashboard"
                         ? 'dark:bg-[rgba(0,229,255,0.15)] bg-[rgba(0,180,220,0.15)] dark:text-[#00E5FF] text-[#0077B6]'
-                        : 'dark:text-[#888888] text-[#666666] dark:hover:text-[#00E5FF] hover:text-[#0077B6]'}`}
+                        : 'dark:text-[#888888] text-[#444444] dark:hover:text-[#00E5FF] hover:text-[#0077B6]'}`}
                   >
                     Dashboard
                   </Button>
@@ -114,7 +114,7 @@ export default function Header({
                     className={`justify-start font-medium font-orbitron text-sm uppercase tracking-wider h-12
                       ${activeTab === "daily-log"
                         ? 'dark:bg-[rgba(0,229,255,0.15)] bg-[rgba(0,180,220,0.15)] dark:text-[#00E5FF] text-[#0077B6]'
-                        : 'dark:text-[#888888] text-[#666666] dark:hover:text-[#00E5FF] hover:text-[#0077B6]'}`}
+                        : 'dark:text-[#888888] text-[#444444] dark:hover:text-[#00E5FF] hover:text-[#0077B6]'}`}
                   >
                     Daily Log
                   </Button>
@@ -124,7 +124,7 @@ export default function Header({
                     className={`justify-start font-medium font-orbitron text-sm uppercase tracking-wider h-12
                       ${activeTab === "data"
                         ? 'dark:bg-[rgba(0,229,255,0.15)] bg-[rgba(0,180,220,0.15)] dark:text-[#00E5FF] text-[#0077B6]'
-                        : 'dark:text-[#888888] text-[#666666] dark:hover:text-[#00E5FF] hover:text-[#0077B6]'}`}
+                        : 'dark:text-[#888888] text-[#444444] dark:hover:text-[#00E5FF] hover:text-[#0077B6]'}`}
                   >
                     Data
                   </Button>
@@ -134,50 +134,50 @@ export default function Header({
                     className={`justify-start font-medium font-orbitron text-sm uppercase tracking-wider h-12
                       ${activeTab === "okr"
                         ? 'dark:bg-[rgba(0,229,255,0.15)] bg-[rgba(0,180,220,0.15)] dark:text-[#00E5FF] text-[#0077B6]'
-                        : 'dark:text-[#888888] text-[#666666] dark:hover:text-[#00E5FF] hover:text-[#0077B6]'}`}
+                        : 'dark:text-[#888888] text-[#444444] dark:hover:text-[#00E5FF] hover:text-[#0077B6]'}`}
                   >
                     OKR
                   </Button>
-                  <div className="border-t dark:border-white/[0.08] border-black/[0.05] my-2" />
-                  <p className="px-3 text-xs font-orbitron dark:text-[#666666] text-[#999999] uppercase tracking-wider mb-1">
+                  <div className="border-t dark:border-white/[0.08] border-black/[0.12] my-2" />
+                  <p className="px-3 text-xs font-orbitron dark:text-[#666666] text-[#777777] uppercase tracking-wider mb-1">
                     Reviews
                   </p>
                   <Button
                     variant="ghost"
                     onClick={() => { handleTabChange("planning"); handleReviewChange("weekly"); }}
-                    className="justify-start font-orbitron text-xs uppercase tracking-wide dark:text-[#888888] text-[#666666] dark:hover:text-[#00E5FF] hover:text-[#0077B6] h-11"
+                    className="justify-start font-orbitron text-xs uppercase tracking-wide dark:text-[#888888] text-[#444444] dark:hover:text-[#00E5FF] hover:text-[#0077B6] h-11"
                   >
                     Weekly Review
                   </Button>
                   <Button
                     variant="ghost"
                     onClick={() => { handleTabChange("planning"); handleReviewChange("monthly"); }}
-                    className="justify-start font-orbitron text-xs uppercase tracking-wide dark:text-[#888888] text-[#666666] dark:hover:text-[#00E5FF] hover:text-[#0077B6] h-11"
+                    className="justify-start font-orbitron text-xs uppercase tracking-wide dark:text-[#888888] text-[#444444] dark:hover:text-[#00E5FF] hover:text-[#0077B6] h-11"
                   >
                     Monthly Review
                   </Button>
                   <Button
                     variant="ghost"
                     onClick={() => { handleTabChange("planning"); handleReviewChange("quarterly"); }}
-                    className="justify-start font-orbitron text-xs uppercase tracking-wide dark:text-[#888888] text-[#666666] dark:hover:text-[#00E5FF] hover:text-[#0077B6] h-11"
+                    className="justify-start font-orbitron text-xs uppercase tracking-wide dark:text-[#888888] text-[#444444] dark:hover:text-[#00E5FF] hover:text-[#0077B6] h-11"
                   >
                     Quarterly Review
                   </Button>
                   <Button
                     variant="ghost"
                     onClick={() => { handleTabChange("planning"); handleReviewChange("annual"); }}
-                    className="justify-start font-orbitron text-xs uppercase tracking-wide dark:text-[#888888] text-[#666666] dark:hover:text-[#00E5FF] hover:text-[#0077B6] h-11"
+                    className="justify-start font-orbitron text-xs uppercase tracking-wide dark:text-[#888888] text-[#444444] dark:hover:text-[#00E5FF] hover:text-[#0077B6] h-11"
                   >
                     Annual Review
                   </Button>
-                  <div className="border-t dark:border-white/[0.08] border-black/[0.05] my-2" />
+                  <div className="border-t dark:border-white/[0.08] border-black/[0.12] my-2" />
                   <Button
                     variant={activeTab === "visionboard" ? "default" : "ghost"}
                     onClick={() => handleTabChange("visionboard")}
                     className={`justify-start font-medium font-orbitron text-sm uppercase tracking-wider h-12
                       ${activeTab === "visionboard"
                         ? 'dark:bg-[rgba(0,229,255,0.15)] bg-[rgba(0,180,220,0.15)] dark:text-[#00E5FF] text-[#0077B6]'
-                        : 'dark:text-[#888888] text-[#666666] dark:hover:text-[#00E5FF] hover:text-[#0077B6]'}`}
+                        : 'dark:text-[#888888] text-[#444444] dark:hover:text-[#00E5FF] hover:text-[#0077B6]'}`}
                   >
                     Visionboard
                   </Button>
@@ -193,7 +193,7 @@ export default function Header({
               className={`font-medium font-orbitron text-[13px] uppercase tracking-wider transition-all duration-200
                 ${activeTab === "dashboard"
                   ? 'dark:bg-[rgba(0,229,255,0.15)] bg-[rgba(0,180,220,0.15)] dark:text-[#00E5FF] text-[#0077B6] dark:shadow-[0_0_12px_rgba(0,229,255,0.25)] shadow-sm border-0'
-                  : 'dark:text-[#888888] text-[#666666] dark:hover:text-[#00E5FF] hover:text-[#0077B6] dark:hover:bg-white/5 hover:bg-black/5'}`}
+                  : 'dark:text-[#888888] text-[#444444] dark:hover:text-[#00E5FF] hover:text-[#0077B6] dark:hover:bg-white/5 hover:bg-black/5'}`}
             >
               Dashboard
             </Button>
@@ -203,7 +203,7 @@ export default function Header({
               className={`font-medium font-orbitron text-[13px] uppercase tracking-wider transition-all duration-200
                 ${activeTab === "daily-log"
                   ? 'dark:bg-[rgba(0,229,255,0.15)] bg-[rgba(0,180,220,0.15)] dark:text-[#00E5FF] text-[#0077B6] dark:shadow-[0_0_12px_rgba(0,229,255,0.25)] shadow-sm border-0'
-                  : 'dark:text-[#888888] text-[#666666] dark:hover:text-[#00E5FF] hover:text-[#0077B6] dark:hover:bg-white/5 hover:bg-black/5'}`}
+                  : 'dark:text-[#888888] text-[#444444] dark:hover:text-[#00E5FF] hover:text-[#0077B6] dark:hover:bg-white/5 hover:bg-black/5'}`}
             >
               Daily Log
             </Button>
@@ -213,7 +213,7 @@ export default function Header({
               className={`font-medium font-orbitron text-[13px] uppercase tracking-wider transition-all duration-200
                 ${activeTab === "data"
                   ? 'dark:bg-[rgba(0,229,255,0.15)] bg-[rgba(0,180,220,0.15)] dark:text-[#00E5FF] text-[#0077B6] dark:shadow-[0_0_12px_rgba(0,229,255,0.25)] shadow-sm border-0'
-                  : 'dark:text-[#888888] text-[#666666] dark:hover:text-[#00E5FF] hover:text-[#0077B6] dark:hover:bg-white/5 hover:bg-black/5'}`}
+                  : 'dark:text-[#888888] text-[#444444] dark:hover:text-[#00E5FF] hover:text-[#0077B6] dark:hover:bg-white/5 hover:bg-black/5'}`}
             >
               Data
             </Button>
@@ -223,7 +223,7 @@ export default function Header({
               className={`font-medium font-orbitron text-[13px] uppercase tracking-wider transition-all duration-200
                 ${activeTab === "okr"
                   ? 'dark:bg-[rgba(0,229,255,0.15)] bg-[rgba(0,180,220,0.15)] dark:text-[#00E5FF] text-[#0077B6] dark:shadow-[0_0_12px_rgba(0,229,255,0.25)] shadow-sm border-0'
-                  : 'dark:text-[#888888] text-[#666666] dark:hover:text-[#00E5FF] hover:text-[#0077B6] dark:hover:bg-white/5 hover:bg-black/5'}`}
+                  : 'dark:text-[#888888] text-[#444444] dark:hover:text-[#00E5FF] hover:text-[#0077B6] dark:hover:bg-white/5 hover:bg-black/5'}`}
             >
               OKR
             </Button>

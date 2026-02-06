@@ -270,7 +270,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                   <div
                     key={okrIdx}
                     className={`p-6 rounded-xl bg-gradient-to-br ${config.gradient}
-                      dark:border dark:border-white/[0.08] border border-black/[0.05]`}
+                      dark:border dark:border-white/[0.08] border border-black/[0.08]`}
                   >
                     <div className="flex items-start gap-3 mb-4">
                       <span className="text-2xl">{config.icon}</span>
@@ -295,7 +295,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                         const progressPercentage = kr.target > 0 ? Math.min(Math.round((currentProgress / kr.target) * 100), 100) : 0;
 
                         return (
-                          <div key={krIdx} className="p-4 rounded-lg dark:bg-white/[0.03] bg-black/[0.02]">
+                          <div key={krIdx} className="p-4 rounded-lg dark:bg-white/[0.03] bg-black/[0.03]">
                             <p className="text-sm dark:text-[#E0E0E0] text-[#1A1A1A] mb-2"
                               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                               {kr.description}
@@ -317,8 +317,8 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                                     [progressKey]: value
                                   });
                                 }}
-                                className="w-20 px-2 py-1 rounded dark:bg-white/[0.05] bg-black/[0.03]
-                                  dark:border-white/[0.1] border-black/[0.08] border
+                                className="w-20 px-2 py-1 rounded dark:bg-white/[0.05] bg-black/[0.04]
+                                  dark:border-white/[0.1] border-black/[0.12] border
                                   dark:text-[#E0E0E0] text-[#1A1A1A] text-sm
                                   focus:outline-none focus:ring-2 focus:ring-[#00E5FF]/50"
                                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
@@ -608,8 +608,8 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                     value={okr.area}
                     onChange={(e) => updateOKR(okrIndex, "area", e.target.value)}
                     disabled={isReadOnly}
-                    className="w-full px-3 py-2 dark:bg-white/[0.03] bg-black/[0.02]
-                      dark:border-white/[0.1] border-black/[0.08] border rounded-lg
+                    className="w-full px-3 py-2 dark:bg-white/[0.03] bg-black/[0.03]
+                      dark:border-white/[0.1] border-black/[0.12] border rounded-lg
                       dark:text-[#E0E0E0] text-[#1A1A1A]
                       focus:outline-none focus:ring-2 focus:ring-[#00E5FF]/50
                       disabled:cursor-not-allowed text-[13px]"
@@ -623,9 +623,9 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                 </div>
 
                 {/* Key Results */}
-                <div className="pt-4 border-t dark:border-[rgba(0,229,255,0.1)] border-[rgba(0,151,167,0.15)]">
+                <div className="pt-4 border-t dark:border-[rgba(0,229,255,0.1)] border-[rgba(0,151,167,0.2)]">
                   <label className="text-[10px] font-bold uppercase tracking-wider
-                    dark:text-[#888888] text-[#666666] block mb-3"
+                    dark:text-[#888888] text-[#555555] block mb-3"
                     style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                     Key Results
                   </label>
@@ -634,11 +634,11 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                     {okr.keyResults.map((kr, krIndex) => (
                       <div
                         key={krIndex}
-                        className="pl-4 border-l-2 dark:border-[#00E5FF]/30 border-[#0097A7]/30 space-y-2"
+                        className="pl-4 border-l-2 dark:border-[#00E5FF]/30 border-[#0097A7]/40 space-y-2"
                       >
                         <div className="flex items-start justify-between gap-4">
                           <span className="text-[10px] font-bold uppercase tracking-wider
-                            dark:text-[#666666] text-[#888888]"
+                            dark:text-[#666666] text-[#777777]"
                             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                             KR {krIndex + 1}
                           </span>
@@ -673,7 +673,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                         <div className="grid grid-cols-2 gap-3">
                           <div>
                             <label className="text-[9px] font-bold uppercase tracking-wider
-                              dark:text-[#666666] text-[#888888] block mb-1"
+                              dark:text-[#666666] text-[#777777] block mb-1"
                               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                               Target
                             </label>
@@ -686,8 +686,8 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                                 updateKeyResult(okrIndex, krIndex, "target", Number(e.target.value))
                               }
                               disabled={isReadOnly}
-                              className="w-full px-3 py-2 dark:bg-white/[0.03] bg-black/[0.02]
-                                dark:border-white/[0.1] border-black/[0.08] border rounded-lg
+                              className="w-full px-3 py-2 dark:bg-white/[0.03] bg-black/[0.03]
+                                dark:border-white/[0.1] border-black/[0.12] border rounded-lg
                                 dark:text-[#E0E0E0] text-[#1A1A1A]
                                 focus:outline-none focus:ring-2 focus:ring-[#00E5FF]/50
                                 disabled:cursor-not-allowed text-[12px]"
@@ -697,7 +697,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                           </div>
                           <div>
                             <label className="text-[9px] font-bold uppercase tracking-wider
-                              dark:text-[#666666] text-[#888888] block mb-1"
+                              dark:text-[#666666] text-[#777777] block mb-1"
                               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                               Unit
                             </label>
@@ -708,8 +708,8 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                                 updateKeyResult(okrIndex, krIndex, "unit", e.target.value)
                               }
                               disabled={isReadOnly}
-                              className="w-full px-3 py-2 dark:bg-white/[0.03] bg-black/[0.02]
-                                dark:border-white/[0.1] border-black/[0.08] border rounded-lg
+                              className="w-full px-3 py-2 dark:bg-white/[0.03] bg-black/[0.03]
+                                dark:border-white/[0.1] border-black/[0.12] border rounded-lg
                                 dark:text-[#E0E0E0] text-[#1A1A1A]
                                 focus:outline-none focus:ring-2 focus:ring-[#00E5FF]/50
                                 disabled:cursor-not-allowed text-[12px]"
@@ -725,12 +725,12 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                       <button
                         type="button"
                         onClick={() => addKeyResult(okrIndex)}
-                        className="w-full px-4 py-2 dark:bg-white/[0.02] bg-black/[0.01]
-                          dark:border dark:border-dashed dark:border-white/[0.1] border border-dashed border-black/[0.08]
-                          dark:text-[#666666] text-[#888888]
-                          dark:hover:bg-white/[0.04] hover:bg-black/[0.02]
-                          dark:hover:border-[#00E5FF]/20 hover:border-[#0097A7]/20
-                          dark:hover:text-[#888888] hover:text-[#666666]
+                        className="w-full px-4 py-2 dark:bg-white/[0.02] bg-black/[0.02]
+                          dark:border dark:border-dashed dark:border-white/[0.1] border border-dashed border-black/[0.12]
+                          dark:text-[#666666] text-[#777777]
+                          dark:hover:bg-white/[0.04] hover:bg-black/[0.03]
+                          dark:hover:border-[#00E5FF]/20 hover:border-[#0097A7]/30
+                          dark:hover:text-[#888888] hover:text-[#555555]
                           uppercase tracking-wider text-[10px] font-bold transition-all duration-200 rounded-lg"
                         style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                       >
@@ -746,11 +746,11 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
               <button
                 type="button"
                 onClick={addOKR}
-                className="w-full px-6 py-3 dark:bg-white/[0.03] bg-black/[0.02]
-                  dark:border dark:border-dashed dark:border-white/[0.15] border border-dashed border-black/[0.1]
-                  dark:text-[#888888] text-[#666666]
-                  dark:hover:bg-white/[0.06] hover:bg-black/[0.04]
-                  dark:hover:border-[#00E5FF]/30 hover:border-[#0097A7]/30
+                className="w-full px-6 py-3 dark:bg-white/[0.03] bg-black/[0.03]
+                  dark:border dark:border-dashed dark:border-white/[0.15] border border-dashed border-black/[0.15]
+                  dark:text-[#888888] text-[#555555]
+                  dark:hover:bg-white/[0.06] hover:bg-black/[0.05]
+                  dark:hover:border-[#00E5FF]/30 hover:border-[#0097A7]/40
                   dark:hover:text-[#00E5FF] hover:text-[#0097A7]
                   uppercase tracking-wider text-[11px] font-bold transition-all duration-200 rounded-lg"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}

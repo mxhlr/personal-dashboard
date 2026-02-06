@@ -231,8 +231,8 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
                             [index]: e.target.checked
                           });
                         }}
-                        className="mt-1 w-5 h-5 rounded border-2 dark:border-[#00E5FF]/30 border-[#0097A7]/30
-                          dark:bg-white/[0.03] bg-black/[0.02]
+                        className="mt-1 w-5 h-5 rounded border-2 dark:border-[#00E5FF]/30 border-[#0097A7]/40
+                          dark:bg-white/[0.03] bg-black/[0.03]
                           checked:dark:bg-[#00E5FF] checked:bg-[#0097A7]
                           checked:dark:border-[#00E5FF] checked:border-[#0097A7]
                           focus:ring-2 focus:ring-[#00E5FF]/50
@@ -485,9 +485,9 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
                   placeholder="Describe your goal for next week..."
                 />
 
-                <div className="pt-2 border-t dark:border-[rgba(0,229,255,0.1)] border-[rgba(0,151,167,0.15)]">
+                <div className="pt-2 border-t dark:border-[rgba(0,229,255,0.1)] border-[rgba(0,151,167,0.2)]">
                   <label className="text-[10px] font-bold uppercase tracking-wider
-                    dark:text-[#888888] text-[#666666] block mb-2"
+                    dark:text-[#888888] text-[#555555] block mb-2"
                     style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                     Category
                   </label>
@@ -495,8 +495,8 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
                     value={goal.category}
                     onChange={(e) => updateGoal(index, "category", e.target.value)}
                     disabled={isReadOnly}
-                    className="w-full px-3 py-2 dark:bg-white/[0.03] bg-black/[0.02]
-                      dark:border-white/[0.1] border-black/[0.08] border rounded-lg
+                    className="w-full px-3 py-2 dark:bg-white/[0.03] bg-black/[0.03]
+                      dark:border-white/[0.1] border-black/[0.12] border rounded-lg
                       dark:text-[#E0E0E0] text-[#1A1A1A]
                       focus:outline-none focus:ring-2 focus:ring-[#00E5FF]/50
                       disabled:cursor-not-allowed text-[13px]"
@@ -515,11 +515,11 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
               <button
                 type="button"
                 onClick={addGoal}
-                className="w-full px-6 py-3 dark:bg-white/[0.03] bg-black/[0.02]
-                  dark:border dark:border-dashed dark:border-white/[0.15] border border-dashed border-black/[0.1]
-                  dark:text-[#888888] text-[#666666]
-                  dark:hover:bg-white/[0.06] hover:bg-black/[0.04]
-                  dark:hover:border-[#00E5FF]/30 hover:border-[#0097A7]/30
+                className="w-full px-6 py-3 dark:bg-white/[0.03] bg-black/[0.03]
+                  dark:border dark:border-dashed dark:border-white/[0.15] border border-dashed border-black/[0.15]
+                  dark:text-[#888888] text-[#555555]
+                  dark:hover:bg-white/[0.06] hover:bg-black/[0.05]
+                  dark:hover:border-[#00E5FF]/30 hover:border-[#0097A7]/40
                   dark:hover:text-[#00E5FF] hover:text-[#0097A7]
                   uppercase tracking-wider text-[11px] font-bold transition-all duration-200 rounded-lg"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}

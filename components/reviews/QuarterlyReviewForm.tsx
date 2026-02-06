@@ -317,7 +317,7 @@ export function QuarterlyReviewForm({
                 {milestoneReview.map((milestone, index) => (
                   <div
                     key={index}
-                    className="p-4 dark:border-border/30 border-border/20 border rounded-lg
+                    className="p-4 dark:border-border/30 border-border/25 border rounded-lg
                       dark:bg-[rgba(26,26,26,0.3)] bg-white/50"
                   >
                     <div className="flex items-start gap-3 mb-2">
@@ -326,7 +326,7 @@ export function QuarterlyReviewForm({
                         checked={milestone.completed}
                         onChange={() => handleMilestoneToggle(index)}
                         disabled={isReadOnly}
-                        className="mt-1 w-5 h-5 rounded dark:border-border/50 border-border/30
+                        className="mt-1 w-5 h-5 rounded dark:border-border/50 border-border/40
                           dark:checked:bg-[#00E676] checked:bg-[#00E676] transition-colors"
                       />
                       <div className="flex-1">
@@ -550,7 +550,7 @@ export function QuarterlyReviewForm({
             <div className="space-y-5">
               {Object.entries(AREA_LABELS).map(([area, label]) => (
                 <div key={area}>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2"
+                  <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#555555] mb-2"
                     style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                   >
                     {label}
@@ -570,7 +570,7 @@ export function QuarterlyReviewForm({
                           }
                           disabled={isReadOnly}
                           placeholder="Milestone..."
-                          className="flex-1 px-3 py-2 dark:border-border/50 border-border/30
+                          className="flex-1 px-3 py-2 dark:border-border/50 border-border/40
                             border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
                             disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
                             focus:outline-none focus:ring-0"
@@ -580,8 +580,8 @@ export function QuarterlyReviewForm({
                           <button
                             type="button"
                             onClick={() => removeNextMilestone(area, index)}
-                            className="px-3 py-2 dark:border-border/50 border-border/30
-                              border rounded-lg dark:hover:bg-white/[0.06] hover:bg-black/[0.04]
+                            className="px-3 py-2 dark:border-border/50 border-border/40
+                              border rounded-lg dark:hover:bg-white/[0.06] hover:bg-black/[0.05]
                               dark:text-[#E0E0E0] text-[#1A1A1A] transition-colors"
                             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                           >

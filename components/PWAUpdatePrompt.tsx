@@ -35,7 +35,7 @@ export default function PWAUpdatePrompt() {
               setShowReload(true);
 
               toast.info("Update verfügbar", {
-                description: "Eine neue Version mit aktualisiertem Icon ist verfügbar.",
+                description: "Eine neue Version ist verfügbar.",
                 duration: Infinity,
                 action: {
                   label: "Aktualisieren",

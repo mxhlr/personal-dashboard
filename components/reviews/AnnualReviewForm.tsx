@@ -281,10 +281,10 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
                 {Object.entries(AREA_LABELS).map(([area, label]) => (
                   <div
                     key={area}
-                    className="p-4 dark:border-border/30 border-border/20 border rounded-lg
+                    className="p-4 dark:border-border/30 border-border/25 border rounded-lg
                       dark:bg-[rgba(26,26,26,0.3)] bg-white/50"
                   >
-                    <div className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2"
+                    <div className="text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#555555] mb-2"
                       style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                     >
                       {label}
@@ -297,7 +297,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
 
                     <div className="space-y-3">
                       <div>
-                        <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2"
+                        <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#555555] mb-2"
                           style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                         >
                           Erreicht?
@@ -322,7 +322,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
                                   )
                                 }
                                 disabled={isReadOnly}
-                                className="w-4 h-4 dark:border-border/50 border-border/30"
+                                className="w-4 h-4 dark:border-border/50 border-border/40"
                               />
                               <span className="text-[13px] dark:text-[#E0E0E0] text-[#1A1A1A]"
                                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
@@ -335,7 +335,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
                       </div>
 
                       <div>
-                        <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2"
+                        <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#555555] mb-2"
                           style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                         >
                           Notizen
@@ -553,7 +553,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
             <div className="space-y-4">
               {Object.entries(AREA_LABELS).map(([area, label]) => (
                 <div key={area}>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#666666] mb-2"
+                  <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#888888] text-[#555555] mb-2"
                     style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                   >
                     {label}
@@ -571,7 +571,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
                     }
                     disabled={isReadOnly}
                     placeholder="North Star..."
-                    className="w-full px-3 py-2 dark:border-border/50 border-border/30
+                    className="w-full px-3 py-2 dark:border-border/50 border-border/40
                       border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
                       disabled:cursor-not-allowed placeholder:dark:text-[#888888]/50 placeholder:text-[#666666]/50
                       focus:outline-none focus:ring-0"

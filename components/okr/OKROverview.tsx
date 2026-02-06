@@ -107,14 +107,14 @@ export function OKROverview() {
             style={{ textShadow: '0 0 20px rgba(0, 229, 255, 0.2)' }}>
             OKR OVERVIEW
           </h1>
-          <p className="text-sm dark:text-[#888888] text-[#666666]"
+          <p className="text-sm dark:text-[#888888] text-[#555555]"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
             Your complete goal hierarchy at a glance
           </p>
         </div>
 
         {/* Annual North Stars */}
-        <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
+        <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.25)] dark:bg-card/50 bg-white/80
           shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
           <div className="flex items-center gap-3 mb-6">
             <Flag className="w-6 h-6 dark:text-[#00E5FF] text-[#0097A7]" />
