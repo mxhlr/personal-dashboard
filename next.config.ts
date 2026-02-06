@@ -7,7 +7,7 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 const withPWA = require("next-pwa")({
   dest: "public",
   register: true,
-  skipWaiting: true, // Auto-activate new service worker
+  skipWaiting: false, // Don't auto-activate - wait for user confirmation
   disable: process.env.NODE_ENV === "development",
   buildExcludes: [/middleware-manifest\.json$/],
   runtimeCaching: [
@@ -24,13 +24,21 @@ const withPWA = require("next-pwa")({
     },
     {
       urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/i,
-      handler: "CacheFirst",
+      handler: "NetworkFirst", // Changed to NetworkFirst for icon updates
       options: {
         cacheName: "image-cache",
         expiration: {
           maxEntries: 100,
           maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
         },
+      },
+    },
+    {
+      urlPattern: /\/icon-.*\.png$/i,
+      handler: "NetworkFirst", // Always check network for app icons
+      options: {
+        cacheName: "app-icon-cache",
+        networkTimeoutSeconds: 3,
       },
     },
   ],
