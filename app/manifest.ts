@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'Personal Dashboard für Habits, Goals, OKRs und persönliche Entwicklung',
     start_url: '/',
     scope: '/',
-    display: 'standalone',
+    display: 'browser', // Kein Auto-Install Button von Chrome
     background_color: '#000000',
     theme_color: '#000000',
     icons: [
