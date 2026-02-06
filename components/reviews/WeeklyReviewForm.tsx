@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from "@/lib/logger";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { ProgressIndicator } from "@/components/dashboard/ProgressIndicator";
@@ -91,7 +92,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
       setIsReadOnly(true);
       toast.success("Weekly Review erfolgreich gespeichert!");
     } catch (error) {
-      console.error("Error submitting review:", error);
+      logger.error("Error submitting review:", error);
       toast.error("Fehler beim Speichern des Reviews.");
     } finally {
       setIsSubmitting(false);

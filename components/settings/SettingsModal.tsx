@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from "@/lib/logger";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
@@ -75,7 +76,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       await updateProfile(profileForm);
       toast.success("Profil gespeichert!");
     } catch (error) {
-      console.error("Failed to save profile:", error);
+      logger.error("Failed to save profile:", error);
       toast.error("Fehler beim Speichern");
     } finally {
       setIsSaving(false);
@@ -88,7 +89,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       await updateNorthStars({ northStars: northStarsForm });
       toast.success("North Stars gespeichert!");
     } catch (error) {
-      console.error("Failed to save North Stars:", error);
+      logger.error("Failed to save North Stars:", error);
       toast.error("Fehler beim Speichern");
     } finally {
       setIsSaving(false);
@@ -101,7 +102,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       await updateCoachTone({ coachTone });
       toast.success("Coach Ton gespeichert!");
     } catch (error) {
-      console.error("Failed to save coach tone:", error);
+      logger.error("Failed to save coach tone:", error);
       toast.error("Fehler beim Speichern");
     } finally {
       setIsSaving(false);
@@ -317,7 +318,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                           toast.success("System zurückgesetzt und neu initialisiert!");
                           window.location.reload(); // Reload to fetch new data
                         } catch (error) {
-                          console.error("Failed to reset:", error);
+                          logger.error("Failed to reset:", error);
                           toast.error("Fehler beim Zurücksetzen");
                         }
                       }}
@@ -354,7 +355,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                         toast.success("Alle Daten wurden zurückgesetzt!");
                         window.location.reload();
                       } catch (error) {
-                        console.error("Failed to reset data:", error);
+                        logger.error("Failed to reset data:", error);
                         toast.error("Fehler beim Zurücksetzen");
                       }
                     }}

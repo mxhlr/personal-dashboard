@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useRouter, useSearchParams } from "next/navigation";
+import { logger } from "@/lib/logger";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Header from "@/components/layout/Header";
 import { Dashboard } from "@/components/dashboard/Dashboard";
@@ -14,6 +15,7 @@ import { WeeklyReviewForm } from "@/components/reviews/WeeklyReviewForm";
 import { MonthlyReviewForm } from "@/components/reviews/MonthlyReviewForm";
 import { QuarterlyReviewForm } from "@/components/reviews/QuarterlyReviewForm";
 import { AnnualReviewForm } from "@/components/reviews/AnnualReviewForm";
+import { ReviewErrorBoundary } from "@/components/reviews/ReviewErrorBoundary";
 import { SettingsModal } from "@/components/settings/SettingsModal";
 import { AnalyticsDashboard } from "@/components/analytics/AnalyticsDashboard";
 import { OKROverview } from "@/components/okr/OKROverview";
@@ -63,12 +65,12 @@ export default function DashboardPage() {
 
   // Redirect to setup if not completed
   useEffect(() => {
-    console.log("Dashboard - hasCompletedSetup:", hasCompletedSetup);
+    logger.log("Dashboard - hasCompletedSetup:", hasCompletedSetup);
     if (hasCompletedSetup === false) {
-      console.log("Redirecting to setup because hasCompletedSetup is false");
+      logger.log("Redirecting to setup because hasCompletedSetup is false");
       router.push("/setup");
     } else if (hasCompletedSetup === true) {
-      console.log("Setup is completed, staying on dashboard");
+      logger.log("Setup is completed, staying on dashboard");
     }
   }, [hasCompletedSetup, router]);
 
@@ -86,7 +88,7 @@ export default function DashboardPage() {
 
   const handleDateNavigation = (direction: "prev" | "next" | "today") => {
     // Date navigation for habit tracking (future enhancement)
-    console.log("Date navigation:", direction);
+    logger.log("Date navigation:", direction);
   };
 
   const handleTabChange = (tab: TabType) => {
@@ -117,7 +119,9 @@ export default function DashboardPage() {
 
           {/* Tab 1: Visionboard */}
           {activeTab === "visionboard" && (
-            <Visionboard />
+            <ErrorBoundary>
+              <Visionboard />
+            </ErrorBoundary>
           )}
 
           {/* Tab 2: Review & Planning */}
@@ -125,19 +129,27 @@ export default function DashboardPage() {
             <>
               {/* Review Forms */}
               {selectedReview === "weekly" && (
-                <WeeklyReviewForm year={currentYear} weekNumber={currentWeek} />
+                <ReviewErrorBoundary reviewType="weekly">
+                  <WeeklyReviewForm year={currentYear} weekNumber={currentWeek} />
+                </ReviewErrorBoundary>
               )}
 
               {selectedReview === "monthly" && (
-                <MonthlyReviewForm year={currentYear} month={currentMonth} />
+                <ReviewErrorBoundary reviewType="monthly">
+                  <MonthlyReviewForm year={currentYear} month={currentMonth} />
+                </ReviewErrorBoundary>
               )}
 
               {selectedReview === "quarterly" && (
-                <QuarterlyReviewForm year={currentYear} quarter={currentQuarter} />
+                <ReviewErrorBoundary reviewType="quarterly">
+                  <QuarterlyReviewForm year={currentYear} quarter={currentQuarter} />
+                </ReviewErrorBoundary>
               )}
 
               {selectedReview === "annual" && (
-                <AnnualReviewForm year={currentYear} />
+                <ReviewErrorBoundary reviewType="annual">
+                  <AnnualReviewForm year={currentYear} />
+                </ReviewErrorBoundary>
               )}
             </>
           )}

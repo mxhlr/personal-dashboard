@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from "@/lib/logger";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
@@ -44,7 +45,7 @@ export function SprintTimer() {
     try {
       await startTimer({ categoryId });
     } catch (error) {
-      console.error("Failed to start timer:", error);
+      logger.error("Failed to start timer:", error);
     }
   };
 
@@ -52,7 +53,7 @@ export function SprintTimer() {
     try {
       await stopTimer({});
     } catch (error) {
-      console.error("Failed to stop timer:", error);
+      logger.error("Failed to stop timer:", error);
     }
   };
 

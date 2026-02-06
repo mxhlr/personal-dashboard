@@ -385,7 +385,8 @@ export default defineSchema({
     .index("by_user_date", ["userId", "date"])
     .index("by_category", ["categoryId"])
     .index("by_user_category", ["userId", "categoryId"])
-    .index("by_user_running", ["userId", "completedAt"]),
+    .index("by_user_running", ["userId", "completedAt"])
+    .index("by_user_date_category", ["userId", "date", "categoryId"]),
 
   winConditions: defineTable({
     userId: v.string(),

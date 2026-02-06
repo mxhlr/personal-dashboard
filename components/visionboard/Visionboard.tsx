@@ -7,6 +7,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { toast } from "sonner";
 import { Plus, X, Edit2, Check } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { logger } from "@/lib/logger";
 import {
   DndContext,
   closestCorners,
@@ -339,7 +340,7 @@ export function Visionboard() {
       await updateListName({ listId, name });
       toast.success("Listenname aktualisiert");
     } catch (error) {
-      console.error("Update list name error:", error);
+      logger.error("Update list name error:", error);
       toast.error("Fehler beim Aktualisieren");
     }
   };
@@ -385,7 +386,7 @@ export function Visionboard() {
 
       toast.success("Bild hochgeladen!");
     } catch (error) {
-      console.error("Upload error:", error);
+      logger.error("Upload error:", error);
       toast.error("Fehler beim Hochladen");
     } finally {
       e.target.value = "";
@@ -397,7 +398,7 @@ export function Visionboard() {
       await deleteImage({ imageId });
       toast.success("Bild gelöscht");
     } catch (error) {
-      console.error("Delete error:", error);
+      logger.error("Delete error:", error);
       toast.error("Fehler beim Löschen");
     }
   };
@@ -410,7 +411,7 @@ export function Visionboard() {
       await updateSubtitle({ imageId, subtitle });
       toast.success("Untertitel aktualisiert");
     } catch (error) {
-      console.error("Update subtitle error:", error);
+      logger.error("Update subtitle error:", error);
       toast.error("Fehler beim Aktualisieren");
     }
   };
@@ -438,7 +439,7 @@ export function Visionboard() {
     const overSortable = (over.data.current as { sortable?: { containerId?: string } })?.sortable;
     const overListId = overSortable?.containerId || over.id;
 
-    console.log("Drag end:", { activeId, activeListId, overListId, overId: over.id });
+    logger.log("Drag end:", { activeId, activeListId, overListId, overId: over.id });
 
     // If dropped on a different list, move the image
     if (activeListId !== overListId) {
@@ -448,7 +449,7 @@ export function Visionboard() {
         await moveImageToList({ imageId: activeId, targetListId });
         toast.success("Bild verschoben");
       } catch (error) {
-        console.error("Move error:", error);
+        logger.error("Move error:", error);
         toast.error("Fehler beim Verschieben");
       }
     } else if (active.id !== over.id) {
@@ -512,7 +513,7 @@ export function Visionboard() {
                         await convertDefaultListToReal({ name });
                         toast.success("Liste erstellt");
                       } catch (error) {
-                        console.error("Convert error:", error);
+                        logger.error("Convert error:", error);
                         toast.error("Fehler beim Umbenennen");
                       }
                     }}

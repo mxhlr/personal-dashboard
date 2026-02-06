@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { logger } from "@/lib/logger";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -84,7 +85,7 @@ export function CategoryEditDialog({
       setName("");
       setColor(PREDEFINED_COLORS[0].value);
     } catch (error) {
-      console.error("Failed to save category:", error);
+      logger.error("Failed to save category:", error);
       toast.error("Failed to save category");
     } finally {
       setIsSubmitting(false);

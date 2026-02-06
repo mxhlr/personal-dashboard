@@ -1,4 +1,5 @@
 import { internalMutation } from "./_generated/server";
+import { logger } from "@/lib/logger";
 
 /**
  * Remove leading numbers from category names
@@ -20,7 +21,7 @@ export const fixCategoryNames = internalMutation({
           name: cleanName,
           updatedAt: new Date().toISOString(),
         });
-        console.log(`Updated: "${category.name}" -> "${cleanName}"`);
+        logger.log(`Updated: "${category.name}" -> "${cleanName}"`);
         updated++;
       }
     }

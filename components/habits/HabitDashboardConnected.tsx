@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { logger } from "@/lib/logger";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { WinConditionBanner } from "./WinConditionBanner";
@@ -118,7 +119,7 @@ export function HabitDashboardConnected() {
 
   const progress = maxXP > 0 ? Math.round((totalXP / maxXP) * 100) : 0;
 
-  const handleHabitToggle = async (categoryName: string, habitId: string) => {
+  const handleHabitToggle = useCallback(async (categoryName: string, habitId: string) => {
     const category = localCategories.find((c) => c.name === categoryName);
     const habit = category?.habits.find((h) => h.id === habitId);
 
@@ -181,16 +182,16 @@ export function HabitDashboardConnected() {
         });
       }
     } catch (error) {
-      console.error("Failed to toggle habit:", error);
+      logger.error("Failed to toggle habit:", error);
       toast({
         title: "Error",
         description: "Failed to update habit. Please try again.",
         variant: "destructive",
       });
     }
-  };
+  }, [localCategories, completeHabit, today, toast, startCategoryTimer, completeCategoryTimer]);
 
-  const handleHabitSkip = async (
+  const handleHabitSkip = useCallback(async (
     categoryName: string,
     habitId: string,
     reason: string
@@ -208,14 +209,14 @@ export function HabitDashboardConnected() {
         duration: 2000,
       });
     } catch (error) {
-      console.error("Failed to skip habit:", error);
+      logger.error("Failed to skip habit:", error);
       toast({
         title: "Error",
         description: "Failed to skip habit. Please try again.",
         variant: "destructive",
       });
     }
-  };
+  }, [skipHabit, today, toast]);
 
   const handleFinishDay = () => {
     // Calculate today's XP

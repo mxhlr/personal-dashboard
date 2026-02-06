@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { logger } from "@/lib/logger";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -143,7 +144,7 @@ export function ManageHabitsDialog({
       setDeleteDialogOpen(false);
       setDeleteTarget(null);
     } catch (error) {
-      console.error("Failed to delete:", error);
+      logger.error("Failed to delete:", error);
       toast.error("Failed to delete");
     } finally {
       setIsDeleting(false);
@@ -165,7 +166,7 @@ export function ManageHabitsDialog({
       });
       toast.success("Category moved up");
     } catch (error) {
-      console.error("Failed to reorder:", error);
+      logger.error("Failed to reorder:", error);
       toast.error("Failed to reorder categories");
     }
   };
@@ -185,7 +186,7 @@ export function ManageHabitsDialog({
       });
       toast.success("Category moved down");
     } catch (error) {
-      console.error("Failed to reorder:", error);
+      logger.error("Failed to reorder:", error);
       toast.error("Failed to reorder categories");
     }
   };
@@ -212,7 +213,7 @@ export function ManageHabitsDialog({
       });
       toast.success("Habit moved up");
     } catch (error) {
-      console.error("Failed to reorder:", error);
+      logger.error("Failed to reorder:", error);
       toast.error("Failed to reorder habits");
     }
   };
@@ -239,7 +240,7 @@ export function ManageHabitsDialog({
       });
       toast.success("Habit moved down");
     } catch (error) {
-      console.error("Failed to reorder:", error);
+      logger.error("Failed to reorder:", error);
       toast.error("Failed to reorder habits");
     }
   };

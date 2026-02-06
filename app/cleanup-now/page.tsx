@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { logger } from "@/lib/logger";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -26,7 +27,7 @@ export default function CleanupNowPage() {
         router.refresh();
       }, 2000);
     } catch (error) {
-      console.error("Failed:", error);
+      logger.error("Failed:", error);
       alert("Fehler: " + (error instanceof Error ? error.message : "Unknown"));
     } finally {
       setIsFixing(false);

@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 import { auth } from "@clerk/nextjs/server";
+import { logger } from "@/lib/logger";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "@/convex/_generated/api";
 
@@ -23,7 +25,7 @@ export async function POST() {
 
     return NextResponse.json({ success: true, result });
   } catch (error) {
-    console.error("Fix custom fields error:", error);
+    logger.error("Fix custom fields error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }

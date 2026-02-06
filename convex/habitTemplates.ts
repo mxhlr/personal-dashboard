@@ -99,7 +99,8 @@ export const updateTemplate = mutation({
     if (!template) throw new Error("Template not found");
     if (template.userId !== identity.subject) throw new Error("Unauthorized");
 
-    const updates: any = {};
+    type TemplateUpdate = Partial<Pick<typeof template, 'name' | 'subtitle' | 'xpValue' | 'isCore'>>;
+    const updates: TemplateUpdate = {};
 
     if (args.name !== undefined) updates.name = args.name;
     if (args.subtitle !== undefined) updates.subtitle = args.subtitle;

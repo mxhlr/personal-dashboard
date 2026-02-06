@@ -11,6 +11,7 @@ import {
   CheckCircle2
 } from "lucide-react";
 import Image from "next/image";
+import { useMemo } from "react";
 import { TodaysWinCondition } from "./TodaysWinCondition";
 import { StoicQuote } from "./StoicQuote";
 import { ReviewNotificationBar } from "./ReviewNotificationBar";
@@ -24,6 +25,90 @@ interface DashboardProps {
   onNavigate: (tab: "daily-log" | "visionboard" | "planning" | "data" | "okr") => void;
 }
 
+// Move greeting arrays outside component to prevent recreation on every render
+const MORNING_GREETINGS_TEMPLATE = [
+  "Good morning", "Rise and shine", "Fresh start", "New day",
+  "Seize the morning", "Conquer the day", "Your day awaits", "Make it count",
+  "Own this day", "Time to build", "Begin with purpose", "Command your morning",
+  "Today is yours", "Dawn of opportunity", "First light", "Early victory",
+  "Morning warrior", "Sunrise mindset", "Start with strength", "Lead the day",
+  "Master the morning", "Attack the day", "Rise with intent", "New chapter",
+  "Morning momentum", "First move wins", "Own the dawn", "Shape your day",
+  "Morning clarity", "Begin boldly", "Daybreak discipline", "Fresh energy",
+  "Awake and ready", "Build your empire", "Start unstoppable", "Morning power",
+  "Embrace the day", "New possibilities", "Command this day", "Morning mastery",
+  "Own your hours", "Begin the conquest", "Morning focus", "Day one mindset",
+  "Rise and execute", "Morning excellence", "Claim this day", "Sunrise strength",
+  "Time to dominate", "Morning mission", "Start legendary", "Own the sunrise",
+  "Wake and build", "Morning champion", "First light wins", "Begin victoriously",
+  "Daybreak drive", "Morning control", "Start with fire", "Greet greatness",
+];
+
+const AFTERNOON_GREETINGS_TEMPLATE = [
+  "Good afternoon", "Keep pushing", "Halfway there", "Making progress",
+  "Stay focused", "Momentum is yours", "Keep building", "Execute your plan",
+  "Power through", "Control what you can", "Strength in action", "Progress over perfection",
+  "Midday strength", "Stay the course", "Maintain velocity", "Keep the fire",
+  "Afternoon warrior", "Peak performance", "Discipline holds", "Stay sharp",
+  "Focus forward", "Push boundaries", "Relentless progress", "Own the grind",
+  "Steady power", "Execution mode", "Drive continues", "Afternoon mastery",
+  "Keep moving", "No surrender", "Build momentum", "Stay hungry",
+  "Afternoon focus", "Press advantage", "Control the pace", "Steady wins",
+  "Lock in", "Peak hours", "Dominate now", "Stay relentless",
+  "Forge ahead", "Keep climbing", "Afternoon drive", "Own this moment",
+  "Maintain intensity", "Never settle", "Keep building", "Consistent effort",
+  "Afternoon power", "Stay committed", "Execute flawlessly", "Own the process",
+  "Keep advancing", "Afternoon excellence", "Stay in control", "Build your legacy",
+  "Press on", "Own the afternoon", "Steady fire", "Keep winning",
+];
+
+const EVENING_GREETINGS_TEMPLATE = [
+  "Good evening", "Finishing strong", "Winding down", "Almost there",
+  "Close it out", "End with intention", "Reflect and prepare", "Tomorrow starts tonight",
+  "Own the finish", "Cap the day", "Complete the circle", "Seal the victory",
+  "Evening wisdom", "Final push", "Close strong", "Finish well",
+  "Evening warrior", "Wrap it up", "Closing hours", "End with power",
+  "Evening focus", "Final stretch", "Sunset strength", "Finish line",
+  "Evening mastery", "Close the loop", "Final moves", "End game",
+  "Evening clarity", "Sunset mindset", "Finish right", "Close victoriously",
+  "Evening drive", "Final chapter", "End strong", "Closing power",
+  "Evening excellence", "Wrap strong", "Final hours", "Close with purpose",
+  "Evening control", "Finish bold", "Last light wins", "End intentionally",
+  "Evening momentum", "Close complete", "Final push up", "End with fire",
+  "Evening discipline", "Finish clean", "Close smart", "Evening mission",
+  "Final lap", "End sharp", "Close perfect", "Evening champion",
+  "Finish legendary", "Close the day", "Evening victory", "End unstoppable",
+];
+
+const NIGHT_GREETINGS_TEMPLATE = [
+  "Burning midnight oil", "Late night hustle", "Night owl mode", "Still grinding",
+  "Own the night", "Silent hours", "Nocturnal progress", "Rest is earned",
+  "Night warrior", "Quiet power", "After hours excellence", "Moon shift activated",
+  "Midnight strength", "Night grind", "Silent power", "Dark hours win",
+  "Night mastery", "Moonlight hustle", "Late night focus", "Nocturnal warrior",
+  "Midnight drive", "Night excellence", "Silent grind", "After dark power",
+  "Night mission", "Moonlit progress", "Midnight momentum", "Night discipline",
+  "Silent hours grind", "Night time wins", "Darkness works", "Midnight warrior",
+  "Night shift strong", "Moon power", "Late night win", "Nocturnal drive",
+  "Midnight mastery", "Night conquest", "Silent victory", "Dark hours hustle",
+  "Night mode on", "Moonlight grind", "Midnight focus", "Night champion",
+  "Silent strength", "After hours win", "Night legend", "Midnight mission",
+  "Nocturnal excellence", "Night dominance", "Silent fire", "Moon shift power",
+  "Midnight control", "Night execution", "Dark hours win", "Late night legend",
+  "Nocturnal mastery", "Night finish", "Silent conquest", "Midnight victory",
+];
+
+// Weekday-specific variations (constant)
+const WEEKDAY_MESSAGES: { [key: number]: string } = {
+  1: "Monday momentum", // Monday
+  2: "Tuesday grind", // Tuesday
+  3: "Midweek power", // Wednesday
+  4: "Thursday drive", // Thursday
+  5: "Friday energy", // Friday
+  6: "Weekend warrior", // Saturday
+  0: "Sunday focus", // Sunday
+};
+
 // Dynamic greeting based on time of day and day of week
 function getDynamicGreeting(name: string, currentStreak: number): { message: string; emoji: string } {
   const now = new Date();
@@ -33,109 +118,25 @@ function getDynamicGreeting(name: string, currentStreak: number): { message: str
   // Get 2-hour block (0-11 blocks per day)
   const timeBlock = Math.floor(hour / 2);
 
-  // Time-based greetings with variations (5x expanded + stoic touches)
-  const morningGreetings = [
-    `Good morning, ${name}`, `Rise and shine, ${name}`, `Fresh start, ${name}`, `New day, ${name}`,
-    `Seize the morning, ${name}`, `Conquer the day, ${name}`, `Your day awaits, ${name}`, `Make it count, ${name}`,
-    `Own this day, ${name}`, `Time to build, ${name}`, `Begin with purpose, ${name}`, `Command your morning, ${name}`,
-    `Today is yours, ${name}`, `Dawn of opportunity, ${name}`, `First light, ${name}`, `Early victory, ${name}`,
-    `Morning warrior, ${name}`, `Sunrise mindset, ${name}`, `Start with strength, ${name}`, `Lead the day, ${name}`,
-    `Master the morning, ${name}`, `Attack the day, ${name}`, `Rise with intent, ${name}`, `New chapter, ${name}`,
-    `Morning momentum, ${name}`, `First move wins, ${name}`, `Own the dawn, ${name}`, `Shape your day, ${name}`,
-    `Morning clarity, ${name}`, `Begin boldly, ${name}`, `Daybreak discipline, ${name}`, `Fresh energy, ${name}`,
-    `Awake and ready, ${name}`, `Build your empire, ${name}`, `Start unstoppable, ${name}`, `Morning power, ${name}`,
-    `Embrace the day, ${name}`, `New possibilities, ${name}`, `Command this day, ${name}`, `Morning mastery, ${name}`,
-    `Own your hours, ${name}`, `Begin the conquest, ${name}`, `Morning focus, ${name}`, `Day one mindset, ${name}`,
-    `Rise and execute, ${name}`, `Morning excellence, ${name}`, `Claim this day, ${name}`, `Sunrise strength, ${name}`,
-    `Time to dominate, ${name}`, `Morning mission, ${name}`, `Start legendary, ${name}`, `Own the sunrise, ${name}`,
-    `Wake and build, ${name}`, `Morning champion, ${name}`, `First light wins, ${name}`, `Begin victoriously, ${name}`,
-    `Daybreak drive, ${name}`, `Morning control, ${name}`, `Start with fire, ${name}`, `Greet greatness, ${name}`,
-  ];
-
-  const afternoonGreetings = [
-    `Good afternoon, ${name}`, `Keep pushing, ${name}`, `Halfway there, ${name}`, `Making progress, ${name}`,
-    `Stay focused, ${name}`, `Momentum is yours, ${name}`, `Keep building, ${name}`, `Execute your plan, ${name}`,
-    `Power through, ${name}`, `Control what you can, ${name}`, `Strength in action, ${name}`, `Progress over perfection, ${name}`,
-    `Midday strength, ${name}`, `Stay the course, ${name}`, `Maintain velocity, ${name}`, `Keep the fire, ${name}`,
-    `Afternoon warrior, ${name}`, `Peak performance, ${name}`, `Discipline holds, ${name}`, `Stay sharp, ${name}`,
-    `Focus forward, ${name}`, `Push boundaries, ${name}`, `Relentless progress, ${name}`, `Own the grind, ${name}`,
-    `Steady power, ${name}`, `Execution mode, ${name}`, `Drive continues, ${name}`, `Afternoon mastery, ${name}`,
-    `Keep moving, ${name}`, `No surrender, ${name}`, `Build momentum, ${name}`, `Stay hungry, ${name}`,
-    `Afternoon focus, ${name}`, `Press advantage, ${name}`, `Control the pace, ${name}`, `Steady wins, ${name}`,
-    `Lock in, ${name}`, `Peak hours, ${name}`, `Dominate now, ${name}`, `Stay relentless, ${name}`,
-    `Forge ahead, ${name}`, `Keep climbing, ${name}`, `Afternoon drive, ${name}`, `Own this moment, ${name}`,
-    `Maintain intensity, ${name}`, `Never settle, ${name}`, `Keep building, ${name}`, `Consistent effort, ${name}`,
-    `Afternoon power, ${name}`, `Stay committed, ${name}`, `Execute flawlessly, ${name}`, `Own the process, ${name}`,
-    `Keep advancing, ${name}`, `Afternoon excellence, ${name}`, `Stay in control, ${name}`, `Build your legacy, ${name}`,
-    `Press on, ${name}`, `Own the afternoon, ${name}`, `Steady fire, ${name}`, `Keep winning, ${name}`,
-  ];
-
-  const eveningGreetings = [
-    `Good evening, ${name}`, `Finishing strong, ${name}`, `Winding down, ${name}`, `Almost there, ${name}`,
-    `Close it out, ${name}`, `End with intention, ${name}`, `Reflect and prepare, ${name}`, `Tomorrow starts tonight, ${name}`,
-    `Own the finish, ${name}`, `Cap the day, ${name}`, `Complete the circle, ${name}`, `Seal the victory, ${name}`,
-    `Evening wisdom, ${name}`, `Final push, ${name}`, `Close strong, ${name}`, `Finish well, ${name}`,
-    `Evening warrior, ${name}`, `Wrap it up, ${name}`, `Closing hours, ${name}`, `End with power, ${name}`,
-    `Evening focus, ${name}`, `Final stretch, ${name}`, `Sunset strength, ${name}`, `Finish line, ${name}`,
-    `Evening mastery, ${name}`, `Close the loop, ${name}`, `Final moves, ${name}`, `End game, ${name}`,
-    `Evening clarity, ${name}`, `Sunset mindset, ${name}`, `Finish right, ${name}`, `Close victoriously, ${name}`,
-    `Evening drive, ${name}`, `Final chapter, ${name}`, `End strong, ${name}`, `Closing power, ${name}`,
-    `Evening excellence, ${name}`, `Wrap strong, ${name}`, `Final hours, ${name}`, `Close with purpose, ${name}`,
-    `Evening control, ${name}`, `Finish bold, ${name}`, `Last light wins, ${name}`, `End intentionally, ${name}`,
-    `Evening momentum, ${name}`, `Close complete, ${name}`, `Final push up, ${name}`, `End with fire, ${name}`,
-    `Evening discipline, ${name}`, `Finish clean, ${name}`, `Close smart, ${name}`, `Evening mission, ${name}`,
-    `Final lap, ${name}`, `End sharp, ${name}`, `Close perfect, ${name}`, `Evening champion, ${name}`,
-    `Finish legendary, ${name}`, `Close the day, ${name}`, `Evening victory, ${name}`, `End unstoppable, ${name}`,
-  ];
-
-  const nightGreetings = [
-    `Burning midnight oil, ${name}`, `Late night hustle, ${name}`, `Night owl mode, ${name}`, `Still grinding, ${name}`,
-    `Own the night, ${name}`, `Silent hours, ${name}`, `Nocturnal progress, ${name}`, `Rest is earned, ${name}`,
-    `Night warrior, ${name}`, `Quiet power, ${name}`, `After hours excellence, ${name}`, `Moon shift activated, ${name}`,
-    `Midnight strength, ${name}`, `Night grind, ${name}`, `Silent power, ${name}`, `Dark hours win, ${name}`,
-    `Night mastery, ${name}`, `Moonlight hustle, ${name}`, `Late night focus, ${name}`, `Nocturnal warrior, ${name}`,
-    `Midnight drive, ${name}`, `Night excellence, ${name}`, `Silent grind, ${name}`, `After dark power, ${name}`,
-    `Night mission, ${name}`, `Moonlit progress, ${name}`, `Midnight momentum, ${name}`, `Night discipline, ${name}`,
-    `Silent hours grind, ${name}`, `Night time wins, ${name}`, `Darkness works, ${name}`, `Midnight warrior, ${name}`,
-    `Night shift strong, ${name}`, `Moon power, ${name}`, `Late night win, ${name}`, `Nocturnal drive, ${name}`,
-    `Midnight mastery, ${name}`, `Night conquest, ${name}`, `Silent victory, ${name}`, `Dark hours hustle, ${name}`,
-    `Night mode on, ${name}`, `Moonlight grind, ${name}`, `Midnight focus, ${name}`, `Night champion, ${name}`,
-    `Silent strength, ${name}`, `After hours win, ${name}`, `Night legend, ${name}`, `Midnight mission, ${name}`,
-    `Nocturnal excellence, ${name}`, `Night dominance, ${name}`, `Silent fire, ${name}`, `Moon shift power, ${name}`,
-    `Midnight control, ${name}`, `Night execution, ${name}`, `Dark hours win, ${name}`, `Late night legend, ${name}`,
-    `Nocturnal mastery, ${name}`, `Night finish, ${name}`, `Silent conquest, ${name}`, `Midnight victory, ${name}`,
-  ];
-
-  // Weekday-specific variations
-  const weekdayMessages: { [key: number]: string } = {
-    1: "Monday momentum", // Monday
-    2: "Tuesday grind", // Tuesday
-    3: "Midweek power", // Wednesday
-    4: "Thursday drive", // Thursday
-    5: "Friday energy", // Friday
-    6: "Weekend warrior", // Saturday
-    0: "Sunday focus", // Sunday
-  };
-
   // Time-based emoji selection (white/subtle emojis)
   let emoji = "🤍"; // Default white heart
-  let greetings = morningGreetings;
+  let greetingsTemplate = MORNING_GREETINGS_TEMPLATE;
 
   if (hour >= 5 && hour < 12) {
     // Morning: 5am - 12pm
-    greetings = morningGreetings;
+    greetingsTemplate = MORNING_GREETINGS_TEMPLATE;
     emoji = "🌅";
   } else if (hour >= 12 && hour < 18) {
     // Afternoon: 12pm - 6pm
-    greetings = afternoonGreetings;
+    greetingsTemplate = AFTERNOON_GREETINGS_TEMPLATE;
     emoji = "☀️";
   } else if (hour >= 18 && hour < 23) {
     // Evening: 6pm - 11pm
-    greetings = eveningGreetings;
+    greetingsTemplate = EVENING_GREETINGS_TEMPLATE;
     emoji = "🌆";
   } else {
     // Night: 11pm - 5am
-    greetings = nightGreetings;
+    greetingsTemplate = NIGHT_GREETINGS_TEMPLATE;
     emoji = "🌙";
   }
 
@@ -145,13 +146,13 @@ function getDynamicGreeting(name: string, currentStreak: number): { message: str
   }
 
   // Select greeting based on 30-minute time block (changes every 30 min)
-  const greetingIndex = timeBlock % greetings.length;
-  const baseGreeting = greetings[greetingIndex];
+  const greetingIndex = timeBlock % greetingsTemplate.length;
+  const baseGreeting = `${greetingsTemplate[greetingIndex]}, ${name}`;
 
   // Occasionally add weekday flavor (30% chance)
   const addWeekdayFlavor = Math.random() > 0.7;
   const message = addWeekdayFlavor
-    ? `${baseGreeting}! ${weekdayMessages[day]}!`
+    ? `${baseGreeting}! ${WEEKDAY_MESSAGES[day]}!`
     : `${baseGreeting}!`;
 
   return { message, emoji };
@@ -173,21 +174,66 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     );
   }
 
-  // Calculate today's progress
-  const coreHabits = habitTemplates.filter((h) => h.isCore);
-  const totalHabits = habitTemplates.length;
-  const completedHabits = dailyHabits.filter((h) => h.completed).length;
-  const completedCore = dailyHabits.filter((h) => h.completed && habitTemplates.find(t => t._id === h.templateId)?.isCore).length;
-  const todayProgress = totalHabits > 0 ? Math.round((completedHabits / totalHabits) * 100) : 0;
-  const todayXP = dailyHabits.reduce((sum, h) => sum + (h.completed ? h.xpEarned : 0), 0);
-  const coreComplete = completedCore === coreHabits.length && coreHabits.length > 0;
-  const todayComplete = todayProgress === 100; // Core + Extra all done = PERFECT DAY (Gold)
+  // Memoize dynamic greeting to prevent recalculation on every render
+  const greeting = useMemo(
+    () => getDynamicGreeting(profile.name, userStats.currentStreak),
+    [profile.name, userStats.currentStreak]
+  );
 
-  const visionboardPreview = visionboardImages?.slice(0, 4) || [];
-  const hasVisionboardImages = visionboardImages && visionboardImages.length > 0;
+  // Memoize expensive habit calculations to avoid recomputing on every render
+  const habitStats = useMemo(() => {
+    const coreHabits = habitTemplates.filter((h) => h.isCore);
+    const totalHabits = habitTemplates.length;
+    const completedHabits = dailyHabits.filter((h) => h.completed).length;
+    const completedCore = dailyHabits.filter(
+      (h) => h.completed && habitTemplates.find(t => t._id === h.templateId)?.isCore
+    ).length;
+    const todayProgress = totalHabits > 0 ? Math.round((completedHabits / totalHabits) * 100) : 0;
+    const todayXP = dailyHabits.reduce((sum, h) => sum + (h.completed ? h.xpEarned : 0), 0);
+    const coreComplete = completedCore === coreHabits.length && coreHabits.length > 0;
+    const todayComplete = todayProgress === 100; // Core + Extra all done = PERFECT DAY (Gold)
 
-  // Get dynamic greeting
-  const greeting = getDynamicGreeting(profile.name, userStats.currentStreak);
+    return {
+      coreHabits,
+      totalHabits,
+      completedHabits,
+      completedCore,
+      todayProgress,
+      todayXP,
+      coreComplete,
+      todayComplete,
+    };
+  }, [dailyHabits, habitTemplates]);
+
+  // Memoize visionboard calculations
+  const visionboardData = useMemo(() => {
+    const visionboardPreview = visionboardImages?.slice(0, 4) || [];
+    const hasVisionboardImages = visionboardImages && visionboardImages.length > 0;
+    return { visionboardPreview, hasVisionboardImages };
+  }, [visionboardImages]);
+
+  // Destructure for cleaner code
+  const {
+    totalHabits,
+    completedHabits,
+    todayProgress,
+    todayXP,
+    coreComplete,
+    todayComplete,
+  } = habitStats;
+
+  const { visionboardPreview, hasVisionboardImages } = visionboardData;
+
+  // Memoize SVG circle calculations for progress ring
+  const progressRingProps = useMemo(() => {
+    const radius = 28;
+    const circumference = 2 * Math.PI * radius;
+    const strokeDashoffset = circumference * (1 - todayProgress / 100);
+    return {
+      circumference,
+      strokeDashoffset,
+    };
+  }, [todayProgress]);
 
   return (
     <div
@@ -429,8 +475,8 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                         stroke="currentColor"
                         strokeWidth="4"
                         fill="none"
-                        strokeDasharray={`${2 * Math.PI * 28}`}
-                        strokeDashoffset={`${2 * Math.PI * 28 * (1 - todayProgress / 100)}`}
+                        strokeDasharray={progressRingProps.circumference}
+                        strokeDashoffset={progressRingProps.strokeDashoffset}
                         className="dark:text-[#00E5FF] text-[#0077B6] transition-all duration-500"
                         style={{
                           filter: todayProgress > 50 ? 'drop-shadow(0 0 6px currentColor)' : 'none'

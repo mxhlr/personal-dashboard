@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useQuery, useAction } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { logger } from "@/lib/logger";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -39,7 +40,7 @@ export function CoachPanel({ isOpen, onClose }: CoachPanelProps) {
     try {
       await sendMessage({ userMessage });
     } catch (error) {
-      console.error("Failed to send message:", error);
+      logger.error("Failed to send message:", error);
       alert("Fehler beim Senden der Nachricht. Bitte versuche es erneut.");
     } finally {
       setIsLoading(false);
@@ -53,6 +54,34 @@ export function CoachPanel({ isOpen, onClose }: CoachPanelProps) {
     }
   };
 
+  // Handle ESC key to close panel
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen, onClose]);
+
+  // Focus trap - focus first interactive element when panel opens
+  useEffect(() => {
+    if (isOpen) {
+      const focusableElements = document.querySelectorAll(
+        'textarea, button:not([disabled])'
+      );
+      const firstElement = Array.from(focusableElements).find(
+        (el) => el.closest('[role="dialog"], .fixed.right-0')
+      ) as HTMLElement;
+
+      if (firstElement) {
+        setTimeout(() => firstElement.focus(), 100);
+      }
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
@@ -61,6 +90,7 @@ export function CoachPanel({ isOpen, onClose }: CoachPanelProps) {
       <div
         className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity"
         onClick={onClose}
+        aria-hidden="true"
       />
 
       {/* Slide-in Panel */}
@@ -75,6 +105,9 @@ export function CoachPanel({ isOpen, onClose }: CoachPanelProps) {
         style={{
           background: 'radial-gradient(ellipse at top right, rgba(255, 152, 0, 0.08) 0%, rgba(26, 26, 26, 1) 50%)'
         }}
+        role="dialog"
+        aria-modal="true"
+        aria-label="AI Coach chat panel"
       >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b dark:border-[rgba(255,152,0,0.15)] border-[rgba(245,124,0,0.2)]">
@@ -99,6 +132,7 @@ export function CoachPanel({ isOpen, onClose }: CoachPanelProps) {
             onClick={onClose}
             className="dark:text-[#888888] text-[#666666] dark:hover:text-[#FF9800] hover:text-[#F57C00]
               dark:hover:bg-white/5 hover:bg-black/5"
+            aria-label="Close AI Coach panel"
           >
             <X className="w-5 h-5" />
           </Button>
@@ -123,6 +157,10 @@ export function CoachPanel({ isOpen, onClose }: CoachPanelProps) {
               ref={scrollRef}
               className="flex-1 overflow-y-auto p-6 space-y-4"
               style={{ scrollbarWidth: 'thin' }}
+              role="log"
+              aria-live="polite"
+              aria-atomic="false"
+              aria-label="Chat conversation"
             >
               {messages.length === 0 ? (
                 <div className="text-center py-12">
@@ -211,6 +249,7 @@ export function CoachPanel({ isOpen, onClose }: CoachPanelProps) {
                     focus:dark:border-[#FF9800] focus:border-[#F57C00]
                     focus:ring-2 focus:dark:ring-[#FF9800]/20 focus:ring-[#F57C00]/20"
                   style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px' }}
+                  aria-label="Message to AI Coach"
                 />
                 <Button
                   onClick={handleSend}
@@ -221,6 +260,7 @@ export function CoachPanel({ isOpen, onClose }: CoachPanelProps) {
                     disabled:opacity-50 disabled:cursor-not-allowed
                     transition-all duration-200"
                   style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                  aria-label="Send message to AI Coach"
                 >
                   {isLoading ? (
                     <Loader2 className="w-4 h-4 animate-spin" />

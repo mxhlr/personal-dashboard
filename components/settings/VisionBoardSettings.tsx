@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { logger } from "@/lib/logger";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -45,7 +46,7 @@ export function VisionBoardSettings() {
       setNewListIcon("");
       setIsCreating(false);
     } catch (error) {
-      console.error("Failed to create list:", error);
+      logger.error("Failed to create list:", error);
       toast.error("Fehler beim Erstellen");
     }
   };
@@ -66,7 +67,7 @@ export function VisionBoardSettings() {
       setEditName("");
       setEditIcon("");
     } catch (error) {
-      console.error("Failed to update list:", error);
+      logger.error("Failed to update list:", error);
       toast.error("Fehler beim Aktualisieren");
     }
   };
@@ -80,7 +81,7 @@ export function VisionBoardSettings() {
       await deleteList({ listId });
       toast.success("Liste gelöscht");
     } catch (error) {
-      console.error("Failed to delete list:", error);
+      logger.error("Failed to delete list:", error);
       toast.error("Fehler beim Löschen");
     }
   };
@@ -97,7 +98,7 @@ export function VisionBoardSettings() {
       });
       toast.success("Reihenfolge geändert");
     } catch (error) {
-      console.error("Failed to reorder:", error);
+      logger.error("Failed to reorder:", error);
       toast.error("Fehler beim Sortieren");
     }
   };
@@ -114,7 +115,7 @@ export function VisionBoardSettings() {
       });
       toast.success("Reihenfolge geändert");
     } catch (error) {
-      console.error("Failed to reorder:", error);
+      logger.error("Failed to reorder:", error);
       toast.error("Fehler beim Sortieren");
     }
   };

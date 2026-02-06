@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { HabitItem } from "./HabitItem";
@@ -25,7 +25,7 @@ interface HabitCategoryProps {
   onHabitSkip: (categoryId: string, habitId: string, reason: string) => void;
 }
 
-export function HabitCategory({
+export const HabitCategory = React.memo(function HabitCategory({
   icon,
   name,
   habits,
@@ -65,9 +65,13 @@ export function HabitCategory({
   const borderColor = isGray ? undefined : hexToRgba(categoryColor, 0.15);
   const borderColorLight = isGray ? undefined : hexToRgba(categoryColor, 0.1);
 
-  const handleToggle = (habitId: string) => {
+  const handleToggle = useCallback((habitId: string) => {
     onHabitToggle(name, habitId);
-  };
+  }, [name, onHabitToggle]);
+
+  const handleSkip = useCallback((habitId: string, reason: string) => {
+    onHabitSkip(name, habitId, reason);
+  }, [name, onHabitSkip]);
 
   return (
     <Card
@@ -89,6 +93,8 @@ export function HabitCategory({
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="flex items-center gap-3 text-left group/header"
+            aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${name} category`}
+            aria-expanded={isExpanded}
           >
             {/* Category number with completion indicator */}
             <div className={`relative flex items-center justify-center w-8 h-8 rounded-lg font-bold font-orbitron text-sm
@@ -97,6 +103,7 @@ export function HabitCategory({
                 ? 'bg-[#00E676]/20 text-[#00E676] shadow-[0_0_10px_rgba(0,230,118,0.3)]'
                 : 'dark:bg-white/5 bg-black/5 dark:text-[#E0E0E0] text-[#333333]'
               }`}
+              aria-hidden="true"
             >
               {isComplete ? '✓' : categoryNumber}
             </div>
@@ -109,11 +116,14 @@ export function HabitCategory({
           </button>
           <div className="flex items-center gap-3">
             {/* Progress fraction with visual enhancement */}
-            <div className={`px-2.5 py-1 rounded-full text-xs font-bold font-orbitron transition-all duration-300
-              ${isComplete
-                ? 'bg-[#00E676]/20 text-[#00E676]'
-                : 'dark:bg-white/5 bg-black/5 dark:text-[#888888] text-[#666666]'
-              }`}>
+            <div
+              className={`px-2.5 py-1 rounded-full text-xs font-bold font-orbitron transition-all duration-300
+                ${isComplete
+                  ? 'bg-[#00E676]/20 text-[#00E676]'
+                  : 'dark:bg-white/5 bg-black/5 dark:text-[#888888] text-[#666666]'
+                }`}
+              aria-label={`${completedTotal} of ${habits.length} habits completed`}
+            >
               {completedTotal}/{habits.length}
             </div>
             {/* Animated chevron */}
@@ -123,6 +133,8 @@ export function HabitCategory({
                 dark:text-[#666666] text-[#999999]
                 hover:dark:text-[#00E5FF] hover:text-[#00B8D4]
                 ${isExpanded ? 'rotate-0' : '-rotate-90'}`}
+              aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${name} category`}
+              aria-expanded={isExpanded}
             >
               <ChevronDown className="h-4 w-4" />
             </button>
@@ -142,13 +154,17 @@ export function HabitCategory({
         <CardContent className="space-y-4 pt-0">
           {/* Core Habits Section */}
           {coreHabits.length > 0 && (
-            <div className="space-y-0 divide-y dark:divide-white/[0.06] divide-black/[0.06]">
+            <div
+              className="space-y-0 divide-y dark:divide-white/[0.06] divide-black/[0.06]"
+              role="list"
+              aria-label={`Core habits in ${name} category`}
+            >
               {coreHabits.map((habit) => (
                 <HabitItem
                   key={habit.id}
                   {...habit}
                   onToggle={handleToggle}
-                  onSkip={(id, reason) => onHabitSkip(name, id, reason)}
+                  onSkip={handleSkip}
                 />
               ))}
             </div>
@@ -158,8 +174,12 @@ export function HabitCategory({
           {extraHabits.length > 0 && (
             <div className="space-y-0 border-t dark:border-white/[0.06] border-black/[0.06] pt-4">
               {!coreComplete ? (
-                <div className="flex w-full items-center gap-2 px-1 py-2 text-xs opacity-60">
-                  <ChevronRight className="h-3 w-3 text-muted-foreground/40" />
+                <div
+                  className="flex w-full items-center gap-2 px-1 py-2 text-xs opacity-60"
+                  role="status"
+                  aria-label={`${extraHabits.length} extra habits locked. Complete core habits to unlock.`}
+                >
+                  <ChevronRight className="h-3 w-3 text-muted-foreground/40" aria-hidden="true" />
                   <span className="text-muted-foreground/60 font-orbitron">
                     Complete core to unlock
                   </span>
@@ -170,8 +190,12 @@ export function HabitCategory({
                 </div>
               ) : (
                 <div className="space-y-0 rounded-lg border dark:border-[#00E5FF]/30 border-[#00E5FF]/20 dark:bg-[rgba(0,229,255,0.03)] bg-[rgba(0,180,220,0.04)] p-3">
-                  <div className="flex w-full items-center gap-2 px-1 py-2 text-xs">
-                    <ChevronDown className="h-3 w-3 text-cyan-500" />
+                  <div
+                    className="flex w-full items-center gap-2 px-1 py-2 text-xs"
+                    role="status"
+                    aria-label={`${extraHabits.length} extra habits unlocked. ${completedExtra} of ${extraHabits.length} completed.`}
+                  >
+                    <ChevronDown className="h-3 w-3 text-cyan-500" aria-hidden="true" />
                     <span className="text-cyan-600 dark:text-cyan-400 font-medium font-orbitron">
                       Extras unlocked
                     </span>
@@ -182,13 +206,17 @@ export function HabitCategory({
                   </div>
 
                   {/* Extra Habits List - always shown when unlocked */}
-                  <div className="space-y-0 divide-y dark:divide-white/[0.06] divide-black/[0.06]">
+                  <div
+                    className="space-y-0 divide-y dark:divide-white/[0.06] divide-black/[0.06]"
+                    role="list"
+                    aria-label={`Extra habits in ${name} category`}
+                  >
                     {extraHabits.map((habit) => (
                       <HabitItem
                         key={habit.id}
                         {...habit}
                         onToggle={handleToggle}
-                        onSkip={(id, reason) => onHabitSkip(name, id, reason)}
+                        onSkip={handleSkip}
                       />
                     ))}
                   </div>
@@ -200,4 +228,4 @@ export function HabitCategory({
       )}
     </Card>
   );
-}
+});

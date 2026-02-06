@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
+import { logger } from "@/lib/logger";
 import Step1Welcome from "./Step1Welcome";
 import Step2AboutYou from "./Step2AboutYou";
 import Step3NorthStars from "./Step3NorthStars";
@@ -90,7 +91,7 @@ export default function SetupWizard() {
 
   const completeSetup = async () => {
     try {
-      console.log("Starting setup...");
+      logger.log("Starting setup...");
       const currentYear = new Date().getFullYear();
       const currentQuarter = Math.ceil((new Date().getMonth() + 1) / 3);
 
@@ -126,8 +127,8 @@ export default function SetupWizard() {
         })),
       ];
 
-      console.log("Creating user profile...");
-      console.log("Profile data:", {
+      logger.log("Creating user profile...");
+      logger.log("Profile data:", {
         name: data.name,
         role: data.role,
         mainProject: data.mainProject,
@@ -146,17 +147,17 @@ export default function SetupWizard() {
         coachTone: data.coachTone,
       });
 
-      console.log("User profile created successfully");
+      logger.log("User profile created successfully");
 
       // Create tracking fields
-      console.log("Creating tracking fields...");
-      console.log("Tracking fields:", data.trackingFields);
+      logger.log("Creating tracking fields...");
+      logger.log("Tracking fields:", data.trackingFields);
 
       await createTrackingFields({
         selectedFields: data.trackingFields,
       });
 
-      console.log("Tracking fields created successfully");
+      logger.log("Tracking fields created successfully");
 
       // Show success step
       nextStep();
@@ -167,8 +168,8 @@ export default function SetupWizard() {
         router.refresh();
       }, 2000);
     } catch (error) {
-      console.error("Setup error:", error);
-      console.error("Error details:", JSON.stringify(error, null, 2));
+      logger.error("Setup error:", error);
+      logger.error("Error details:", JSON.stringify(error, null, 2));
       alert(`Fehler beim Speichern: ${error instanceof Error ? error.message : 'Unbekannter Fehler'}. Bitte versuche es erneut.`);
     }
   };

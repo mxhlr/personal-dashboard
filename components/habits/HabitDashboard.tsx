@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { logger } from "@/lib/logger";
 import { WinConditionBanner } from "./WinConditionBanner";
 import { StatsBar } from "./StatsBar";
 import { ProgressRing } from "./ProgressRing";
@@ -125,11 +126,11 @@ export function HabitDashboard() {
     habitId: string,
     reason: string
   ) => {
-    console.log(`Skipped ${habitId} in ${categoryName}: ${reason}`);
+    logger.log(`Skipped ${habitId} in ${categoryName}: ${reason}`);
   };
 
   const handleFinishDay = () => {
-    console.log("Finishing day...");
+    logger.log("Finishing day...");
   };
 
   return (

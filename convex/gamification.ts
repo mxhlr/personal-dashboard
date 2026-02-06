@@ -258,7 +258,19 @@ export const updateUserStats = internalMutation({
 
 // Helper to calculate streaks and week score
 async function calculateStreakAndWeekScore(
-  ctx: any,
+  ctx: {
+    db: {
+      query: (table: string) => {
+        collect: () => Promise<Array<{
+          _id: Id<"dailyHabits">;
+          userId: string;
+          date: string;
+          completed: boolean;
+          [key: string]: unknown;
+        }>>;
+      };
+    };
+  },
   userId: string,
   currentDate: string
 ): Promise<{ currentStreak: number; weekScore: number }> {
@@ -268,7 +280,7 @@ async function calculateStreakAndWeekScore(
     .collect();
 
   // Filter to only this user's habits
-  const userHabits = allHabits.filter((h: any) => h.userId === userId);
+  const userHabits = allHabits.filter((h) => h.userId === userId);
 
   // Group by date and check if each day has any completed habits
   const dateCompletionMap = new Map<string, boolean>();

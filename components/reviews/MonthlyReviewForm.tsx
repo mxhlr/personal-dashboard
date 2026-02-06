@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from "@/lib/logger";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { format } from "date-fns";
@@ -107,7 +108,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
       setIsReadOnly(true);
       toast.success("Monthly Review erfolgreich gespeichert!");
     } catch (error) {
-      console.error("Error submitting review:", error);
+      logger.error("Error submitting review:", error);
       toast.error("Fehler beim Speichern des Reviews.");
     } finally {
       setIsSubmitting(false);
@@ -302,11 +303,18 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                             <div className="flex items-center gap-3">
                               <input
                                 type="number"
+                                min="0"
+                                max={kr.target}
                                 value={currentProgress}
                                 onChange={(e) => {
+                                  const value = Number(e.target.value);
+                                  if (value < 0 || value > kr.target) {
+                                    toast.error(`Progress must be between 0 and ${kr.target}`);
+                                    return;
+                                  }
                                   setKeyResultProgress({
                                     ...keyResultProgress,
-                                    [progressKey]: Number(e.target.value)
+                                    [progressKey]: value
                                   });
                                 }}
                                 className="w-20 px-2 py-1 rounded dark:bg-white/[0.05] bg-black/[0.03]
@@ -671,6 +679,8 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                             </label>
                             <input
                               type="number"
+                              min="0"
+                              max="100000"
                               value={kr.target}
                               onChange={(e) =>
                                 updateKeyResult(okrIndex, krIndex, "target", Number(e.target.value))

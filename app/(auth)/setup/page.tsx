@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
+import { logger } from "@/lib/logger";
 import SetupWizard from "@/components/onboarding/SetupWizard";
 
 export default function SetupPage() {
@@ -13,7 +14,7 @@ export default function SetupPage() {
   // Redirect to dashboard if setup is already completed
   useEffect(() => {
     if (hasCompletedSetup === true) {
-      console.log("Setup already completed, redirecting to dashboard");
+      logger.log("Setup already completed, redirecting to dashboard");
       router.push("/");
       router.refresh();
     }

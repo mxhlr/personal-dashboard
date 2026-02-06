@@ -202,8 +202,55 @@ export const sendMessage = action({
   },
 });
 
+// Type definitions for user context
+type UserProfile = {
+  name: string;
+  role: string;
+  mainProject: string;
+  northStars: {
+    wealth: string;
+    health: string;
+    love: string;
+    happiness: string;
+  };
+  quarterlyMilestones: Array<{
+    quarter: number;
+    year: number;
+    area: string;
+    milestone: string;
+    completed: boolean;
+  }>;
+  coachTone: string;
+};
+
+type RecentLog = {
+  date: string;
+  completed: boolean;
+  wellbeing?: {
+    energy: number;
+    satisfaction: number;
+    stress: number;
+  };
+  tracking: Record<string, unknown>;
+};
+
+type TrackingField = {
+  name: string;
+  type: string;
+  hasStreak: boolean;
+  currentStreak?: number;
+  longestStreak?: number;
+  weeklyTarget?: number;
+};
+
+type UserContext = {
+  profile: UserProfile;
+  recentLogs: RecentLog[];
+  trackingFields: TrackingField[];
+};
+
 // Helper function to build system prompt
-function buildSystemPrompt(userContext: any): string {
+function buildSystemPrompt(userContext: UserContext): string {
   const { profile, recentLogs, trackingFields } = userContext;
 
   let toneInstruction = "";
@@ -255,21 +302,21 @@ Nutze die Du-Form. Sei authentisch und menschlich. Halte Antworten prägnant (2-
 **Aktuelle Milestones (dieses Quartal):**
 ${profile.quarterlyMilestones
   .slice(0, 4)
-  .map((m: any) => `- ${m.area.toUpperCase()}: ${m.milestone}`)
+  .map((m) => `- ${m.area.toUpperCase()}: ${m.milestone}`)
   .join("\n")}
 
 **Tracking Fields & Streaks:**
 ${trackingFields
-  .filter((f: any) => f.hasStreak)
+  .filter((f) => f.hasStreak)
   .map(
-    (f: any) =>
+    (f) =>
       `- ${f.name}: Current Streak ${f.currentStreak || 0}, Longest ${f.longestStreak || 0}`
   )
   .join("\n")}
 
 **Letzte 7 Tage:**
 ${recentLogs
-  .map((log: any) => {
+  .map((log) => {
     const wellbeing = log.wellbeing
       ? `Energy: ${log.wellbeing.energy}, Satisfaction: ${log.wellbeing.satisfaction}, Stress: ${log.wellbeing.stress}`
       : "Keine Wellbeing Daten";

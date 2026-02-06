@@ -1,5 +1,7 @@
 import { v } from "convex/values";
+import { logger } from "@/lib/logger";
 import { mutation, query, internalMutation } from "./_generated/server";
+import { logger } from "@/lib/logger";
 
 /**
  * Habit Categories CRUD
@@ -74,7 +76,12 @@ export const updateCategory = mutation({
     if (category.userId !== identity.subject) throw new Error("Unauthorized");
 
     const now = new Date().toISOString();
-    const updates: any = { updatedAt: now };
+
+    type CategoryUpdate = Partial<Pick<typeof category, 'name' | 'icon' | 'requiresCoreCompletion'>> & {
+      updatedAt: string
+    };
+
+    const updates: CategoryUpdate = { updatedAt: now };
 
     if (args.name !== undefined) updates.name = args.name;
     if (args.icon !== undefined) updates.icon = args.icon;
@@ -168,7 +175,7 @@ export const fixCategoryNames = internalMutation({
           name: cleanName,
           updatedAt: new Date().toISOString(),
         });
-        console.log(`Updated: "${category.name}" -> "${cleanName}"`);
+        logger.log(`Updated: "${category.name}" -> "${cleanName}"`);
         updated++;
       }
     }

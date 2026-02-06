@@ -66,6 +66,10 @@ export default function Step5Tracking({
   };
 
   const updateWeeklyTarget = (fieldName: string, target: number) => {
+    // Validate target is between 1 and 7
+    if (target < 1 || target > 7) {
+      return;
+    }
     const updatedFields = data.trackingFields.map((f) =>
       f.name === fieldName ? { ...f, weeklyTarget: target } : f
     );

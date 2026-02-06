@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { logger } from "@/lib/logger";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -57,8 +58,8 @@ export function HabitEditDialog({
     }
 
     const xpValue = parseInt(xp, 10);
-    if (isNaN(xpValue) || xpValue <= 0) {
-      toast.error("XP value must be a positive number");
+    if (isNaN(xpValue) || xpValue <= 0 || xpValue > 10000) {
+      toast.error("XP must be between 1 and 10,000");
       return;
     }
 
@@ -88,7 +89,7 @@ export function HabitEditDialog({
       onOpenChange(false);
       resetForm();
     } catch (error) {
-      console.error("Failed to save habit:", error);
+      logger.error("Failed to save habit:", error);
       toast.error("Failed to save habit");
     } finally {
       setIsSubmitting(false);
@@ -160,12 +161,13 @@ export function HabitEditDialog({
                 id="xp"
                 type="number"
                 min="1"
+                max="10000"
                 value={xp}
                 onChange={(e) => setXp(e.target.value)}
                 placeholder="10"
               />
               <p className="text-xs text-muted-foreground">
-                How much XP this habit is worth when completed
+                How much XP this habit is worth when completed (1-10,000)
               </p>
             </div>
 

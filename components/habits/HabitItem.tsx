@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { logger } from "@/lib/logger";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import {
@@ -33,7 +34,7 @@ const SKIP_REASONS = [
   "Chose something else",
 ];
 
-export function HabitItem({
+export const HabitItem = React.memo(function HabitItem({
   id,
   name,
   subtitle,
@@ -71,8 +72,8 @@ export function HabitItem({
 
   const handleXPSave = async () => {
     const newXP = parseInt(xpValue, 10);
-    if (isNaN(newXP) || newXP <= 0) {
-      toast.error("XP must be a positive number");
+    if (isNaN(newXP) || newXP <= 0 || newXP > 10000) {
+      toast.error("XP must be between 1 and 10,000");
       setXpValue(xp.toString());
       setIsEditingXP(false);
       return;
@@ -86,7 +87,7 @@ export function HabitItem({
         });
         toast.success("XP value updated");
       } catch (error) {
-        console.error("Failed to update XP:", error);
+        logger.error("Failed to update XP:", error);
         toast.error("Failed to update XP");
         setXpValue(xp.toString());
       }
@@ -128,6 +129,7 @@ export function HabitItem({
       className={`group relative flex items-center gap-3 py-3 px-2 -mx-2 rounded-lg transition-all duration-300 ${
         showRowHighlight ? 'animate-[row-highlight_0.8s_ease-out]' : ''
       } hover:bg-foreground/[0.02]`}
+      role="listitem"
     >
       {/* Enhanced Checkbox with pulse animation */}
       <Checkbox
@@ -139,6 +141,7 @@ export function HabitItem({
           data-[state=checked]:!text-[#FFFFFF] data-[state=checked]:!rounded-[6px]
           data-[state=checked]:!opacity-100 data-[state=checked]:scale-110
           ${isAnimating ? 'animate-[checkbox-pulse_0.6s_ease-out]' : ''}`}
+        aria-label={`Mark ${name} as ${completed ? 'incomplete' : 'complete'}`}
       />
 
       <div className="flex-1 min-w-0">
@@ -176,11 +179,13 @@ export function HabitItem({
                 ref={inputRef}
                 type="number"
                 min="1"
+                max="10000"
                 value={xpValue}
                 onChange={(e) => setXpValue(e.target.value)}
                 onBlur={handleXPSave}
                 onKeyDown={handleXPKeyDown}
                 className="h-7 w-16 text-center text-sm font-semibold font-orbitron"
+                aria-label={`Edit XP value for ${name}`}
               />
             ) : (
               <button
@@ -189,14 +194,17 @@ export function HabitItem({
                 style={{
                   textShadow: '0 0 8px rgba(255, 152, 0, 0.5)'
                 }}
-                title="Click to edit XP"
+                aria-label={`Edit XP value for ${name}, currently ${xp} XP`}
               >
                 +{xp}
               </button>
             )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="text-[11px] font-medium font-orbitron dark:text-[#666666] text-[#999999] bg-transparent border-0 px-2 py-1 rounded-md transition-all duration-200 hover:bg-foreground/5 hover:text-foreground/60">
+                <button
+                  className="text-[11px] font-medium font-orbitron dark:text-[#666666] text-[#999999] bg-transparent border-0 px-2 py-1 rounded-md transition-all duration-200 hover:bg-foreground/5 hover:text-foreground/60"
+                  aria-label={`Skip ${name} with reason`}
+                >
                   Skip
                 </button>
               </DropdownMenuTrigger>
@@ -229,4 +237,4 @@ export function HabitItem({
       )}
     </div>
   );
-}
+});

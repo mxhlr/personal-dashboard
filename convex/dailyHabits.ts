@@ -23,15 +23,20 @@ export const getHabitsForDate = query({
       .collect();
 
     // Enrich with template data
-    const enrichedHabits = await Promise.all(
-      habits.map(async (habit) => {
-        const template = await ctx.db.get(habit.templateId);
-        return {
-          ...habit,
-          template: template || null,
-        };
-      })
-    );
+    // Get all unique template IDs
+    const templateIds = [...new Set(habits.map(h => h.templateId))];
+
+    // Fetch all templates in parallel
+    const templates = await Promise.all(templateIds.map(id => ctx.db.get(id)));
+
+    // Create a map for O(1) lookup
+    const templateMap = new Map(templates.map(t => t && [t._id, t]).filter(Boolean));
+
+    // Enrich habits with templates
+    const enrichedHabits = habits.map(habit => ({
+      ...habit,
+      template: templateMap.get(habit.templateId) || null
+    }));
 
     return enrichedHabits;
   },
@@ -54,15 +59,20 @@ export const getTodayHabits = query({
       .collect();
 
     // Enrich with template data
-    const enrichedHabits = await Promise.all(
-      habits.map(async (habit) => {
-        const template = await ctx.db.get(habit.templateId);
-        return {
-          ...habit,
-          template: template || null,
-        };
-      })
-    );
+    // Get all unique template IDs
+    const templateIds = [...new Set(habits.map(h => h.templateId))];
+
+    // Fetch all templates in parallel
+    const templates = await Promise.all(templateIds.map(id => ctx.db.get(id)));
+
+    // Create a map for O(1) lookup
+    const templateMap = new Map(templates.map(t => t && [t._id, t]).filter(Boolean));
+
+    // Enrich habits with templates
+    const enrichedHabits = habits.map(habit => ({
+      ...habit,
+      template: templateMap.get(habit.templateId) || null
+    }));
 
     return enrichedHabits;
   },
@@ -128,8 +138,13 @@ export const getPatternIntelligence = query({
       completionRate: number;
     }>();
 
+    // Fetch all templates in batch to avoid N+1 queries
+    const templateIds = [...new Set(habitsInRange.map(h => h.templateId))];
+    const templates = await Promise.all(templateIds.map(id => ctx.db.get(id)));
+    const templateMap = new Map(templates.map(t => t && [t._id, t]).filter(Boolean));
+
     for (const habit of habitsInRange) {
-      const template = await ctx.db.get(habit.templateId);
+      const template = templateMap.get(habit.templateId);
       if (!template) continue;
 
       const key = habit.templateId;
