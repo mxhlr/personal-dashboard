@@ -56,3 +56,6 @@ package-lock.json
 /visual-regression/.auth/
 /playwright-report/
 /playwright/.cache/
+/test-results/
+/e2e/.auth/
+.env.test

@@ -37,6 +37,58 @@ export const getUserProfile = query({
   },
 });
 
+// Create minimal user profile (quick onboarding)
+export const createMinimalProfile = mutation({
+  args: {
+    name: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const now = new Date().toISOString();
+
+    // Check if profile already exists
+    const existingProfile = await ctx.db
+      .query("userProfile")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .first();
+
+    if (existingProfile) {
+      // Update existing profile
+      await ctx.db.patch(existingProfile._id, {
+        name: args.name,
+        setupCompleted: true,
+        setupDate: existingProfile.setupDate || now,
+        updatedAt: now,
+      });
+      return existingProfile._id;
+    }
+
+    // Create minimal profile with defaults
+    const profileId = await ctx.db.insert("userProfile", {
+      userId: identity.subject,
+      name: args.name,
+      role: "User", // Default
+      mainProject: "Personal Growth", // Default
+      northStars: {
+        wealth: "",
+        health: "",
+        love: "",
+        happiness: "",
+      },
+      quarterlyMilestones: [],
+      coachTone: "Direkt", // Default
+      setupCompleted: true,
+      setupDate: now,
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    return profileId;
+  },
+});
+
 // Create user profile (during onboarding)
 export const createUserProfile = mutation({
   args: {

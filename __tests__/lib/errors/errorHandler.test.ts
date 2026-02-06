@@ -157,11 +157,21 @@ describe('errorHandler', () => {
       const error = new NetworkError('Failed')
       const fn = jest.fn().mockRejectedValue(error)
 
-      const promise = retry(fn, { maxAttempts: 2, initialDelay: 100 })
+      // Suppress console error output from the test
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation()
 
-      await jest.advanceTimersByTimeAsync(100)
+      let caughtError
+      try {
+        const promise = retry(fn, { maxAttempts: 2, initialDelay: 100 })
+        await jest.advanceTimersByTimeAsync(100)
+        await promise
+      } catch (e) {
+        caughtError = e
+      }
 
-      await expect(promise).rejects.toThrow(NetworkError)
+      consoleSpy.mockRestore()
+
+      expect(caughtError).toBeInstanceOf(NetworkError)
       expect(fn).toHaveBeenCalledTimes(2)
     })
 

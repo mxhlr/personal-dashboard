@@ -5,9 +5,9 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
 import { logger } from "@/lib/logger";
-import { QuickSetup } from "@/components/onboarding/QuickSetup";
+import SetupWizard from "@/components/onboarding/SetupWizard";
 
-export default function SetupPage() {
+export default function AdvancedSetupPage() {
   const router = useRouter();
   const hasCompletedSetup = useQuery(api.userProfile.hasCompletedSetup);
 
@@ -37,5 +37,5 @@ export default function SetupPage() {
     return null;
   }
 
-  return <QuickSetup />;
+  return <SetupWizard />;
 }

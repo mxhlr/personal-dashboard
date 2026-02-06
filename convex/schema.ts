@@ -368,6 +368,14 @@ export default defineSchema({
     currentStreak: v.number(), // days in a row completing habits
     longestStreak: v.number(),
     weekScore: v.number(), // days completed this week (0-7)
+
+    // Streak Protection (NEW)
+    streakFreezesAvailable: v.optional(v.number()), // 2 per month, defaults to 2
+    streakFreezeActive: v.optional(v.boolean()), // true if freeze is currently active
+    streakFreezeExpiresAt: v.optional(v.number()), // timestamp when freeze expires
+    lastFreezeUsedAt: v.optional(v.number()), // timestamp when last freeze was used
+    streakRepairWindowEnd: v.optional(v.number()), // 24h grace period to repair streak
+
     updatedAt: v.string(),
   })
     .index("by_user", ["userId"]),

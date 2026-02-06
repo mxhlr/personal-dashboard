@@ -12,6 +12,7 @@ import { PatternIntelligence } from "./PatternIntelligence";
 import { MilestonePopup } from "./MilestonePopup";
 import { SprintTimer } from "./SprintTimer";
 import { LevelProgressBar } from "./LevelProgressBar";
+import { StreakProtection } from "./StreakProtection";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Id } from "@/convex/_generated/dataModel";
@@ -292,6 +293,9 @@ export function HabitDashboardConnected() {
           level={userStats.level}
           currentXP={userStats.totalXP}
         />
+
+        {/* Streak Protection */}
+        <StreakProtection />
 
         {/* Habit Categories */}
         <div className="space-y-6">
