@@ -280,6 +280,12 @@ export default defineSchema({
       }),
     }),
 
+    // Next Year Goals (unlimited goals)
+    nextYearGoals: v.optional(v.array(v.object({
+      goal: v.string(),
+      category: v.string(), // wealth, health, love, happiness
+    }))),
+
     completedAt: v.string(),
   })
     .index("by_user", ["userId"])
