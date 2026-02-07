@@ -66,40 +66,76 @@ export function OKROverview() {
             OKR Overview
           </h1>
           <p className="text-sm text-muted-foreground">
-            Your complete goal hierarchy at a glance
+            From weekly actions to annual vision
           </p>
         </header>
 
-        {/* Annual North Stars */}
-        <Card className="shadow-sm transition-shadow duration-200 hover:shadow-md">
+        {/* Weekly Goals - PRIORITY #1 */}
+        <Card className="shadow-md border-primary/20 transition-all duration-200 hover:shadow-lg">
           <CardHeader>
-            <div className="flex items-center gap-2">
-              <Flag className="h-5 w-5" />
-              <CardTitle className="text-lg font-semibold">Annual North Stars</CardTitle>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Target className="h-5 w-5 text-primary" />
+                <CardTitle className="text-lg font-semibold">
+                  Week {currentWeekNumber} Goals
+                </CardTitle>
+                <Badge variant="outline" className="ml-2">This Week</Badge>
+              </div>
+              <Badge variant="outline">
+                {weeklyGoals?.length || 0} Goals
+              </Badge>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {[
-                { area: "Wealth", value: profile.northStars.wealth },
-                { area: "Health", value: profile.northStars.health },
-                { area: "Love", value: profile.northStars.love },
-                { area: "Happiness", value: profile.northStars.happiness },
-              ].map(({ area, value }) => {
-                const config = areaConfig[area];
-                return (
-                  <div key={area} className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg">{config.icon}</span>
-                      <Badge variant="secondary" className={config.color}>
-                        {area}
-                      </Badge>
+            {!weeklyGoals || weeklyGoals.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <Target className="h-12 w-12 text-muted-foreground/40 mb-4" />
+                <p className="text-sm text-muted-foreground">
+                  No goals set for this week.
+                  <br />
+                  Complete last week&apos;s review to plan ahead.
+                </p>
+              </div>
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2">
+                {Object.entries(
+                  weeklyGoals.reduce((acc, goal) => {
+                    if (!acc[goal.category]) acc[goal.category] = [];
+                    acc[goal.category].push(goal);
+                    return acc;
+                  }, {} as Record<string, typeof weeklyGoals>)
+                ).map(([category, goals]) => {
+                  const config = categoryConfig[category] || {
+                    icon: "🎯",
+                    color: "bg-gray-500/10 text-gray-700 dark:text-gray-400"
+                  };
+
+                  return (
+                    <div
+                      key={category}
+                      className="p-4 rounded-lg border bg-card"
+                    >
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-base">{config.icon}</span>
+                        <Badge variant="secondary" className={config.color}>
+                          {category}
+                        </Badge>
+                      </div>
+                      <div className="space-y-2">
+                        {goals.map((goal, index) => (
+                          <div key={index} className="flex items-start gap-2 group">
+                            <CheckCircle2 className="w-4 h-4 mt-0.5 text-muted-foreground/40 flex-shrink-0 group-hover:text-primary transition-colors" />
+                            <p className="text-sm leading-relaxed">
+                              {goal.goal}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <p className="text-sm leading-relaxed">{value}</p>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -234,71 +270,36 @@ export function OKROverview() {
           </CardContent>
         </Card>
 
-        {/* Weekly Goals */}
+        {/* Annual North Stars */}
         <Card className="shadow-sm transition-shadow duration-200 hover:shadow-md">
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Target className="h-5 w-5" />
-                <CardTitle className="text-lg font-semibold">
-                  Week {currentWeekNumber} Goals
-                </CardTitle>
-              </div>
-              <Badge variant="outline">
-                {weeklyGoals?.length || 0} Goals
-              </Badge>
+            <div className="flex items-center gap-2">
+              <Flag className="h-5 w-5" />
+              <CardTitle className="text-lg font-semibold">Annual North Stars</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
-            {!weeklyGoals || weeklyGoals.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <Target className="h-12 w-12 text-muted-foreground/40 mb-4" />
-                <p className="text-sm text-muted-foreground">
-                  No goals set for this week.
-                  <br />
-                  Complete last week&apos;s review to plan ahead.
-                </p>
-              </div>
-            ) : (
-              <div className="grid gap-4 md:grid-cols-2">
-                {Object.entries(
-                  weeklyGoals.reduce((acc, goal) => {
-                    if (!acc[goal.category]) acc[goal.category] = [];
-                    acc[goal.category].push(goal);
-                    return acc;
-                  }, {} as Record<string, typeof weeklyGoals>)
-                ).map(([category, goals]) => {
-                  const config = categoryConfig[category] || {
-                    icon: "🎯",
-                    color: "bg-gray-500/10 text-gray-700 dark:text-gray-400"
-                  };
-
-                  return (
-                    <div
-                      key={category}
-                      className="p-4 rounded-lg border bg-card"
-                    >
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="text-base">{config.icon}</span>
-                        <Badge variant="secondary" className={config.color}>
-                          {category}
-                        </Badge>
-                      </div>
-                      <div className="space-y-2">
-                        {goals.map((goal, index) => (
-                          <div key={index} className="flex items-start gap-2 group">
-                            <CheckCircle2 className="w-4 h-4 mt-0.5 text-muted-foreground/40 flex-shrink-0 group-hover:text-primary transition-colors" />
-                            <p className="text-sm leading-relaxed">
-                              {goal.goal}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {[
+                { area: "Wealth", value: profile.northStars.wealth },
+                { area: "Health", value: profile.northStars.health },
+                { area: "Love", value: profile.northStars.love },
+                { area: "Happiness", value: profile.northStars.happiness },
+              ].map(({ area, value }) => {
+                const config = areaConfig[area];
+                return (
+                  <div key={area} className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">{config.icon}</span>
+                      <Badge variant="secondary" className={config.color}>
+                        {area}
+                      </Badge>
                     </div>
-                  );
-                })}
-              </div>
-            )}
+                    <p className="text-sm leading-relaxed">{value}</p>
+                  </div>
+                );
+              })}
+            </div>
           </CardContent>
         </Card>
 

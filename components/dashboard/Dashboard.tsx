@@ -155,6 +155,118 @@ export function Dashboard({ onNavigate }: DashboardProps) {
           </p>
         </header>
 
+        {/* Today's Log + Quick Stats - HERO SECTION */}
+        <div className="grid gap-6 lg:grid-cols-2">
+          {/* Today's Log - Priority #1 */}
+          <Card className={`shadow-md transition-all duration-200 ${
+            todayComplete
+              ? 'border-yellow-500/30 hover:shadow-yellow-500/20 shadow-yellow-500/10'
+              : coreComplete
+                ? 'border-green-500/30 hover:shadow-green-500/20 shadow-green-500/10'
+                : 'border-primary/20 hover:shadow-lg'
+          }`}>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-primary" />
+                <CardTitle className="text-lg font-semibold">Today&apos;s Log</CardTitle>
+                <Badge variant="outline" className="ml-auto">Priority</Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {todayComplete ? (
+                <>
+                  <div className="flex items-center gap-4">
+                    <CheckCircle2 className="h-12 w-12 text-yellow-500" />
+                    <div>
+                      <p className="text-base font-semibold text-yellow-600 dark:text-yellow-500">
+                        Perfect Day ✨
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {todayProgress}% • {todayXP} XP
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => onNavigate("daily-log")}
+                    className="w-full bg-gradient-to-r from-yellow-500 to-amber-500 text-black hover:from-yellow-600 hover:to-amber-600 transition-all duration-200"
+                  >
+                    Celebration Mode ✨
+                  </Button>
+                </>
+              ) : coreComplete ? (
+                <>
+                  <div className="flex items-center gap-4">
+                    <CheckCircle2 className="h-12 w-12 text-green-500" />
+                    <div>
+                      <p className="text-base font-semibold text-green-600 dark:text-green-500">
+                        Solid Day ✓
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Core done • Extras open
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => onNavigate("daily-log")}
+                    className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 transition-all duration-200"
+                  >
+                    Complete Extras →
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-4">
+                    <div className="relative h-16 w-16">
+                      <svg className="h-16 w-16 -rotate-90">
+                        <circle
+                          cx="32"
+                          cy="32"
+                          r="28"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                          fill="none"
+                          className="text-muted/30"
+                        />
+                        <circle
+                          cx="32"
+                          cy="32"
+                          r="28"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                          fill="none"
+                          strokeDasharray={progressRingProps.circumference}
+                          strokeDashoffset={progressRingProps.strokeDashoffset}
+                          className="text-primary transition-all duration-500"
+                        />
+                      </svg>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-sm font-semibold">{todayProgress}%</span>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">
+                        {completedHabits}/{totalHabits} Habits
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {todayXP} XP earned
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => onNavigate("daily-log")}
+                    className="w-full transition-all duration-200"
+                  >
+                    Go to Daily Log →
+                  </Button>
+                </>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Quick Stats Badge */}
+          <QuickStatsBadge />
+        </div>
+
         {/* Review Notifications + Weekly Progress */}
         <div className="grid gap-6 md:grid-cols-2">
           <Card className="shadow-sm transition-shadow duration-200 hover:shadow-md">
@@ -231,117 +343,6 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             </div>
           </CardContent>
         </Card>
-
-        {/* Today's Log + Quick Stats */}
-        <div className="grid gap-6 lg:grid-cols-2">
-          {/* Today's Log - Compact Version */}
-          <Card className={`shadow-sm transition-all duration-200 ${
-            todayComplete
-              ? 'border-yellow-500/20 hover:shadow-yellow-500/10'
-              : coreComplete
-                ? 'border-green-500/20 hover:shadow-green-500/10'
-                : 'hover:shadow-md'
-          }`}>
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-primary" />
-                <CardTitle className="text-lg font-semibold">Today&apos;s Log</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {todayComplete ? (
-                <>
-                  <div className="flex items-center gap-4">
-                    <CheckCircle2 className="h-10 w-10 text-yellow-500" />
-                    <div>
-                      <p className="text-sm font-medium text-yellow-600 dark:text-yellow-500">
-                        Perfect Day ✨
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {todayProgress}% • {todayXP} XP
-                      </p>
-                    </div>
-                  </div>
-                  <Button
-                    onClick={() => onNavigate("daily-log")}
-                    className="w-full bg-gradient-to-r from-yellow-500 to-amber-500 text-black hover:from-yellow-600 hover:to-amber-600 transition-all duration-200"
-                  >
-                    Celebration Mode ✨
-                  </Button>
-                </>
-              ) : coreComplete ? (
-                <>
-                  <div className="flex items-center gap-4">
-                    <CheckCircle2 className="h-10 w-10 text-green-500" />
-                    <div>
-                      <p className="text-sm font-medium text-green-600 dark:text-green-500">
-                        Solid Day ✓
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        Core done • Extras open
-                      </p>
-                    </div>
-                  </div>
-                  <Button
-                    onClick={() => onNavigate("daily-log")}
-                    className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 transition-all duration-200"
-                  >
-                    Complete Extras →
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center gap-4">
-                    <div className="relative h-16 w-16">
-                      <svg className="h-16 w-16 -rotate-90">
-                        <circle
-                          cx="32"
-                          cy="32"
-                          r="28"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                          fill="none"
-                          className="text-muted/30"
-                        />
-                        <circle
-                          cx="32"
-                          cy="32"
-                          r="28"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                          fill="none"
-                          strokeDasharray={progressRingProps.circumference}
-                          strokeDashoffset={progressRingProps.strokeDashoffset}
-                          className="text-primary transition-all duration-500"
-                        />
-                      </svg>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-sm font-semibold">{todayProgress}%</span>
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">
-                        {completedHabits}/{totalHabits} Habits
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {todayXP} XP earned
-                      </p>
-                    </div>
-                  </div>
-                  <Button
-                    onClick={() => onNavigate("daily-log")}
-                    className="w-full transition-all duration-200"
-                  >
-                    Go to Daily Log →
-                  </Button>
-                </>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Quick Stats Badge */}
-          <QuickStatsBadge />
-        </div>
 
         {/* Visionboard Carousel */}
         <VisionboardCarousel />
