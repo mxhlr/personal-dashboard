@@ -35,10 +35,10 @@ export default defineSchema({
 
     // North Stars (mehrere pro Lebensbereich möglich)
     northStars: v.object({
-      wealth: v.union(v.string(), v.array(v.string())),
-      health: v.union(v.string(), v.array(v.string())),
-      love: v.union(v.string(), v.array(v.string())),
-      happiness: v.union(v.string(), v.array(v.string())),
+      wealth: v.array(v.string()),
+      health: v.array(v.string()),
+      love: v.array(v.string()),
+      happiness: v.array(v.string()),
     }),
 
     // Quarterly OKRs (Objectives & Key Results - hauptsächliche OKR-Ebene)
@@ -273,10 +273,10 @@ export default defineSchema({
       topThreeLearnings: v.string(),     // Top 3 Learnings?
       stopStartContinue: v.string(),     // Was stoppen/starten/weitermachen?
       nextYearNorthStars: v.object({     // North Stars für nächstes Jahr (mehrere pro Kategorie)
-        wealth: v.union(v.string(), v.array(v.string())),
-        health: v.union(v.string(), v.array(v.string())),
-        love: v.union(v.string(), v.array(v.string())),
-        happiness: v.union(v.string(), v.array(v.string())),
+        wealth: v.array(v.string()),
+        health: v.array(v.string()),
+        love: v.array(v.string()),
+        happiness: v.array(v.string()),
       }),
     }),
 
