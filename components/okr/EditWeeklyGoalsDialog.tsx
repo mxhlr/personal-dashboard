@@ -28,15 +28,15 @@ export function EditWeeklyGoalsDialog({ isOpen, onClose, year, weekNumber }: Edi
   useEffect(() => {
     if (weeklyGoals && isOpen) {
       if (weeklyGoals.length > 0) {
-        setGoals(weeklyGoals.map(g => ({ category: g.category, goal: g.goal })));
+        setGoals(weeklyGoals.map(g => ({ category: g.category || "Wealth", goal: g.goal })));
       } else {
-        setGoals([{ category: "Work", goal: "" }]);
+        setGoals([{ category: "Wealth", goal: "" }]);
       }
     }
   }, [weeklyGoals, isOpen]);
 
   const addGoal = () => {
-    setGoals((prev) => [...prev, { category: "Work", goal: "" }]);
+    setGoals((prev) => [...prev, { category: "Wealth", goal: "" }]);
   };
 
   const removeGoal = (index: number) => {
@@ -90,17 +90,17 @@ export function EditWeeklyGoalsDialog({ isOpen, onClose, year, weekNumber }: Edi
             <div key={index} className="flex flex-col sm:flex-row gap-2 items-start">
               <div className="flex-1 w-full space-y-2">
                 <Select
-                  value={goal.category}
+                  value={goal.category || "Wealth"}
                   onValueChange={(value) => updateGoal(index, "category", value)}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Work">💼 Work</SelectItem>
+                    <SelectItem value="Wealth">💰 Wealth</SelectItem>
                     <SelectItem value="Health">🏃 Health</SelectItem>
-                    <SelectItem value="Learning">📚 Learning</SelectItem>
-                    <SelectItem value="Personal">✨ Personal</SelectItem>
+                    <SelectItem value="Love">❤️ Love</SelectItem>
+                    <SelectItem value="Happiness">😊 Happiness</SelectItem>
                   </SelectContent>
                 </Select>
 

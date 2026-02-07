@@ -53,10 +53,10 @@ export function OKROverview() {
   ];
 
   const categoryConfig: Record<string, { icon: string; color: string }> = {
-    Work: { icon: "💼", color: "text-blue-400" },
+    Wealth: { icon: "💰", color: "text-yellow-400" },
     Health: { icon: "🏃", color: "text-green-400" },
-    Learning: { icon: "📚", color: "text-purple-400" },
-    Personal: { icon: "✨", color: "text-pink-400" },
+    Love: { icon: "❤️", color: "text-red-400" },
+    Happiness: { icon: "😊", color: "text-purple-400" },
   };
 
   const areaConfig: Record<string, { icon: string; color: string; gradient: string }> = {

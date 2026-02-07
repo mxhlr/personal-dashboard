@@ -165,7 +165,7 @@ export default defineSchema({
     // Next Week Goals (User definiert Goals für nächste Woche)
     nextWeekGoals: v.optional(v.array(v.object({
       goal: v.string(),
-      category: v.string(), // "Work", "Health", "Learning", "Personal"
+      category: v.string(), // "Wealth", "Health", "Love", "Happiness"
     }))),
 
     completedAt: v.string(),
