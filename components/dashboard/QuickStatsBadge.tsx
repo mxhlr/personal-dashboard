@@ -22,7 +22,7 @@ export function QuickStatsBadge() {
         </h3>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-3">
       {/* Level Badge */}
       <div
         className="group flex items-center justify-between px-4 py-4 rounded-lg

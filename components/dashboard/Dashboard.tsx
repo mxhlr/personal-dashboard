@@ -302,26 +302,24 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
           {/* Today's Log - Compact Version */}
           <Card
-            className={`p-6 dark:bg-card/50 bg-white/80
+            className={`p-6
             shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl
             ${todayComplete
-              ? 'dark:border-[rgba(255,215,0,0.3)] border-[rgba(255,215,0,0.4)] dark:hover:border-[rgba(255,215,0,0.4)] hover:border-[rgba(255,215,0,0.5)] dark:hover:shadow-[0_0_40px_rgba(255,215,0,0.3)] hover:shadow-[0_8px_40px_rgba(255,215,0,0.4)]'
+              ? 'dark:border-[rgba(255,215,0,0.3)] border-[rgba(255,215,0,0.4)] dark:hover:border-[rgba(255,215,0,0.4)] hover:border-[rgba(255,215,0,0.5)] dark:hover:shadow-[0_0_40px_rgba(255,215,0,0.3)] hover:shadow-[0_8px_40px_rgba(255,215,0,0.4)] dark:bg-gradient-to-r dark:from-yellow-500/10 dark:to-green-500/10 bg-gradient-to-r from-yellow-500/5 to-green-500/5'
               : coreComplete
-                ? 'dark:border-[rgba(0,230,118,0.25)] border-[rgba(76,175,80,0.3)] dark:hover:border-[rgba(0,230,118,0.35)] hover:border-[rgba(76,175,80,0.4)] dark:hover:shadow-[0_0_35px_rgba(0,230,118,0.25)] hover:shadow-[0_8_35px_rgba(76,175,80,0.3)]'
-                : 'dark:border-[rgba(255,255,255,0.08)] border-[rgba(0,0,0,0.08)] dark:hover:border-[rgba(255,255,255,0.12)] hover:border-[rgba(0,0,0,0.12)] dark:hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.1)]'
+                ? 'dark:border-[rgba(0,230,118,0.25)] border-[rgba(76,175,80,0.3)] dark:hover:border-[rgba(0,230,118,0.35)] hover:border-[rgba(76,175,80,0.4)] dark:hover:shadow-[0_0_35px_rgba(0,230,118,0.25)] hover:shadow-[0_8_35px_rgba(76,175,80,0.3)] dark:bg-gradient-to-r dark:from-green-500/10 dark:to-cyan-500/10 bg-gradient-to-r from-green-500/5 to-cyan-500/5'
+                : 'dark:border-purple-500/20 border-purple-500/10 dark:hover:border-purple-500/30 hover:border-purple-500/15 dark:hover:shadow-[0_0_30px_rgba(139,92,246,0.2)] hover:shadow-[0_8px_30px_rgba(139,92,246,0.1)] dark:bg-gradient-to-r dark:from-purple-500/10 dark:to-cyan-500/10 bg-gradient-to-r from-purple-500/5 to-cyan-500/5'
             }`}
-            style={{
-              background: todayComplete
-                ? 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(0, 230, 118, 0.06) 100%), rgba(26, 26, 26, 0.5)'
-                : coreComplete
-                  ? 'linear-gradient(135deg, rgba(0, 230, 118, 0.08) 0%, rgba(0, 229, 255, 0.04) 100%), rgba(26, 26, 26, 0.5)'
-                  : 'linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(26, 26, 26, 0.5) 100%)'
-            }}
+            style={
+              !todayComplete && !coreComplete
+                ? { boxShadow: '0 0 20px rgba(139, 92, 246, 0.15)' }
+                : undefined
+            }
           >
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <Calendar className="h-5 w-5 dark:text-[white] text-[black]" />
-                <h3 className="font-bold font-orbitron dark:text-[white] text-[black]">Today&apos;s Log</h3>
+                <Calendar className="h-5 w-5 dark:text-purple-400 text-purple-600" />
+                <h3 className="font-bold font-orbitron dark:text-purple-400 text-purple-600">Today&apos;s Log</h3>
               </div>
 
             {todayComplete ? (
@@ -438,11 +436,10 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                 </div>
                 <Button
                   onClick={() => onNavigate("daily-log")}
-                  className="w-full dark:bg-gradient-to-r dark:from-white dark:to-gray-100 bg-gradient-to-r from-gray-700 to-gray-800
-                    dark:text-black text-white font-bold font-orbitron uppercase tracking-wider text-xs
-                    dark:border-white/30 border-black/30
-                    dark:shadow-[0_0_15px_rgba(0,229,255,0.3)] shadow-[0_4px_12px_rgba(0,119,182,0.3)]
-                    dark:hover:shadow-[0_0_25px_rgba(0,229,255,0.5)] hover:shadow-[0_6px_20px_rgba(0,119,182,0.5)] hover:scale-105
+                  className="w-full dark:bg-gradient-to-r dark:from-purple-500/90 dark:to-cyan-500/90 bg-gradient-to-r from-purple-600 to-cyan-600
+                    text-white font-bold font-orbitron uppercase tracking-wider text-xs
+                    dark:shadow-[0_0_20px_rgba(139,92,246,0.4)] shadow-[0_4px_15px_rgba(139,92,246,0.3)]
+                    dark:hover:shadow-[0_0_30px_rgba(139,92,246,0.6)] hover:shadow-[0_6px_25px_rgba(139,92,246,0.5)] hover:scale-105
                     transition-all duration-300"
                 >
                   Zum Daily Log →

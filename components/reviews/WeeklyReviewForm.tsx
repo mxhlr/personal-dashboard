@@ -151,18 +151,18 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
       <div className="relative max-w-4xl mx-auto px-8 py-8 space-y-8">
         {/* Header */}
         <div className="text-center space-y-2">
-          <h1 className="text-[44px] font-bold text-white"
+          <h1
+            className="font-[family-name:var(--font-orbitron)] text-[44px] font-bold"
             style={{
-              textShadow: '0 0 30px rgba(255, 255, 255, 0.2)',
-              fontFamily: '"Courier New", "Monaco", monospace',
-              fontVariantNumeric: 'tabular-nums',
-              letterSpacing: '2px'
+              color: '#00E5FF',
+              textShadow: '0 0 40px rgba(0, 229, 255, 0.5)',
+              letterSpacing: '3px'
             }}
           >
-            Weekly Review
+            WEEKLY REVIEW
           </h1>
-          <p className="text-[13px] dark:text-[#525252] text-[#3d3d3d] font-medium"
-            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+          <p className="text-[14px] dark:text-[#00E5FF]/70 text-[#0097A7]/80 font-medium"
+            style={{ fontFamily: '"Courier New", "Monaco", monospace', letterSpacing: '1px' }}
           >
             Week {weekNumber}, {year}
           </p>
@@ -192,34 +192,37 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
           {/* Part 1: Previous Week Goals Review */}
           {previousGoals && previousGoals.length > 0 && !isReadOnly && (
             <div className="space-y-4 pb-8">
-              <div className="text-center pb-2">
-                <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7]"
-                  style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                  Teil 1: Goal Check
+              <div className="text-center pb-4">
+                <h3 className="text-[14px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7]"
+                  style={{ fontFamily: '"Courier New", "Monaco", monospace', letterSpacing: '2px' }}>
+                  ◢ Teil 1: Goal Check ◣
                 </h3>
-                <p className="text-[11px] dark:text-[#525252] text-[#3d3d3d] mt-1"
+                <p className="text-[12px] dark:text-[#B0B0B0] text-[#666666] mt-2"
                   style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                   Markiere welche Goals du erreicht hast
                 </p>
               </div>
 
               {previousGoals.map((goal, index) => {
-                const categoryConfig: Record<string, { icon: string; color: string }> = {
-                  Wealth: { icon: "💰", color: "text-yellow-400" },
-                  Health: { icon: "🏃", color: "text-green-400" },
-                  Love: { icon: "❤️", color: "text-pink-400" },
-                  Happiness: { icon: "😊", color: "text-purple-400" },
+                const categoryConfig: Record<string, { icon: string; color: string; glow: string }> = {
+                  Wealth: { icon: "💰", color: "text-yellow-400", glow: "rgba(251, 191, 36, 0.3)" },
+                  Health: { icon: "🏃", color: "text-green-400", glow: "rgba(74, 222, 128, 0.3)" },
+                  Love: { icon: "❤️", color: "text-pink-400", glow: "rgba(244, 114, 182, 0.3)" },
+                  Happiness: { icon: "😊", color: "text-purple-400", glow: "rgba(192, 132, 252, 0.3)" },
                 };
 
-                const config = categoryConfig[goal.category] || { icon: "🎯", color: "text-blue-400" };
+                const config = categoryConfig[goal.category] || { icon: "🎯", color: "text-cyan-400", glow: "rgba(0, 229, 255, 0.3)" };
 
                 return (
                   <div
                     key={index}
-                    className="group dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,151,167,0.2)] border-2
-                      dark:bg-[rgba(0,229,255,0.02)] bg-[rgba(0,151,167,0.03)]
-                      backdrop-blur-sm rounded-xl p-6 transition-all duration-200
-                      hover:dark:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,151,167,0.3)]"
+                    className="group dark:border-[rgba(0,229,255,0.25)] border-[rgba(0,151,167,0.3)] border-2
+                      backdrop-blur-sm rounded-xl p-6 transition-all duration-300
+                      hover:dark:border-[rgba(0,229,255,0.4)] hover:border-[rgba(0,151,167,0.4)]
+                      hover:shadow-[0_0_20px_rgba(0,229,255,0.2)]"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.08) 0%, rgba(139, 92, 246, 0.06) 100%)'
+                    }}
                   >
                     <div className="flex items-start gap-4">
                       <input
@@ -246,8 +249,8 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
                             {goal.category}
                           </span>
                         </div>
-                        <p className="dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
-                          style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px' }}>
+                        <p className="dark:text-[#FFFFFF] text-[#1A1A1A] leading-relaxed font-medium"
+                          style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '15px' }}>
                           {goal.goal}
                         </p>
                       </div>
@@ -257,9 +260,9 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
               })}
 
               <div className="text-center pt-2">
-                <p className="text-xs dark:text-[#525252] text-[#3d3d3d]"
-                  style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                  {Object.values(goalCompletionStatus).filter(Boolean).length} / {previousGoals.length} erreicht
+                <p className="text-sm dark:text-[#00E5FF]/80 text-[#0097A7] font-bold"
+                  style={{ fontFamily: '"Courier New", "Monaco", monospace', letterSpacing: '1px' }}>
+                  {Object.values(goalCompletionStatus).filter(Boolean).length} / {previousGoals.length} ERREICHT
                 </p>
               </div>
             </div>
@@ -267,12 +270,12 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
 
           {/* Part 2: Reflection Questions */}
           {!isReadOnly && (
-            <div className="text-center pb-4 pt-8">
-              <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7]"
-                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                Teil 2: Reflexion
+            <div className="text-center pb-6 pt-8">
+              <h3 className="text-[14px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7]"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace', letterSpacing: '2px' }}>
+                ◢ Teil 2: Reflexion ◣
               </h3>
-              <p className="text-[11px] dark:text-[#525252] text-[#3d3d3d] mt-1"
+              <p className="text-[12px] dark:text-[#B0B0B0] text-[#666666] mt-2"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                 Reflektiere über deine Woche
               </p>
@@ -280,19 +283,18 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
           )}
 
           {/* Question 1 */}
-          <div className="group dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
+          <div className="group dark:border-[rgba(0,229,255,0.3)] border-[rgba(0,180,220,0.35)] border-2
             transition-all duration-300 ease-out
-            hover:shadow-xl hover:-translate-y-1 shadow-sm
-            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]
-            dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.2)]
-            rounded-2xl p-6"
+            hover:shadow-[0_0_30px_rgba(0,229,255,0.25)] hover:-translate-y-1 shadow-sm
+            dark:hover:border-[rgba(0,229,255,0.5)] hover:border-[rgba(0,180,220,0.5)]
+            rounded-xl p-6"
             style={{
-              background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
+              background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.10) 0%, rgba(139, 92, 246, 0.08) 100%)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
-              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            <label className="block text-[12px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7] mb-4"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', letterSpacing: '1.5px' }}
             >
-              Was war dein größter Erfolg diese Woche?
+              → Was war dein größter Erfolg diese Woche?
             </label>
             <textarea
               value={formData.biggestSuccess}
@@ -300,29 +302,29 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
                 setFormData({ ...formData, biggestSuccess: e.target.value })
               }
               disabled={isReadOnly}
-              className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
-                focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
-                dark:text-[#E0E0E0] text-[#1A1A1A]"
-              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
+              className="w-full min-h-[120px] px-4 py-3 border-2 dark:border-[rgba(0,229,255,0.2)] border-[rgba(0,180,220,0.25)]
+                dark:bg-[rgba(0,229,255,0.05)] bg-[rgba(0,180,220,0.08)] rounded-lg resize-none
+                focus:outline-none focus:ring-2 focus:ring-[#00E5FF]/50 focus:border-[rgba(0,229,255,0.4)]
+                disabled:cursor-not-allowed placeholder:dark:text-[#A0A0A0] placeholder:text-[#888888]
+                dark:text-[#FFFFFF] text-[#1A1A1A] transition-all"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '15px', lineHeight: '1.7' }}
               placeholder="Beschreibe deinen größten Erfolg..."
             />
           </div>
 
           {/* Question 2 */}
-          <div className="group dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
+          <div className="group dark:border-[rgba(0,229,255,0.3)] border-[rgba(0,180,220,0.35)] border-2
             transition-all duration-300 ease-out
-            hover:shadow-xl hover:-translate-y-1 shadow-sm
-            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]
-            dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.2)]
-            rounded-2xl p-6"
+            hover:shadow-[0_0_30px_rgba(0,229,255,0.25)] hover:-translate-y-1 shadow-sm
+            dark:hover:border-[rgba(0,229,255,0.5)] hover:border-[rgba(0,180,220,0.5)]
+            rounded-xl p-6"
             style={{
-              background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
+              background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.10) 0%, rgba(139, 92, 246, 0.08) 100%)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
-              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            <label className="block text-[12px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7] mb-4"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', letterSpacing: '1.5px' }}
             >
-              Was hat dich am meisten frustriert?
+              → Was hat dich am meisten frustriert?
             </label>
             <textarea
               value={formData.mostFrustrating}
@@ -330,29 +332,29 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
                 setFormData({ ...formData, mostFrustrating: e.target.value })
               }
               disabled={isReadOnly}
-              className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
-                focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
-                dark:text-[#E0E0E0] text-[#1A1A1A]"
-              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
+              className="w-full min-h-[120px] px-4 py-3 border-2 dark:border-[rgba(0,229,255,0.2)] border-[rgba(0,180,220,0.25)]
+                dark:bg-[rgba(0,229,255,0.05)] bg-[rgba(0,180,220,0.08)] rounded-lg resize-none
+                focus:outline-none focus:ring-2 focus:ring-[#00E5FF]/50 focus:border-[rgba(0,229,255,0.4)]
+                disabled:cursor-not-allowed placeholder:dark:text-[#A0A0A0] placeholder:text-[#888888]
+                dark:text-[#FFFFFF] text-[#1A1A1A] transition-all"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '15px', lineHeight: '1.7' }}
               placeholder="Was war frustrierend?"
             />
           </div>
 
           {/* Question 3 */}
-          <div className="group dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
+          <div className="group dark:border-[rgba(0,229,255,0.3)] border-[rgba(0,180,220,0.35)] border-2
             transition-all duration-300 ease-out
-            hover:shadow-xl hover:-translate-y-1 shadow-sm
-            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]
-            dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.2)]
-            rounded-2xl p-6"
+            hover:shadow-[0_0_30px_rgba(0,229,255,0.25)] hover:-translate-y-1 shadow-sm
+            dark:hover:border-[rgba(0,229,255,0.5)] hover:border-[rgba(0,180,220,0.5)]
+            rounded-xl p-6"
             style={{
-              background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
+              background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.10) 0%, rgba(139, 92, 246, 0.08) 100%)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
-              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            <label className="block text-[12px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7] mb-4"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', letterSpacing: '1.5px' }}
             >
-              Was hättest du anders gemacht?
+              → Was hättest du anders gemacht?
             </label>
             <textarea
               value={formData.differentlyNextTime}
@@ -363,29 +365,29 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
                 })
               }
               disabled={isReadOnly}
-              className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
-                focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
-                dark:text-[#E0E0E0] text-[#1A1A1A]"
-              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
+              className="w-full min-h-[120px] px-4 py-3 border-2 dark:border-[rgba(0,229,255,0.2)] border-[rgba(0,180,220,0.25)]
+                dark:bg-[rgba(0,229,255,0.05)] bg-[rgba(0,180,220,0.08)] rounded-lg resize-none
+                focus:outline-none focus:ring-2 focus:ring-[#00E5FF]/50 focus:border-[rgba(0,229,255,0.4)]
+                disabled:cursor-not-allowed placeholder:dark:text-[#A0A0A0] placeholder:text-[#888888]
+                dark:text-[#FFFFFF] text-[#1A1A1A] transition-all"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '15px', lineHeight: '1.7' }}
               placeholder="Was würdest du beim nächsten Mal anders machen?"
             />
           </div>
 
           {/* Question 4 */}
-          <div className="group dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
+          <div className="group dark:border-[rgba(0,229,255,0.3)] border-[rgba(0,180,220,0.35)] border-2
             transition-all duration-300 ease-out
-            hover:shadow-xl hover:-translate-y-1 shadow-sm
-            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]
-            dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.2)]
-            rounded-2xl p-6"
+            hover:shadow-[0_0_30px_rgba(0,229,255,0.25)] hover:-translate-y-1 shadow-sm
+            dark:hover:border-[rgba(0,229,255,0.5)] hover:border-[rgba(0,180,220,0.5)]
+            rounded-xl p-6"
             style={{
-              background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
+              background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.10) 0%, rgba(139, 92, 246, 0.08) 100%)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
-              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            <label className="block text-[12px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7] mb-4"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', letterSpacing: '1.5px' }}
             >
-              Was hast du diese Woche gelernt?
+              → Was hast du diese Woche gelernt?
             </label>
             <textarea
               value={formData.learned}
@@ -393,29 +395,29 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
                 setFormData({ ...formData, learned: e.target.value })
               }
               disabled={isReadOnly}
-              className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
-                focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
-                dark:text-[#E0E0E0] text-[#1A1A1A]"
-              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
+              className="w-full min-h-[120px] px-4 py-3 border-2 dark:border-[rgba(0,229,255,0.2)] border-[rgba(0,180,220,0.25)]
+                dark:bg-[rgba(0,229,255,0.05)] bg-[rgba(0,180,220,0.08)] rounded-lg resize-none
+                focus:outline-none focus:ring-2 focus:ring-[#00E5FF]/50 focus:border-[rgba(0,229,255,0.4)]
+                disabled:cursor-not-allowed placeholder:dark:text-[#A0A0A0] placeholder:text-[#888888]
+                dark:text-[#FFFFFF] text-[#1A1A1A] transition-all"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '15px', lineHeight: '1.7' }}
               placeholder="Deine wichtigsten Learnings..."
             />
           </div>
 
           {/* Question 5 */}
-          <div className="group dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
+          <div className="group dark:border-[rgba(0,229,255,0.3)] border-[rgba(0,180,220,0.35)] border-2
             transition-all duration-300 ease-out
-            hover:shadow-xl hover:-translate-y-1 shadow-sm
-            dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]
-            dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.2)]
-            rounded-2xl p-6"
+            hover:shadow-[0_0_30px_rgba(0,229,255,0.25)] hover:-translate-y-1 shadow-sm
+            dark:hover:border-[rgba(0,229,255,0.5)] hover:border-[rgba(0,180,220,0.5)]
+            rounded-xl p-6"
             style={{
-              background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
+              background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.10) 0%, rgba(139, 92, 246, 0.08) 100%)'
             }}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-3"
-              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+            <label className="block text-[12px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7] mb-4"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', letterSpacing: '1.5px' }}
             >
-              Worauf fokussierst du dich nächste Woche?
+              → Worauf fokussierst du dich nächste Woche?
             </label>
             <textarea
               value={formData.nextWeekFocus}
@@ -423,23 +425,24 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
                 setFormData({ ...formData, nextWeekFocus: e.target.value })
               }
               disabled={isReadOnly}
-              className="w-full min-h-[120px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
-                focus:outline-none focus:ring-0
-                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
-                dark:text-[#E0E0E0] text-[#1A1A1A]"
-              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
+              className="w-full min-h-[120px] px-4 py-3 border-2 dark:border-[rgba(0,229,255,0.2)] border-[rgba(0,180,220,0.25)]
+                dark:bg-[rgba(0,229,255,0.05)] bg-[rgba(0,180,220,0.08)] rounded-lg resize-none
+                focus:outline-none focus:ring-2 focus:ring-[#00E5FF]/50 focus:border-[rgba(0,229,255,0.4)]
+                disabled:cursor-not-allowed placeholder:dark:text-[#A0A0A0] placeholder:text-[#888888]
+                dark:text-[#FFFFFF] text-[#1A1A1A] transition-all"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '15px', lineHeight: '1.7' }}
               placeholder="Dein Fokus für nächste Woche..."
             />
           </div>
 
           {/* Next Week Goals Section */}
           <div className="space-y-4 pt-8">
-            <div className="text-center pb-2">
-              <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7]"
-                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                Teil 3: Next Week Goals
+            <div className="text-center pb-4">
+              <h3 className="text-[14px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7]"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace', letterSpacing: '2px' }}>
+                ◢ Teil 3: Next Week Goals ◣
               </h3>
-              <p className="text-[11px] dark:text-[#525252] text-[#3d3d3d] mt-1"
+              <p className="text-[12px] dark:text-[#B0B0B0] text-[#666666] mt-2"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
                 Setze 3-5 Goals für nächste Woche
               </p>
@@ -477,11 +480,12 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
                   value={goal.goal}
                   onChange={(e) => updateGoal(index, "goal", e.target.value)}
                   disabled={isReadOnly}
-                  className="w-full min-h-[80px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
-                    focus:outline-none focus:ring-0 mb-3
-                    disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
-                    dark:text-[#E0E0E0] text-[#1A1A1A]"
-                  style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
+                  className="w-full min-h-[80px] px-4 py-3 border-2 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)]
+                    dark:bg-[rgba(0,229,255,0.03)] bg-[rgba(0,180,220,0.05)] rounded-lg resize-none mb-3
+                    focus:outline-none focus:ring-2 focus:ring-[#00E5FF]/50 focus:border-[rgba(0,229,255,0.3)]
+                    disabled:cursor-not-allowed placeholder:dark:text-[#A0A0A0] placeholder:text-[#888888]
+                    dark:text-[#FFFFFF] text-[#1A1A1A] transition-all"
+                  style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '15px', lineHeight: '1.7' }}
                   placeholder="Describe your goal for next week..."
                 />
 
