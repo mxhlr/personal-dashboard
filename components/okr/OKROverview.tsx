@@ -2,10 +2,7 @@
 
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
+import { Card } from "@/components/ui/card";
 import { Target, TrendingUp, CheckCircle2, Flag } from "lucide-react";
 import { getWeek, getYear, getMonth } from "date-fns";
 
@@ -34,6 +31,7 @@ export function OKROverview() {
     );
   }
 
+  // Extract quarterly milestones
   const quarterlyMilestones = profile?.quarterlyMilestones?.filter(
     (m) => m.year === currentYear && m.quarter === currentQuarter
   ) || [];
@@ -44,268 +42,335 @@ export function OKROverview() {
   ];
 
   const categoryConfig: Record<string, { icon: string; color: string }> = {
-    Work: { icon: "💼", color: "bg-blue-500/10 text-blue-700 dark:text-blue-400" },
-    Health: { icon: "🏃", color: "bg-green-500/10 text-green-700 dark:text-green-400" },
-    Learning: { icon: "📚", color: "bg-purple-500/10 text-purple-700 dark:text-purple-400" },
-    Personal: { icon: "✨", color: "bg-pink-500/10 text-pink-700 dark:text-pink-400" },
+    Work: { icon: "💼", color: "text-blue-400" },
+    Health: { icon: "🏃", color: "text-green-400" },
+    Learning: { icon: "📚", color: "text-purple-400" },
+    Personal: { icon: "✨", color: "text-pink-400" },
   };
 
-  const areaConfig: Record<string, { icon: string; color: string }> = {
-    Wealth: { icon: "💰", color: "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400" },
-    Health: { icon: "🏃", color: "bg-green-500/10 text-green-700 dark:text-green-400" },
-    Love: { icon: "❤️", color: "bg-red-500/10 text-red-700 dark:text-red-400" },
-    Happiness: { icon: "😊", color: "bg-purple-500/10 text-purple-700 dark:text-purple-400" },
+  const areaConfig: Record<string, { icon: string; color: string; gradient: string }> = {
+    Wealth: {
+      icon: "💰",
+      color: "text-yellow-400",
+      gradient: "from-yellow-500/20 to-yellow-600/10",
+    },
+    Health: {
+      icon: "🏃",
+      color: "text-green-400",
+      gradient: "from-green-500/20 to-green-600/10",
+    },
+    Love: {
+      icon: "❤️",
+      color: "text-red-400",
+      gradient: "from-red-500/20 to-red-600/10",
+    },
+    Happiness: {
+      icon: "😊",
+      color: "text-purple-400",
+      gradient: "from-purple-500/20 to-purple-600/10",
+    },
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 space-y-8 max-w-7xl">
+    <div
+      className="min-h-[calc(100vh-64px)] relative overflow-hidden"
+      style={{
+        background: 'radial-gradient(ellipse at center, var(--daily-log-bg-start) 0%, var(--daily-log-bg-end) 100%)'
+      }}
+    >
+      {/* Subtle grid overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.015]"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(0, 229, 255, 0.3) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 229, 255, 0.3) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px'
+        }}
+      />
+
+      {/* Animated scanline */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        style={{
+          background: 'linear-gradient(transparent 40%, rgba(0, 229, 255, 0.2) 50%, transparent 60%)',
+          backgroundSize: '100% 4px',
+          animation: 'scanline 8s linear infinite'
+        }}
+      />
+
+      <div className="relative max-w-7xl mx-auto px-6 py-8 space-y-8">
         {/* Header */}
-        <header className="space-y-1">
-          <h1 className="text-3xl font-semibold tracking-tight">
-            OKR Overview
+        <div className="text-center space-y-2">
+          <h1 className="text-4xl font-bold font-orbitron dark:text-white text-black"
+            style={{ textShadow: '0 0 20px rgba(0, 229, 255, 0.2)' }}>
+            OKR OVERVIEW
           </h1>
-          <p className="text-sm text-muted-foreground">
-            From weekly actions to annual vision
+          <p className="text-sm dark:text-[#525252] text-[#555555]"
+            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+            Your complete goal hierarchy at a glance
           </p>
-        </header>
+        </div>
 
-        {/* Weekly Goals - PRIORITY #1 */}
-        <Card className="shadow-md border-primary/20 transition-all duration-200 hover:shadow-lg">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Target className="h-5 w-5 text-primary" />
-                <CardTitle className="text-lg font-semibold">
-                  Week {currentWeekNumber} Goals
-                </CardTitle>
-                <Badge variant="outline" className="ml-2">This Week</Badge>
-              </div>
-              <Badge variant="outline">
-                {weeklyGoals?.length || 0} Goals
-              </Badge>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {!weeklyGoals || weeklyGoals.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <Target className="h-12 w-12 text-muted-foreground/40 mb-4" />
-                <p className="text-sm text-muted-foreground">
-                  No goals set for this week.
-                  <br />
-                  Complete last week&apos;s review to plan ahead.
-                </p>
-              </div>
-            ) : (
-              <div className="grid gap-4 md:grid-cols-2">
-                {Object.entries(
-                  weeklyGoals.reduce((acc, goal) => {
-                    if (!acc[goal.category]) acc[goal.category] = [];
-                    acc[goal.category].push(goal);
-                    return acc;
-                  }, {} as Record<string, typeof weeklyGoals>)
-                ).map(([category, goals]) => {
-                  const config = categoryConfig[category] || {
-                    icon: "🎯",
-                    color: "bg-gray-500/10 text-gray-700 dark:text-gray-400"
-                  };
-
-                  return (
-                    <div
-                      key={category}
-                      className="p-4 rounded-lg border bg-card"
-                    >
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="text-base">{config.icon}</span>
-                        <Badge variant="secondary" className={config.color}>
-                          {category}
-                        </Badge>
-                      </div>
-                      <div className="space-y-2">
-                        {goals.map((goal, index) => (
-                          <div key={index} className="flex items-start gap-2 group">
-                            <CheckCircle2 className="w-4 h-4 mt-0.5 text-muted-foreground/40 flex-shrink-0 group-hover:text-primary transition-colors" />
-                            <p className="text-sm leading-relaxed">
-                              {goal.goal}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </CardContent>
+        {/* Annual North Stars */}
+        <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.25)] dark:bg-card/50 bg-white/80
+          shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
+          <div className="flex items-center gap-3 mb-6">
+            <Flag className="w-6 h-6 dark:text-[#00E5FF] text-[#0097A7]" />
+            <h2 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0097A7]">
+              ANNUAL NORTH STARS
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { area: "Wealth", value: profile.northStars.wealth },
+              { area: "Health", value: profile.northStars.health },
+              { area: "Love", value: profile.northStars.love },
+              { area: "Happiness", value: profile.northStars.happiness },
+            ].map(({ area, value }) => {
+              const config = areaConfig[area];
+              return (
+                <div key={area} className={`p-6 rounded-xl bg-gradient-to-br ${config.gradient}
+                  dark:border dark:border-white/[0.08] border border-black/[0.08]`}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-2xl">{config.icon}</span>
+                    <h3 className={`text-sm font-bold uppercase tracking-wider ${config.color}`}
+                      style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                      {area}
+                    </h3>
+                  </div>
+                  <p className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
+                    style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                    {value}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
         </Card>
 
         {/* Monthly OKRs */}
-        <Card className="shadow-sm transition-shadow duration-200 hover:shadow-md">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5" />
-                <CardTitle className="text-lg font-semibold">
-                  {monthNames[currentMonth - 1]} {currentYear} OKRs
-                </CardTitle>
-              </div>
-              <Badge variant="outline">
-                {monthlyOKRs?.length || 0} Objectives
-              </Badge>
+        <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.25)] dark:bg-card/50 bg-white/80
+          shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <TrendingUp className="w-6 h-6 dark:text-[#00E5FF] text-[#0097A7]" />
+              <h2 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0097A7]">
+                {monthNames[currentMonth - 1].toUpperCase()} {currentYear} OKRs
+              </h2>
             </div>
-          </CardHeader>
-          <CardContent>
-            {!monthlyOKRs || monthlyOKRs.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <TrendingUp className="h-12 w-12 text-muted-foreground/40 mb-4" />
-                <p className="text-sm text-muted-foreground">
-                  No OKRs set for this month.
-                  <br />
-                  Complete last month&apos;s review to plan ahead.
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-6">
-                {monthlyOKRs.map((okr, index) => {
-                  const config = areaConfig[okr.area] || {
-                    icon: "🎯",
-                    color: "bg-gray-500/10 text-gray-700 dark:text-gray-400",
-                  };
+            <span className="text-sm dark:text-[#525252] text-[#555555] font-bold"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+              {monthlyOKRs?.length || 0} Objectives
+            </span>
+          </div>
 
-                  return (
-                    <div key={index} className="space-y-4">
-                      <div className="flex items-start gap-3">
-                        <span className="text-xl mt-0.5">{config.icon}</span>
-                        <div className="flex-1 space-y-2">
-                          <div className="flex items-center gap-2">
-                            <Badge variant="secondary" className={config.color}>
-                              {okr.area}
-                            </Badge>
-                          </div>
-                          <p className="text-base font-medium leading-relaxed">
-                            {okr.objective}
-                          </p>
-
-                          {/* Key Results */}
-                          <div className="space-y-3 pl-4 border-l-2 border-border">
-                            {okr.keyResults.map((kr, krIndex) => (
-                              <div key={krIndex} className="space-y-2">
-                                <div className="flex items-baseline justify-between gap-2">
-                                  <p className="text-sm text-muted-foreground">
-                                    {kr.description}
-                                  </p>
-                                  <span className="text-xs text-muted-foreground whitespace-nowrap">
-                                    0/{kr.target} {kr.unit}
-                                  </span>
-                                </div>
-                                <Progress value={0} className="h-2" />
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                      {index < monthlyOKRs.length - 1 && <Separator />}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Quarterly Milestones */}
-        <Card className="shadow-sm transition-shadow duration-200 hover:shadow-md">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Flag className="h-5 w-5" />
-                <CardTitle className="text-lg font-semibold">
-                  Q{currentQuarter} {currentYear} Milestones
-                </CardTitle>
-              </div>
-              <Badge variant="outline">
-                {quarterlyMilestones.length} {quarterlyMilestones.length === 1 ? "Milestone" : "Milestones"}
-              </Badge>
+          {!monthlyOKRs || monthlyOKRs.length === 0 ? (
+            <div className="text-center py-12">
+              <TrendingUp className="w-16 h-16 dark:text-[#444444] text-[#BBBBBB] mx-auto mb-4 opacity-40" />
+              <p className="text-sm dark:text-[#3d3d3d] text-[#777777]"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                No OKRs set for this month.<br />
+                Complete last month&apos;s review to plan ahead.
+              </p>
             </div>
-          </CardHeader>
-          <CardContent>
-            {quarterlyMilestones.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <Flag className="h-12 w-12 text-muted-foreground/40 mb-4" />
-                <p className="text-sm text-muted-foreground">
-                  No milestones set for this quarter.
-                  <br />
-                  Complete last quarter&apos;s review to plan ahead.
-                </p>
-              </div>
-            ) : (
-              <div className="grid gap-4 md:grid-cols-2">
-                {quarterlyMilestones.map((milestone, index) => {
-                  const config = areaConfig[milestone.area] || {
-                    icon: "🎯",
-                    color: "bg-gray-500/10 text-gray-700 dark:text-gray-400",
-                  };
+          ) : (
+            <div className="space-y-6">
+              {monthlyOKRs.map((okr, index) => {
+                const config = areaConfig[okr.area] || {
+                  icon: "🎯",
+                  color: "text-gray-400",
+                  gradient: "from-gray-500/20 to-gray-600/10",
+                };
 
-                  return (
-                    <div
-                      key={index}
-                      className="p-4 rounded-lg border bg-card transition-all duration-200 hover:shadow-sm"
-                    >
-                      <div className="flex items-start gap-3">
-                        <span className="text-xl mt-0.5">{config.icon}</span>
-                        <div className="flex-1 space-y-2">
-                          <Badge variant="secondary" className={config.color}>
-                            {milestone.area}
-                          </Badge>
-                          <p className="text-sm leading-relaxed">
-                            {milestone.milestone}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Annual North Stars */}
-        <Card className="shadow-sm transition-shadow duration-200 hover:shadow-md">
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <Flag className="h-5 w-5" />
-              <CardTitle className="text-lg font-semibold">Annual North Stars</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {[
-                { area: "Wealth", value: profile.northStars.wealth },
-                { area: "Health", value: profile.northStars.health },
-                { area: "Love", value: profile.northStars.love },
-                { area: "Happiness", value: profile.northStars.happiness },
-              ].map(({ area, value }) => {
-                const config = areaConfig[area];
                 return (
-                  <div key={area} className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg">{config.icon}</span>
-                      <Badge variant="secondary" className={config.color}>
-                        {area}
-                      </Badge>
+                  <div
+                    key={index}
+                    className={`rounded-xl p-6 bg-gradient-to-br ${config.gradient}
+                      dark:border dark:border-white/[0.08] border border-black/[0.08]`}
+                  >
+                    <div className="flex items-start gap-3 mb-4">
+                      <span className="text-xl mt-1">{config.icon}</span>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className={`text-xs font-bold uppercase tracking-wider ${config.color}`}
+                            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                            {okr.area}
+                          </span>
+                        </div>
+                        <p className="text-lg dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed mb-4"
+                          style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                          {okr.objective}
+                        </p>
+
+                        {/* Key Results */}
+                        <div className="space-y-3 pl-6 border-l-2 dark:border-white/[0.15] border-black/[0.12]">
+                          {okr.keyResults.map((kr, krIndex) => (
+                            <div key={krIndex} className="space-y-1">
+                              <div className="flex items-baseline justify-between gap-2">
+                                <p className="text-sm dark:text-[#CCCCCC] text-[#333333]"
+                                  style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                                  {kr.description}
+                                </p>
+                                <span className="text-xs dark:text-[#525252] text-[#555555] font-bold whitespace-nowrap"
+                                  style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                                  0/{kr.target} {kr.unit}
+                                </span>
+                              </div>
+                              <div className="h-2 dark:bg-white/[0.05] bg-black/[0.08] rounded-full overflow-hidden">
+                                <div
+                                  className={`h-full bg-gradient-to-r ${config.gradient} transition-all duration-500`}
+                                  style={{ width: "0%" }}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-sm leading-relaxed">{value}</p>
                   </div>
                 );
               })}
             </div>
-          </CardContent>
+          )}
         </Card>
 
-        {/* Footer */}
-        <div className="text-center py-4">
-          <p className="text-xs text-muted-foreground">
+        {/* Quarterly Milestones */}
+        <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.25)] dark:bg-card/50 bg-white/80
+          shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <Flag className="w-6 h-6 dark:text-[#00E5FF] text-[#0097A7]" />
+              <h2 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0097A7]">
+                Q{currentQuarter} {currentYear} MILESTONES
+              </h2>
+            </div>
+            <span className="text-sm dark:text-[#525252] text-[#555555] font-bold"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+              {quarterlyMilestones.length} {quarterlyMilestones.length === 1 ? "Milestone" : "Milestones"}
+            </span>
+          </div>
+
+          {quarterlyMilestones.length === 0 ? (
+            <div className="text-center py-12">
+              <Flag className="w-16 h-16 dark:text-[#444444] text-[#BBBBBB] mx-auto mb-4 opacity-40" />
+              <p className="text-sm dark:text-[#3d3d3d] text-[#777777]"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                No milestones set for this quarter.<br />
+                Complete last quarter&apos;s review to plan ahead.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {quarterlyMilestones.map((milestone, index) => {
+                const config = areaConfig[milestone.area] || {
+                  icon: "🎯",
+                  color: "text-gray-400",
+                  gradient: "from-gray-500/20 to-gray-600/10",
+                };
+
+                return (
+                  <div
+                    key={index}
+                    className={`p-6 rounded-xl bg-gradient-to-br ${config.gradient}
+                      dark:border dark:border-white/[0.08] border border-black/[0.08]
+                      transition-all duration-200 hover:scale-[1.02]`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl mt-1">{config.icon}</span>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className={`text-xs font-bold uppercase tracking-wider ${config.color}`}
+                            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                            {milestone.area}
+                          </span>
+                        </div>
+                        <p className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
+                          style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                          {milestone.milestone}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </Card>
+
+        {/* Weekly Goals */}
+        <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.25)] dark:bg-card/50 bg-white/80
+          shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <Target className="w-6 h-6 dark:text-[#00E5FF] text-[#0097A7]" />
+              <h2 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0097A7]">
+                WEEK {currentWeekNumber} GOALS
+              </h2>
+            </div>
+            <span className="text-sm dark:text-[#525252] text-[#555555] font-bold"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+              {weeklyGoals?.length || 0} Goals
+            </span>
+          </div>
+
+          {!weeklyGoals || weeklyGoals.length === 0 ? (
+            <div className="text-center py-12">
+              <Target className="w-16 h-16 dark:text-[#444444] text-[#BBBBBB] mx-auto mb-4 opacity-40" />
+              <p className="text-sm dark:text-[#3d3d3d] text-[#777777]"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                No goals set for this week.<br />
+                Complete last week&apos;s review to plan ahead.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {Object.entries(
+                weeklyGoals.reduce((acc, goal) => {
+                  if (!acc[goal.category]) acc[goal.category] = [];
+                  acc[goal.category].push(goal);
+                  return acc;
+                }, {} as Record<string, typeof weeklyGoals>)
+              ).map(([category, goals]) => {
+                const config = categoryConfig[category] || { icon: "🎯", color: "text-gray-400" };
+
+                return (
+                  <div
+                    key={category}
+                    className="p-6 rounded-xl dark:bg-white/[0.02] bg-black/[0.03]
+                      dark:border dark:border-white/[0.08] border border-black/[0.08]"
+                  >
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="text-lg">{config.icon}</span>
+                      <h3 className={`text-sm font-bold uppercase tracking-wider ${config.color}`}
+                        style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                        {category}
+                      </h3>
+                    </div>
+                    <div className="space-y-3">
+                      {goals.map((goal, index) => (
+                        <div key={index} className="flex items-start gap-3 group">
+                          <CheckCircle2 className="w-5 h-5 mt-0.5 dark:text-[#3d3d3d] text-[#525252] flex-shrink-0
+                            group-hover:dark:text-[#00E5FF] group-hover:text-[#0097A7] transition-colors" />
+                          <p className="text-sm dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
+                            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                            {goal.goal}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </Card>
+
+        {/* Info Footer */}
+        <div className="text-center py-6">
+          <p className="text-xs dark:text-[#3d3d3d] text-[#777777] uppercase tracking-wider"
+            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
             Complete your reviews to keep your OKRs up to date
           </p>
         </div>

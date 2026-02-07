@@ -3,13 +3,14 @@
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { format } from "date-fns";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Calendar,
+  Image as ImageIcon,
   CheckCircle2
 } from "lucide-react";
+import Image from "next/image";
 import { useMemo } from "react";
 import { TodaysWinCondition } from "./TodaysWinCondition";
 import { StoicQuote } from "./StoicQuote";
@@ -24,42 +25,137 @@ interface DashboardProps {
   onNavigate: (tab: "daily-log" | "visionboard" | "planning" | "data" | "okr") => void;
 }
 
-// Simplified greeting arrays
-const MORNING_GREETINGS = [
-  "Good morning", "Rise and shine", "Fresh start", "New day"
+// Move greeting arrays outside component to prevent recreation on every render
+const MORNING_GREETINGS_TEMPLATE = [
+  "Good morning", "Rise and shine", "Fresh start", "New day",
+  "Seize the morning", "Conquer the day", "Your day awaits", "Make it count",
+  "Own this day", "Time to build", "Begin with purpose", "Command your morning",
+  "Today is yours", "Dawn of opportunity", "First light", "Early victory",
+  "Morning warrior", "Sunrise mindset", "Start with strength", "Lead the day",
+  "Master the morning", "Attack the day", "Rise with intent", "New chapter",
+  "Morning momentum", "First move wins", "Own the dawn", "Shape your day",
+  "Morning clarity", "Begin boldly", "Daybreak discipline", "Fresh energy",
+  "Awake and ready", "Build your empire", "Start unstoppable", "Morning power",
+  "Embrace the day", "New possibilities", "Command this day", "Morning mastery",
+  "Own your hours", "Begin the conquest", "Morning focus", "Day one mindset",
+  "Rise and execute", "Morning excellence", "Claim this day", "Sunrise strength",
+  "Time to dominate", "Morning mission", "Start legendary", "Own the sunrise",
+  "Wake and build", "Morning champion", "First light wins", "Begin victoriously",
+  "Daybreak drive", "Morning control", "Start with fire", "Greet greatness",
 ];
 
-const AFTERNOON_GREETINGS = [
-  "Good afternoon", "Keep pushing", "Halfway there", "Making progress"
+const AFTERNOON_GREETINGS_TEMPLATE = [
+  "Good afternoon", "Keep pushing", "Halfway there", "Making progress",
+  "Stay focused", "Momentum is yours", "Keep building", "Execute your plan",
+  "Power through", "Control what you can", "Strength in action", "Progress over perfection",
+  "Midday strength", "Stay the course", "Maintain velocity", "Keep the fire",
+  "Afternoon warrior", "Peak performance", "Discipline holds", "Stay sharp",
+  "Focus forward", "Push boundaries", "Relentless progress", "Own the grind",
+  "Steady power", "Execution mode", "Drive continues", "Afternoon mastery",
+  "Keep moving", "No surrender", "Build momentum", "Stay hungry",
+  "Afternoon focus", "Press advantage", "Control the pace", "Steady wins",
+  "Lock in", "Peak hours", "Dominate now", "Stay relentless",
+  "Forge ahead", "Keep climbing", "Afternoon drive", "Own this moment",
+  "Maintain intensity", "Never settle", "Keep building", "Consistent effort",
+  "Afternoon power", "Stay committed", "Execute flawlessly", "Own the process",
+  "Keep advancing", "Afternoon excellence", "Stay in control", "Build your legacy",
+  "Press on", "Own the afternoon", "Steady fire", "Keep winning",
 ];
 
-const EVENING_GREETINGS = [
-  "Good evening", "Finishing strong", "Winding down", "Almost there"
+const EVENING_GREETINGS_TEMPLATE = [
+  "Good evening", "Finishing strong", "Winding down", "Almost there",
+  "Close it out", "End with intention", "Reflect and prepare", "Tomorrow starts tonight",
+  "Own the finish", "Cap the day", "Complete the circle", "Seal the victory",
+  "Evening wisdom", "Final push", "Close strong", "Finish well",
+  "Evening warrior", "Wrap it up", "Closing hours", "End with power",
+  "Evening focus", "Final stretch", "Sunset strength", "Finish line",
+  "Evening mastery", "Close the loop", "Final moves", "End game",
+  "Evening clarity", "Sunset mindset", "Finish right", "Close victoriously",
+  "Evening drive", "Final chapter", "End strong", "Closing power",
+  "Evening excellence", "Wrap strong", "Final hours", "Close with purpose",
+  "Evening control", "Finish bold", "Last light wins", "End intentionally",
+  "Evening momentum", "Close complete", "Final push up", "End with fire",
+  "Evening discipline", "Finish clean", "Close smart", "Evening mission",
+  "Final lap", "End sharp", "Close perfect", "Evening champion",
+  "Finish legendary", "Close the day", "Evening victory", "End unstoppable",
 ];
 
-const NIGHT_GREETINGS = [
-  "Burning midnight oil", "Late night hustle", "Night owl mode", "Still grinding"
+const NIGHT_GREETINGS_TEMPLATE = [
+  "Burning midnight oil", "Late night hustle", "Night owl mode", "Still grinding",
+  "Own the night", "Silent hours", "Nocturnal progress", "Rest is earned",
+  "Night warrior", "Quiet power", "After hours excellence", "Moon shift activated",
+  "Midnight strength", "Night grind", "Silent power", "Dark hours win",
+  "Night mastery", "Moonlight hustle", "Late night focus", "Nocturnal warrior",
+  "Midnight drive", "Night excellence", "Silent grind", "After dark power",
+  "Night mission", "Moonlit progress", "Midnight momentum", "Night discipline",
+  "Silent hours grind", "Night time wins", "Darkness works", "Midnight warrior",
+  "Night shift strong", "Moon power", "Late night win", "Nocturnal drive",
+  "Midnight mastery", "Night conquest", "Silent victory", "Dark hours hustle",
+  "Night mode on", "Moonlight grind", "Midnight focus", "Night champion",
+  "Silent strength", "After hours win", "Night legend", "Midnight mission",
+  "Nocturnal excellence", "Night dominance", "Silent fire", "Moon shift power",
+  "Midnight control", "Night execution", "Dark hours win", "Late night legend",
+  "Nocturnal mastery", "Night finish", "Silent conquest", "Midnight victory",
 ];
 
-function getDynamicGreeting(name: string): string {
+// Weekday-specific variations (constant)
+const WEEKDAY_MESSAGES: { [key: number]: string } = {
+  1: "Monday momentum", // Monday
+  2: "Tuesday grind", // Tuesday
+  3: "Midweek power", // Wednesday
+  4: "Thursday drive", // Thursday
+  5: "Friday energy", // Friday
+  6: "Weekend warrior", // Saturday
+  0: "Sunday focus", // Sunday
+};
+
+// Dynamic greeting based on time of day and day of week
+function getDynamicGreeting(name: string, currentStreak: number): { message: string; emoji: string } {
   const now = new Date();
   const hour = now.getHours();
+  const day = now.getDay(); // 0 = Sunday, 6 = Saturday
+
+  // Get 2-hour block (0-11 blocks per day)
   const timeBlock = Math.floor(hour / 2);
 
-  let greetingsTemplate = MORNING_GREETINGS;
+  // Time-based emoji selection (white/subtle emojis)
+  let emoji = "🤍"; // Default white heart
+  let greetingsTemplate = MORNING_GREETINGS_TEMPLATE;
 
   if (hour >= 5 && hour < 12) {
-    greetingsTemplate = MORNING_GREETINGS;
+    // Morning: 5am - 12pm
+    greetingsTemplate = MORNING_GREETINGS_TEMPLATE;
+    emoji = "🌅";
   } else if (hour >= 12 && hour < 18) {
-    greetingsTemplate = AFTERNOON_GREETINGS;
+    // Afternoon: 12pm - 6pm
+    greetingsTemplate = AFTERNOON_GREETINGS_TEMPLATE;
+    emoji = "☀️";
   } else if (hour >= 18 && hour < 23) {
-    greetingsTemplate = EVENING_GREETINGS;
+    // Evening: 6pm - 11pm
+    greetingsTemplate = EVENING_GREETINGS_TEMPLATE;
+    emoji = "🌆";
   } else {
-    greetingsTemplate = NIGHT_GREETINGS;
+    // Night: 11pm - 5am
+    greetingsTemplate = NIGHT_GREETINGS_TEMPLATE;
+    emoji = "🌙";
   }
 
+  // Add streak-based motivation
+  if (currentStreak >= 7) {
+    emoji = "🔥"; // Fire for hot streaks
+  }
+
+  // Select greeting based on 30-minute time block (changes every 30 min)
   const greetingIndex = timeBlock % greetingsTemplate.length;
-  return `${greetingsTemplate[greetingIndex]}, ${name}`;
+  const baseGreeting = `${greetingsTemplate[greetingIndex]}, ${name}`;
+
+  // Occasionally add weekday flavor (30% chance)
+  const addWeekdayFlavor = Math.random() > 0.7;
+  const message = addWeekdayFlavor
+    ? `${baseGreeting}! ${WEEKDAY_MESSAGES[day]}!`
+    : `${baseGreeting}!`;
+
+  return { message, emoji };
 }
 
 export function Dashboard({ onNavigate }: DashboardProps) {
@@ -68,12 +164,15 @@ export function Dashboard({ onNavigate }: DashboardProps) {
   const userStats = useQuery(api.gamification.getUserStats);
   const dailyHabits = useQuery(api.dailyHabits.getHabitsForDate, { date: today });
   const habitTemplates = useQuery(api.habitTemplates.listTemplates, {});
+  const visionboardImages = useQuery(api.visionboard.getAllImages);
 
+  // Memoize dynamic greeting to prevent recalculation on every render
   const greeting = useMemo(
-    () => profile ? getDynamicGreeting(profile.name) : "",
-    [profile]
+    () => profile && userStats ? getDynamicGreeting(profile.name, userStats.currentStreak) : { message: "", emoji: "" },
+    [profile, userStats]
   );
 
+  // Memoize expensive habit calculations to avoid recomputing on every render
   const habitStats = useMemo(() => {
     if (!dailyHabits || !habitTemplates) {
       return {
@@ -97,7 +196,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     const todayProgress = totalHabits > 0 ? Math.round((completedHabits / totalHabits) * 100) : 0;
     const todayXP = dailyHabits.reduce((sum, h) => sum + (h.completed ? h.xpEarned : 0), 0);
     const coreComplete = completedCore === coreHabits.length && coreHabits.length > 0;
-    const todayComplete = todayProgress === 100;
+    const todayComplete = todayProgress === 100; // Core + Extra all done = PERFECT DAY (Gold)
 
     return {
       coreHabits,
@@ -111,6 +210,14 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     };
   }, [dailyHabits, habitTemplates]);
 
+  // Memoize visionboard calculations
+  const visionboardData = useMemo(() => {
+    const visionboardPreview = visionboardImages?.slice(0, 4) || [];
+    const hasVisionboardImages = visionboardImages && visionboardImages.length > 0;
+    return { visionboardPreview, hasVisionboardImages };
+  }, [visionboardImages]);
+
+  // Memoize SVG circle calculations for progress ring
   const progressRingProps = useMemo(() => {
     const radius = 28;
     const circumference = 2 * Math.PI * radius;
@@ -121,6 +228,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     };
   }, [habitStats.todayProgress]);
 
+  // Destructure for cleaner code
   const {
     totalHabits,
     completedHabits,
@@ -129,6 +237,8 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     coreComplete,
     todayComplete,
   } = habitStats;
+
+  const { visionboardPreview, hasVisionboardImages } = visionboardData;
 
   if (!profile || !userStats || !dailyHabits || !habitTemplates) {
     return (
@@ -139,209 +249,343 @@ export function Dashboard({ onNavigate }: DashboardProps) {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 space-y-8 max-w-7xl">
-        {/* Clean Header */}
-        <header className="space-y-1">
-          <h1 className="text-3xl font-semibold tracking-tight">
-            {greeting}
+    <div
+      className="min-h-[calc(100vh-64px)] relative overflow-hidden"
+      style={{
+        background: 'radial-gradient(ellipse at center, var(--daily-log-bg-start) 0%, var(--daily-log-bg-end) 100%)'
+      }}
+    >
+      {/* Subtle grid overlay for HUD effect */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.015]"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(0, 229, 255, 0.3) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 229, 255, 0.3) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px'
+        }}
+      />
+
+      {/* Animated scanline effect */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        style={{
+          background: 'linear-gradient(transparent 40%, rgba(0, 229, 255, 0.2) 50%, transparent 60%)',
+          backgroundSize: '100% 4px',
+          animation: 'scanline 8s linear infinite'
+        }}
+      />
+
+      <div className="relative max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8 space-y-4 md:space-y-6">
+        {/* Welcome Header */}
+        <div className="text-center space-y-2 md:space-y-3 mb-2">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold font-orbitron text-white"
+            style={{
+              textShadow: '0 0 30px rgba(255, 255, 255, 0.2)'
+            }}
+          >
+            {greeting.message} {greeting.emoji}
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p
+            className="text-sm md:text-base lg:text-lg dark:text-[#AAAAAA] text-[#525252]"
+            style={{
+              fontFamily: '"Courier New", "Monaco", monospace',
+              fontVariantNumeric: 'tabular-nums'
+            }}
+          >
             {format(new Date(), "EEEE, MMMM d, yyyy")}
           </p>
-        </header>
+        </div>
 
-        {/* Today's Log + Quick Stats - HERO SECTION */}
-        <div className="grid gap-6 lg:grid-cols-2">
-          {/* Today's Log - Priority #1 */}
-          <Card className={`shadow-md transition-all duration-200 ${
-            todayComplete
-              ? 'border-yellow-500/30 hover:shadow-yellow-500/20 shadow-yellow-500/10'
+      {/* Today's Log (compact) + Quick Stats - PRIORITY #1 */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+          {/* Today's Log - Compact Version */}
+          <Card
+            className={`p-6 dark:bg-card/50 bg-white/80
+            shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl
+            ${todayComplete
+              ? 'dark:border-[rgba(255,215,0,0.3)] border-[rgba(255,215,0,0.4)] dark:hover:border-[rgba(255,215,0,0.4)] hover:border-[rgba(255,215,0,0.5)] dark:hover:shadow-[0_0_40px_rgba(255,215,0,0.3)] hover:shadow-[0_8px_40px_rgba(255,215,0,0.4)]'
               : coreComplete
-                ? 'border-green-500/30 hover:shadow-green-500/20 shadow-green-500/10'
-                : 'border-primary/20 hover:shadow-lg'
-          }`}>
-            <CardHeader>
+                ? 'dark:border-[rgba(0,230,118,0.25)] border-[rgba(76,175,80,0.3)] dark:hover:border-[rgba(0,230,118,0.35)] hover:border-[rgba(76,175,80,0.4)] dark:hover:shadow-[0_0_35px_rgba(0,230,118,0.25)] hover:shadow-[0_8_35px_rgba(76,175,80,0.3)]'
+                : 'dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)] dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.25)]'
+            }`}
+            style={{
+              background: todayComplete
+                ? 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(0, 230, 118, 0.06) 100%), rgba(26, 26, 26, 0.5)'
+                : coreComplete
+                  ? 'linear-gradient(135deg, rgba(0, 230, 118, 0.08) 0%, rgba(0, 229, 255, 0.04) 100%), rgba(26, 26, 26, 0.5)'
+                  : 'linear-gradient(135deg, rgba(0, 229, 255, 0.05) 0%, rgba(26, 26, 26, 0.5) 100%)'
+            }}
+          >
+            <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-primary" />
-                <CardTitle className="text-lg font-semibold">Today&apos;s Log</CardTitle>
-                <Badge variant="outline" className="ml-auto">Priority</Badge>
+                <Calendar className="h-5 w-5 dark:text-[#00E5FF] text-[#0077B6]" />
+                <h3 className="font-bold font-orbitron dark:text-[#00E5FF] text-[#0077B6]">Today&apos;s Log</h3>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {todayComplete ? (
-                <>
-                  <div className="flex items-center gap-4">
-                    <CheckCircle2 className="h-12 w-12 text-yellow-500" />
-                    <div>
-                      <p className="text-base font-semibold text-yellow-600 dark:text-yellow-500">
-                        Perfect Day ✨
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {todayProgress}% • {todayXP} XP
-                      </p>
+
+            {todayComplete ? (
+              <>
+                <div className="flex items-center gap-4">
+                  <div className="relative">
+                    <CheckCircle2
+                      className="h-12 w-12 dark:text-[#FFD700] text-[#FFA500]"
+                      style={{
+                        filter: 'drop-shadow(0 0 8px rgba(255, 215, 0, 0.6))',
+                        animation: 'neon-pulse 2s ease-in-out infinite'
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium font-orbitron dark:text-[#FFD700] text-[#FFA500]"
+                      style={{
+                        textShadow: '0 0 10px rgba(255, 215, 0, 0.5)'
+                      }}
+                    >
+                      PERFECT DAY ✨
+                    </p>
+                    <p className="text-sm dark:text-[#525252] text-[#3d3d3d]">
+                      <span className="font-orbitron" style={{ fontVariantNumeric: 'tabular-nums' }}>{todayProgress}%</span>
+                      {' • '}
+                      <span className="font-orbitron" style={{ fontVariantNumeric: 'tabular-nums' }}>{todayXP}</span>
+                      {' '}XP
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  onClick={() => onNavigate("daily-log")}
+                  className="w-full dark:bg-gradient-to-r dark:from-[#FFD700] dark:to-[#FFA500] bg-gradient-to-r from-[#FFA500] to-[#FF8C00]
+                    text-black font-bold font-orbitron uppercase tracking-wider text-xs
+                    dark:shadow-[0_0_20px_rgba(255,215,0,0.4)] shadow-[0_4px_15px_rgba(255,165,0,0.4)]
+                    dark:hover:shadow-[0_0_30px_rgba(255,215,0,0.6)] hover:shadow-[0_6px_25px_rgba(255,165,0,0.6)] hover:scale-105
+                    transition-all duration-300"
+                >
+                  Celebration Mode ✨
+                </Button>
+              </>
+            ) : coreComplete ? (
+              <>
+                <div className="flex items-center gap-4">
+                  <CheckCircle2 className="h-12 w-12 dark:text-[#00E676] text-[#4CAF50]"
+                    style={{
+                      filter: 'drop-shadow(0 0 6px rgba(0, 230, 118, 0.5))'
+                    }}
+                  />
+                  <div>
+                    <p className="text-sm font-medium font-orbitron dark:text-[#00E676] text-[#4CAF50]">
+                      SOLID DAY ✓
+                    </p>
+                    <p className="text-sm dark:text-[#525252] text-[#3d3d3d]">
+                      Core erledigt • Extras offen
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  onClick={() => onNavigate("daily-log")}
+                  className="w-full dark:bg-gradient-to-r dark:from-[#00E676] dark:to-[#00C853] bg-gradient-to-r from-[#4CAF50] to-[#388E3C]
+                    text-black font-bold font-orbitron uppercase tracking-wider text-xs
+                    dark:shadow-[0_0_15px_rgba(0,230,118,0.3)] shadow-[0_4px_12px_rgba(76,175,80,0.3)]
+                    dark:hover:shadow-[0_0_25px_rgba(0,230,118,0.5)] hover:shadow-[0_6px_20px_rgba(76,175,80,0.5)] hover:scale-105
+                    transition-all duration-300"
+                >
+                  Complete Extras →
+                </Button>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-4">
+                  <div className="relative h-16 w-16">
+                    {/* Simple Progress Ring with glow */}
+                    <svg className="h-16 w-16 -rotate-90">
+                      <circle
+                        cx="32"
+                        cy="32"
+                        r="28"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        fill="none"
+                        className="dark:text-[#2a2a2a] text-[#e9ecef]"
+                      />
+                      <circle
+                        cx="32"
+                        cy="32"
+                        r="28"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        fill="none"
+                        strokeDasharray={progressRingProps.circumference}
+                        strokeDashoffset={progressRingProps.strokeDashoffset}
+                        className="dark:text-[#00E5FF] text-[#0077B6] transition-all duration-500"
+                        style={{
+                          filter: todayProgress > 50 ? 'drop-shadow(0 0 6px currentColor)' : 'none'
+                        }}
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-sm font-bold dark:text-[#E0E0E0] text-[#1A1A1A] font-orbitron">{todayProgress}%</span>
                     </div>
                   </div>
-                  <Button
-                    onClick={() => onNavigate("daily-log")}
-                    className="w-full bg-gradient-to-r from-yellow-500 to-amber-500 text-black hover:from-yellow-600 hover:to-amber-600 transition-all duration-200"
-                  >
-                    Celebration Mode ✨
-                  </Button>
-                </>
-              ) : coreComplete ? (
-                <>
-                  <div className="flex items-center gap-4">
-                    <CheckCircle2 className="h-12 w-12 text-green-500" />
-                    <div>
-                      <p className="text-base font-semibold text-green-600 dark:text-green-500">
-                        Solid Day ✓
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        Core done • Extras open
-                      </p>
-                    </div>
+                  <div>
+                    <p className="text-sm font-medium dark:text-[#E0E0E0] text-[#1A1A1A]">
+                      <span className="font-orbitron" style={{ fontVariantNumeric: 'tabular-nums' }}>{completedHabits}/{totalHabits}</span>
+                      {' '}Habits erledigt
+                    </p>
+                    <p className="text-sm dark:text-[#525252] text-[#3d3d3d]">
+                      <span className="font-orbitron" style={{ fontVariantNumeric: 'tabular-nums' }}>{todayXP}</span>
+                      {' '}XP earned
+                    </p>
                   </div>
-                  <Button
-                    onClick={() => onNavigate("daily-log")}
-                    className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 transition-all duration-200"
-                  >
-                    Complete Extras →
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center gap-4">
-                    <div className="relative h-16 w-16">
-                      <svg className="h-16 w-16 -rotate-90">
-                        <circle
-                          cx="32"
-                          cy="32"
-                          r="28"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                          fill="none"
-                          className="text-muted/30"
-                        />
-                        <circle
-                          cx="32"
-                          cy="32"
-                          r="28"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                          fill="none"
-                          strokeDasharray={progressRingProps.circumference}
-                          strokeDashoffset={progressRingProps.strokeDashoffset}
-                          className="text-primary transition-all duration-500"
-                        />
-                      </svg>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-sm font-semibold">{todayProgress}%</span>
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">
-                        {completedHabits}/{totalHabits} Habits
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {todayXP} XP earned
-                      </p>
-                    </div>
-                  </div>
-                  <Button
-                    onClick={() => onNavigate("daily-log")}
-                    className="w-full transition-all duration-200"
-                  >
-                    Go to Daily Log →
-                  </Button>
-                </>
-              )}
-            </CardContent>
-          </Card>
+                </div>
+                <Button
+                  onClick={() => onNavigate("daily-log")}
+                  className="w-full dark:bg-gradient-to-r dark:from-[#00E5FF] dark:to-[#00B8D4] bg-gradient-to-r from-[#0077B6] to-[#005F8F]
+                    text-white font-bold font-orbitron uppercase tracking-wider text-xs
+                    dark:border-[#00E5FF]/30 border-[#0077B6]/30
+                    dark:shadow-[0_0_15px_rgba(0,229,255,0.3)] shadow-[0_4px_12px_rgba(0,119,182,0.3)]
+                    dark:hover:shadow-[0_0_25px_rgba(0,229,255,0.5)] hover:shadow-[0_6px_20px_rgba(0,119,182,0.5)] hover:scale-105
+                    transition-all duration-300"
+                >
+                  Zum Daily Log →
+                </Button>
+              </>
+            )}
+          </div>
+        </Card>
 
           {/* Quick Stats Badge */}
           <QuickStatsBadge />
         </div>
 
-        {/* Review Notifications + Weekly Progress */}
-        <div className="grid gap-6 md:grid-cols-2">
-          <Card className="shadow-sm transition-shadow duration-200 hover:shadow-md">
-            <CardContent className="p-6">
-              <ReviewNotificationBar />
-            </CardContent>
-          </Card>
-
-          <Card className="shadow-sm transition-shadow duration-200 hover:shadow-md">
-            <CardContent className="p-6">
-              <WeeklyProgressTracker />
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Win Condition & Stoic Quote */}
-        <div className="grid gap-6 md:grid-cols-2">
-          <StoicQuote />
-          <TodaysWinCondition />
-        </div>
-
-        {/* Weekly Goals Widget */}
-        <WeeklyGoalsWidget />
-
-        {/* Monthly OKR Progress Widget */}
-        <MonthlyOKRProgress />
-
-        {/* North Stars - Clean Version */}
-        <Card className="shadow-sm transition-shadow duration-200 hover:shadow-md">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold">North Stars</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">💰</span>
-                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    Wealth
-                  </p>
-                </div>
-                <p className="text-sm leading-relaxed">{profile.northStars.wealth}</p>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">🏃</span>
-                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    Health
-                  </p>
-                </div>
-                <p className="text-sm leading-relaxed">{profile.northStars.health}</p>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">❤️</span>
-                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    Love
-                  </p>
-                </div>
-                <p className="text-sm leading-relaxed">{profile.northStars.love}</p>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">😊</span>
-                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    Happiness
-                  </p>
-                </div>
-                <p className="text-sm leading-relaxed">{profile.northStars.happiness}</p>
-              </div>
-            </div>
-          </CardContent>
+      {/* Review Notifications + Weekly Progress - Side by Side */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+        {/* Review Notifications - Left */}
+        <Card className="p-4 md:p-6 dark:bg-card/50 bg-white/80
+          shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
+          dark:border-border/50 border-border/60
+          dark:hover:border-border hover:border-border/80">
+          <ReviewNotificationBar />
         </Card>
 
-        {/* Visionboard Carousel */}
+        {/* Weekly Progress - Right */}
+        <Card className="p-4 md:p-6 dark:bg-card/50 bg-white/80
+          shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
+          dark:border-border/50 border-border/60
+          dark:hover:border-border hover:border-border/80">
+          <WeeklyProgressTracker />
+        </Card>
+      </div>
+
+      {/* Win Condition & Stoic Quote - Side by Side */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Daily Stoic Quote - Left */}
+        <StoicQuote />
+
+        {/* Today's Win Condition - Right */}
+        <TodaysWinCondition />
+      </div>
+
+      {/* Weekly Goals Widget */}
+      <WeeklyGoalsWidget />
+
+      {/* Monthly OKR Progress Widget */}
+      <MonthlyOKRProgress />
+
+        {/* North Stars - Gaming HUD Style */}
+        <Card className="p-4 md:p-6 lg:p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:bg-card/50 bg-white/80
+          shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
+          dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)]
+          dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.2)]
+          hover:scale-[1.005]"
+          style={{
+            background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
+          }}
+        >
+          <div className="grid grid-cols-2 md:flex md:items-center md:justify-center gap-4 md:gap-8 lg:gap-16">
+            <div className="text-center group cursor-default">
+              <p className="text-[10px] md:text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#525252] text-[#3d3d3d] mb-2 md:mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
+                💰 WEALTH
+              </p>
+              <p className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.wealth}</p>
+            </div>
+            <div className="hidden md:block h-12 w-[1px] bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent opacity-30" />
+            <div className="text-center group cursor-default">
+              <p className="text-[10px] md:text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#525252] text-[#3d3d3d] mb-2 md:mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
+                🏃 HEALTH
+              </p>
+              <p className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.health}</p>
+            </div>
+            <div className="hidden md:block h-12 w-[1px] bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent opacity-30" />
+            <div className="text-center group cursor-default">
+              <p className="text-[10px] md:text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#525252] text-[#3d3d3d] mb-2 md:mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
+                ❤️ LOVE
+              </p>
+              <p className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.love}</p>
+            </div>
+            <div className="hidden md:block h-12 w-[1px] bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent opacity-30" />
+            <div className="text-center group cursor-default">
+              <p className="text-[10px] md:text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#525252] text-[#3d3d3d] mb-2 md:mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
+                😊 HAPPINESS
+              </p>
+              <p className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.happiness}</p>
+            </div>
+          </div>
+        </Card>
+
+        {/* Visionboard Carousel - Full Width */}
         <VisionboardCarousel />
+
+        {/* Old Visionboard kept below for reference - DELETE THIS */}
+        <div className="hidden">
+          <Card
+            className="p-6 dark:border-[rgba(139,92,246,0.15)] border-[rgba(139,92,246,0.2)] dark:bg-card/50 bg-white/80
+            shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl
+            dark:hover:border-[rgba(139,92,246,0.25)] hover:border-[rgba(139,92,246,0.3)]
+            dark:hover:shadow-[0_0_30px_rgba(139,92,246,0.2)] hover:shadow-[0_8px_30px_rgba(139,92,246,0.25)]"
+            style={{
+              background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(26, 26, 26, 0.5) 100%)'
+            }}
+          >
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <ImageIcon className="h-5 w-5 dark:text-[#8B5CF6] text-[#7C3AED]" />
+                <h3 className="font-bold font-orbitron dark:text-[#8B5CF6] text-[#7C3AED]">Visionboard</h3>
+              </div>
+            {hasVisionboardImages ? (
+              <div className="flex gap-2 overflow-hidden">
+                {visionboardPreview.map((image) => (
+                  <div
+                    key={image._id}
+                    className="w-20 h-20 rounded-lg overflow-hidden dark:bg-[#2a2a2a] bg-[#f1f3f5] relative flex-shrink-0
+                      border dark:border-[rgba(139,92,246,0.2)] border-[rgba(139,92,246,0.15)]"
+                  >
+                    <Image
+                      src={image.url}
+                      alt="Vision"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm dark:text-[#525252] text-[#3d3d3d]">No images yet</p>
+            )}
+              <Button
+                onClick={() => onNavigate("visionboard")}
+                variant="outline"
+                className="w-full dark:border-[#8B5CF6]/30 border-[#7C3AED]/30 dark:text-[#8B5CF6] text-[#7C3AED]
+                  dark:hover:bg-[rgba(139,92,246,0.1)] hover:bg-[rgba(124,58,237,0.1)]
+                  font-orbitron uppercase tracking-wider text-xs transition-all duration-200"
+              >
+                {hasVisionboardImages ? "Zum Visionboard" : "Add Images"}
+              </Button>
+            </div>
+          </Card>
+        </div>
+
+        {/* Quick Actions Grid - Keep existing structure */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        </div>
       </div>
     </div>
   );
