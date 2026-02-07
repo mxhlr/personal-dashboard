@@ -69,16 +69,12 @@ export const submitAnnualReview = mutation({
       topThreeLearnings: v.string(),
       stopStartContinue: v.string(),
       nextYearNorthStars: v.object({
-        wealth: v.string(),
-        health: v.string(),
-        love: v.string(),
-        happiness: v.string(),
+        wealth: v.array(v.string()),
+        health: v.array(v.string()),
+        love: v.array(v.string()),
+        happiness: v.array(v.string()),
       }),
     }),
-    nextYearGoals: v.optional(v.array(v.object({
-      goal: v.string(),
-      category: v.string(),
-    }))),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -112,7 +108,6 @@ export const submitAnnualReview = mutation({
       await ctx.db.patch(existingReview._id, {
         northStarReview: args.northStarReview,
         responses: args.responses,
-        nextYearGoals: args.nextYearGoals,
         completedAt: new Date().toISOString(),
       });
       return existingReview._id;
@@ -123,7 +118,6 @@ export const submitAnnualReview = mutation({
         year: args.year,
         northStarReview: args.northStarReview,
         responses: args.responses,
-        nextYearGoals: args.nextYearGoals,
         completedAt: new Date().toISOString(),
       });
       return reviewId;

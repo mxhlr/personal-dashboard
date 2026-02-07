@@ -33,12 +33,12 @@ export default defineSchema({
     role: v.string(),
     mainProject: v.string(),
 
-    // 4 North Stars (1 pro Lebensbereich)
+    // North Stars (mehrere pro Lebensbereich möglich)
     northStars: v.object({
-      wealth: v.string(),
-      health: v.string(),
-      love: v.string(),
-      happiness: v.string(),
+      wealth: v.array(v.string()),
+      health: v.array(v.string()),
+      love: v.array(v.string()),
+      happiness: v.array(v.string()),
     }),
 
     // Quarterly OKRs (Objectives & Key Results - hauptsächliche OKR-Ebene)
@@ -272,19 +272,13 @@ export default defineSchema({
       mostProudOf: v.string(),           // Worauf bist du am meisten stolz?
       topThreeLearnings: v.string(),     // Top 3 Learnings?
       stopStartContinue: v.string(),     // Was stoppen/starten/weitermachen?
-      nextYearNorthStars: v.object({     // North Stars für nächstes Jahr
-        wealth: v.string(),
-        health: v.string(),
-        love: v.string(),
-        happiness: v.string(),
+      nextYearNorthStars: v.object({     // North Stars für nächstes Jahr (mehrere pro Kategorie)
+        wealth: v.array(v.string()),
+        health: v.array(v.string()),
+        love: v.array(v.string()),
+        happiness: v.array(v.string()),
       }),
     }),
-
-    // Next Year Goals (unlimited goals)
-    nextYearGoals: v.optional(v.array(v.object({
-      goal: v.string(),
-      category: v.string(), // wealth, health, love, happiness
-    }))),
 
     completedAt: v.string(),
   })

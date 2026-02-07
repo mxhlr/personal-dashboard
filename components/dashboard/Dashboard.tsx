@@ -495,33 +495,54 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%), rgba(26, 26, 26, 0.5)'
           }}
         >
-          <div className="grid grid-cols-2 md:flex md:items-center md:justify-center gap-4 md:gap-8 lg:gap-16">
-            <div className="text-center group cursor-default">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+            <div className="text-center md:text-left group cursor-default">
               <p className="text-[10px] md:text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#525252] text-[#3d3d3d] mb-2 md:mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
                 💰 WEALTH
               </p>
-              <p className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.wealth}</p>
+              <div className="space-y-1.5">
+                {profile.northStars.wealth.map((goal, index) => (
+                  <p key={index} className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">
+                    {goal}
+                  </p>
+                ))}
+              </div>
             </div>
-            <div className="hidden md:block h-12 w-[1px] bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent opacity-30" />
-            <div className="text-center group cursor-default">
+            <div className="text-center md:text-left group cursor-default">
               <p className="text-[10px] md:text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#525252] text-[#3d3d3d] mb-2 md:mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
                 🏃 HEALTH
               </p>
-              <p className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.health}</p>
+              <div className="space-y-1.5">
+                {profile.northStars.health.map((goal, index) => (
+                  <p key={index} className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">
+                    {goal}
+                  </p>
+                ))}
+              </div>
             </div>
-            <div className="hidden md:block h-12 w-[1px] bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent opacity-30" />
-            <div className="text-center group cursor-default">
+            <div className="text-center md:text-left group cursor-default">
               <p className="text-[10px] md:text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#525252] text-[#3d3d3d] mb-2 md:mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
                 ❤️ LOVE
               </p>
-              <p className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.love}</p>
+              <div className="space-y-1.5">
+                {profile.northStars.love.map((goal, index) => (
+                  <p key={index} className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">
+                    {goal}
+                  </p>
+                ))}
+              </div>
             </div>
-            <div className="hidden md:block h-12 w-[1px] bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent opacity-30" />
-            <div className="text-center group cursor-default">
+            <div className="text-center md:text-left group cursor-default">
               <p className="text-[10px] md:text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#525252] text-[#3d3d3d] mb-2 md:mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
                 😊 HAPPINESS
               </p>
-              <p className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">{profile.northStars.happiness}</p>
+              <div className="space-y-1.5">
+                {profile.northStars.happiness.map((goal, index) => (
+                  <p key={index} className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">
+                    {goal}
+                  </p>
+                ))}
+              </div>
             </div>
           </div>
         </Card>
