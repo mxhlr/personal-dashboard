@@ -8,11 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Calendar,
-  CheckCircle2,
-  Target,
-  TrendingUp
+  CheckCircle2
 } from "lucide-react";
-import Image from "next/image";
 import { useMemo } from "react";
 import { TodaysWinCondition } from "./TodaysWinCondition";
 import { StoicQuote } from "./StoicQuote";
@@ -71,7 +68,6 @@ export function Dashboard({ onNavigate }: DashboardProps) {
   const userStats = useQuery(api.gamification.getUserStats);
   const dailyHabits = useQuery(api.dailyHabits.getHabitsForDate, { date: today });
   const habitTemplates = useQuery(api.habitTemplates.listTemplates, {});
-  const visionboardImages = useQuery(api.visionboard.getAllImages);
 
   const greeting = useMemo(
     () => profile ? getDynamicGreeting(profile.name) : "",
