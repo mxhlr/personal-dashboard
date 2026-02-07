@@ -406,10 +406,14 @@ export function OKROverview() {
                       {area}
                     </h3>
                   </div>
-                  <p className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
-                    style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                    {value}
-                  </p>
+                  <div className="space-y-1.5">
+                    {value.map((goal, index) => (
+                      <p key={index} className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
+                        style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                        {goal}
+                      </p>
+                    ))}
+                  </div>
                 </div>
               );
             })}
