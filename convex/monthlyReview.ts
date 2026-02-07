@@ -42,14 +42,9 @@ export const submitMonthlyReview = mutation({
       proudOf: v.string(),
       nextMonthFocus: v.string(),
     }),
-    nextMonthOKRs: v.optional(v.array(v.object({
-      objective: v.string(),
+    nextMonthMilestones: v.optional(v.array(v.object({
+      milestone: v.string(),
       area: v.string(),
-      keyResults: v.array(v.object({
-        description: v.string(),
-        target: v.number(),
-        unit: v.string(),
-      })),
     }))),
   },
   handler: async (ctx, args) => {
@@ -70,7 +65,7 @@ export const submitMonthlyReview = mutation({
       // Update existing review
       await ctx.db.patch(existingReview._id, {
         responses: args.responses,
-        nextMonthOKRs: args.nextMonthOKRs,
+        nextMonthMilestones: args.nextMonthMilestones,
         completedAt: new Date().toISOString(),
       });
       return existingReview._id;
@@ -81,7 +76,7 @@ export const submitMonthlyReview = mutation({
         year: args.year,
         month: args.month,
         responses: args.responses,
-        nextMonthOKRs: args.nextMonthOKRs,
+        nextMonthMilestones: args.nextMonthMilestones,
         completedAt: new Date().toISOString(),
       });
       return reviewId;
@@ -90,9 +85,9 @@ export const submitMonthlyReview = mutation({
 });
 
 /**
- * Get monthly OKRs for the current month
+ * Get monthly milestones for the current month
  */
-export const getMonthlyOKRs = query({
+export const getMonthlyMilestones = query({
   args: {
     year: v.number(),
     month: v.number(),
@@ -103,7 +98,7 @@ export const getMonthlyOKRs = query({
       throw new Error("Not authenticated");
     }
 
-    // OKRs are set in LAST month's review for THIS month
+    // Milestones are set in LAST month's review for THIS month
     // So we need to look at (year, month - 1)
     let targetYear = args.year;
     let targetMonth = args.month - 1;
@@ -121,25 +116,20 @@ export const getMonthlyOKRs = query({
       )
       .first();
 
-    return review?.nextMonthOKRs || [];
+    return review?.nextMonthMilestones || [];
   },
 });
 
 /**
- * Update monthly OKRs for a specific month
+ * Update monthly milestones for a specific month
  */
-export const updateMonthlyOKRs = mutation({
+export const updateMonthlyMilestones = mutation({
   args: {
     year: v.number(),
     month: v.number(),
-    okrs: v.array(v.object({
-      objective: v.string(),
+    milestones: v.array(v.object({
+      milestone: v.string(),
       area: v.string(),
-      keyResults: v.array(v.object({
-        description: v.string(),
-        target: v.number(),
-        unit: v.string(),
-      })),
     })),
   },
   handler: async (ctx, args) => {
@@ -148,7 +138,7 @@ export const updateMonthlyOKRs = mutation({
       throw new Error("Not authenticated");
     }
 
-    // OKRs for month X are stored in month X-1's review
+    // Milestones for month X are stored in month X-1's review
     let targetYear = args.year;
     let targetMonth = args.month - 1;
 
@@ -169,7 +159,7 @@ export const updateMonthlyOKRs = mutation({
     if (existingReview) {
       // Update existing review
       await ctx.db.patch(existingReview._id, {
-        nextMonthOKRs: args.okrs,
+        nextMonthMilestones: args.milestones,
       });
       return existingReview._id;
     } else {
@@ -186,7 +176,7 @@ export const updateMonthlyOKRs = mutation({
           proudOf: "",
           nextMonthFocus: "",
         },
-        nextMonthOKRs: args.okrs,
+        nextMonthMilestones: args.milestones,
         completedAt: new Date().toISOString(),
       });
       return reviewId;

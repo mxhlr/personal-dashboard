@@ -41,13 +41,18 @@ export default defineSchema({
       happiness: v.string(),
     }),
 
-    // Quarterly Milestones (pro Bereich, frei wählbar)
-    quarterlyMilestones: v.array(v.object({
+    // Quarterly OKRs (Objectives & Key Results - hauptsächliche OKR-Ebene)
+    quarterlyOKRs: v.array(v.object({
       quarter: v.number(), // 1-4
       year: v.number(), // Jahr für das Quartal
-      area: v.string(), // "wealth" | "health" | "love" | "happiness"
-      milestone: v.string(),
-      completed: v.boolean(),
+      area: v.string(), // "Wealth" | "Health" | "Love" | "Happiness"
+      objective: v.string(), // Main objective for the quarter
+      keyResults: v.array(v.object({
+        description: v.string(),
+        target: v.number(),
+        unit: v.string(),
+        current: v.optional(v.number()), // Current progress (optional)
+      })),
     })),
 
     // Coach Settings
@@ -187,15 +192,10 @@ export default defineSchema({
       nextMonthFocus: v.string(),        // Was ist dein Fokus für nächsten Monat?
     }),
 
-    // Next Month OKRs (User definiert OKRs für nächsten Monat)
-    nextMonthOKRs: v.optional(v.array(v.object({
-      objective: v.string(),           // "Build stronger fitness foundation"
-      area: v.string(),                // "Wealth", "Health", "Love", "Happiness"
-      keyResults: v.array(v.object({
-        description: v.string(),       // "Run 3x per week"
-        target: v.number(),            // 12
-        unit: v.string(),              // "runs", "hours", "pages", etc.
-      })),
+    // Next Month Milestones (einfache Focus Areas für nächsten Monat)
+    nextMonthMilestones: v.optional(v.array(v.object({
+      milestone: v.string(),         // "Launch new website" or "Complete certification"
+      area: v.string(),              // "Wealth", "Health", "Love", "Happiness"
     }))),
 
     completedAt: v.string(),

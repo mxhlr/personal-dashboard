@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Target, TrendingUp, CheckCircle2, Flag, Edit2 } from "lucide-react";
 import { getWeek, getYear, getMonth } from "date-fns";
 import { EditNorthStarsDialog } from "./EditNorthStarsDialog";
-import { EditMilestonesDialog } from "./EditMilestonesDialog";
+import { EditQuarterlyOKRsDialog } from "./EditQuarterlyOKRsDialog";
 import { EditWeeklyGoalsDialog } from "./EditWeeklyGoalsDialog";
-import { EditMonthlyOKRsDialog } from "./EditMonthlyOKRsDialog";
+import { EditMonthlyMilestonesDialog } from "./EditMonthlyMilestonesDialog";
 
 export function OKROverview() {
   const currentDate = new Date();
@@ -20,16 +20,16 @@ export function OKROverview() {
   const currentQuarter = Math.floor((currentMonth - 1) / 3) + 1;
 
   const [isNorthStarsDialogOpen, setIsNorthStarsDialogOpen] = useState(false);
-  const [isMilestonesDialogOpen, setIsMilestonesDialogOpen] = useState(false);
+  const [isQuarterlyOKRsDialogOpen, setIsQuarterlyOKRsDialogOpen] = useState(false);
   const [isWeeklyGoalsDialogOpen, setIsWeeklyGoalsDialogOpen] = useState(false);
-  const [isMonthlyOKRsDialogOpen, setIsMonthlyOKRsDialogOpen] = useState(false);
+  const [isMonthlyMilestonesDialogOpen, setIsMonthlyMilestonesDialogOpen] = useState(false);
 
   const profile = useQuery(api.userProfile.getUserProfile);
   const weeklyGoals = useQuery(api.weeklyReview.getWeeklyGoals, {
     year: currentYear,
     weekNumber: currentWeekNumber,
   });
-  const monthlyOKRs = useQuery(api.monthlyReview.getMonthlyOKRs, {
+  const monthlyMilestones = useQuery(api.monthlyReview.getMonthlyMilestones, {
     year: currentYear,
     month: currentMonth,
   });
@@ -42,9 +42,9 @@ export function OKROverview() {
     );
   }
 
-  // Extract quarterly milestones
-  const quarterlyMilestones = profile?.quarterlyMilestones?.filter(
-    (m) => m.year === currentYear && m.quarter === currentQuarter
+  // Extract quarterly OKRs
+  const quarterlyOKRs = profile?.quarterlyOKRs?.filter(
+    (okr) => okr.year === currentYear && okr.quarter === currentQuarter
   ) || [];
 
   const monthNames = [
@@ -209,18 +209,18 @@ export function OKROverview() {
             <div className="flex items-center gap-3">
               <TrendingUp className="w-6 h-6 dark:text-[#00E5FF] text-[#0097A7]" />
               <h2 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0097A7]">
-                {monthNames[currentMonth - 1].toUpperCase()} {currentYear} OKRs
+                {monthNames[currentMonth - 1].toUpperCase()} {currentYear} MILESTONES
               </h2>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-sm dark:text-[#525252] text-[#555555] font-bold"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                {monthlyOKRs?.length || 0} Objectives
+                {monthlyMilestones?.length || 0} Milestones
               </span>
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setIsMonthlyOKRsDialogOpen(true)}
+                onClick={() => setIsMonthlyMilestonesDialogOpen(true)}
                 className="h-8 w-8 dark:hover:bg-white/[0.08] hover:bg-black/[0.05]"
               >
                 <Edit2 className="h-4 w-4 dark:text-[#00E5FF] text-[#0097A7]" />
@@ -228,18 +228,90 @@ export function OKROverview() {
             </div>
           </div>
 
-          {!monthlyOKRs || monthlyOKRs.length === 0 ? (
+          {!monthlyMilestones || monthlyMilestones.length === 0 ? (
             <div className="text-center py-12">
               <TrendingUp className="w-16 h-16 dark:text-[#444444] text-[#BBBBBB] mx-auto mb-4 opacity-40" />
               <p className="text-sm dark:text-[#3d3d3d] text-[#777777]"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                No OKRs set for this month.<br />
+                No milestones set for this month.<br />
                 Complete last month&apos;s review to plan ahead.
               </p>
             </div>
           ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {monthlyMilestones.map((milestone, index) => {
+                const config = areaConfig[milestone.area] || {
+                  icon: "🎯",
+                  color: "text-gray-400",
+                  gradient: "from-gray-500/20 to-gray-600/10",
+                };
+
+                return (
+                  <div
+                    key={index}
+                    className={`p-6 rounded-xl bg-gradient-to-br ${config.gradient}
+                      dark:border dark:border-white/[0.08] border border-black/[0.08]
+                      transition-all duration-200 hover:scale-[1.02]`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl mt-1">{config.icon}</span>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className={`text-xs font-bold uppercase tracking-wider ${config.color}`}
+                            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                            {milestone.area}
+                          </span>
+                        </div>
+                        <p className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
+                          style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                          {milestone.milestone}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </Card>
+
+        <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.25)] dark:bg-card/50 bg-white/80
+          shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <Flag className="w-6 h-6 dark:text-[#00E5FF] text-[#0097A7]" />
+              <h2 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0097A7]">
+                Q{currentQuarter} {currentYear} OKRs
+              </h2>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-sm dark:text-[#525252] text-[#555555] font-bold"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                {quarterlyOKRs.length} {quarterlyOKRs.length === 1 ? "Objective" : "Objectives"}
+              </span>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsQuarterlyOKRsDialogOpen(true)}
+                className="h-8 w-8 dark:hover:bg-white/[0.08] hover:bg-black/[0.05]"
+              >
+                <Edit2 className="h-4 w-4 dark:text-[#00E5FF] text-[#0097A7]" />
+              </Button>
+            </div>
+          </div>
+
+          {quarterlyOKRs.length === 0 ? (
+            <div className="text-center py-12">
+              <Flag className="w-16 h-16 dark:text-[#444444] text-[#BBBBBB] mx-auto mb-4 opacity-40" />
+              <p className="text-sm dark:text-[#3d3d3d] text-[#777777]"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                No OKRs set for this quarter.<br />
+                Complete last quarter&apos;s review to plan ahead.
+              </p>
+            </div>
+          ) : (
             <div className="space-y-6">
-              {monthlyOKRs.map((okr, index) => {
+              {quarterlyOKRs.map((okr, index) => {
                 const config = areaConfig[okr.area] || {
                   icon: "🎯",
                   color: "text-gray-400",
@@ -277,90 +349,18 @@ export function OKROverview() {
                                 </p>
                                 <span className="text-xs dark:text-[#525252] text-[#555555] font-bold whitespace-nowrap"
                                   style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                                  0/{kr.target} {kr.unit}
+                                  {kr.current || 0}/{kr.target} {kr.unit}
                                 </span>
                               </div>
                               <div className="h-2 dark:bg-white/[0.05] bg-black/[0.08] rounded-full overflow-hidden">
                                 <div
                                   className={`h-full bg-gradient-to-r ${config.gradient} transition-all duration-500`}
-                                  style={{ width: "0%" }}
+                                  style={{ width: `${Math.min(((kr.current || 0) / kr.target) * 100, 100)}%` }}
                                 />
                               </div>
                             </div>
                           ))}
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </Card>
-
-        <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.25)] dark:bg-card/50 bg-white/80
-          shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <Flag className="w-6 h-6 dark:text-[#00E5FF] text-[#0097A7]" />
-              <h2 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0097A7]">
-                Q{currentQuarter} {currentYear} MILESTONES
-              </h2>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-sm dark:text-[#525252] text-[#555555] font-bold"
-                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                {quarterlyMilestones.length} {quarterlyMilestones.length === 1 ? "Milestone" : "Milestones"}
-              </span>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsMilestonesDialogOpen(true)}
-                className="h-8 w-8 dark:hover:bg-white/[0.08] hover:bg-black/[0.05]"
-              >
-                <Edit2 className="h-4 w-4 dark:text-[#00E5FF] text-[#0097A7]" />
-              </Button>
-            </div>
-          </div>
-
-          {quarterlyMilestones.length === 0 ? (
-            <div className="text-center py-12">
-              <Flag className="w-16 h-16 dark:text-[#444444] text-[#BBBBBB] mx-auto mb-4 opacity-40" />
-              <p className="text-sm dark:text-[#3d3d3d] text-[#777777]"
-                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                No milestones set for this quarter.<br />
-                Complete last quarter&apos;s review to plan ahead.
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {quarterlyMilestones.map((milestone, index) => {
-                const config = areaConfig[milestone.area] || {
-                  icon: "🎯",
-                  color: "text-gray-400",
-                  gradient: "from-gray-500/20 to-gray-600/10",
-                };
-
-                return (
-                  <div
-                    key={index}
-                    className={`p-6 rounded-xl bg-gradient-to-br ${config.gradient}
-                      dark:border dark:border-white/[0.08] border border-black/[0.08]
-                      transition-all duration-200 hover:scale-[1.02]`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <span className="text-2xl mt-1">{config.icon}</span>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className={`text-xs font-bold uppercase tracking-wider ${config.color}`}
-                            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                            {milestone.area}
-                          </span>
-                        </div>
-                        <p className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
-                          style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                          {milestone.milestone}
-                        </p>
                       </div>
                     </div>
                   </div>
@@ -432,15 +432,15 @@ export function OKROverview() {
         year={currentYear}
         weekNumber={currentWeekNumber}
       />
-      <EditMonthlyOKRsDialog
-        isOpen={isMonthlyOKRsDialogOpen}
-        onClose={() => setIsMonthlyOKRsDialogOpen(false)}
+      <EditMonthlyMilestonesDialog
+        isOpen={isMonthlyMilestonesDialogOpen}
+        onClose={() => setIsMonthlyMilestonesDialogOpen(false)}
         year={currentYear}
         month={currentMonth}
       />
-      <EditMilestonesDialog
-        isOpen={isMilestonesDialogOpen}
-        onClose={() => setIsMilestonesDialogOpen(false)}
+      <EditQuarterlyOKRsDialog
+        isOpen={isQuarterlyOKRsDialogOpen}
+        onClose={() => setIsQuarterlyOKRsDialogOpen(false)}
         year={currentYear}
         quarter={currentQuarter}
       />

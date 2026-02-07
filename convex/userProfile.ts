@@ -207,15 +207,20 @@ export const updateCoachTone = mutation({
   },
 });
 
-// Update Quarterly Milestones
-export const updateQuarterlyMilestones = mutation({
+// Update Quarterly OKRs
+export const updateQuarterlyOKRs = mutation({
   args: {
-    milestones: v.array(v.object({
+    okrs: v.array(v.object({
       area: v.string(),
-      milestone: v.string(),
+      objective: v.string(),
+      keyResults: v.array(v.object({
+        description: v.string(),
+        target: v.number(),
+        unit: v.string(),
+        current: v.optional(v.number()),
+      })),
       year: v.number(),
       quarter: v.number(),
-      completed: v.boolean(),
     })),
   },
   handler: async (ctx, args) => {
@@ -230,7 +235,7 @@ export const updateQuarterlyMilestones = mutation({
     if (!profile) throw new Error("Profile not found");
 
     await ctx.db.patch(profile._id, {
-      quarterlyMilestones: args.milestones,
+      quarterlyOKRs: args.okrs,
       updatedAt: new Date().toISOString(),
     });
   },
