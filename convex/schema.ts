@@ -42,7 +42,7 @@ export default defineSchema({
     }),
 
     // Quarterly OKRs (Objectives & Key Results - hauptsächliche OKR-Ebene)
-    quarterlyOKRs: v.array(v.object({
+    quarterlyOKRs: v.optional(v.array(v.object({
       quarter: v.number(), // 1-4
       year: v.number(), // Jahr für das Quartal
       area: v.string(), // "Wealth" | "Health" | "Love" | "Happiness"
@@ -53,7 +53,16 @@ export default defineSchema({
         unit: v.string(),
         current: v.optional(v.number()), // Current progress (optional)
       })),
-    })),
+    }))),
+
+    // Legacy field - kept for backward compatibility during migration
+    quarterlyMilestones: v.optional(v.array(v.object({
+      quarter: v.number(),
+      year: v.number(),
+      area: v.string(),
+      milestone: v.string(),
+      completed: v.boolean(),
+    }))),
 
     // Coach Settings
     coachTone: v.string(), // "Motivierend" | "Sachlich" | "Empathisch" | "Direkt"

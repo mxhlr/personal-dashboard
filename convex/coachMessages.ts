@@ -111,7 +111,7 @@ export const getUserContext = query({
         role: profile.role,
         mainProject: profile.mainProject,
         northStars: profile.northStars,
-        quarterlyOKRs: profile.quarterlyOKRs,
+        quarterlyOKRs: profile.quarterlyOKRs || [],
         coachTone: profile.coachTone,
       },
       recentLogs: recentLogs.map((log) => ({
@@ -305,7 +305,7 @@ Nutze die Du-Form. Sei authentisch und menschlich. Halte Antworten prägnant (2-
 - 😊 HAPPINESS: ${profile.northStars.happiness}
 
 **Aktuelle OKRs (dieses Quartal):**
-${profile.quarterlyOKRs
+${(profile.quarterlyOKRs || [])
   .slice(0, 4)
   .map((okr) => `- ${okr.area.toUpperCase()}: ${okr.objective}`)
   .join("\n")}

@@ -27,7 +27,7 @@ export const getQuarterlyOKRs = query({
       return [];
     }
 
-    const okrs = profile.quarterlyOKRs.filter(
+    const okrs = (profile.quarterlyOKRs || []).filter(
       (okr) => okr.year === args.year && okr.quarter === args.quarter
     );
 
