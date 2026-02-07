@@ -452,7 +452,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         </div>
 
       {/* Review Notifications + Weekly Progress - Side by Side */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Review Notifications - Left */}
         <Card className="p-4 md:p-6 dark:bg-card/50 bg-white/80
           shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
