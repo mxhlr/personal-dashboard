@@ -30,9 +30,12 @@ export function EditMilestonesDialog({ isOpen, onClose, year, quarter }: EditMil
       const currentMilestones = profile.quarterlyMilestones?.filter(
         (m) => m.year === year && m.quarter === quarter
       ) || [];
-      
+
       if (currentMilestones.length > 0) {
-        setMilestones(currentMilestones.map(m => ({ area: m.area, milestone: m.milestone })));
+        setMilestones(currentMilestones.map(m => ({
+          area: m.area || "Wealth", // Ensure area is never empty
+          milestone: m.milestone
+        })));
       } else {
         setMilestones([{ area: "Wealth", milestone: "" }]);
       }
@@ -56,10 +59,18 @@ export function EditMilestonesDialog({ isOpen, onClose, year, quarter }: EditMil
   };
 
   const handleSave = async () => {
-    const validMilestones = milestones.filter(m => m.milestone.trim() !== "");
+    // Validate that all milestones have both area and milestone filled
+    const validMilestones = milestones.filter(m => m.milestone.trim() !== "" && m.area.trim() !== "");
 
     if (validMilestones.length === 0) {
       toast.error("Add at least one milestone");
+      return;
+    }
+
+    // Check if any milestone has an empty area
+    const hasEmptyArea = milestones.some(m => m.milestone.trim() !== "" && !m.area);
+    if (hasEmptyArea) {
+      toast.error("Please select a category for all milestones");
       return;
     }
 
@@ -113,11 +124,11 @@ export function EditMilestonesDialog({ isOpen, onClose, year, quarter }: EditMil
             <div key={index} className="flex flex-col sm:flex-row gap-2 items-start">
               <div className="flex-1 w-full space-y-2">
                 <Select
-                  value={milestone.area}
+                  value={milestone.area || "Wealth"}
                   onValueChange={(value) => updateMilestone(index, "area", value)}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Wealth">💰 Wealth</SelectItem>
