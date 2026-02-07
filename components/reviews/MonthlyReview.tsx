@@ -31,6 +31,7 @@ export function MonthlyReview() {
   };
 
   const completionRate = (stats.habitsCompleted / stats.totalHabits) * 100;
+  const weekCompletionRate = (stats.weeksCompleted / stats.totalWeeks) * 100;
 
   // Mock category breakdown
   const categoryStats = [
@@ -261,6 +262,7 @@ export function MonthlyReview() {
                       value={progress}
                       className="h-2 dark:bg-[#2A2A2E] bg-[#d1d2d4]"
                       style={{
+                        // @ts-ignore
                         '--progress-background': category.color
                       } as React.CSSProperties}
                     />

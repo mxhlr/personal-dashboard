@@ -41,13 +41,8 @@ export const submitWeeklyReview = mutation({
       nextWeekFocus: v.string(),
     }),
     nextWeekGoals: v.optional(v.array(v.object({
-      objective: v.string(),
-      area: v.string(),
-      keyResults: v.array(v.object({
-        description: v.string(),
-        target: v.number(),
-        unit: v.string(),
-      })),
+      goal: v.string(),
+      category: v.string(),
     }))),
   },
   handler: async (ctx, args) => {
@@ -131,13 +126,8 @@ export const updateWeeklyGoals = mutation({
     year: v.number(),
     weekNumber: v.number(),
     goals: v.array(v.object({
-      objective: v.string(),
-      area: v.string(),
-      keyResults: v.array(v.object({
-        description: v.string(),
-        target: v.number(),
-        unit: v.string(),
-      })),
+      goal: v.string(),
+      category: v.string(),
     })),
   },
   handler: async (ctx, args) => {

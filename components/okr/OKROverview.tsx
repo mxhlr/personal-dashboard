@@ -5,7 +5,7 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Target, TrendingUp, Flag, Edit2 } from "lucide-react";
+import { Target, TrendingUp, CheckCircle2, Flag, Edit2 } from "lucide-react";
 import { getWeek, getYear, getMonth } from "date-fns";
 import { EditNorthStarsDialog } from "./EditNorthStarsDialog";
 import { EditMilestonesDialog } from "./EditMilestonesDialog";
@@ -52,6 +52,12 @@ export function OKROverview() {
     "July", "August", "September", "October", "November", "December"
   ];
 
+  const categoryConfig: Record<string, { icon: string; color: string }> = {
+    Work: { icon: "💼", color: "text-blue-400" },
+    Health: { icon: "🏃", color: "text-green-400" },
+    Learning: { icon: "📚", color: "text-purple-400" },
+    Personal: { icon: "✨", color: "text-pink-400" },
+  };
 
   const areaConfig: Record<string, { icon: string; color: string; gradient: string }> = {
     Wealth: {
@@ -155,58 +161,40 @@ export function OKROverview() {
               </p>
             </div>
           ) : (
-            <div className="space-y-6">
-              {weeklyGoals.map((goal, index) => {
-                const config = areaConfig[goal.area] || {
-                  icon: "🎯",
-                  color: "text-gray-400",
-                  gradient: "from-gray-500/20 to-gray-600/10",
-                };
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {Object.entries(
+                weeklyGoals.reduce((acc, goal) => {
+                  if (!acc[goal.category]) acc[goal.category] = [];
+                  acc[goal.category].push(goal);
+                  return acc;
+                }, {} as Record<string, typeof weeklyGoals>)
+              ).map(([category, goals]) => {
+                const config = categoryConfig[category] || { icon: "🎯", color: "text-gray-400" };
 
                 return (
                   <div
-                    key={index}
-                    className={`rounded-xl p-6 bg-gradient-to-br ${config.gradient}
-                      dark:border dark:border-white/[0.08] border border-black/[0.08]`}
+                    key={category}
+                    className="p-6 rounded-xl dark:bg-white/[0.02] bg-black/[0.03]
+                      dark:border dark:border-white/[0.08] border border-black/[0.08]"
                   >
-                    <div className="flex items-start gap-3 mb-4">
-                      <span className="text-xl mt-1">{config.icon}</span>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className={`text-xs font-bold uppercase tracking-wider ${config.color}`}
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="text-lg">{config.icon}</span>
+                      <h3 className={`text-sm font-bold uppercase tracking-wider ${config.color}`}
+                        style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                        {category}
+                      </h3>
+                    </div>
+                    <div className="space-y-3">
+                      {goals.map((goal, index) => (
+                        <div key={index} className="flex items-start gap-3 group">
+                          <CheckCircle2 className="w-5 h-5 mt-0.5 dark:text-[#3d3d3d] text-[#525252] flex-shrink-0
+                            group-hover:dark:text-[#00E5FF] group-hover:text-[#0097A7] transition-colors" />
+                          <p className="text-sm dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
                             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                            {goal.area}
-                          </span>
+                            {goal.goal}
+                          </p>
                         </div>
-                        <p className="text-lg dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed mb-4"
-                          style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                          {goal.objective}
-                        </p>
-
-                        {/* Key Results */}
-                        <div className="space-y-3 pl-6 border-l-2 dark:border-white/[0.15] border-black/[0.12]">
-                          {goal.keyResults.map((kr, krIndex) => (
-                            <div key={krIndex} className="space-y-1">
-                              <div className="flex items-baseline justify-between gap-2">
-                                <p className="text-sm dark:text-[#CCCCCC] text-[#333333]"
-                                  style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                                  {kr.description}
-                                </p>
-                                <span className="text-xs dark:text-[#525252] text-[#555555] font-bold whitespace-nowrap"
-                                  style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                                  0/{kr.target} {kr.unit}
-                                </span>
-                              </div>
-                              <div className="h-2 dark:bg-white/[0.05] bg-black/[0.08] rounded-full overflow-hidden">
-                                <div
-                                  className={`h-full bg-gradient-to-r ${config.gradient} transition-all duration-500`}
-                                  style={{ width: "0%" }}
-                                />
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
+                      ))}
                     </div>
                   </div>
                 );

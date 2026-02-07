@@ -35,6 +35,7 @@ export function WeeklyReview() {
   };
 
   const completionRate = (stats.habitsCompleted / stats.totalHabits) * 100;
+  const dayCompletionRate = (stats.daysCompleted / stats.totalDays) * 100;
 
   const handleSave = () => {
     console.log("Saving weekly review...");
