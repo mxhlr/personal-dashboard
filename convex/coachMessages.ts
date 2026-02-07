@@ -208,10 +208,10 @@ type UserProfile = {
   role: string;
   mainProject: string;
   northStars: {
-    wealth: string;
-    health: string;
-    love: string;
-    happiness: string;
+    wealth: string[];
+    health: string[];
+    love: string[];
+    happiness: string[];
   };
   quarterlyOKRs: Array<{
     quarter: number;
@@ -299,10 +299,10 @@ Nutze die Du-Form. Sei authentisch und menschlich. Halte Antworten prägnant (2-
 - Hauptprojekt: ${profile.mainProject}
 
 **North Stars (Jahresziele):**
-- 💰 WEALTH: ${profile.northStars.wealth}
-- 🏃 HEALTH: ${profile.northStars.health}
-- ❤️ LOVE: ${profile.northStars.love}
-- 😊 HAPPINESS: ${profile.northStars.happiness}
+- 💰 WEALTH: ${profile.northStars.wealth.join(', ')}
+- 🏃 HEALTH: ${profile.northStars.health.join(', ')}
+- ❤️ LOVE: ${profile.northStars.love.join(', ')}
+- 😊 HAPPINESS: ${profile.northStars.happiness.join(', ')}
 
 **Aktuelle OKRs (dieses Quartal):**
 ${(profile.quarterlyOKRs || [])

@@ -21,10 +21,10 @@ export interface OnboardingData {
 
   // Step 3
   northStars: {
-    wealth: string;
-    health: string;
-    love: string;
-    happiness: string;
+    wealth: string[];
+    health: string[];
+    love: string[];
+    happiness: string[];
   };
 
   // Step 4
@@ -55,10 +55,10 @@ export default function SetupWizard() {
     role: "",
     mainProject: "",
     northStars: {
-      wealth: "",
-      health: "",
-      love: "",
-      happiness: "",
+      wealth: [],
+      health: [],
+      love: [],
+      happiness: [],
     },
     milestones: {
       wealth: [],

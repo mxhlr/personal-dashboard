@@ -19,10 +19,10 @@ export default function Step3NorthStars({
   onBack,
 }: Step3NorthStarsProps) {
   const canProceed =
-    data.northStars.wealth &&
-    data.northStars.health &&
-    data.northStars.love &&
-    data.northStars.happiness;
+    data.northStars.wealth.length > 0 &&
+    data.northStars.health.length > 0 &&
+    data.northStars.love.length > 0 &&
+    data.northStars.happiness.length > 0;
 
   return (
     <div className="bg-card border border-border rounded-lg p-8">
@@ -35,10 +35,10 @@ export default function Step3NorthStars({
         <div>
           <Label>💰 WEALTH (Geld, Karriere, Business)</Label>
           <Input
-            value={data.northStars.wealth}
+            value={data.northStars.wealth[0] || ""}
             onChange={(e) =>
               onUpdate({
-                northStars: { ...data.northStars, wealth: e.target.value },
+                northStars: { ...data.northStars, wealth: [e.target.value] },
               })
             }
             placeholder="z.B. SaaS auf 10k MRR"
@@ -49,10 +49,10 @@ export default function Step3NorthStars({
         <div>
           <Label>🏃 HEALTH (Körper, Fitness, Ernährung)</Label>
           <Input
-            value={data.northStars.health}
+            value={data.northStars.health[0] || ""}
             onChange={(e) =>
               onUpdate({
-                northStars: { ...data.northStars, health: e.target.value },
+                northStars: { ...data.northStars, health: [e.target.value] },
               })
             }
             placeholder="z.B. Halbmarathon laufen"
@@ -63,10 +63,10 @@ export default function Step3NorthStars({
         <div>
           <Label>❤️ LOVE (Beziehungen, Familie, Freunde)</Label>
           <Input
-            value={data.northStars.love}
+            value={data.northStars.love[0] || ""}
             onChange={(e) =>
               onUpdate({
-                northStars: { ...data.northStars, love: e.target.value },
+                northStars: { ...data.northStars, love: [e.target.value] },
               })
             }
             placeholder="z.B. Weekly Date Night etablieren"
@@ -77,10 +77,10 @@ export default function Step3NorthStars({
         <div>
           <Label>😊 HAPPINESS (Erfüllung, Hobbies, Sinn)</Label>
           <Input
-            value={data.northStars.happiness}
+            value={data.northStars.happiness[0] || ""}
             onChange={(e) =>
               onUpdate({
-                northStars: { ...data.northStars, happiness: e.target.value },
+                northStars: { ...data.northStars, happiness: [e.target.value] },
               })
             }
             placeholder="z.B. Meditation täglich"

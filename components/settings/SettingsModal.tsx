@@ -171,10 +171,10 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
   // North Stars form state
   const [northStarsForm, setNorthStarsForm] = useState({
-    wealth: "",
-    health: "",
-    love: "",
-    happiness: "",
+    wealth: [""],
+    health: [""],
+    love: [""],
+    happiness: [""],
   });
 
   // Coach tone state
@@ -188,7 +188,12 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         role: profile.role,
         mainProject: profile.mainProject,
       });
-      setNorthStarsForm(profile.northStars);
+      setNorthStarsForm({
+        wealth: profile.northStars.wealth.length > 0 ? profile.northStars.wealth : [""],
+        health: profile.northStars.health.length > 0 ? profile.northStars.health : [""],
+        love: profile.northStars.love.length > 0 ? profile.northStars.love : [""],
+        happiness: profile.northStars.happiness.length > 0 ? profile.northStars.happiness : [""],
+      });
       setCoachTone(profile.coachTone);
     }
   }, [profile]);
@@ -207,9 +212,23 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   };
 
   const handleSaveNorthStars = async () => {
+    // Filter out empty strings
+    const cleanedNorthStars = {
+      wealth: northStarsForm.wealth.filter(g => g.trim() !== ""),
+      health: northStarsForm.health.filter(g => g.trim() !== ""),
+      love: northStarsForm.love.filter(g => g.trim() !== ""),
+      happiness: northStarsForm.happiness.filter(g => g.trim() !== ""),
+    };
+
+    if (!cleanedNorthStars.wealth.length || !cleanedNorthStars.health.length ||
+        !cleanedNorthStars.love.length || !cleanedNorthStars.happiness.length) {
+      toast.error("Bitte füge mindestens ein Ziel pro Kategorie hinzu");
+      return;
+    }
+
     setIsSaving(true);
     try {
-      await updateNorthStars({ northStars: northStarsForm });
+      await updateNorthStars({ northStars: cleanedNorthStars });
       toast.success("North Stars gespeichert!");
     } catch (error) {
       logger.error("Failed to save North Stars:", error);
@@ -217,6 +236,28 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const addNorthStar = (category: 'wealth' | 'health' | 'love' | 'happiness') => {
+    setNorthStarsForm(prev => ({
+      ...prev,
+      [category]: [...prev[category], ""]
+    }));
+  };
+
+  const removeNorthStar = (category: 'wealth' | 'health' | 'love' | 'happiness', index: number) => {
+    setNorthStarsForm(prev => ({
+      ...prev,
+      [category]: prev[category].filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateNorthStar = (category: 'wealth' | 'health' | 'love' | 'happiness', index: number, value: string) => {
+    setNorthStarsForm(prev => {
+      const updated = [...prev[category]];
+      updated[index] = value;
+      return { ...prev, [category]: updated };
+    });
   };
 
   const handleSaveCoachTone = async () => {
@@ -328,56 +369,160 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 Deine Jahresziele für die 4 Lebensbereiche
               </p>
 
-              <div className="space-y-2">
-                <Label>💰 WEALTH (Geld, Karriere, Business)</Label>
-                <Textarea
-                  value={northStarsForm.wealth}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setNorthStarsForm((prev) => ({ ...prev, wealth: value }));
-                  }}
-                  placeholder="z.B. SaaS auf 10k MRR"
-                  rows={2}
-                />
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label>💰 WEALTH (Geld, Karriere, Business)</Label>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => addNorthStar('wealth')}
+                    className="h-7 text-xs"
+                  >
+                    + Hinzufügen
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  {northStarsForm.wealth.map((goal, index) => (
+                    <div key={index} className="flex gap-2">
+                      <Textarea
+                        value={goal}
+                        onChange={(e) => updateNorthStar('wealth', index, e.target.value)}
+                        placeholder="z.B. SaaS auf 10k MRR"
+                        rows={2}
+                        className="flex-1"
+                      />
+                      {northStarsForm.wealth.length > 1 && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeNorthStar('wealth', index)}
+                          className="h-auto px-3"
+                        >
+                          ✕
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label>🏃 HEALTH (Körper, Fitness, Ernährung)</Label>
-                <Textarea
-                  value={northStarsForm.health}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setNorthStarsForm((prev) => ({ ...prev, health: value }));
-                  }}
-                  placeholder="z.B. Halbmarathon laufen"
-                  rows={2}
-                />
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label>🏃 HEALTH (Körper, Fitness, Ernährung)</Label>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => addNorthStar('health')}
+                    className="h-7 text-xs"
+                  >
+                    + Hinzufügen
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  {northStarsForm.health.map((goal, index) => (
+                    <div key={index} className="flex gap-2">
+                      <Textarea
+                        value={goal}
+                        onChange={(e) => updateNorthStar('health', index, e.target.value)}
+                        placeholder="z.B. Halbmarathon laufen"
+                        rows={2}
+                        className="flex-1"
+                      />
+                      {northStarsForm.health.length > 1 && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeNorthStar('health', index)}
+                          className="h-auto px-3"
+                        >
+                          ✕
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label>❤️ LOVE (Beziehungen, Familie, Freunde)</Label>
-                <Textarea
-                  value={northStarsForm.love}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setNorthStarsForm((prev) => ({ ...prev, love: value }));
-                  }}
-                  placeholder="z.B. Weekly Date Night etablieren"
-                  rows={2}
-                />
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label>❤️ LOVE (Beziehungen, Familie, Freunde)</Label>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => addNorthStar('love')}
+                    className="h-7 text-xs"
+                  >
+                    + Hinzufügen
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  {northStarsForm.love.map((goal, index) => (
+                    <div key={index} className="flex gap-2">
+                      <Textarea
+                        value={goal}
+                        onChange={(e) => updateNorthStar('love', index, e.target.value)}
+                        placeholder="z.B. Weekly Date Night etablieren"
+                        rows={2}
+                        className="flex-1"
+                      />
+                      {northStarsForm.love.length > 1 && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeNorthStar('love', index)}
+                          className="h-auto px-3"
+                        >
+                          ✕
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label>😊 HAPPINESS (Erfüllung, Hobbies, Sinn)</Label>
-                <Textarea
-                  value={northStarsForm.happiness}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setNorthStarsForm((prev) => ({ ...prev, happiness: value }));
-                  }}
-                  placeholder="z.B. Meditation täglich"
-                  rows={2}
-                />
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label>😊 HAPPINESS (Erfüllung, Hobbies, Sinn)</Label>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => addNorthStar('happiness')}
+                    className="h-7 text-xs"
+                  >
+                    + Hinzufügen
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  {northStarsForm.happiness.map((goal, index) => (
+                    <div key={index} className="flex gap-2">
+                      <Textarea
+                        value={goal}
+                        onChange={(e) => updateNorthStar('happiness', index, e.target.value)}
+                        placeholder="z.B. Meditation täglich"
+                        rows={2}
+                        className="flex-1"
+                      />
+                      {northStarsForm.happiness.length > 1 && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeNorthStar('happiness', index)}
+                          className="h-auto px-3"
+                        >
+                          ✕
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <Button onClick={handleSaveNorthStars} disabled={isSaving}>

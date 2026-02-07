@@ -72,10 +72,10 @@ export const createMinimalProfile = mutation({
       role: "User", // Default
       mainProject: "Personal Growth", // Default
       northStars: {
-        wealth: "",
-        health: "",
-        love: "",
-        happiness: "",
+        wealth: [],
+        health: [],
+        love: [],
+        happiness: [],
       },
       quarterlyOKRs: [],
       coachTone: "Direkt", // Default
@@ -96,10 +96,10 @@ export const createUserProfile = mutation({
     role: v.string(),
     mainProject: v.string(),
     northStars: v.object({
-      wealth: v.string(),
-      health: v.string(),
-      love: v.string(),
-      happiness: v.string(),
+      wealth: v.array(v.string()),
+      health: v.array(v.string()),
+      love: v.array(v.string()),
+      happiness: v.array(v.string()),
     }),
     quarterlyOKRs: v.optional(v.array(v.object({
       quarter: v.number(),
