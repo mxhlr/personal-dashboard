@@ -9,6 +9,8 @@ import { Target, TrendingUp, CheckCircle2, Flag, Edit2 } from "lucide-react";
 import { getWeek, getYear, getMonth } from "date-fns";
 import { EditNorthStarsDialog } from "./EditNorthStarsDialog";
 import { EditMilestonesDialog } from "./EditMilestonesDialog";
+import { EditWeeklyGoalsDialog } from "./EditWeeklyGoalsDialog";
+import { EditMonthlyOKRsDialog } from "./EditMonthlyOKRsDialog";
 
 export function OKROverview() {
   const currentDate = new Date();
@@ -19,6 +21,8 @@ export function OKROverview() {
 
   const [isNorthStarsDialogOpen, setIsNorthStarsDialogOpen] = useState(false);
   const [isMilestonesDialogOpen, setIsMilestonesDialogOpen] = useState(false);
+  const [isWeeklyGoalsDialogOpen, setIsWeeklyGoalsDialogOpen] = useState(false);
+  const [isMonthlyOKRsDialogOpen, setIsMonthlyOKRsDialogOpen] = useState(false);
 
   const profile = useQuery(api.userProfile.getUserProfile);
   const weeklyGoals = useQuery(api.weeklyReview.getWeeklyGoals, {
@@ -131,10 +135,20 @@ export function OKROverview() {
                 WEEK {currentWeekNumber} GOALS
               </h2>
             </div>
-            <span className="text-sm dark:text-[#525252] text-[#555555] font-bold"
-              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-              {weeklyGoals?.length || 0} Goals
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="text-sm dark:text-[#525252] text-[#555555] font-bold"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                {weeklyGoals?.length || 0} Goals
+              </span>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsWeeklyGoalsDialogOpen(true)}
+                className="h-8 w-8 dark:hover:bg-white/[0.08] hover:bg-black/[0.05]"
+              >
+                <Edit2 className="h-4 w-4 dark:text-[#00E5FF] text-[#0097A7]" />
+              </Button>
+            </div>
           </div>
 
           {!weeklyGoals || weeklyGoals.length === 0 ? (
@@ -198,10 +212,20 @@ export function OKROverview() {
                 {monthNames[currentMonth - 1].toUpperCase()} {currentYear} OKRs
               </h2>
             </div>
-            <span className="text-sm dark:text-[#525252] text-[#555555] font-bold"
-              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-              {monthlyOKRs?.length || 0} Objectives
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="text-sm dark:text-[#525252] text-[#555555] font-bold"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                {monthlyOKRs?.length || 0} Objectives
+              </span>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsMonthlyOKRsDialogOpen(true)}
+                className="h-8 w-8 dark:hover:bg-white/[0.08] hover:bg-black/[0.05]"
+              >
+                <Edit2 className="h-4 w-4 dark:text-[#00E5FF] text-[#0097A7]" />
+              </Button>
+            </div>
           </div>
 
           {!monthlyOKRs || monthlyOKRs.length === 0 ? (
@@ -402,15 +426,27 @@ export function OKROverview() {
       </div>
 
       {/* Edit Dialogs */}
-      <EditNorthStarsDialog
-        isOpen={isNorthStarsDialogOpen}
-        onClose={() => setIsNorthStarsDialogOpen(false)}
+      <EditWeeklyGoalsDialog
+        isOpen={isWeeklyGoalsDialogOpen}
+        onClose={() => setIsWeeklyGoalsDialogOpen(false)}
+        year={currentYear}
+        weekNumber={currentWeekNumber}
+      />
+      <EditMonthlyOKRsDialog
+        isOpen={isMonthlyOKRsDialogOpen}
+        onClose={() => setIsMonthlyOKRsDialogOpen(false)}
+        year={currentYear}
+        month={currentMonth}
       />
       <EditMilestonesDialog
         isOpen={isMilestonesDialogOpen}
         onClose={() => setIsMilestonesDialogOpen(false)}
         year={currentYear}
         quarter={currentQuarter}
+      />
+      <EditNorthStarsDialog
+        isOpen={isNorthStarsDialogOpen}
+        onClose={() => setIsNorthStarsDialogOpen(false)}
       />
     </div>
   );

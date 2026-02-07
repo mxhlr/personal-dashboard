@@ -117,3 +117,66 @@ export const getWeeklyGoals = query({
     return review?.nextWeekGoals || [];
   },
 });
+
+/**
+ * Update weekly goals for a specific week
+ */
+export const updateWeeklyGoals = mutation({
+  args: {
+    year: v.number(),
+    weekNumber: v.number(),
+    goals: v.array(v.object({
+      goal: v.string(),
+      category: v.string(),
+    })),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    // Goals for week X are stored in week X-1's review
+    let targetYear = args.year;
+    let targetWeek = args.weekNumber - 1;
+
+    // Handle week 1 edge case
+    if (targetWeek < 1) {
+      targetYear = args.year - 1;
+      targetWeek = 52;
+    }
+
+    // Find or create the review
+    const existingReview = await ctx.db
+      .query("weeklyReview")
+      .withIndex("by_user_year_week", (q) =>
+        q.eq("userId", identity.subject).eq("year", targetYear).eq("weekNumber", targetWeek)
+      )
+      .first();
+
+    if (existingReview) {
+      // Update existing review
+      await ctx.db.patch(existingReview._id, {
+        nextWeekGoals: args.goals,
+      });
+      return existingReview._id;
+    } else {
+      // Create new review with empty responses
+      const reviewId = await ctx.db.insert("weeklyReview", {
+        userId: identity.subject,
+        year: targetYear,
+        weekNumber: targetWeek,
+        responses: {
+          biggestSuccess: "",
+          mostFrustrating: "",
+          differentlyNextTime: "",
+          learned: "",
+          nextWeekFocus: "",
+        },
+        nextWeekGoals: args.goals,
+        completedAt: new Date().toISOString(),
+      });
+      return reviewId;
+    }
+  },
+});
