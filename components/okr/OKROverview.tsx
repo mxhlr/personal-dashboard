@@ -114,43 +114,74 @@ export function OKROverview() {
         </div>
 
         {/* Annual North Stars */}
+
         <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.25)] dark:bg-card/50 bg-white/80
           shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
-          <div className="flex items-center gap-3 mb-6">
-            <Flag className="w-6 h-6 dark:text-[#00E5FF] text-[#0097A7]" />
-            <h2 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0097A7]">
-              ANNUAL NORTH STARS
-            </h2>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <Target className="w-6 h-6 dark:text-[#00E5FF] text-[#0097A7]" />
+              <h2 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0097A7]">
+                WEEK {currentWeekNumber} GOALS
+              </h2>
+            </div>
+            <span className="text-sm dark:text-[#525252] text-[#555555] font-bold"
+              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+              {weeklyGoals?.length || 0} Goals
+            </span>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { area: "Wealth", value: profile.northStars.wealth },
-              { area: "Health", value: profile.northStars.health },
-              { area: "Love", value: profile.northStars.love },
-              { area: "Happiness", value: profile.northStars.happiness },
-            ].map(({ area, value }) => {
-              const config = areaConfig[area];
-              return (
-                <div key={area} className={`p-6 rounded-xl bg-gradient-to-br ${config.gradient}
-                  dark:border dark:border-white/[0.08] border border-black/[0.08]`}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-2xl">{config.icon}</span>
-                    <h3 className={`text-sm font-bold uppercase tracking-wider ${config.color}`}
-                      style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                      {area}
-                    </h3>
+
+          {!weeklyGoals || weeklyGoals.length === 0 ? (
+            <div className="text-center py-12">
+              <Target className="w-16 h-16 dark:text-[#444444] text-[#BBBBBB] mx-auto mb-4 opacity-40" />
+              <p className="text-sm dark:text-[#3d3d3d] text-[#777777]"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                No goals set for this week.<br />
+                Complete last week&apos;s review to plan ahead.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {Object.entries(
+                weeklyGoals.reduce((acc, goal) => {
+                  if (!acc[goal.category]) acc[goal.category] = [];
+                  acc[goal.category].push(goal);
+                  return acc;
+                }, {} as Record<string, typeof weeklyGoals>)
+              ).map(([category, goals]) => {
+                const config = categoryConfig[category] || { icon: "🎯", color: "text-gray-400" };
+
+                return (
+                  <div
+                    key={category}
+                    className="p-6 rounded-xl dark:bg-white/[0.02] bg-black/[0.03]
+                      dark:border dark:border-white/[0.08] border border-black/[0.08]"
+                  >
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="text-lg">{config.icon}</span>
+                      <h3 className={`text-sm font-bold uppercase tracking-wider ${config.color}`}
+                        style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                        {category}
+                      </h3>
+                    </div>
+                    <div className="space-y-3">
+                      {goals.map((goal, index) => (
+                        <div key={index} className="flex items-start gap-3 group">
+                          <CheckCircle2 className="w-5 h-5 mt-0.5 dark:text-[#3d3d3d] text-[#525252] flex-shrink-0
+                            group-hover:dark:text-[#00E5FF] group-hover:text-[#0097A7] transition-colors" />
+                          <p className="text-sm dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
+                            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                            {goal.goal}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <p className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
-                    style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                    {value}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </Card>
 
-        {/* Monthly OKRs */}
         <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.25)] dark:bg-card/50 bg-white/80
           shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
           <div className="flex items-center justify-between mb-6">
@@ -236,7 +267,6 @@ export function OKROverview() {
           )}
         </Card>
 
-        {/* Quarterly Milestones */}
         <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.25)] dark:bg-card/50 bg-white/80
           shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
           <div className="flex items-center justify-between mb-6">
@@ -299,75 +329,43 @@ export function OKROverview() {
           )}
         </Card>
 
-        {/* Weekly Goals */}
         <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.25)] dark:bg-card/50 bg-white/80
           shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <Target className="w-6 h-6 dark:text-[#00E5FF] text-[#0097A7]" />
-              <h2 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0097A7]">
-                WEEK {currentWeekNumber} GOALS
-              </h2>
-            </div>
-            <span className="text-sm dark:text-[#525252] text-[#555555] font-bold"
-              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-              {weeklyGoals?.length || 0} Goals
-            </span>
+          <div className="flex items-center gap-3 mb-6">
+            <Flag className="w-6 h-6 dark:text-[#00E5FF] text-[#0097A7]" />
+            <h2 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0097A7]">
+              ANNUAL NORTH STARS
+            </h2>
           </div>
-
-          {!weeklyGoals || weeklyGoals.length === 0 ? (
-            <div className="text-center py-12">
-              <Target className="w-16 h-16 dark:text-[#444444] text-[#BBBBBB] mx-auto mb-4 opacity-40" />
-              <p className="text-sm dark:text-[#3d3d3d] text-[#777777]"
-                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                No goals set for this week.<br />
-                Complete last week&apos;s review to plan ahead.
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {Object.entries(
-                weeklyGoals.reduce((acc, goal) => {
-                  if (!acc[goal.category]) acc[goal.category] = [];
-                  acc[goal.category].push(goal);
-                  return acc;
-                }, {} as Record<string, typeof weeklyGoals>)
-              ).map(([category, goals]) => {
-                const config = categoryConfig[category] || { icon: "🎯", color: "text-gray-400" };
-
-                return (
-                  <div
-                    key={category}
-                    className="p-6 rounded-xl dark:bg-white/[0.02] bg-black/[0.03]
-                      dark:border dark:border-white/[0.08] border border-black/[0.08]"
-                  >
-                    <div className="flex items-center gap-2 mb-4">
-                      <span className="text-lg">{config.icon}</span>
-                      <h3 className={`text-sm font-bold uppercase tracking-wider ${config.color}`}
-                        style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                        {category}
-                      </h3>
-                    </div>
-                    <div className="space-y-3">
-                      {goals.map((goal, index) => (
-                        <div key={index} className="flex items-start gap-3 group">
-                          <CheckCircle2 className="w-5 h-5 mt-0.5 dark:text-[#3d3d3d] text-[#525252] flex-shrink-0
-                            group-hover:dark:text-[#00E5FF] group-hover:text-[#0097A7] transition-colors" />
-                          <p className="text-sm dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
-                            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                            {goal.goal}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { area: "Wealth", value: profile.northStars.wealth },
+              { area: "Health", value: profile.northStars.health },
+              { area: "Love", value: profile.northStars.love },
+              { area: "Happiness", value: profile.northStars.happiness },
+            ].map(({ area, value }) => {
+              const config = areaConfig[area];
+              return (
+                <div key={area} className={`p-6 rounded-xl bg-gradient-to-br ${config.gradient}
+                  dark:border dark:border-white/[0.08] border border-black/[0.08]`}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-2xl">{config.icon}</span>
+                    <h3 className={`text-sm font-bold uppercase tracking-wider ${config.color}`}
+                      style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                      {area}
+                    </h3>
                   </div>
-                );
-              })}
-            </div>
-          )}
+                  <p className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
+                    style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                    {value}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
         </Card>
 
-        {/* Info Footer */}
+{/* Info Footer */}
         <div className="text-center py-6">
           <p className="text-xs dark:text-[#3d3d3d] text-[#777777] uppercase tracking-wider"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
