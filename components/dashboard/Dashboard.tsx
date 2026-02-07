@@ -501,7 +501,10 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                 💰 WEALTH
               </p>
               <div className="space-y-1.5">
-                {profile.northStars.wealth.map((goal, index) => (
+                {(Array.isArray(profile.northStars.wealth)
+                  ? profile.northStars.wealth
+                  : [profile.northStars.wealth]
+                ).map((goal, index) => (
                   <p key={index} className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">
                     {goal}
                   </p>
@@ -513,7 +516,10 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                 🏃 HEALTH
               </p>
               <div className="space-y-1.5">
-                {profile.northStars.health.map((goal, index) => (
+                {(Array.isArray(profile.northStars.health)
+                  ? profile.northStars.health
+                  : [profile.northStars.health]
+                ).map((goal, index) => (
                   <p key={index} className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">
                     {goal}
                   </p>
@@ -525,7 +531,10 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                 ❤️ LOVE
               </p>
               <div className="space-y-1.5">
-                {profile.northStars.love.map((goal, index) => (
+                {(Array.isArray(profile.northStars.love)
+                  ? profile.northStars.love
+                  : [profile.northStars.love]
+                ).map((goal, index) => (
                   <p key={index} className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">
                     {goal}
                   </p>
@@ -537,7 +546,10 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                 😊 HAPPINESS
               </p>
               <div className="space-y-1.5">
-                {profile.northStars.happiness.map((goal, index) => (
+                {(Array.isArray(profile.northStars.happiness)
+                  ? profile.northStars.happiness
+                  : [profile.northStars.happiness]
+                ).map((goal, index) => (
                   <p key={index} className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">
                     {goal}
                   </p>
