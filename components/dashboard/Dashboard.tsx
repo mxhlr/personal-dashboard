@@ -500,11 +500,14 @@ export function Dashboard({ onNavigate }: DashboardProps) {
               <p className="text-[10px] md:text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#525252] text-[#3d3d3d] mb-2 md:mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
                 💰 WEALTH
               </p>
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 {profile.northStars.wealth.map((goal, index) => (
-                  <p key={index} className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">
-                    {goal}
-                  </p>
+                  <div key={index} className="flex items-start gap-2">
+                    <span className="text-xs dark:text-[#525252] text-[#777777] mt-1">•</span>
+                    <p className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">
+                      {goal}
+                    </p>
+                  </div>
                 ))}
               </div>
             </div>
@@ -512,11 +515,14 @@ export function Dashboard({ onNavigate }: DashboardProps) {
               <p className="text-[10px] md:text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#525252] text-[#3d3d3d] mb-2 md:mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
                 🏃 HEALTH
               </p>
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 {profile.northStars.health.map((goal, index) => (
-                  <p key={index} className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">
-                    {goal}
-                  </p>
+                  <div key={index} className="flex items-start gap-2">
+                    <span className="text-xs dark:text-[#525252] text-[#777777] mt-1">•</span>
+                    <p className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">
+                      {goal}
+                    </p>
+                  </div>
                 ))}
               </div>
             </div>
@@ -524,11 +530,14 @@ export function Dashboard({ onNavigate }: DashboardProps) {
               <p className="text-[10px] md:text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#525252] text-[#3d3d3d] mb-2 md:mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
                 ❤️ LOVE
               </p>
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 {profile.northStars.love.map((goal, index) => (
-                  <p key={index} className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">
-                    {goal}
-                  </p>
+                  <div key={index} className="flex items-start gap-2">
+                    <span className="text-xs dark:text-[#525252] text-[#777777] mt-1">•</span>
+                    <p className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">
+                      {goal}
+                    </p>
+                  </div>
                 ))}
               </div>
             </div>
@@ -536,11 +545,14 @@ export function Dashboard({ onNavigate }: DashboardProps) {
               <p className="text-[10px] md:text-xs font-bold font-orbitron uppercase tracking-widest dark:text-[#525252] text-[#3d3d3d] mb-2 md:mb-3 group-hover:dark:text-[#00E5FF] group-hover:text-[#0077B6] transition-colors duration-200">
                 😊 HAPPINESS
               </p>
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 {profile.northStars.happiness.map((goal, index) => (
-                  <p key={index} className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">
-                    {goal}
-                  </p>
+                  <div key={index} className="flex items-start gap-2">
+                    <span className="text-xs dark:text-[#525252] text-[#777777] mt-1">•</span>
+                    <p className="text-sm md:text-base dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed">
+                      {goal}
+                    </p>
+                  </div>
                 ))}
               </div>
             </div>

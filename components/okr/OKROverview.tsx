@@ -406,12 +406,15 @@ export function OKROverview() {
                       {area}
                     </h3>
                   </div>
-                  <div className="space-y-1.5">
+                  <div className="space-y-2">
                     {value.map((goal, index) => (
-                      <p key={index} className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
-                        style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                        {goal}
-                      </p>
+                      <div key={index} className="flex items-start gap-2">
+                        <span className="text-xs dark:text-[#525252] text-[#777777] mt-1">•</span>
+                        <p className="text-base dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
+                          style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                          {goal}
+                        </p>
+                      </div>
                     ))}
                   </div>
                 </div>
