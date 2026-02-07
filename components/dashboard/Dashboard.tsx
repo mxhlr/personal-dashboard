@@ -578,9 +578,6 @@ export function Dashboard({ onNavigate }: DashboardProps) {
           </Card>
         </div>
 
-        {/* Quick Actions Grid - Keep existing structure */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        </div>
       </div>
     </div>
   );
