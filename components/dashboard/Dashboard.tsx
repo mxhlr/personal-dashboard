@@ -308,20 +308,20 @@ export function Dashboard({ onNavigate }: DashboardProps) {
               ? 'dark:border-[rgba(255,215,0,0.3)] border-[rgba(255,215,0,0.4)] dark:hover:border-[rgba(255,215,0,0.4)] hover:border-[rgba(255,215,0,0.5)] dark:hover:shadow-[0_0_40px_rgba(255,215,0,0.3)] hover:shadow-[0_8px_40px_rgba(255,215,0,0.4)]'
               : coreComplete
                 ? 'dark:border-[rgba(0,230,118,0.25)] border-[rgba(76,175,80,0.3)] dark:hover:border-[rgba(0,230,118,0.35)] hover:border-[rgba(76,175,80,0.4)] dark:hover:shadow-[0_0_35px_rgba(0,230,118,0.25)] hover:shadow-[0_8_35px_rgba(76,175,80,0.3)]'
-                : 'dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.2)] dark:hover:border-[rgba(0,229,255,0.25)] hover:border-[rgba(0,180,220,0.3)] dark:hover:shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_8px_30px_rgba(0,180,220,0.25)]'
+                : 'dark:border-[rgba(255,255,255,0.08)] border-[rgba(0,0,0,0.08)] dark:hover:border-[rgba(255,255,255,0.12)] hover:border-[rgba(0,0,0,0.12)] dark:hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.1)]'
             }`}
             style={{
               background: todayComplete
                 ? 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(0, 230, 118, 0.06) 100%), rgba(26, 26, 26, 0.5)'
                 : coreComplete
                   ? 'linear-gradient(135deg, rgba(0, 230, 118, 0.08) 0%, rgba(0, 229, 255, 0.04) 100%), rgba(26, 26, 26, 0.5)'
-                  : 'linear-gradient(135deg, rgba(0, 229, 255, 0.05) 0%, rgba(26, 26, 26, 0.5) 100%)'
+                  : 'linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(26, 26, 26, 0.5) 100%)'
             }}
           >
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <Calendar className="h-5 w-5 dark:text-[#00E5FF] text-[#0077B6]" />
-                <h3 className="font-bold font-orbitron dark:text-[#00E5FF] text-[#0077B6]">Today&apos;s Log</h3>
+                <Calendar className="h-5 w-5 dark:text-[white] text-[black]" />
+                <h3 className="font-bold font-orbitron dark:text-[white] text-[black]">Today&apos;s Log</h3>
               </div>
 
             {todayComplete ? (
@@ -415,7 +415,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                         fill="none"
                         strokeDasharray={progressRingProps.circumference}
                         strokeDashoffset={progressRingProps.strokeDashoffset}
-                        className="dark:text-[#00E5FF] text-[#0077B6] transition-all duration-500"
+                        className="dark:text-[white] text-[black] transition-all duration-500"
                         style={{
                           filter: todayProgress > 50 ? 'drop-shadow(0 0 6px currentColor)' : 'none'
                         }}
@@ -438,9 +438,9 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                 </div>
                 <Button
                   onClick={() => onNavigate("daily-log")}
-                  className="w-full dark:bg-gradient-to-r dark:from-[#00E5FF] dark:to-[#00B8D4] bg-gradient-to-r from-[#0077B6] to-[#005F8F]
-                    text-white font-bold font-orbitron uppercase tracking-wider text-xs
-                    dark:border-[#00E5FF]/30 border-[#0077B6]/30
+                  className="w-full dark:bg-gradient-to-r dark:from-white dark:to-gray-100 bg-gradient-to-r from-gray-700 to-gray-800
+                    dark:text-black text-white font-bold font-orbitron uppercase tracking-wider text-xs
+                    dark:border-white/30 border-black/30
                     dark:shadow-[0_0_15px_rgba(0,229,255,0.3)] shadow-[0_4px_12px_rgba(0,119,182,0.3)]
                     dark:hover:shadow-[0_0_25px_rgba(0,229,255,0.5)] hover:shadow-[0_6px_20px_rgba(0,119,182,0.5)] hover:scale-105
                     transition-all duration-300"

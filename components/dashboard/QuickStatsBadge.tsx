@@ -14,7 +14,15 @@ export function QuickStatsBadge() {
   const xpProgress = xpForNextLevel > 0 ? Math.round((totalXP / xpForNextLevel) * 100) : 0;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <div className="space-y-3">
+      {/* Header */}
+      <div className="flex items-center gap-2 px-1">
+        <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-white text-black font-orbitron">
+          Quick Stats
+        </h3>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
       {/* Level Badge */}
       <div
         className="group flex items-center justify-between px-4 py-4 rounded-lg
@@ -136,6 +144,7 @@ export function QuickStatsBadge() {
             </p>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
