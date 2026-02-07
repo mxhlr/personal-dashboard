@@ -58,21 +58,21 @@ export function WeeklyGoalsWidget() {
     );
   }
 
-  // Group goals by category
-  const goalsByCategory = weeklyGoals.reduce((acc, goal) => {
-    if (!acc[goal.category]) {
-      acc[goal.category] = [];
+  // Group goals by area
+  const goalsByArea = weeklyGoals.reduce((acc, goal) => {
+    if (!acc[goal.area]) {
+      acc[goal.area] = [];
     }
-    acc[goal.category].push(goal);
+    acc[goal.area].push(goal);
     return acc;
   }, {} as Record<string, typeof weeklyGoals>);
 
-  // Category colors/icons
-  const categoryConfig: Record<string, { icon: string; color: string }> = {
-    Work: { icon: "💼", color: "text-blue-400" },
+  // Area colors/icons
+  const areaConfig: Record<string, { icon: string; color: string }> = {
+    Wealth: { icon: "💰", color: "text-yellow-400" },
     Health: { icon: "🏃", color: "text-green-400" },
-    Learning: { icon: "📚", color: "text-purple-400" },
-    Personal: { icon: "✨", color: "text-pink-400" },
+    Love: { icon: "❤️", color: "text-pink-400" },
+    Happiness: { icon: "😊", color: "text-purple-400" },
   };
 
   return (
@@ -96,23 +96,23 @@ export function WeeklyGoalsWidget() {
           </span>
         </div>
 
-        {/* Goals by Category */}
+        {/* Goals by Area */}
         <div className="space-y-3">
-          {Object.entries(goalsByCategory).map(([category, goals]) => {
-            const config = categoryConfig[category] || { icon: "🎯", color: "text-gray-400" };
+          {Object.entries(goalsByArea).map(([area, goals]) => {
+            const config = areaConfig[area] || { icon: "🎯", color: "text-gray-400" };
 
             return (
-              <div key={category} className="space-y-2">
-                {/* Category Header */}
+              <div key={area} className="space-y-2">
+                {/* Area Header */}
                 <div className="flex items-center gap-2">
                   <span className="text-[11px]">{config.icon}</span>
                   <span className={`text-[11px] font-bold uppercase tracking-wider ${config.color}`}
                     style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                    {category}
+                    {area}
                   </span>
                 </div>
 
-                {/* Goals in Category */}
+                {/* Goals in Area */}
                 <div className="space-y-2 pl-6">
                   {goals.map((goal, index) => (
                     <div
@@ -123,7 +123,7 @@ export function WeeklyGoalsWidget() {
                         group-hover:dark:text-[#00E5FF] group-hover:text-[#0097A7] transition-colors" />
                       <p className="text-[13px] dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
                         style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                        {goal.goal}
+                        {goal.objective}
                       </p>
                     </div>
                   ))}

@@ -29,47 +29,31 @@ const CoachPanel = lazy(() =>
 );
 
 const WeeklyReviewForm = lazy(() =>
-  import("@/components/reviews/WeeklyReviewForm").then((mod) => ({
-    default: mod.WeeklyReviewForm,
+  import("@/components/reviews/WeeklyReview").then((mod) => ({
+    default: mod.WeeklyReview,
   }))
 );
 
 const MonthlyReviewForm = lazy(() =>
-  import("@/components/reviews/MonthlyReviewForm").then((mod) => ({
-    default: mod.MonthlyReviewForm,
+  import("@/components/reviews/MonthlyReview").then((mod) => ({
+    default: mod.MonthlyReview,
   }))
 );
 
 const QuarterlyReviewForm = lazy(() =>
-  import("@/components/reviews/QuarterlyReviewForm").then((mod) => ({
-    default: mod.QuarterlyReviewForm,
+  import("@/components/reviews/QuarterlyReview").then((mod) => ({
+    default: mod.QuarterlyReview,
   }))
 );
 
 const AnnualReviewForm = lazy(() =>
-  import("@/components/reviews/AnnualReviewForm").then((mod) => ({
-    default: mod.AnnualReviewForm,
+  import("@/components/reviews/AnnualReview").then((mod) => ({
+    default: mod.AnnualReview,
   }))
 );
 
 type ReviewType = "weekly" | "monthly" | "quarterly" | "annual";
 type TabType = "dashboard" | "daily-log" | "visionboard" | "planning" | "data" | "okr";
-
-// Helper function to get current week number (ISO 8601)
-function getWeekNumber(date: Date): number {
-  const d = new Date(
-    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
-  );
-  const dayNum = d.getUTCDay() || 7;
-  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  return Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
-}
-
-// Helper function to get current quarter
-function getQuarter(date: Date): number {
-  return Math.floor(date.getMonth() / 3) + 1;
-}
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -88,12 +72,6 @@ export default function DashboardPage() {
     }
   }, [searchParams]);
 
-  // Get current date info for reviews
-  const now = new Date();
-  const currentYear = now.getFullYear();
-  const currentMonth = now.getMonth() + 1; // 1-12
-  const currentWeek = getWeekNumber(now);
-  const currentQuarter = getQuarter(now);
 
   // Redirect to setup if not completed
   useEffect(() => {
@@ -165,7 +143,7 @@ export default function DashboardPage() {
               {selectedReview === "weekly" && (
                 <ReviewErrorBoundary reviewType="weekly">
                   <Suspense fallback={<LoadingFallback message="Wöchentliche Reflexion wird geladen..." />}>
-                    <WeeklyReviewForm year={currentYear} weekNumber={currentWeek} />
+                    <WeeklyReviewForm />
                   </Suspense>
                 </ReviewErrorBoundary>
               )}
@@ -173,7 +151,7 @@ export default function DashboardPage() {
               {selectedReview === "monthly" && (
                 <ReviewErrorBoundary reviewType="monthly">
                   <Suspense fallback={<LoadingFallback message="Monatliche Reflexion wird geladen..." />}>
-                    <MonthlyReviewForm year={currentYear} month={currentMonth} />
+                    <MonthlyReviewForm />
                   </Suspense>
                 </ReviewErrorBoundary>
               )}
@@ -181,7 +159,7 @@ export default function DashboardPage() {
               {selectedReview === "quarterly" && (
                 <ReviewErrorBoundary reviewType="quarterly">
                   <Suspense fallback={<LoadingFallback message="Quartalsreflexion wird geladen..." />}>
-                    <QuarterlyReviewForm year={currentYear} quarter={currentQuarter} />
+                    <QuarterlyReviewForm />
                   </Suspense>
                 </ReviewErrorBoundary>
               )}
@@ -189,7 +167,7 @@ export default function DashboardPage() {
               {selectedReview === "annual" && (
                 <ReviewErrorBoundary reviewType="annual">
                   <Suspense fallback={<LoadingFallback message="Jahresreflexion wird geladen..." />}>
-                    <AnnualReviewForm year={currentYear} />
+                    <AnnualReviewForm />
                   </Suspense>
                 </ReviewErrorBoundary>
               )}

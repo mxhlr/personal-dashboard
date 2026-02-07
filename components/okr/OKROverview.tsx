@@ -5,7 +5,7 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Target, TrendingUp, CheckCircle2, Flag, Edit2 } from "lucide-react";
+import { Target, TrendingUp, Flag, Edit2 } from "lucide-react";
 import { getWeek, getYear, getMonth } from "date-fns";
 import { EditNorthStarsDialog } from "./EditNorthStarsDialog";
 import { EditMilestonesDialog } from "./EditMilestonesDialog";
@@ -52,12 +52,6 @@ export function OKROverview() {
     "July", "August", "September", "October", "November", "December"
   ];
 
-  const categoryConfig: Record<string, { icon: string; color: string }> = {
-    Work: { icon: "💼", color: "text-blue-400" },
-    Health: { icon: "🏃", color: "text-green-400" },
-    Learning: { icon: "📚", color: "text-purple-400" },
-    Personal: { icon: "✨", color: "text-pink-400" },
-  };
 
   const areaConfig: Record<string, { icon: string; color: string; gradient: string }> = {
     Wealth: {
