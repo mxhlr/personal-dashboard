@@ -2,10 +2,10 @@
 
 interface Step7DoneProps {
   northStars: {
-    wealth: string;
-    health: string;
-    love: string;
-    happiness: string;
+    wealth: string[];
+    health: string[];
+    love: string[];
+    happiness: string[];
   };
 }
 
@@ -22,19 +22,19 @@ export default function Step7Done({ northStars }: Step7DoneProps) {
         <div className="space-y-4 text-left max-w-xl mx-auto">
           <div className="border border-border/60 rounded-lg p-4">
             <div className="font-medium mb-1">💰 WEALTH</div>
-            <p className="text-muted-foreground">{northStars.wealth}</p>
+            <p className="text-muted-foreground">{northStars.wealth[0] || ""}</p>
           </div>
           <div className="border border-border/60 rounded-lg p-4">
             <div className="font-medium mb-1">🏃 HEALTH</div>
-            <p className="text-muted-foreground">{northStars.health}</p>
+            <p className="text-muted-foreground">{northStars.health[0] || ""}</p>
           </div>
           <div className="border border-border/60 rounded-lg p-4">
             <div className="font-medium mb-1">❤️ LOVE</div>
-            <p className="text-muted-foreground">{northStars.love}</p>
+            <p className="text-muted-foreground">{northStars.love[0] || ""}</p>
           </div>
           <div className="border border-border/60 rounded-lg p-4">
             <div className="font-medium mb-1">😊 HAPPINESS</div>
-            <p className="text-muted-foreground">{northStars.happiness}</p>
+            <p className="text-muted-foreground">{northStars.happiness[0] || ""}</p>
           </div>
         </div>
       </div>
