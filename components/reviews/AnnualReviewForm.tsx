@@ -25,11 +25,17 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
   const currentNorthStars = useQuery(api.annualReview.getCurrentNorthStars);
   const submitReview = useMutation(api.annualReview.submitAnnualReview);
 
-  const [northStarReview, setNorthStarReview] = useState({
-    wealth: { achieved: "", notes: "" },
-    health: { achieved: "", notes: "" },
-    love: { achieved: "", notes: "" },
-    happiness: { achieved: "", notes: "" },
+  // Each area now holds an array of reviews, one per North Star
+  const [northStarReview, setNorthStarReview] = useState<{
+    wealth: Array<{ goal: string; achieved: string; notes: string }>;
+    health: Array<{ goal: string; achieved: string; notes: string }>;
+    love: Array<{ goal: string; achieved: string; notes: string }>;
+    happiness: Array<{ goal: string; achieved: string; notes: string }>;
+  }>({
+    wealth: [],
+    health: [],
+    love: [],
+    happiness: [],
   });
 
   const [formData, setFormData] = useState({
@@ -50,7 +56,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isReadOnly, setIsReadOnly] = useState(false);
 
-  // Load existing review data
+  // Load existing review data or initialize from current North Stars
   useEffect(() => {
     if (existingReview) {
       setNorthStarReview(existingReview.northStarReview);
@@ -64,6 +70,25 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
       setNextYearNorthStars(existingReview.responses.nextYearNorthStars);
       setIsReadOnly(true);
     } else if (currentNorthStars) {
+      // Initialize northStarReview with one entry per North Star
+      const areas = ["wealth", "health", "love", "happiness"] as const;
+      const initialReviews: typeof northStarReview = {
+        wealth: [],
+        health: [],
+        love: [],
+        happiness: [],
+      };
+
+      areas.forEach((area) => {
+        const goals = currentNorthStars[area] || [];
+        initialReviews[area] = goals.map((goal: string) => ({
+          goal,
+          achieved: "",
+          notes: "",
+        }));
+      });
+
+      setNorthStarReview(initialReviews);
       // Pre-fill next year's North Stars with current ones
       setNextYearNorthStars(currentNorthStars);
     }
@@ -73,7 +98,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
     let totalFields = 0;
     let filledFields = 0;
 
-    // North Star reviews (4 areas, 2 fields each = 8 fields)
+    // North Star reviews - 2 fields (achieved + notes) per individual North Star
     const areas: Array<keyof typeof northStarReview> = [
       "wealth",
       "health",
@@ -81,9 +106,12 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
       "happiness",
     ];
     areas.forEach((area) => {
-      totalFields += 2; // achieved + notes
-      if (northStarReview[area].achieved) filledFields++;
-      if (northStarReview[area].notes.trim()) filledFields++;
+      const reviews = northStarReview[area];
+      reviews.forEach((review) => {
+        totalFields += 2; // achieved + notes per North Star
+        if (review.achieved) filledFields++;
+        if (review.notes.trim()) filledFields++;
+      });
     });
 
     // Reflection questions (5 fields)
@@ -101,20 +129,19 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
       if (hasGoal) filledFields++;
     });
 
-    return Math.round((filledFields / totalFields) * 100);
+    return totalFields > 0 ? Math.round((filledFields / totalFields) * 100) : 0;
   };
 
   const handleNorthStarReviewChange = (
     area: keyof typeof northStarReview,
+    index: number,
     field: "achieved" | "notes",
     value: string
   ) => {
-    setNorthStarReview({
-      ...northStarReview,
-      [area]: {
-        ...northStarReview[area],
-        [field]: value,
-      },
+    setNorthStarReview((prev) => {
+      const updated = [...prev[area]];
+      updated[index] = { ...updated[index], [field]: value };
+      return { ...prev, [area]: updated };
     });
   };
 
@@ -129,14 +156,15 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
       "happiness",
     ];
     for (const area of areas) {
-      if (
-        !northStarReview[area].achieved ||
-        !northStarReview[area].notes.trim()
-      ) {
-        toast.error(
-          `Bitte fülle die North Star Review für ${AREA_LABELS[area]} vollständig aus.`
-        );
-        return;
+      const reviews = northStarReview[area];
+      for (let i = 0; i < reviews.length; i++) {
+        const review = reviews[i];
+        if (!review.achieved || !review.notes.trim()) {
+          toast.error(
+            `Bitte fülle die Review für "${review.goal}" (${AREA_LABELS[area]}) vollständig aus.`
+          );
+          return;
+        }
       }
     }
 
@@ -312,93 +340,96 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
 
             {currentNorthStars && (
               <div className="space-y-5">
-                {Object.entries(AREA_LABELS).map(([area, label]) => (
-                  <div
-                    key={area}
-                    className="p-4 dark:border-border/60 border-border/25 border rounded-lg
-                      dark:bg-[rgba(26,26,26,0.3)] bg-white/50"
-                  >
-                    <div className="text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#555555] mb-2"
-                      style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
-                    >
-                      {label}
-                    </div>
-                    <div className="text-[13px] dark:text-[#E0E0E0] text-[#1A1A1A] font-medium mb-3"
-                      style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
-                    >
-                      North Star: {currentNorthStars[area as keyof typeof currentNorthStars]}
-                    </div>
+                {Object.entries(AREA_LABELS).map(([area, label]) => {
+                  const areaReviews = northStarReview[area as keyof typeof northStarReview] || [];
 
-                    <div className="space-y-3">
-                      <div>
-                        <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#555555] mb-2"
-                          style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                  return (
+                    <div key={area} className="space-y-3">
+                      <div className="text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#555555]"
+                        style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                      >
+                        {label}
+                      </div>
+
+                      {areaReviews.map((review, index) => (
+                        <div
+                          key={`${area}-${index}`}
+                          className="p-4 dark:border-border/60 border-border/25 border rounded-lg
+                            dark:bg-[rgba(26,26,26,0.3)] bg-white/50"
                         >
-                          Erreicht?
-                        </label>
-                        <div className="flex gap-4">
-                          {["Ja", "Teilweise", "Nein"].map((option) => (
-                            <label key={option} className="flex items-center gap-2 cursor-pointer">
-                              <input
-                                type="radio"
-                                name={`achieved-${area}`}
-                                value={option}
-                                checked={
-                                  northStarReview[
-                                    area as keyof typeof northStarReview
-                                  ].achieved === option
-                                }
+                          <div className="text-[13px] dark:text-[#E0E0E0] text-[#1A1A1A] font-medium mb-3"
+                            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                          >
+                            • {review.goal}
+                          </div>
+
+                          <div className="space-y-3">
+                            <div>
+                              <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#555555] mb-2"
+                                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                              >
+                                Erreicht?
+                              </label>
+                              <div className="flex gap-4">
+                                {["Ja", "Teilweise", "Nein"].map((option) => (
+                                  <label key={option} className="flex items-center gap-2 cursor-pointer">
+                                    <input
+                                      type="radio"
+                                      name={`achieved-${area}-${index}`}
+                                      value={option}
+                                      checked={review.achieved === option}
+                                      onChange={(e) =>
+                                        handleNorthStarReviewChange(
+                                          area as keyof typeof northStarReview,
+                                          index,
+                                          "achieved",
+                                          e.target.value
+                                        )
+                                      }
+                                      disabled={isReadOnly}
+                                      className="w-4 h-4 dark:border-border/50 border-border/40"
+                                    />
+                                    <span className="text-[13px] dark:text-[#E0E0E0] text-[#1A1A1A]"
+                                      style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                                    >
+                                      {option}
+                                    </span>
+                                  </label>
+                                ))}
+                              </div>
+                            </div>
+
+                            <div>
+                              <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#555555] mb-2"
+                                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                              >
+                                Notizen
+                              </label>
+                              <textarea
+                                value={review.notes}
                                 onChange={(e) =>
                                   handleNorthStarReviewChange(
                                     area as keyof typeof northStarReview,
-                                    "achieved",
+                                    index,
+                                    "notes",
                                     e.target.value
                                   )
                                 }
                                 disabled={isReadOnly}
-                                className="w-4 h-4 dark:border-border/50 border-border/40"
+                                placeholder="Notizen..."
+                                className="w-full min-h-[80px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
+                                  dark:text-[#E0E0E0] text-[#1A1A1A]
+                                  disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
+                                  focus:outline-none focus:ring-0"
+                                style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
                               />
-                              <span className="text-[13px] dark:text-[#E0E0E0] text-[#1A1A1A]"
-                                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
-                              >
-                                {option}
-                              </span>
-                            </label>
-                          ))}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#555555] mb-2"
-                          style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
-                        >
-                          Notizen
-                        </label>
-                        <textarea
-                          value={
-                            northStarReview[
-                              area as keyof typeof northStarReview
-                            ].notes
-                          }
-                          onChange={(e) =>
-                            handleNorthStarReviewChange(
-                              area as keyof typeof northStarReview,
-                              "notes",
-                              e.target.value
-                            )
-                          }
-                          disabled={isReadOnly}
-                          placeholder="Notizen..."
-                          className="w-full min-h-[80px] px-0 py-0 border-0 dark:bg-transparent bg-transparent resize-none
-                            dark:text-[#E0E0E0] text-[#1A1A1A]
-                            disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
-                            focus:outline-none focus:ring-0"
-                          style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px', lineHeight: '1.6' }}
-                        />
-                      </div>
+                      ))}
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

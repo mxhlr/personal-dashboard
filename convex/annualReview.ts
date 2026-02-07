@@ -57,10 +57,10 @@ export const submitAnnualReview = mutation({
   args: {
     year: v.number(),
     northStarReview: v.object({
-      wealth: v.object({ achieved: v.string(), notes: v.string() }),
-      health: v.object({ achieved: v.string(), notes: v.string() }),
-      love: v.object({ achieved: v.string(), notes: v.string() }),
-      happiness: v.object({ achieved: v.string(), notes: v.string() }),
+      wealth: v.array(v.object({ goal: v.string(), achieved: v.string(), notes: v.string() })),
+      health: v.array(v.object({ goal: v.string(), achieved: v.string(), notes: v.string() })),
+      love: v.array(v.object({ goal: v.string(), achieved: v.string(), notes: v.string() })),
+      happiness: v.array(v.object({ goal: v.string(), achieved: v.string(), notes: v.string() })),
     }),
     responses: v.object({
       yearInOneSentence: v.string(),

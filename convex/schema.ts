@@ -257,12 +257,12 @@ export default defineSchema({
     userId: v.string(), // Clerk user ID
     year: v.number(),
 
-    // North Star Review
+    // North Star Review (ein Review pro North Star, nicht pro Kategorie)
     northStarReview: v.object({
-      wealth: v.object({ achieved: v.string(), notes: v.string() }),
-      health: v.object({ achieved: v.string(), notes: v.string() }),
-      love: v.object({ achieved: v.string(), notes: v.string() }),
-      happiness: v.object({ achieved: v.string(), notes: v.string() }),
+      wealth: v.array(v.object({ goal: v.string(), achieved: v.string(), notes: v.string() })),
+      health: v.array(v.object({ goal: v.string(), achieved: v.string(), notes: v.string() })),
+      love: v.array(v.object({ goal: v.string(), achieved: v.string(), notes: v.string() })),
+      happiness: v.array(v.object({ goal: v.string(), achieved: v.string(), notes: v.string() })),
     }),
 
     // User Input (6 Fragen)
