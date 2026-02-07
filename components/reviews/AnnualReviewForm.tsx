@@ -47,6 +47,10 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
     happiness: "",
   });
 
+  const [nextYearGoals, setNextYearGoals] = useState<Array<{ goal: string; category: string }>>([
+    { goal: "", category: "Wealth" },
+  ]);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isReadOnly, setIsReadOnly] = useState(false);
 
@@ -62,6 +66,9 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
         stopStartContinue: existingReview.responses.stopStartContinue,
       });
       setNextYearNorthStars(existingReview.responses.nextYearNorthStars);
+      if (existingReview.nextYearGoals && existingReview.nextYearGoals.length > 0) {
+        setNextYearGoals(existingReview.nextYearGoals);
+      }
       setIsReadOnly(true);
     } else if (currentNorthStars) {
       // Pre-fill next year's North Stars with current ones
@@ -163,6 +170,9 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
 
     setIsSubmitting(true);
     try {
+      // Filter out empty goals
+      const validGoals = nextYearGoals.filter(g => g.goal.trim() !== "");
+
       await submitReview({
         year,
         northStarReview,
@@ -170,6 +180,7 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
           ...formData,
           nextYearNorthStars,
         },
+        nextYearGoals: validGoals.length > 0 ? validGoals : undefined,
       });
       setIsReadOnly(true);
       toast.success("Annual Review erfolgreich gespeichert!");
@@ -183,6 +194,21 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
 
   const handleEdit = () => {
     setIsReadOnly(false);
+  };
+
+  // Goal Helper Functions
+  const addGoal = () => {
+    setNextYearGoals([...nextYearGoals, { goal: "", category: "Wealth" }]);
+  };
+
+  const removeGoal = (index: number) => {
+    setNextYearGoals(nextYearGoals.filter((_, i) => i !== index));
+  };
+
+  const updateGoal = (index: number, field: "goal" | "category", value: string) => {
+    const updated = [...nextYearGoals];
+    updated[index][field] = value;
+    setNextYearGoals(updated);
   };
 
   return (
@@ -580,6 +606,107 @@ export function AnnualReviewForm({ year }: AnnualReviewFormProps) {
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* Part 4: Next Year Goals */}
+          <div className="space-y-4 pt-4">
+            <div className="text-center pb-4">
+              <h3 className="text-[14px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7]"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace', letterSpacing: '2px' }}>
+                ◢ Teil 4: Goals für {year + 1} ◣
+              </h3>
+              <p className="text-[12px] dark:text-[#B0B0B0] text-[#666666] mt-2"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                Setze konkrete Goals für das nächste Jahr
+              </p>
+            </div>
+
+            {nextYearGoals.map((goal, index) => (
+              <div
+                key={index}
+                className="group dark:border-[rgba(0,229,255,0.25)] border-[rgba(0,151,167,0.3)] border-2
+                  backdrop-blur-sm rounded-xl p-6 transition-all duration-300
+                  hover:dark:border-[rgba(0,229,255,0.4)] hover:border-[rgba(0,151,167,0.4)]
+                  hover:shadow-[0_0_20px_rgba(0,229,255,0.2)]"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.08) 0%, rgba(139, 92, 246, 0.06) 100%)'
+                }}
+              >
+                <div className="flex items-start justify-between gap-4 mb-3">
+                  <label className="text-[11px] font-bold uppercase tracking-wider
+                    dark:text-[#00E5FF] text-[#0097A7] flex-shrink-0"
+                    style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                    Goal {index + 1}
+                  </label>
+                  {!isReadOnly && nextYearGoals.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeGoal(index)}
+                      className="text-[10px] dark:text-[#525252] text-[#3d3d3d]
+                        dark:hover:text-red-400 hover:text-red-600
+                        uppercase tracking-wider transition-colors"
+                      style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+
+                <textarea
+                  value={goal.goal}
+                  onChange={(e) => updateGoal(index, "goal", e.target.value)}
+                  disabled={isReadOnly}
+                  className="w-full min-h-[80px] px-4 py-3 border-2 dark:border-[rgba(0,229,255,0.2)] border-[rgba(0,180,220,0.25)]
+                    dark:bg-[rgba(0,229,255,0.05)] bg-[rgba(0,180,220,0.08)] rounded-lg resize-none mb-3
+                    focus:outline-none focus:ring-2 focus:ring-[#00E5FF]/50 focus:border-[rgba(0,229,255,0.4)]
+                    disabled:cursor-not-allowed placeholder:dark:text-[#A0A0A0] placeholder:text-[#888888]
+                    dark:text-[#FFFFFF] text-[#1A1A1A] transition-all"
+                  style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '15px', lineHeight: '1.7' }}
+                  placeholder="Beschreibe dein Goal für nächstes Jahr..."
+                />
+
+                <div className="pt-2 border-t dark:border-[rgba(0,229,255,0.1)] border-[rgba(0,151,167,0.2)]">
+                  <label className="text-[10px] font-bold uppercase tracking-wider
+                    dark:text-[#525252] text-[#555555] block mb-2"
+                    style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                    Category
+                  </label>
+                  <select
+                    value={goal.category}
+                    onChange={(e) => updateGoal(index, "category", e.target.value)}
+                    disabled={isReadOnly}
+                    className="w-full px-3 py-2 dark:bg-white/[0.03] bg-black/[0.03]
+                      dark:border-white/[0.1] border-black/[0.12] border rounded-lg
+                      dark:text-[#E0E0E0] text-[#1A1A1A]
+                      focus:outline-none focus:ring-2 focus:ring-[#00E5FF]/50
+                      disabled:cursor-not-allowed text-[13px]"
+                    style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                  >
+                    <option value="Wealth">Wealth</option>
+                    <option value="Health">Health</option>
+                    <option value="Love">Love</option>
+                    <option value="Happiness">Happiness</option>
+                  </select>
+                </div>
+              </div>
+            ))}
+
+            {!isReadOnly && (
+              <button
+                type="button"
+                onClick={addGoal}
+                className="w-full px-6 py-3 dark:bg-white/[0.03] bg-black/[0.03]
+                  dark:border dark:border-dashed dark:border-white/[0.15] border border-dashed border-black/[0.15]
+                  dark:text-[#525252] text-[#555555]
+                  dark:hover:bg-white/[0.06] hover:bg-black/[0.05]
+                  dark:hover:border-[#00E5FF]/30 hover:border-[#0097A7]/40
+                  dark:hover:text-[#00E5FF] hover:text-[#0097A7]
+                  uppercase tracking-wider text-[11px] font-bold transition-all duration-200 rounded-lg"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+              >
+                + Add Goal ({nextYearGoals.length})
+              </button>
+            )}
           </div>
 
           {/* Buttons */}
