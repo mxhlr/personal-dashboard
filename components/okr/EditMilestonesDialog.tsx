@@ -55,7 +55,7 @@ export function EditMilestonesDialog({ isOpen, onClose, year, quarter }: EditMil
 
   const handleSave = async () => {
     const validMilestones = milestones.filter(m => m.milestone.trim() !== "");
-    
+
     if (validMilestones.length === 0) {
       toast.error("Add at least one milestone");
       return;
@@ -63,21 +63,34 @@ export function EditMilestonesDialog({ isOpen, onClose, year, quarter }: EditMil
 
     setIsSaving(true);
     try {
-      // Get all existing milestones for other quarters
+      // Get all existing milestones for other quarters (keep their completed status, year, quarter)
       const otherMilestones = profile?.quarterlyMilestones?.filter(
         (m) => !(m.year === year && m.quarter === quarter)
-      ) || [];
+      ).map(m => ({
+        area: m.area,
+        milestone: m.milestone,
+        year: m.year,
+        quarter: m.quarter,
+        completed: m.completed
+      })) || [];
 
-      // Combine with new milestones for this quarter
+      // Combine with new milestones for this quarter (all marked as not completed)
       const allMilestones = [
         ...otherMilestones,
-        ...validMilestones.map(m => ({ ...m, year, quarter }))
+        ...validMilestones.map(m => ({
+          area: m.area,
+          milestone: m.milestone,
+          year,
+          quarter,
+          completed: false
+        }))
       ];
 
       await updateMilestones({ milestones: allMilestones });
       toast.success(`Q${quarter} ${year} Milestones updated!`);
       onClose();
-    } catch {
+    } catch (error) {
+      console.error("Failed to update milestones:", error);
       toast.error("Failed to update milestones");
     } finally {
       setIsSaving(false);
@@ -86,7 +99,7 @@ export function EditMilestonesDialog({ isOpen, onClose, year, quarter }: EditMil
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="w-[95vw] max-w-2xl max-h-[85vh] overflow-y-auto p-4 sm:p-6">
         <DialogHeader>
           <DialogTitle className="font-orbitron">
             Edit Q{quarter} {year} Milestones
@@ -95,8 +108,8 @@ export function EditMilestonesDialog({ isOpen, onClose, year, quarter }: EditMil
         
         <div className="space-y-4">
           {milestones.map((milestone, index) => (
-            <div key={index} className="flex gap-2 items-start">
-              <div className="flex-1 space-y-2">
+            <div key={index} className="flex flex-col sm:flex-row gap-2 items-start">
+              <div className="flex-1 w-full space-y-2">
                 <Select
                   value={milestone.area}
                   onValueChange={(value) => updateMilestone(index, "area", value)}
@@ -124,7 +137,7 @@ export function EditMilestonesDialog({ isOpen, onClose, year, quarter }: EditMil
                 size="icon"
                 onClick={() => removeMilestone(index)}
                 disabled={milestones.length === 1}
-                className="mt-1"
+                className="sm:mt-1 w-full sm:w-auto"
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
@@ -140,11 +153,11 @@ export function EditMilestonesDialog({ isOpen, onClose, year, quarter }: EditMil
             Add Milestone
           </Button>
 
-          <div className="flex justify-end gap-2 pt-4">
-            <Button variant="outline" onClick={onClose} disabled={isSaving}>
+          <div className="flex flex-col sm:flex-row justify-end gap-2 pt-4">
+            <Button variant="outline" onClick={onClose} disabled={isSaving} className="w-full sm:w-auto">
               Cancel
             </Button>
-            <Button onClick={handleSave} disabled={isSaving}>
+            <Button onClick={handleSave} disabled={isSaving} className="w-full sm:w-auto">
               {isSaving ? "Saving..." : "Save Changes"}
             </Button>
           </div>

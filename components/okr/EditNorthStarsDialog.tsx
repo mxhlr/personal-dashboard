@@ -61,7 +61,7 @@ export function EditNorthStarsDialog({ isOpen, onClose }: EditNorthStarsDialogPr
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="w-[95vw] max-w-2xl max-h-[85vh] overflow-y-auto p-4 sm:p-6">
         <DialogHeader>
           <DialogTitle className="font-orbitron">Edit Annual North Stars</DialogTitle>
         </DialogHeader>
@@ -111,11 +111,11 @@ export function EditNorthStarsDialog({ isOpen, onClose }: EditNorthStarsDialogPr
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-4">
-            <Button variant="outline" onClick={onClose} disabled={isSaving}>
+          <div className="flex flex-col sm:flex-row justify-end gap-2 pt-4">
+            <Button variant="outline" onClick={onClose} disabled={isSaving} className="w-full sm:w-auto">
               Cancel
             </Button>
-            <Button onClick={handleSave} disabled={isSaving}>
+            <Button onClick={handleSave} disabled={isSaving} className="w-full sm:w-auto">
               {isSaving ? "Saving..." : "Save Changes"}
             </Button>
           </div>
