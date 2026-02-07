@@ -238,11 +238,11 @@ export default defineSchema({
       needForNextQuarter: v.string(),    // Was brauchst du, um nächstes Quartal erfolgreicher zu sein?
     }),
 
-    // Next Quarter Milestones (User definiert neue)
-    nextQuarterMilestones: v.array(v.object({
+    // Next Quarter Milestones (User definiert neue) - DEPRECATED: OKRs are now stored in userProfile.quarterlyOKRs
+    nextQuarterMilestones: v.optional(v.array(v.object({
       area: v.string(),
       milestone: v.string(),
-    })),
+    }))),
 
     completedAt: v.string(),
   })

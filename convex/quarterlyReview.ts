@@ -28,9 +28,9 @@ export const getQuarterlyReview = query({
 });
 
 /**
- * Get the current quarter's milestones from previous quarter's review
+ * Get the current quarter's OKRs from userProfile
  */
-export const getCurrentQuarterMilestones = query({
+export const getCurrentQuarterOKRs = query({
   args: {
     year: v.number(),
     quarter: v.number(),
@@ -41,24 +41,21 @@ export const getCurrentQuarterMilestones = query({
       throw new Error("Not authenticated");
     }
 
-    // Milestones for quarter X are set in quarter X-1's review
-    let targetYear = args.year;
-    let targetQuarter = args.quarter - 1;
-
-    // Handle quarter 1 edge case (get from Q4 of previous year)
-    if (targetQuarter < 1) {
-      targetYear = args.year - 1;
-      targetQuarter = 4;
-    }
-
-    const review = await ctx.db
-      .query("quarterlyReview")
-      .withIndex("by_user_year_quarter", (q) =>
-        q.eq("userId", identity.subject).eq("year", targetYear).eq("quarter", targetQuarter)
-      )
+    const profile = await ctx.db
+      .query("userProfile")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
       .first();
 
-    return review?.nextQuarterMilestones || [];
+    if (!profile || !profile.quarterlyOKRs) {
+      return [];
+    }
+
+    // Filter OKRs for the current quarter
+    const currentOKRs = profile.quarterlyOKRs.filter(
+      (okr) => okr.quarter === args.quarter && okr.year === args.year
+    );
+
+    return currentOKRs;
   },
 });
 
@@ -84,10 +81,19 @@ export const submitQuarterlyReview = mutation({
       decisionDifferently: v.string(),
       needForNextQuarter: v.string(),
     }),
-    nextQuarterMilestones: v.array(
+    nextQuarterOKRs: v.array(
       v.object({
         area: v.string(),
-        milestone: v.string(),
+        objective: v.string(),
+        quarter: v.number(),
+        year: v.number(),
+        keyResults: v.array(
+          v.object({
+            description: v.string(),
+            target: v.number(),
+            unit: v.string(),
+          })
+        ),
       })
     ),
   },
@@ -96,9 +102,6 @@ export const submitQuarterlyReview = mutation({
     if (!identity) {
       throw new Error("Not authenticated");
     }
-
-    // Note: Milestone review is now stored in quarterlyReview table
-    // Quarterly planning is done via OKRs in userProfile.quarterlyOKRs
 
     // Check if review already exists
     const existingReview = await ctx.db
@@ -113,22 +116,44 @@ export const submitQuarterlyReview = mutation({
       await ctx.db.patch(existingReview._id, {
         milestoneReview: args.milestoneReview,
         responses: args.responses,
-        nextQuarterMilestones: args.nextQuarterMilestones,
         completedAt: new Date().toISOString(),
       });
-      return existingReview._id;
     } else {
       // Create new review
-      const reviewId = await ctx.db.insert("quarterlyReview", {
+      await ctx.db.insert("quarterlyReview", {
         userId: identity.subject,
         year: args.year,
         quarter: args.quarter,
         milestoneReview: args.milestoneReview,
         responses: args.responses,
-        nextQuarterMilestones: args.nextQuarterMilestones,
         completedAt: new Date().toISOString(),
       });
-      return reviewId;
     }
+
+    // Update user profile with quarterly OKRs
+    const profile = await ctx.db
+      .query("userProfile")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .first();
+
+    if (profile) {
+      // Get existing OKRs and filter out OKRs for the next quarter/year
+      const existingOKRs = profile.quarterlyOKRs || [];
+      const nextQuarter = args.nextQuarterOKRs[0]?.quarter;
+      const nextYear = args.nextQuarterOKRs[0]?.year;
+
+      const filteredOKRs = existingOKRs.filter(
+        (okr) => !(okr.quarter === nextQuarter && okr.year === nextYear)
+      );
+
+      // Add new OKRs
+      const updatedOKRs = [...filteredOKRs, ...args.nextQuarterOKRs];
+
+      await ctx.db.patch(profile._id, {
+        quarterlyOKRs: updatedOKRs,
+      });
+    }
+
+    return existingReview?._id;
   },
 });

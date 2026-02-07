@@ -27,8 +27,8 @@ export function QuarterlyReviewForm({
     year,
     quarter,
   });
-  const currentMilestones = useQuery(
-    api.quarterlyReview.getCurrentQuarterMilestones,
+  const currentOKRs = useQuery(
+    api.quarterlyReview.getCurrentQuarterOKRs,
     { year, quarter }
   );
   const submitReview = useMutation(api.quarterlyReview.submitQuarterlyReview);
@@ -50,14 +50,17 @@ export function QuarterlyReviewForm({
     needForNextQuarter: "",
   });
 
-  const [nextQuarterMilestones, setNextQuarterMilestones] = useState<
-    Record<string, string[]>
-  >({
-    wealth: [""],
-    health: [""],
-    love: [""],
-    happiness: [""],
-  });
+  const [nextQuarterOKRs, setNextQuarterOKRs] = useState<Array<{
+    area: string;
+    objective: string;
+    keyResults: Array<{ description: string; target: number; unit: string }>;
+  }>>([
+    {
+      area: "Wealth",
+      objective: "",
+      keyResults: [{ description: "", target: 0, unit: "" }],
+    },
+  ]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isReadOnly, setIsReadOnly] = useState(false);
@@ -67,37 +70,21 @@ export function QuarterlyReviewForm({
     if (existingReview) {
       setMilestoneReview(existingReview.milestoneReview);
       setFormData(existingReview.responses);
-
-      // Organize next quarter milestones by area
-      const organized: Record<string, string[]> = {
-        wealth: [],
-        health: [],
-        love: [],
-        happiness: [],
-      };
-      existingReview.nextQuarterMilestones.forEach((m) => {
-        organized[m.area].push(m.milestone);
-      });
-      // Ensure at least one empty field per area
-      Object.keys(organized).forEach((area) => {
-        if (organized[area].length === 0) {
-          organized[area] = [""];
-        }
-      });
-      setNextQuarterMilestones(organized);
       setIsReadOnly(true);
-    } else if (currentMilestones) {
-      // Initialize milestone review with current milestones
+    } else if (currentOKRs && currentOKRs.length > 0) {
+      // Initialize milestone review with current OKRs
       setMilestoneReview(
-        currentMilestones.map((m: { area: string; milestone: string; completed?: boolean }) => ({
-          area: m.area,
-          milestone: m.milestone,
-          completed: m.completed || false,
-          notes: "",
-        }))
+        currentOKRs.flatMap((okr: any) =>
+          okr.keyResults.map((kr: any) => ({
+            area: okr.area,
+            milestone: `${okr.objective} - ${kr.description}`,
+            completed: false,
+            notes: "",
+          }))
+        )
       );
     }
-  }, [existingReview, currentMilestones]);
+  }, [existingReview, currentOKRs]);
 
   const calculateProgress = () => {
     let totalFields = 5; // 5 reflection questions
@@ -110,13 +97,13 @@ export function QuarterlyReviewForm({
     if (formData.decisionDifferently.trim()) filledFields++;
     if (formData.needForNextQuarter.trim()) filledFields++;
 
-    // Check if all life areas have at least one milestone
-    const areas = ["wealth", "health", "love", "happiness"];
-    const hasAllAreas = areas.every((area) =>
-      nextQuarterMilestones[area].some((m) => m.trim())
+    // Check if we have at least one complete OKR
+    const hasCompleteOKR = nextQuarterOKRs.some((okr) =>
+      okr.objective.trim() !== "" &&
+      okr.keyResults.some((kr) => kr.description.trim() !== "")
     );
-    totalFields += 1; // For the milestone planning
-    if (hasAllAreas) filledFields++;
+    totalFields += 1; // For the OKR planning
+    if (hasCompleteOKR) filledFields++;
 
     return Math.round((filledFields / totalFields) * 100);
   };
@@ -133,29 +120,57 @@ export function QuarterlyReviewForm({
     setMilestoneReview(updated);
   };
 
-  const handleNextMilestoneChange = (
-    area: string,
-    index: number,
-    value: string
-  ) => {
-    const updated = { ...nextQuarterMilestones };
-    updated[area][index] = value;
-    setNextQuarterMilestones(updated);
-  };
-
-  const addNextMilestone = (area: string) => {
-    const updated = { ...nextQuarterMilestones };
-    updated[area].push("");
-    setNextQuarterMilestones(updated);
-  };
-
-  const removeNextMilestone = (area: string, index: number) => {
-    const updated = { ...nextQuarterMilestones };
-    updated[area].splice(index, 1);
-    if (updated[area].length === 0) {
-      updated[area] = [""];
+  // OKR Helper Functions
+  const addOKR = () => {
+    if (nextQuarterOKRs.length < 4) {
+      setNextQuarterOKRs([
+        ...nextQuarterOKRs,
+        {
+          area: "Wealth",
+          objective: "",
+          keyResults: [{ description: "", target: 0, unit: "" }],
+        },
+      ]);
     }
-    setNextQuarterMilestones(updated);
+  };
+
+  const removeOKR = (index: number) => {
+    setNextQuarterOKRs(nextQuarterOKRs.filter((_, i) => i !== index));
+  };
+
+  const updateOKR = (index: number, field: "objective" | "area", value: string) => {
+    const updated = [...nextQuarterOKRs];
+    updated[index][field] = value;
+    setNextQuarterOKRs(updated);
+  };
+
+  const addKeyResult = (okrIndex: number) => {
+    const updated = [...nextQuarterOKRs];
+    if (updated[okrIndex].keyResults.length < 3) {
+      updated[okrIndex].keyResults.push({ description: "", target: 0, unit: "" });
+      setNextQuarterOKRs(updated);
+    }
+  };
+
+  const removeKeyResult = (okrIndex: number, krIndex: number) => {
+    const updated = [...nextQuarterOKRs];
+    updated[okrIndex].keyResults = updated[okrIndex].keyResults.filter((_, i) => i !== krIndex);
+    setNextQuarterOKRs(updated);
+  };
+
+  const updateKeyResult = (
+    okrIndex: number,
+    krIndex: number,
+    field: "description" | "target" | "unit",
+    value: string | number
+  ) => {
+    const updated = [...nextQuarterOKRs];
+    if (field === "target") {
+      updated[okrIndex].keyResults[krIndex][field] = value as number;
+    } else {
+      updated[okrIndex].keyResults[krIndex][field] = value as string;
+    }
+    setNextQuarterOKRs(updated);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -173,33 +188,35 @@ export function QuarterlyReviewForm({
       return;
     }
 
-    // Validate at least one milestone per area for next quarter
-    const nextMilestones = Object.entries(nextQuarterMilestones).flatMap(
-      ([area, milestones]) =>
-        milestones
-          .filter((m) => m.trim())
-          .map((milestone) => ({ area, milestone }))
+    // Validate at least one complete OKR
+    const validOKRs = nextQuarterOKRs.filter(
+      (okr) => okr.objective.trim() !== "" &&
+               okr.keyResults.some((kr) => kr.description.trim() !== "")
     );
 
-    const areas = ["wealth", "health", "love", "happiness"];
-    for (const area of areas) {
-      const hasArea = nextMilestones.some((m) => m.area === area);
-      if (!hasArea) {
-        toast.error(
-          `Bitte definiere mindestens einen Milestone für ${AREA_LABELS[area]}.`
-        );
-        return;
-      }
+    if (validOKRs.length === 0) {
+      toast.error("Bitte definiere mindestens ein OKR mit einem Key Result für nächstes Quartal.");
+      return;
     }
 
     setIsSubmitting(true);
     try {
+      // Convert OKRs to format expected by backend (with quarter and year)
+      const nextQuarter = quarter === 4 ? 1 : quarter + 1;
+      const nextYear = quarter === 4 ? year + 1 : year;
+
+      const okrsWithQuarter = validOKRs.map((okr) => ({
+        ...okr,
+        quarter: nextQuarter,
+        year: nextYear,
+      }));
+
       await submitReview({
         year,
         quarter,
         milestoneReview,
         responses: formData,
-        nextQuarterMilestones: nextMilestones,
+        nextQuarterOKRs: okrsWithQuarter,
       });
       setIsReadOnly(true);
       toast.success("Quarterly Review erfolgreich gespeichert!");
@@ -539,70 +556,166 @@ export function QuarterlyReviewForm({
             <h3 className="text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d] mb-4"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
-              Teil 3: Milestones für nächstes Quartal
+              Teil 3: OKRs für nächstes Quartal
             </h3>
             <p className="text-[13px] dark:text-[#525252] text-[#3d3d3d] mb-4"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
             >
-              Definiere mindestens einen Milestone pro Lebensbereich.
+              Definiere deine Objectives und Key Results für das nächste Quartal.
             </p>
 
             <div className="space-y-5">
-              {Object.entries(AREA_LABELS).map(([area, label]) => (
-                <div key={area}>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#555555] mb-2"
-                    style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
-                  >
-                    {label}
-                  </label>
-                  <div className="space-y-2">
-                    {nextQuarterMilestones[area].map((milestone, index) => (
-                      <div key={index} className="flex gap-2">
-                        <input
-                          type="text"
-                          value={milestone}
-                          onChange={(e) =>
-                            handleNextMilestoneChange(
-                              area,
-                              index,
-                              e.target.value
-                            )
-                          }
-                          disabled={isReadOnly}
-                          placeholder="Milestone..."
-                          className="flex-1 px-3 py-2 dark:border-border/50 border-border/40
-                            border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
-                            disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
-                            focus:outline-none focus:ring-0"
-                          style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px' }}
-                        />
-                        {!isReadOnly && nextQuarterMilestones[area].length > 1 && (
-                          <button
-                            type="button"
-                            onClick={() => removeNextMilestone(area, index)}
-                            className="px-3 py-2 dark:border-border/50 border-border/40
-                              border rounded-lg dark:hover:bg-white/[0.06] hover:bg-black/[0.05]
-                              dark:text-[#E0E0E0] text-[#1A1A1A] transition-colors"
-                            style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
-                          >
-                            ✕
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                    {!isReadOnly && (
-                      <button
-                        type="button"
-                        onClick={() => addNextMilestone(area)}
-                        className="text-[11px] dark:text-[#525252] text-[#3d3d3d] hover:underline font-medium"
-                        style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
-                      >
-                        + Weiterer Milestone
-                      </button>
-                    )}
+              {nextQuarterOKRs.map((okr, okrIndex) => (
+                <div key={okrIndex} className="p-4 rounded-lg border dark:border-border/50 border-border/40 space-y-4">
+                  {/* Area Selection */}
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#555555] mb-2"
+                      style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                    >
+                      Lebensbereich
+                    </label>
+                    <select
+                      value={okr.area}
+                      onChange={(e) => updateOKR(okrIndex, "area", e.target.value)}
+                      disabled={isReadOnly}
+                      className="w-full px-3 py-2 dark:border-border/50 border-border/40
+                        border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                        disabled:cursor-not-allowed
+                        focus:outline-none focus:ring-0"
+                      style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px' }}
+                    >
+                      <option value="Wealth">💰 Wealth</option>
+                      <option value="Health">🏃 Health</option>
+                      <option value="Love">❤️ Love</option>
+                      <option value="Happiness">😊 Happiness</option>
+                    </select>
                   </div>
+
+                  {/* Objective */}
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#555555] mb-2"
+                      style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                    >
+                      Objective
+                    </label>
+                    <textarea
+                      value={okr.objective}
+                      onChange={(e) => updateOKR(okrIndex, "objective", e.target.value)}
+                      disabled={isReadOnly}
+                      placeholder="Was möchtest du erreichen?"
+                      className="w-full px-3 py-2 dark:border-border/50 border-border/40
+                        border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                        disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
+                        focus:outline-none focus:ring-0 min-h-[80px] resize-none"
+                      style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px' }}
+                    />
+                  </div>
+
+                  {/* Key Results */}
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#555555] mb-2"
+                      style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                    >
+                      Key Results
+                    </label>
+                    <div className="space-y-3">
+                      {okr.keyResults.map((kr, krIndex) => (
+                        <div key={krIndex} className="flex gap-2 items-start">
+                          <div className="flex-1 space-y-2">
+                            <input
+                              type="text"
+                              value={kr.description}
+                              onChange={(e) => updateKeyResult(okrIndex, krIndex, "description", e.target.value)}
+                              disabled={isReadOnly}
+                              placeholder="Beschreibung des Key Results..."
+                              className="w-full px-3 py-2 dark:border-border/50 border-border/40
+                                border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                                disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
+                                focus:outline-none focus:ring-0"
+                              style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px' }}
+                            />
+                            <div className="flex gap-2">
+                              <input
+                                type="number"
+                                value={kr.target}
+                                onChange={(e) => updateKeyResult(okrIndex, krIndex, "target", Number(e.target.value))}
+                                disabled={isReadOnly}
+                                placeholder="Zielwert"
+                                className="w-28 px-3 py-2 dark:border-border/50 border-border/40
+                                  border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                                  disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
+                                  focus:outline-none focus:ring-0"
+                                style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px' }}
+                              />
+                              <input
+                                type="text"
+                                value={kr.unit}
+                                onChange={(e) => updateKeyResult(okrIndex, krIndex, "unit", e.target.value)}
+                                disabled={isReadOnly}
+                                placeholder="Einheit (z.B. kg, €, %)"
+                                className="flex-1 px-3 py-2 dark:border-border/50 border-border/40
+                                  border rounded-lg dark:bg-transparent bg-transparent dark:text-[#E0E0E0] text-[#1A1A1A]
+                                  disabled:cursor-not-allowed placeholder:dark:text-[#525252]/50 placeholder:text-[#3d3d3d]/50
+                                  focus:outline-none focus:ring-0"
+                                style={{ fontFamily: '"Courier New", "Monaco", monospace', fontSize: '14px' }}
+                              />
+                            </div>
+                          </div>
+                          {!isReadOnly && okr.keyResults.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => removeKeyResult(okrIndex, krIndex)}
+                              className="px-3 py-2 dark:border-border/50 border-border/40
+                                border rounded-lg dark:hover:bg-white/[0.06] hover:bg-black/[0.05]
+                                dark:text-[#E0E0E0] text-[#1A1A1A] transition-colors mt-0"
+                              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                            >
+                              ✕
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                      {!isReadOnly && (
+                        <button
+                          type="button"
+                          onClick={() => addKeyResult(okrIndex)}
+                          className="text-[11px] dark:text-[#525252] text-[#3d3d3d] hover:underline font-medium"
+                          style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                        >
+                          + Weiteres Key Result
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Remove OKR Button */}
+                  {!isReadOnly && nextQuarterOKRs.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeOKR(okrIndex)}
+                      className="w-full px-3 py-2 dark:border-border/50 border-border/40
+                        border rounded-lg dark:hover:bg-white/[0.06] hover:bg-black/[0.05]
+                        dark:text-[#525252] text-[#3d3d3d] transition-colors text-[11px] font-medium"
+                      style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                    >
+                      OKR entfernen
+                    </button>
+                  )}
                 </div>
               ))}
+
+              {!isReadOnly && nextQuarterOKRs.length < 4 && (
+                <button
+                  type="button"
+                  onClick={addOKR}
+                  className="w-full px-4 py-3 dark:border-border/50 border-border/40
+                    border border-dashed rounded-lg dark:hover:bg-white/[0.06] hover:bg-black/[0.05]
+                    dark:text-[#525252] text-[#3d3d3d] transition-colors text-[11px] font-medium"
+                  style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
+                >
+                  + Neues OKR hinzufügen
+                </button>
+              )}
             </div>
           </div>
 
