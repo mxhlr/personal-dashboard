@@ -1,2 +1,6 @@
 [    1430ms] [ERROR]  Note that 'script-src' was not explicitly set, so 'default-src' is used as a fallback. @ https://assured-bison-80.accounts.dev/_next/static/chunks/pages/_app-ae82798d2d1e6bbf.js:23
 [    1850ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ https://assured-bison-80.accounts.dev/_next/static/chunks/pages/_app-ae82798d2d1e6bbf.js:19
+[   41811ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/:0
+[   78956ms] [ERROR]  Note that 'script-src' was not explicitly set, so 'default-src' is used as a fallback. @ https://assured-bison-80.accounts.dev/_next/static/chunks/pages/_app-ae82798d2d1e6bbf.js:23
+[   79069ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ https://assured-bison-80.accounts.dev/_next/static/chunks/pages/_app-ae82798d2d1e6bbf.js:19
+[   79821ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/:0
