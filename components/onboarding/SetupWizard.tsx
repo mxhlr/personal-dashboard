@@ -92,58 +92,21 @@ export default function SetupWizard() {
   const completeSetup = async () => {
     try {
       logger.log("Starting setup...");
-      const currentYear = new Date().getFullYear();
-      const currentQuarter = Math.ceil((new Date().getMonth() + 1) / 3);
-
-      // Prepare quarterly milestones
-      const quarterlyMilestones = [
-        ...data.milestones.wealth.map(m => ({
-          quarter: currentQuarter,
-          year: currentYear,
-          area: "wealth",
-          milestone: m,
-          completed: false,
-        })),
-        ...data.milestones.health.map(m => ({
-          quarter: currentQuarter,
-          year: currentYear,
-          area: "health",
-          milestone: m,
-          completed: false,
-        })),
-        ...data.milestones.love.map(m => ({
-          quarter: currentQuarter,
-          year: currentYear,
-          area: "love",
-          milestone: m,
-          completed: false,
-        })),
-        ...data.milestones.happiness.map(m => ({
-          quarter: currentQuarter,
-          year: currentYear,
-          area: "happiness",
-          milestone: m,
-          completed: false,
-        })),
-      ];
-
       logger.log("Creating user profile...");
       logger.log("Profile data:", {
         name: data.name,
         role: data.role,
         mainProject: data.mainProject,
         northStars: data.northStars,
-        quarterlyMilestones,
         coachTone: data.coachTone,
       });
 
-      // Create user profile
+      // Create user profile (quarterly OKRs will be set during quarterly reviews)
       await createUserProfile({
         name: data.name,
         role: data.role,
         mainProject: data.mainProject,
         northStars: data.northStars,
-        quarterlyMilestones,
         coachTone: data.coachTone,
       });
 

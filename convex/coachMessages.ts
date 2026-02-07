@@ -111,7 +111,7 @@ export const getUserContext = query({
         role: profile.role,
         mainProject: profile.mainProject,
         northStars: profile.northStars,
-        quarterlyMilestones: profile.quarterlyMilestones,
+        quarterlyOKRs: profile.quarterlyOKRs,
         coachTone: profile.coachTone,
       },
       recentLogs: recentLogs.map((log) => ({
@@ -213,12 +213,17 @@ type UserProfile = {
     love: string;
     happiness: string;
   };
-  quarterlyMilestones: Array<{
+  quarterlyOKRs: Array<{
     quarter: number;
     year: number;
     area: string;
-    milestone: string;
-    completed: boolean;
+    objective: string;
+    keyResults: Array<{
+      description: string;
+      target: number;
+      unit: string;
+      current?: number;
+    }>;
   }>;
   coachTone: string;
 };
@@ -299,10 +304,10 @@ Nutze die Du-Form. Sei authentisch und menschlich. Halte Antworten prägnant (2-
 - ❤️ LOVE: ${profile.northStars.love}
 - 😊 HAPPINESS: ${profile.northStars.happiness}
 
-**Aktuelle Milestones (dieses Quartal):**
-${profile.quarterlyMilestones
+**Aktuelle OKRs (dieses Quartal):**
+${profile.quarterlyOKRs
   .slice(0, 4)
-  .map((m) => `- ${m.area.toUpperCase()}: ${m.milestone}`)
+  .map((okr) => `- ${okr.area.toUpperCase()}: ${okr.objective}`)
   .join("\n")}
 
 **Tracking Fields & Streaks:**

@@ -89,10 +89,10 @@ export function QuarterlyReviewForm({
     } else if (currentMilestones) {
       // Initialize milestone review with current milestones
       setMilestoneReview(
-        currentMilestones.map((m) => ({
+        currentMilestones.map((m: { area: string; milestone: string; completed?: boolean }) => ({
           area: m.area,
           milestone: m.milestone,
-          completed: m.completed,
+          completed: m.completed || false,
           notes: "",
         }))
       );

@@ -28,7 +28,7 @@ export const getQuarterlyReview = query({
 });
 
 /**
- * Get the current quarter's milestones from userProfile
+ * Get the current quarter's milestones from previous quarter's review
  */
 export const getCurrentQuarterMilestones = query({
   args: {
@@ -41,21 +41,24 @@ export const getCurrentQuarterMilestones = query({
       throw new Error("Not authenticated");
     }
 
-    const profile = await ctx.db
-      .query("userProfile")
-      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
-      .first();
+    // Milestones for quarter X are set in quarter X-1's review
+    let targetYear = args.year;
+    let targetQuarter = args.quarter - 1;
 
-    if (!profile) {
-      return [];
+    // Handle quarter 1 edge case (get from Q4 of previous year)
+    if (targetQuarter < 1) {
+      targetYear = args.year - 1;
+      targetQuarter = 4;
     }
 
-    // Filter milestones for the specified quarter and year
-    const milestones = profile.quarterlyMilestones.filter(
-      (m) => m.quarter === args.quarter && m.year === args.year
-    );
+    const review = await ctx.db
+      .query("quarterlyReview")
+      .withIndex("by_user_year_quarter", (q) =>
+        q.eq("userId", identity.subject).eq("year", targetYear).eq("quarter", targetQuarter)
+      )
+      .first();
 
-    return milestones;
+    return review?.nextQuarterMilestones || [];
   },
 });
 
@@ -94,45 +97,8 @@ export const submitQuarterlyReview = mutation({
       throw new Error("Not authenticated");
     }
 
-    // Update milestones in userProfile based on milestoneReview
-    const profile = await ctx.db
-      .query("userProfile")
-      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
-      .first();
-
-    if (profile) {
-      // Update completion status of reviewed milestones
-      const updatedMilestones = profile.quarterlyMilestones.map((milestone) => {
-        const review = args.milestoneReview.find(
-          (r) =>
-            r.area === milestone.area &&
-            r.milestone === milestone.milestone &&
-            milestone.quarter === args.quarter &&
-            milestone.year === args.year
-        );
-        if (review) {
-          return { ...milestone, completed: review.completed };
-        }
-        return milestone;
-      });
-
-      // Add next quarter milestones to the profile
-      const nextQuarter = args.quarter === 4 ? 1 : args.quarter + 1;
-      const nextYear = args.quarter === 4 ? args.year + 1 : args.year;
-
-      const newMilestones = args.nextQuarterMilestones.map((m) => ({
-        quarter: nextQuarter,
-        year: nextYear,
-        area: m.area,
-        milestone: m.milestone,
-        completed: false,
-      }));
-
-      await ctx.db.patch(profile._id, {
-        quarterlyMilestones: [...updatedMilestones, ...newMilestones],
-        updatedAt: new Date().toISOString(),
-      });
-    }
+    // Note: Milestone review is now stored in quarterlyReview table
+    // Quarterly planning is done via OKRs in userProfile.quarterlyOKRs
 
     // Check if review already exists
     const existingReview = await ctx.db

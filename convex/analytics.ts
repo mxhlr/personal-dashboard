@@ -6,8 +6,8 @@ import { query } from "./_generated/server";
  * Provides review status queries for Weekly, Monthly, Quarterly, and Annual reviews
  */
 
-// Get quarterly milestones with completion status
-export const getQuarterlyMilestones = query({
+// Get quarterly OKRs
+export const getQuarterlyOKRs = query({
   args: {
     year: v.number(),
     quarter: v.number(),
@@ -27,19 +27,11 @@ export const getQuarterlyMilestones = query({
       return [];
     }
 
-    const milestones = profile.quarterlyMilestones.filter(
-      (m) => m.year === args.year && m.quarter === args.quarter
+    const okrs = profile.quarterlyOKRs.filter(
+      (okr) => okr.year === args.year && okr.quarter === args.quarter
     );
 
-    const total = milestones.length;
-    const completed = milestones.filter((m) => m.completed).length;
-
-    return {
-      milestones,
-      total,
-      completed,
-      percentage: total > 0 ? Math.round((completed / total) * 100) : 0,
-    };
+    return okrs;
   },
 });
 

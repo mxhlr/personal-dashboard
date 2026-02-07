@@ -11,13 +11,13 @@ export function MonthlyOKRProgress() {
   const currentMonth = getMonth(currentDate) + 1; // getMonth() returns 0-11
   const currentYear = getYear(currentDate);
 
-  const monthlyOKRs = useQuery(api.monthlyReview.getMonthlyOKRs, {
+  const monthlyMilestones = useQuery(api.monthlyReview.getMonthlyMilestones, {
     year: currentYear,
     month: currentMonth,
   });
 
   // Loading state
-  if (monthlyOKRs === undefined) {
+  if (monthlyMilestones === undefined) {
     return (
       <Card className="p-6 dark:bg-card/50 bg-white/80
         shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
@@ -32,8 +32,8 @@ export function MonthlyOKRProgress() {
     );
   }
 
-  // No OKRs for this month
-  if (!monthlyOKRs || monthlyOKRs.length === 0) {
+  // No Milestones for this month
+  if (!monthlyMilestones || monthlyMilestones.length === 0) {
     return (
       <Card className="p-6 dark:bg-card/50 bg-white/80
         shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
@@ -45,11 +45,11 @@ export function MonthlyOKRProgress() {
           </div>
           <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#525252] text-[#3d3d3d]"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-            This Month&apos;s OKRs
+            This Month&apos;s Milestones
           </h3>
           <p className="text-[12px] dark:text-[#3d3d3d] text-[#525252]"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-            No OKRs set for this month.
+            No milestones set for this month.
             <br />
             Complete last month&apos;s review to plan ahead.
           </p>
@@ -99,19 +99,19 @@ export function MonthlyOKRProgress() {
             <TrendingUp className="w-5 h-5 dark:text-[#00E5FF] text-[#0097A7]" />
             <h3 className="text-[13px] font-bold uppercase tracking-wider dark:text-[#00E5FF] text-[#0097A7]"
               style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-              {monthNames[currentMonth - 1]} {currentYear} OKRs
+              {monthNames[currentMonth - 1]} {currentYear} Milestones
             </h3>
           </div>
           <span className="text-[11px] dark:text-[#525252] text-[#3d3d3d] font-bold"
             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-            {monthlyOKRs.length} {monthlyOKRs.length === 1 ? "Objective" : "Objectives"}
+            {monthlyMilestones.length} {monthlyMilestones.length === 1 ? "Milestone" : "Milestones"}
           </span>
         </div>
 
-        {/* OKRs */}
-        <div className="space-y-5">
-          {monthlyOKRs.map((okr, index) => {
-            const config = areaConfig[okr.area] || {
+        {/* Milestones */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {monthlyMilestones.map((milestone, index) => {
+            const config = areaConfig[milestone.area] || {
               icon: "🎯",
               color: "text-gray-400",
               gradient: "from-gray-500/20 to-gray-600/10",
@@ -124,54 +124,20 @@ export function MonthlyOKRProgress() {
                   dark:border dark:border-white/[0.08] border border-black/[0.05]
                   transition-all duration-200 hover:scale-[1.01]`}
               >
-                {/* Objective Header */}
-                <div className="flex items-start gap-2 mb-3">
-                  <span className="text-[14px] mt-0.5">{config.icon}</span>
+                <div className="flex items-start gap-2">
+                  <span className="text-xl mt-0.5">{config.icon}</span>
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="flex items-center gap-2 mb-2">
                       <span className={`text-[10px] font-bold uppercase tracking-wider ${config.color}`}
                         style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                        {okr.area}
+                        {milestone.area}
                       </span>
                     </div>
-                    <p className="text-[13px] dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed"
+                    <p className="text-[13px] dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
                       style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                      {okr.objective}
+                      {milestone.milestone}
                     </p>
                   </div>
-                </div>
-
-                {/* Key Results */}
-                <div className="space-y-2 pl-6 border-l-2 dark:border-white/[0.1] border-black/[0.05]">
-                  {okr.keyResults.map((kr, krIndex) => (
-                    <div key={krIndex} className="space-y-1">
-                      <div className="flex items-baseline justify-between gap-2">
-                        <p className="text-[11px] dark:text-[#CCCCCC] text-[#444444]"
-                          style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                          {kr.description}
-                        </p>
-                        <span className="text-[10px] dark:text-[#525252] text-[#3d3d3d] font-bold whitespace-nowrap"
-                          style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                          0/{kr.target} {kr.unit}
-                        </span>
-                      </div>
-                      {/* Progress Bar - Currently at 0% since we don't track progress yet */}
-                      <div className="h-1.5 dark:bg-white/[0.05] bg-black/[0.05] rounded-full overflow-hidden">
-                        <div
-                          className={`h-full bg-gradient-to-r ${config.gradient} transition-all duration-500`}
-                          style={{ width: "0%" }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Overall Progress Note */}
-                <div className="mt-3 pt-3 border-t dark:border-white/[0.05] border-black/[0.03]">
-                  <p className="text-[10px] dark:text-[#3d3d3d] text-[#525252] text-center italic"
-                    style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                    Track progress manually • Update in monthly review
-                  </p>
                 </div>
               </div>
             );
