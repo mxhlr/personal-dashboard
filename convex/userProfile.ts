@@ -206,3 +206,31 @@ export const updateCoachTone = mutation({
     });
   },
 });
+
+// Update Quarterly Milestones
+export const updateQuarterlyMilestones = mutation({
+  args: {
+    milestones: v.array(v.object({
+      area: v.string(),
+      milestone: v.string(),
+      year: v.number(),
+      quarter: v.number(),
+    })),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const profile = await ctx.db
+      .query("userProfile")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .first();
+
+    if (!profile) throw new Error("Profile not found");
+
+    await ctx.db.patch(profile._id, {
+      quarterlyMilestones: args.milestones,
+      updatedAt: new Date().toISOString(),
+    });
+  },
+});
