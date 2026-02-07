@@ -100,9 +100,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
   };
 
   const addGoal = () => {
-    if (nextWeekGoals.length < 5) {
-      setNextWeekGoals([...nextWeekGoals, { goal: "", category: "Wealth" }]);
-    }
+    setNextWeekGoals([...nextWeekGoals, { goal: "", category: "Wealth" }]);
   };
 
   const removeGoal = (index: number) => {
@@ -515,7 +513,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
               </div>
             ))}
 
-            {!isReadOnly && nextWeekGoals.length < 5 && (
+            {!isReadOnly && (
               <button
                 type="button"
                 onClick={addGoal}
@@ -528,7 +526,7 @@ export function WeeklyReviewForm({ year, weekNumber }: WeeklyReviewFormProps) {
                   uppercase tracking-wider text-[11px] font-bold transition-all duration-200 rounded-lg"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
               >
-                + Add Goal ({nextWeekGoals.length}/5)
+                + Add Goal ({nextWeekGoals.length})
               </button>
             )}
           </div>

@@ -103,15 +103,13 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
 
   // Milestone Helper Functions
   const addMilestone = () => {
-    if (nextMonthMilestones.length < 4) {
-      setNextMonthMilestones([
-        ...nextMonthMilestones,
-        {
-          milestone: "",
-          area: "Wealth",
-        },
-      ]);
-    }
+    setNextMonthMilestones([
+      ...nextMonthMilestones,
+      {
+        milestone: "",
+        area: "Wealth",
+      },
+    ]);
   };
 
   const removeMilestone = (index: number) => {
@@ -533,7 +531,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
               </div>
             ))}
 
-            {!isReadOnly && nextMonthMilestones.length < 4 && (
+            {!isReadOnly && (
               <button
                 type="button"
                 onClick={addMilestone}
@@ -545,7 +543,7 @@ export function MonthlyReviewForm({ year, month }: MonthlyReviewFormProps) {
                   uppercase tracking-wider text-[11px] font-bold transition-all duration-200 rounded-lg"
                 style={{ fontFamily: '"Courier New", "Monaco", monospace', letterSpacing: '1.5px' }}
               >
-                + Add Milestone ({nextMonthMilestones.length}/4)
+                + Add Milestone ({nextMonthMilestones.length})
               </button>
             )}
           </div>

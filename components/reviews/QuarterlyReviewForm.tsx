@@ -122,16 +122,14 @@ export function QuarterlyReviewForm({
 
   // OKR Helper Functions
   const addOKR = () => {
-    if (nextQuarterOKRs.length < 4) {
-      setNextQuarterOKRs([
-        ...nextQuarterOKRs,
-        {
-          area: "Wealth",
-          objective: "",
-          keyResults: [{ description: "", target: 0, unit: "" }],
-        },
-      ]);
-    }
+    setNextQuarterOKRs([
+      ...nextQuarterOKRs,
+      {
+        area: "Wealth",
+        objective: "",
+        keyResults: [{ description: "", target: 0, unit: "" }],
+      },
+    ]);
   };
 
   const removeOKR = (index: number) => {
@@ -146,10 +144,8 @@ export function QuarterlyReviewForm({
 
   const addKeyResult = (okrIndex: number) => {
     const updated = [...nextQuarterOKRs];
-    if (updated[okrIndex].keyResults.length < 3) {
-      updated[okrIndex].keyResults.push({ description: "", target: 0, unit: "" });
-      setNextQuarterOKRs(updated);
-    }
+    updated[okrIndex].keyResults.push({ description: "", target: 0, unit: "" });
+    setNextQuarterOKRs(updated);
   };
 
   const removeKeyResult = (okrIndex: number, krIndex: number) => {
@@ -704,7 +700,7 @@ export function QuarterlyReviewForm({
                 </div>
               ))}
 
-              {!isReadOnly && nextQuarterOKRs.length < 4 && (
+              {!isReadOnly && (
                 <button
                   type="button"
                   onClick={addOKR}
@@ -713,7 +709,7 @@ export function QuarterlyReviewForm({
                     dark:text-[#525252] text-[#3d3d3d] transition-colors text-[11px] font-medium"
                   style={{ fontFamily: '"Courier New", "Monaco", monospace' }}
                 >
-                  + Neues OKR hinzufügen
+                  + Neues OKR hinzufügen ({nextQuarterOKRs.length})
                 </button>
               )}
             </div>
