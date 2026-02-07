@@ -277,7 +277,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         }}
       />
 
-      <div className="relative max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8 space-y-4 md:space-y-6">
+      <div className="relative max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8 space-y-4">
         {/* Welcome Header */}
         <div className="text-center space-y-2 md:space-y-3 mb-2">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold font-orbitron text-white"
@@ -299,7 +299,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         </div>
 
       {/* Today's Log (compact) + Quick Stats - PRIORITY #1 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Today's Log - Compact Version */}
           <Card
             className={`p-6
@@ -452,7 +452,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         </div>
 
       {/* Review Notifications + Weekly Progress - Side by Side */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Review Notifications - Left */}
         <Card className="p-4 md:p-6 dark:bg-card/50 bg-white/80
           shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl
