@@ -40,20 +40,19 @@ export function EditMilestonesDialog({ isOpen, onClose, year, quarter }: EditMil
   }, [profile, isOpen, year, quarter]);
 
   const addMilestone = () => {
-    console.log("Adding milestone, current count:", milestones.length);
-    setMilestones([...milestones, { area: "Wealth", milestone: "" }]);
+    setMilestones((prev) => [...prev, { area: "Wealth", milestone: "" }]);
   };
 
   const removeMilestone = (index: number) => {
-    console.log("Removing milestone at index:", index, "current count:", milestones.length);
-    setMilestones(milestones.filter((_, i) => i !== index));
+    setMilestones((prev) => prev.filter((_, i) => i !== index));
   };
 
   const updateMilestone = (index: number, field: "area" | "milestone", value: string) => {
-    console.log("Updating milestone", index, field, value);
-    const updated = [...milestones];
-    updated[index][field] = value;
-    setMilestones(updated);
+    setMilestones((prev) => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
   };
 
   const handleSave = async () => {
