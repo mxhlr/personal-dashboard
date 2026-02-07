@@ -1,10 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Card } from "@/components/ui/card";
-import { Target, TrendingUp, CheckCircle2, Flag } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Target, TrendingUp, CheckCircle2, Flag, Edit2 } from "lucide-react";
 import { getWeek, getYear, getMonth } from "date-fns";
+import { EditNorthStarsDialog } from "./EditNorthStarsDialog";
+import { EditMilestonesDialog } from "./EditMilestonesDialog";
 
 export function OKROverview() {
   const currentDate = new Date();
@@ -12,6 +16,9 @@ export function OKROverview() {
   const currentMonth = getMonth(currentDate) + 1;
   const currentYear = getYear(currentDate);
   const currentQuarter = Math.floor((currentMonth - 1) / 3) + 1;
+
+  const [isNorthStarsDialogOpen, setIsNorthStarsDialogOpen] = useState(false);
+  const [isMilestonesDialogOpen, setIsMilestonesDialogOpen] = useState(false);
 
   const profile = useQuery(api.userProfile.getUserProfile);
   const weeklyGoals = useQuery(api.weeklyReview.getWeeklyGoals, {
@@ -276,10 +283,20 @@ export function OKROverview() {
                 Q{currentQuarter} {currentYear} MILESTONES
               </h2>
             </div>
-            <span className="text-sm dark:text-[#525252] text-[#555555] font-bold"
-              style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-              {quarterlyMilestones.length} {quarterlyMilestones.length === 1 ? "Milestone" : "Milestones"}
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="text-sm dark:text-[#525252] text-[#555555] font-bold"
+                style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                {quarterlyMilestones.length} {quarterlyMilestones.length === 1 ? "Milestone" : "Milestones"}
+              </span>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsMilestonesDialogOpen(true)}
+                className="h-8 w-8 dark:hover:bg-white/[0.08] hover:bg-black/[0.05]"
+              >
+                <Edit2 className="h-4 w-4 dark:text-[#00E5FF] text-[#0097A7]" />
+              </Button>
+            </div>
           </div>
 
           {quarterlyMilestones.length === 0 ? (
@@ -331,11 +348,21 @@ export function OKROverview() {
 
         <Card className="p-8 dark:border-[rgba(0,229,255,0.15)] border-[rgba(0,180,220,0.25)] dark:bg-card/50 bg-white/80
           shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
-          <div className="flex items-center gap-3 mb-6">
-            <Flag className="w-6 h-6 dark:text-[#00E5FF] text-[#0097A7]" />
-            <h2 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0097A7]">
-              ANNUAL NORTH STARS
-            </h2>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <Flag className="w-6 h-6 dark:text-[#00E5FF] text-[#0097A7]" />
+              <h2 className="text-xl font-bold font-orbitron dark:text-[#00E5FF] text-[#0097A7]">
+                ANNUAL NORTH STARS
+              </h2>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsNorthStarsDialogOpen(true)}
+              className="h-8 w-8 dark:hover:bg-white/[0.08] hover:bg-black/[0.05]"
+            >
+              <Edit2 className="h-4 w-4 dark:text-[#00E5FF] text-[#0097A7]" />
+            </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
@@ -373,6 +400,18 @@ export function OKROverview() {
           </p>
         </div>
       </div>
+
+      {/* Edit Dialogs */}
+      <EditNorthStarsDialog
+        isOpen={isNorthStarsDialogOpen}
+        onClose={() => setIsNorthStarsDialogOpen(false)}
+      />
+      <EditMilestonesDialog
+        isOpen={isMilestonesDialogOpen}
+        onClose={() => setIsMilestonesDialogOpen(false)}
+        year={currentYear}
+        quarter={currentQuarter}
+      />
     </div>
   );
 }

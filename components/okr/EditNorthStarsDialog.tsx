@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
@@ -25,14 +25,14 @@ export function EditNorthStarsDialog({ isOpen, onClose }: EditNorthStarsDialogPr
   const [isSaving, setIsSaving] = useState(false);
 
   // Initialize with current values when dialog opens
-  useState(() => {
+  useEffect(() => {
     if (profile && isOpen) {
       setWealth(profile.northStars.wealth);
       setHealth(profile.northStars.health);
       setLove(profile.northStars.love);
       setHappiness(profile.northStars.happiness);
     }
-  });
+  }, [profile, isOpen]);
 
   const handleSave = async () => {
     if (!wealth || !health || !love || !happiness) {
@@ -43,14 +43,16 @@ export function EditNorthStarsDialog({ isOpen, onClose }: EditNorthStarsDialogPr
     setIsSaving(true);
     try {
       await updateNorthStars({
-        wealth,
-        health,
-        love,
-        happiness,
+        northStars: {
+          wealth,
+          health,
+          love,
+          happiness,
+        }
       });
       toast.success("North Stars updated!");
       onClose();
-    } catch (error) {
+    } catch {
       toast.error("Failed to update North Stars");
     } finally {
       setIsSaving(false);
