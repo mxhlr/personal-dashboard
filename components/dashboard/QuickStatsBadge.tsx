@@ -25,14 +25,10 @@ export function QuickStatsBadge() {
       <div className="grid grid-cols-3 gap-3">
       {/* Level Badge */}
       <div
-        className="group flex items-center justify-between px-4 py-4 rounded-lg
-          dark:bg-gradient-to-r dark:from-purple-500/10 dark:to-cyan-500/10
-          bg-gradient-to-r from-purple-500/5 to-cyan-500/5
-          dark:border dark:border-purple-500/20 border border-purple-500/10
-          hover:shadow-lg transition-all duration-200"
-        style={{
-          boxShadow: '0 0 20px rgba(139, 92, 246, 0.1)',
-        }}
+        className="flex items-center justify-between px-4 py-4 rounded-lg
+          dark:bg-white/[0.03] bg-black/[0.02]
+          dark:border dark:border-white/[0.08] border border-black/[0.05]
+          transition-all duration-200"
       >
         <div className="flex items-center gap-2">
           <div className="text-xl">⚡</div>

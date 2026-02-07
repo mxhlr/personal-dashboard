@@ -436,11 +436,9 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                 </div>
                 <Button
                   onClick={() => onNavigate("daily-log")}
-                  className="w-full dark:bg-gradient-to-r dark:from-purple-500/90 dark:to-cyan-500/90 bg-gradient-to-r from-purple-600 to-cyan-600
-                    text-white font-bold font-orbitron uppercase tracking-wider text-xs
-                    dark:shadow-[0_0_20px_rgba(139,92,246,0.4)] shadow-[0_4px_15px_rgba(139,92,246,0.3)]
-                    dark:hover:shadow-[0_0_30px_rgba(139,92,246,0.6)] hover:shadow-[0_6px_25px_rgba(139,92,246,0.5)] hover:scale-105
-                    transition-all duration-300"
+                  className="w-full dark:bg-gradient-to-r dark:from-white dark:to-gray-100 bg-gradient-to-r from-gray-700 to-gray-800
+                    dark:text-black text-white font-bold font-orbitron uppercase tracking-wider text-xs
+                    transition-all duration-300 hover:scale-105"
                 >
                   Zum Daily Log →
                 </Button>
