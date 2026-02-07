@@ -74,8 +74,8 @@ export function QuarterlyReviewForm({
     } else if (currentOKRs && currentOKRs.length > 0) {
       // Initialize milestone review with current OKRs
       setMilestoneReview(
-        currentOKRs.flatMap((okr: any) =>
-          okr.keyResults.map((kr: any) => ({
+        currentOKRs.flatMap((okr) =>
+          okr.keyResults.map((kr) => ({
             area: okr.area,
             milestone: `${okr.objective} - ${kr.description}`,
             completed: false,
