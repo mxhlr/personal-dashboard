@@ -26,6 +26,7 @@ import type * as migrations_adminCommands from "../migrations/adminCommands.js";
 import type * as migrations_fixCategoryNames from "../migrations/fixCategoryNames.js";
 import type * as migrations_migrateNorthStars from "../migrations/migrateNorthStars.js";
 import type * as migrations_migrateUser from "../migrations/migrateUser.js";
+import type * as migrations_runMigration from "../migrations/runMigration.js";
 import type * as migrations_seedHabitSystem from "../migrations/seedHabitSystem.js";
 import type * as monthlyReview from "../monthlyReview.js";
 import type * as quarterlyReview from "../quarterlyReview.js";
@@ -62,6 +63,7 @@ declare const fullApi: ApiFromModules<{
   "migrations/fixCategoryNames": typeof migrations_fixCategoryNames;
   "migrations/migrateNorthStars": typeof migrations_migrateNorthStars;
   "migrations/migrateUser": typeof migrations_migrateUser;
+  "migrations/runMigration": typeof migrations_runMigration;
   "migrations/seedHabitSystem": typeof migrations_seedHabitSystem;
   monthlyReview: typeof monthlyReview;
   quarterlyReview: typeof quarterlyReview;
