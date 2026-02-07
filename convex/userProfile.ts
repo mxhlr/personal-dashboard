@@ -215,7 +215,7 @@ export const updateQuarterlyMilestones = mutation({
       milestone: v.string(),
       year: v.number(),
       quarter: v.number(),
-      completed: v.optional(v.boolean()),
+      completed: v.boolean(),
     })),
   },
   handler: async (ctx, args) => {
@@ -229,14 +229,8 @@ export const updateQuarterlyMilestones = mutation({
 
     if (!profile) throw new Error("Profile not found");
 
-    // Ensure all milestones have a completed field
-    const milestonesWithCompleted = args.milestones.map(m => ({
-      ...m,
-      completed: m.completed ?? false,
-    }));
-
     await ctx.db.patch(profile._id, {
-      quarterlyMilestones: milestonesWithCompleted,
+      quarterlyMilestones: args.milestones,
       updatedAt: new Date().toISOString(),
     });
   },
