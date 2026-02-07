@@ -161,40 +161,58 @@ export function OKROverview() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {Object.entries(
-                weeklyGoals.reduce((acc, goal) => {
-                  if (!acc[goal.category]) acc[goal.category] = [];
-                  acc[goal.category].push(goal);
-                  return acc;
-                }, {} as Record<string, typeof weeklyGoals>)
-              ).map(([category, goals]) => {
-                const config = categoryConfig[category] || { icon: "🎯", color: "text-gray-400" };
+            <div className="space-y-6">
+              {weeklyGoals.map((goal, index) => {
+                const config = areaConfig[goal.area] || {
+                  icon: "🎯",
+                  color: "text-gray-400",
+                  gradient: "from-gray-500/20 to-gray-600/10",
+                };
 
                 return (
                   <div
-                    key={category}
-                    className="p-6 rounded-xl dark:bg-white/[0.02] bg-black/[0.03]
-                      dark:border dark:border-white/[0.08] border border-black/[0.08]"
+                    key={index}
+                    className={`rounded-xl p-6 bg-gradient-to-br ${config.gradient}
+                      dark:border dark:border-white/[0.08] border border-black/[0.08]`}
                   >
-                    <div className="flex items-center gap-2 mb-4">
-                      <span className="text-lg">{config.icon}</span>
-                      <h3 className={`text-sm font-bold uppercase tracking-wider ${config.color}`}
-                        style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                        {category}
-                      </h3>
-                    </div>
-                    <div className="space-y-3">
-                      {goals.map((goal, index) => (
-                        <div key={index} className="flex items-start gap-3 group">
-                          <CheckCircle2 className="w-5 h-5 mt-0.5 dark:text-[#3d3d3d] text-[#525252] flex-shrink-0
-                            group-hover:dark:text-[#00E5FF] group-hover:text-[#0097A7] transition-colors" />
-                          <p className="text-sm dark:text-[#E0E0E0] text-[#1A1A1A] leading-relaxed"
+                    <div className="flex items-start gap-3 mb-4">
+                      <span className="text-xl mt-1">{config.icon}</span>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className={`text-xs font-bold uppercase tracking-wider ${config.color}`}
                             style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
-                            {goal.goal}
-                          </p>
+                            {goal.area}
+                          </span>
                         </div>
-                      ))}
+                        <p className="text-lg dark:text-[#E0E0E0] text-[#1A1A1A] font-semibold leading-relaxed mb-4"
+                          style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                          {goal.objective}
+                        </p>
+
+                        {/* Key Results */}
+                        <div className="space-y-3 pl-6 border-l-2 dark:border-white/[0.15] border-black/[0.12]">
+                          {goal.keyResults.map((kr, krIndex) => (
+                            <div key={krIndex} className="space-y-1">
+                              <div className="flex items-baseline justify-between gap-2">
+                                <p className="text-sm dark:text-[#CCCCCC] text-[#333333]"
+                                  style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                                  {kr.description}
+                                </p>
+                                <span className="text-xs dark:text-[#525252] text-[#555555] font-bold whitespace-nowrap"
+                                  style={{ fontFamily: '"Courier New", "Monaco", monospace' }}>
+                                  0/{kr.target} {kr.unit}
+                                </span>
+                              </div>
+                              <div className="h-2 dark:bg-white/[0.05] bg-black/[0.08] rounded-full overflow-hidden">
+                                <div
+                                  className={`h-full bg-gradient-to-r ${config.gradient} transition-all duration-500`}
+                                  style={{ width: "0%" }}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 );

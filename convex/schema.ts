@@ -157,10 +157,15 @@ export default defineSchema({
       nextWeekFocus: v.string(),         // Worauf fokussierst du dich nächste Woche?
     }),
 
-    // Next Week Goals (User definiert Goals für nächste Woche)
+    // Next Week Goals (User definiert Goals für nächste Woche mit OKR-Struktur)
     nextWeekGoals: v.optional(v.array(v.object({
-      goal: v.string(),
-      category: v.string(), // "Work", "Health", "Learning", "Personal"
+      objective: v.string(),           // "Improve fitness routine"
+      area: v.string(),                // "Wealth", "Health", "Love", "Happiness"
+      keyResults: v.array(v.object({
+        description: v.string(),       // "Complete workout sessions"
+        target: v.number(),            // 3
+        unit: v.string(),              // "sessions", "hours", etc.
+      })),
     }))),
 
     completedAt: v.string(),
